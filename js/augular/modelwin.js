@@ -49,7 +49,6 @@ function add_model(app) {
 	.-model-form{
 	    font-size: 1.1em;
 	    border-radius: 5px;
-	    color: #1686E2;
 	    background:  #fff;
 	}*/}); 
 	styleInjector.insertCSS(css)
@@ -60,29 +59,32 @@ function add_model(app) {
 				<div ng-transclude class='-model-form'></div></div>",
 		link:function (scope,ele,attr) {
 			var form = ele.find('.-model-form')
-			if(attr.width){
-				//var mt=/(\d+)%/.exec(attr.width);
-				//if(mt){
-				//	form.css('width',$(window).width()*parseFloat('0.'+mt[1]))
-				//	$(window).resize(function () {
-				//		form.css('width',$(window).width()*parseFloat('0.'+mt[1]))
-				//	})
-				//}else{
-					form.css('width',attr.width)
-				//}
+			if (attr.style){
+				form.attr('style',attr.style)
 			}
-			if(attr.height){
-				//var mt = /(\d+)%/.exec(attr.height);
-				//if(mt){
-				//	form.css('height',$(window).height()*parseFloat('0.'+mt[1]))
-				//	$(window).resize(function () {
-				//		form.css('height',$(window).height()*parseFloat('0.'+mt[1]))
-				//	})
-				//}else{
-					form.css('height',attr.height)
-				//}
+			//if(attr.width){
+			//	//var mt=/(\d+)%/.exec(attr.width);
+			//	//if(mt){
+			//	//	form.css('width',$(window).width()*parseFloat('0.'+mt[1]))
+			//	//	$(window).resize(function () {
+			//	//		form.css('width',$(window).width()*parseFloat('0.'+mt[1]))
+			//	//	})
+			//	//}else{
+			//		form.css('width',attr.width)
+			//	//}
+			//}
+			//if(attr.height){
+			//	//var mt = /(\d+)%/.exec(attr.height);
+			//	//if(mt){
+			//	//	form.css('height',$(window).height()*parseFloat('0.'+mt[1]))
+			//	//	$(window).resize(function () {
+			//	//		form.css('height',$(window).height()*parseFloat('0.'+mt[1]))
+			//	//	})
+			//	//}else{
+			//		form.css('height',attr.height)
+			//	//}
 				
-			}
+			//}
 			scope.$watch(attr.ngShow, function(value){
 				if (value){
 					$timeout(function () {
