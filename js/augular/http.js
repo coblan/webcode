@@ -8,7 +8,9 @@ function add_ajax(app) {
 						if(data.msg){
 							alert(data.msg)
 						} 
-						callback(data)
+						if (callback){
+							callback(data)
+						}
 					}).error(function(data, status, headers, config) {  
 					    alert('有错误,返回码为:'+status)
 					});
