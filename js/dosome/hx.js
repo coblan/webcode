@@ -15,7 +15,7 @@ function build_index(node){
               count+=1;
             }
   
-          var new_node=$('<li><a href="#'+$(this).attr('id')+'">'+$(this).text()+'</a></li>');
+          var new_node=$('<li><a href="#'+$(this).attr('id')+'" target="_self">'+$(this).text()+'</a></li>');
           x=parseInt(el.tagName.charAt(1))-1;
           if (x==0){
             out.append(new_node);
