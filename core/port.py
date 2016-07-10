@@ -4,6 +4,7 @@ import json
 import inspect
 from django.http import HttpResponse
 from django.contrib.auth.models import User
+from django.conf import settings
 
 def jsonpost(request, scope):
     """
@@ -23,51 +24,90 @@ def ajax_view(request):
             return HttpResponse(json.dumps(rt),content_type="application/json")
             
     """
-    cmddc = json.loads(request.body)
-    outdc = {}
-    msgs=[]
-    orderls = cmddc.pop('order', None)
-    if orderls:
-        for k in orderls:
-            try:
-                func = scope[k]
-                kw=cmddc.pop(k)                
-                outdc[k]=_run_func(func, request,**kw)
-            except (UserWarning,TypeError) as e:
-                msgs.append(str(e))
-            except KeyError as e:
-                msgs.append('no function %s'%k)            
+    router=RouterAjax(request, scope,rt_except=not settings.DEBUG)
+    return router.run()
 
-    for k, kw in cmddc.items():
-        try:
-            func = scope[k]
-            outdc[k]=_run_func(func, request,**kw)
-        except (UserWarning,TypeError) as e:
-            msgs.append(str(e))
-        except KeyError as e:
-            msgs.append('no function %s'%k)
-    
-    outdc['msg']=';'.join(msgs)
-    return HttpResponse(json.dumps(outdc), content_type="application/json")
-
-
-def _run_func(func,request,**kw):
-    args=inspect.getargspec(func).args
-    if 'request' in args:
-        kw['request']=request
-    if 'user' in args:
-        user=_get_user(request)
-        if user:
-            kw['user']=user
+class RouterAjax(object):
+    def __init__(self,request,scope,rt_except=False):
+        self.request=request
+        self.scope=scope
+        self.rt_except=rt_except
+        self.rt={}
+        self.msgs=[]
+        
+    def run(self):
+        self.commands = json.loads(self.request.body)
+        if isinstance(self.commands,list):
+            return self.run_list()
         else:
-            raise UserWarning,'function need user ,but canot get user from request'
+            return self.run_dict()
+    
+    def run_list(self):
+        """
+        json format :
+        
+        [{fun:'name',k1:'v1',k2:'v2'},
+        {fun:'name',value:'last_fun',kk1:'vv1'}]
+        
+        """
+        for func_dic in self.commands:
+            try:
+                fun_name= func_dic.pop('fun')
+                func = self.scope[fun_name]
+                self.rt[fun_name] = self.inject_and_run(func,**func_dic)
+            except (UserWarning,TypeError,KeyError) as e:
+                if self.rt_except:
+                    self.msgs.append(repr(e))
+                else:
+                    raise e
+        self.rt['msg']=';'.join(self.msgs)
+        return HttpResponse(json.dumps(self.rt), content_type="application/json")            
             
-    return func(**kw)
+    def run_dict(self):
+        self.orders=self.commands.pop('order',[])
+        if self.rt_except:
+            try:
+                self.proc_order()
+                self.proc_no_order()
+            except (UserWarning,TypeError,KeyError) as e:
+                self.msgs.append(repr(e))
+            #except KeyError as e:
+                #self.msgs.append('no function %s'%k)
+        else:
+            self.proc_order()
+            self.proc_no_order()
+        self.rt['msg']=';'.join(self.msgs)
+        return HttpResponse(json.dumps(self.rt), content_type="application/json")     
 
-def _get_user(request):
-    if request.user.is_authenticated():
-        return request.user
-    else:
-        return None
+    def proc_order(self):
+        for k in self.orders:
+            func = self.scope[k]
+            kw=self.commands.pop(k)                
+            self.rt[k]=self.inject_and_run(func,**kw)
+            
+    def proc_no_order(self):
+        for k, kw in self.commands.items():
+            func = self.scope[k]
+            self.rt[k]=self.inject_and_run(func,**kw) 
+    
+    def inject_and_run(self,func,**kw):
+        """Inject user , request"""
+        args=inspect.getargspec(func).args
+        if 'request' in args:
+            kw['request']=self.request
+        if 'user' in args:
+            user=self._get_user()
+            if user:
+                kw['user']=user
+            else:
+                raise UserWarning,'function need login ,but you are not login'
+                
+        return func(**kw)    
+    
+    def _get_user(self):
+        if self.request.user.is_authenticated():
+            return self.request.user
+        else:
+            return None    
+                
 
-      
