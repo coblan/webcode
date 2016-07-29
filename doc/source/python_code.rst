@@ -1,0 +1,23 @@
+db_tool(数据库工具)
+=======================
+
+to_dict()
+
+将django model对象转换为字典。便于串行化。
+该函数会将_class信息放入字典，标示出字典代表的Model类别。在from_dict函数中，可以直接利用该信息，反串行化model对象。
+
+from_dict()
+
+将字典转换为django model对象
+
+get_or_none(model, **kw):
+
+在model中查询一个对象，返回第一个。
+类似于model.objects.get()，get会产生异常，书写方式不太舒服。这个不会报错，只会返回none。
+
+
+port
+========================
+
+jsonpost(request, scope):
+
