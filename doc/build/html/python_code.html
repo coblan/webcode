@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>webcode &mdash; webcode 1.0 documentation</title>
+  <title>python代码 &mdash; webcode 1.0 documentation</title>
   
 
   
@@ -31,8 +31,7 @@
 
   
     <link rel="top" title="webcode 1.0 documentation" href="index.html"/>
-        <link rel="next" title="python代码" href="python_code.html"/>
-        <link rel="prev" title="Welcome to webcode’s documentation!" href="index.html"/> 
+        <link rel="prev" title="webcode" href="introduce.html"/> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -82,11 +81,12 @@
             
             
                 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">webcode</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#id1">介绍</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introduce.html">webcode</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">python代码</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#db-tool">db_tool(数据库工具)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#port">port</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="python_code.html">python代码</a></li>
 </ul>
 
             
@@ -117,11 +117,11 @@
   <ul class="wy-breadcrumbs">
     <li><a href="index.html">Docs</a> &raquo;</li>
       
-    <li>webcode</li>
+    <li>python代码</li>
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="_sources/introduce.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/python_code.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -131,16 +131,28 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="webcode">
-<h1>webcode<a class="headerlink" href="#webcode" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="id1">
-<h2>介绍<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
-<p>主要是针对web开发的一个库。</p>
-<p>包含</p>
-<ol class="arabic simple">
-<li>js库。依赖jquery，Vuejs库</li>
-<li>django代码库</li>
-</ol>
+  <div class="section" id="python">
+<h1>python代码<a class="headerlink" href="#python" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="db-tool">
+<h2>db_tool(数据库工具)<a class="headerlink" href="#db-tool" title="Permalink to this headline">¶</a></h2>
+<p>to_dict()</p>
+<p>将django model对象转换为字典。便于串行化。
+该函数会将_class信息放入字典，标示出字典代表的Model类别。在from_dict函数中，可以直接利用该信息，反串行化model对象。</p>
+<p>from_dict()</p>
+<p>将字典转换为django model对象</p>
+<p>get_or_none(model, kw)</p>
+<p>在model中查询一个对象，返回第一个。
+类似于model.objects.get()，get会产生异常，书写方式不太舒服。这个不会报错，只会返回none。</p>
+</div>
+<div class="section" id="port">
+<h2>port<a class="headerlink" href="#port" title="Permalink to this headline">¶</a></h2>
+<p>jsonpost(request, scope)</p>
+<p>路由ajax请求</p>
+<p>ajax请求格式为:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">[{</span><span class="n">fun</span><span class="p">:</span><span class="s1">&#39;name&#39;</span><span class="p">,</span><span class="n">k1</span><span class="p">:</span><span class="s1">&#39;v1&#39;</span><span class="p">,</span><span class="n">k2</span><span class="p">:</span><span class="s1">&#39;v2&#39;</span><span class="p">},</span>
+<span class="p">{</span><span class="n">fun</span><span class="p">:</span><span class="s1">&#39;name&#39;</span><span class="p">,</span><span class="n">value</span><span class="p">:</span><span class="s1">&#39;last_fun&#39;</span><span class="p">,</span><span class="n">kk1</span><span class="p">:</span><span class="s1">&#39;vv1&#39;</span><span class="p">}]</span>
+</pre></div>
+</div>
 </div>
 </div>
 
@@ -151,10 +163,8 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="python_code.html" class="btn btn-neutral float-right" title="python代码" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
-      
-        <a href="index.html" class="btn btn-neutral" title="Welcome to webcode’s documentation!" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="introduce.html" class="btn btn-neutral" title="webcode" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
