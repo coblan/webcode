@@ -90,7 +90,7 @@ def from_dict(dc,model=None,pre_proc=None):
         processed=pre_proc(dc,model)
     for k in processed:
         dc.pop(k)         # 去除被pre_proc处理过的值， (因为处理过的值，不应再被 _convert_foreign处理)
-    _convert_foreign(dc,model)
+    fpk_to_fobj(dc,model)
     dc.update(processed)   # 把pre_proc的值合并回去 ，(因为下面要给 instance赋值)
     pk=dc.get('pk')
     if pk:
@@ -102,7 +102,10 @@ def from_dict(dc,model=None,pre_proc=None):
         instance=model.objects.create(**dc)
         return instance
     
-def _convert_foreign(dc,model):
+def fpk_to_fobj(dc,model):
+    """
+    convert foreign key to foreign object. foreign key field name is in dc . according to model
+    """
     fields=model._meta.fields
     for field in fields:
         if field.name in dc and isinstance(field,models.ForeignKey)\
@@ -116,17 +119,20 @@ def _deserilize_foreignkey(field,pk):
     else:
         return None
 
-def _field_name_to_filed(fields,instance):
-    out = []
-    for name in fields:
-        for field in instance._meta.fields:
-            if field.name==name:
-                out.append(field)
-                break  
-    return out
+#def _field_name_to_filed(fields,instance):
+    #out = []
+    #for name in fields:
+        #for field in instance._meta.fields:
+            #if field.name==name:
+                #out.append(field)
+                #break  
+    #return out
                 
 
 def form_to_head(form):
+    """
+    convert form to head dict.一般接下来，会json.dumps()处理一下，然后传到到前端页面
+    """
     out = []
     for k,v in form.fields.items():
         dc = {'name':k,'label':unicode(v.label),'required':v.required,}
@@ -139,22 +145,6 @@ def form_to_head(form):
             dc.update({'type':'text'})
         out.append(dc)
     return out
-    
-def model_form_save(form,models,success=None,**kw):
-    model_dict= models # kw.pop('models')
-    model_dict.update(kw)
-    iform = form(model_dict)
-
-    if iform.is_valid():
-        model = form.Meta.model
-        obj = from_dict(iform.cleaned_data,model)
-        if success:
-            return success(obj)
-        else:
-            return {'status':'success'}
-    else:
-        return {'errors':iform.errors}
-
 
 def save_model(models,scope):
     if '_form' in models:
@@ -167,6 +157,35 @@ def save_model(models,scope):
                     form = v
                     break
     return model_form_save(form,models)
+
+
+def model_form_save(form,models,success=None,**kw):
+    """
+    保存 ModelForm。这个函数不如save_model智能。需要手动传入form。如果前端页面有_class信息，最好使用使用自动化的save_model函数
+    
+    @form : 普通的django form
+    @models: dict: 代表是所有field的值
+    
+    @success: callback(obj) : 
+    
+    """
+    model_dict= models # kw.pop('models')
+    model_dict.update(kw)
+    iform = form(model_dict)
+
+    if iform.is_valid():
+        model = form.Meta.model
+        obj = from_dict(iform.cleaned_data,model)
+        if success:
+            return success(obj)
+        else:
+            obj.save()
+            return {'status':'success'}
+    else:
+        return {'errors':iform.errors}
+
+
+
                 
 
 
