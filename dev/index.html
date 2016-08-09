@@ -7,6 +7,7 @@
 		<script src="http://cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 		<link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
 		<script src="../build/fields.pack.js"></script>
+		<!--<script src="../build/file.pack.js"></script>-->
 
         <script type="text/javascript">
 			Vue.config.devtools = true
@@ -25,6 +26,8 @@
 					{name:'username',label:'用户名',type:'text',required:true,autofocus:true},
 					{name:'password',label:'mima',type:'text',required:true,autofocus:true},
 					{name:'hh',label:'ss',type:'color',},
+					{name:'hjk',label:'ff',type:'logo',up_url:"jj"},
+					{name:'hjkK',label:'fSSf',type:'logo',up_url:"jj"}
 				]
 			}
 //			sub=[{name:'username',type:'area'}]
@@ -54,6 +57,10 @@
 	        <field name='username' :kw='meta' :set="{label_cls:'col-md-2',input_cls:'col-md-10'}"></field>
 			<field name="password" :kw="meta"></field>
 			<field name="hh" :kw="meta"></field>
+			<field name="hjk" :kw="meta"></field>
+			<field name="hjkK" :kw="meta"></field>
+
+			<!--<logo-input up_url="jj"></logo-input>-->
         </div>
 
 		<!--<input type='text' id="custom" />-->

@@ -46,6 +46,7 @@ $.post('',JSON.stringify(post_data),function (data) {
 */
 
 import {use_color} from '../dosome/color.js'
+import * as f from './file.js'
 
 
 function is_valid(form_fun_rt,errors_obj,callback) {
@@ -105,23 +106,23 @@ var field_base={
     },
     components: {
         text: {
-            props: ['model','kw'],
+            props: ['name','model','kw'],
 
 
-            template: `<input type="text" class="form-control" v-model="model"
+            template: `<input type="text" class="form-control" v-model="model" :id="'id_'+name"
                         :placeholder="kw.placeholder" :autofocus="kw.autofocus" :maxlength='kw.maxlength'>`
         },
         password: {
-            props: ['model','kw'],
-            template: '<input type="password" class="form-control" v-model="model" :placeholder="kw.placeholder">'
+            props: ['name','model','kw'],
+            template: `<input type="password" :id="'id_'+name" class="form-control" v-model="model" :placeholder="kw.placeholder">`
         },
         area: {
-            props: ['model','kw'],
-            template: '<textarea class="form-control" rows="3" v-model="model" :placeholder="kw.placeholder"></textarea>'
+            props: ['name','model','kw'],
+            template: `<textarea class="form-control" rows="3" :id="'id_'+name" v-model="model" :placeholder="kw.placeholder"></textarea>`
         },
         color:{
-            props:['model','kw'],
-            template: '<input type="text" v-model="model">',
+            props:['name','model','kw'],
+            template: `<input type="text" v-model="model" :id="'id_'+name">`,
             watch:{
                 'model':function (){
                     this.sync_to_spec()
@@ -143,6 +144,10 @@ var field_base={
             compiled:function(){
                 this.sync_to_spec()
             },
+        },
+        logo:{
+            props:['name','model','kw'],
+            template:`<logo-input :up_url="kw.up_url" :web_url.sync="model" :id="'id_'+name"></logo-input>`
         }
     }
 
@@ -152,14 +157,13 @@ Vue.component('field',{
     mixins:[field_base],
 
 	template:`
-	<div for='field' class="form-group" :class='{"error":error_data(name)}'>
+	<div for='field' class="form-group field" :class='{"error":error_data(name)}'>
 	<label :for="'id_'+name" v-text="head.label" :class='set.label_cls'  control-label"><span class="req_star" v-if='head.required'> *</span>
 	</label>
 	<div :class="set.input_cls">
         <component :is='head.type'
-            :model='row[name]'
+            :model.sync='row[name]'
             :name='name'
-            :id="'id_'+name"
             :kw='head'>
         </component>
 	</div>

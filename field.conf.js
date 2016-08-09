@@ -5,6 +5,7 @@ module.exports =
     //context:__dirname,
     entry: {
         fields: './js/vuejs/fields.js',
+        //file:'./js/vuejs/file.js'
         },
     output: {
         path:'./build',

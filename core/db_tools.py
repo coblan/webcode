@@ -152,8 +152,8 @@ def save_model(models,scope):
     else:
         model=apps.get_model(models['_class'])
         for k,v in scope.items():
-            if isinstance(v,forms.ModelForm):
-                if v.Meta.model==model:
+            if isinstance(v,type) and issubclass(v,forms.ModelForm):
+                if hasattr(v,'Meta') and v.Meta.model==model:
                     form = v
                     break
     return model_form_save(form,models)
@@ -167,6 +167,7 @@ def model_form_save(form,models,success=None,**kw):
     @models: dict: 代表是所有field的值
     
     @success: callback(obj) : 
+    @kw : 可以传入user 等  /// 可以没有用处，等等调整它.
     
     """
     model_dict= models # kw.pop('models')
@@ -175,7 +176,8 @@ def model_form_save(form,models,success=None,**kw):
 
     if iform.is_valid():
         model = form.Meta.model
-        obj = from_dict(iform.cleaned_data,model)
+        model_dict.update(iform.cleaned_data)
+        obj = from_dict(model_dict,model)
         if success:
             return success(obj)
         else:
