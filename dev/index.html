@@ -38,7 +38,12 @@
 	        	el:'#hello',
 	        	data:{
 		        	meta:meta
-	        	}
+	        	},
+				methods:{
+					show_upload:function(){
+						show_upload()
+					}
+				}
         	})
 
 
@@ -61,6 +66,7 @@
 			<field name="hjkK" :kw="meta"></field>
 
 			<!--<logo-input up_url="jj"></logo-input>-->
+			<button class="btn" @click="show_upload()">show upload</button>
         </div>
 
 		<!--<input type='text' id="custom" />-->

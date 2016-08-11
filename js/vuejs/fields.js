@@ -46,8 +46,11 @@ $.post('',JSON.stringify(post_data),function (data) {
 */
 
 import {use_color} from '../dosome/color.js'
+import {hook_ajax_msg,show_upload,hide_upload} from '../ajax_fun.js'
 import * as f from './file.js'
+//import '../css/hello.scss'
 
+hook_ajax_msg()
 
 function is_valid(form_fun_rt,errors_obj,callback) {
 	if(form_fun_rt){
@@ -197,5 +200,7 @@ export function merge(mains,subs) {
 	}
 }
 window.use_color = use_color
+window.show_upload =show_upload
+window.hide_upload =hide_upload
 window.merge=merge;
 

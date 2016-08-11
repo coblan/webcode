@@ -4,6 +4,7 @@ from django.db import models
 from django.apps import apps
 from django import forms
 import json
+from datetime import datetime
 
 
 def get_or_none(model, **kw):
@@ -26,7 +27,7 @@ def to_dict(instance,filt_attr=None,include=None,exclude=None):
     
     注意，返回的字典，是可以json化的才行。
     """
-    fields=instance._meta.fields
+    fields=instance._meta.get_fields()
     if include:
         fields=filter(lambda field:field.name in include,fields)
     if exclude:
@@ -36,7 +37,8 @@ def to_dict(instance,filt_attr=None,include=None,exclude=None):
     else:
         out={}
     for field in fields:
-        if field.name in out:
+        if field.name in out or\
+           isinstance(field,models.ManyToManyRel):
             continue
         else:
             if field_map.get(field.__class__):
@@ -65,13 +67,29 @@ class DatetimeProc(object):
             return value.strftime('%Y-%m-%d %H:%M:%S')
         else:
             return ''
+    
+    def from_dict(self,value,field):
+        return datetime.strptime(value,'%Y-%m-%d %H:%M:%S')
         
 class ForeignProc(object):
     def to_dict(self,inst,name):
         foreign=getattr(inst,name)
         if foreign:
             return foreign.pk
+        
+    def from_dict(self,value,field):
+        model=field.rel.to
+        return model.objects.get(pk=value)
 
+class ManyProc(object):
+    def to_dict(self,inst,name):
+        out =[]
+        for item in getattr(getattr(inst,name),'all')():
+            out.append(item.pk)
+        return out
+    
+    def from_dict(self,value,field):
+        return value
     
 
 def from_dict(dc,model=None,pre_proc=None):
@@ -90,34 +108,46 @@ def from_dict(dc,model=None,pre_proc=None):
         processed=pre_proc(dc,model)
     for k in processed:
         dc.pop(k)         # 去除被pre_proc处理过的值， (因为处理过的值，不应再被 _convert_foreign处理)
-    fpk_to_fobj(dc,model)
-    dc.update(processed)   # 把pre_proc的值合并回去 ，(因为下面要给 instance赋值)
+        
+    fields = model._meta.get_fields()
+    for field in fields:
+        value= dc.get(field.name,None)
+        if value:
+            if field_map.get(field.__class__):
+                processed[field.name] = field_map.get(field.__class__)().from_dict(value,field) 
+            else:
+                processed[field.name]=value
+
+            
+     #       
+    # fpk_to_fobj(dc,model)
+    # dc.update(processed)   # 把pre_proc的值合并回去 ，(因为下面要给 instance赋值)
     pk=dc.get('pk')
     if pk:
         instance=model.objects.get(pk=pk) 
-        for k,v in dc.items():
+        for k,v in processed.items():
             setattr(instance,k,v)       
         return instance            
     else:
-        instance=model.objects.create(**dc)
+        instance=model.objects.create(**processed)
         return instance
     
-def fpk_to_fobj(dc,model):
-    """
-    convert foreign key to foreign object. foreign key field name is in dc . according to model
-    """
-    fields=model._meta.fields
-    for field in fields:
-        if field.name in dc and isinstance(field,models.ForeignKey)\
-           and not isinstance(dc[field.name],field.rel.to):
-            dc[field.name]=_deserilize_foreignkey(field, dc[field.name])    
+# def fpk_to_fobj(dc,model):
+    # """
+    # convert foreign key to foreign object. foreign key field name is in dc . according to model
+    # """
+    # fields=model._meta.fields
+    # for field in fields:
+        # if field.name in dc and isinstance(field,models.ForeignKey)\
+           # and not isinstance(dc[field.name],field.rel.to):
+            # dc[field.name]=_deserilize_foreignkey(field, dc[field.name])    
 
-def _deserilize_foreignkey(field,pk):
-    if pk is not None:
-        model=field.rel.to
-        return model.objects.get(pk=pk)
-    else:
-        return None
+# def _deserilize_foreignkey(field,pk):
+    # if pk is not None:
+        # model=field.rel.to
+        # return model.objects.get(pk=pk)
+    # else:
+        # return None
 
 #def _field_name_to_filed(fields,instance):
     #out = []
@@ -193,5 +223,6 @@ def model_form_save(form,models,success=None,**kw):
 
 field_map={
     models.DateTimeField:DatetimeProc,
-    models.ForeignKey : ForeignProc
+    models.ForeignKey : ForeignProc,
+    models.ManyToManyField:ManyProc
 }

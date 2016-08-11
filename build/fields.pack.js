@@ -53,12 +53,17 @@
 
 	var _color = __webpack_require__(1);
 
-	var _file = __webpack_require__(2);
+	var _ajax_fun = __webpack_require__(2);
+
+	var _file = __webpack_require__(3);
 
 	var f = _interopRequireWildcard(_file);
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
+	//import '../css/hello.scss'
+
+	(0, _ajax_fun.hook_ajax_msg)();
 	/*
 	基本内容
 	==============
@@ -294,6 +299,8 @@
 	    }
 	}
 	window.use_color = _color.use_color;
+	window.show_upload = _ajax_fun.show_upload;
+	window.hide_upload = _ajax_fun.hide_upload;
 	window.merge = merge;
 
 /***/ },
@@ -316,6 +323,67 @@
 
 /***/ },
 /* 2 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	exports.hook_ajax_msg = hook_ajax_msg;
+	exports.show_upload = show_upload;
+	exports.hide_upload = hide_upload;
+	/**
+	 * Created by zhangrong on 2016/8/6.
+	 */
+
+	function hook_ajax_msg() {
+		if (window.hook_ajax_msg_mark) {
+			return;
+		}
+		window.hook_ajax_msg_mark = true;
+		$(window).bind('beforeunload', function () {
+			window.iclosed = true;
+		});
+
+		$(document).ajaxSuccess(function (event, data) {
+			var rt = data.responseJSON;
+			if (rt && rt.msg) {
+				alert(rt.msg);
+			}
+		}).ajaxError(function (event, jqxhr, settings, thrownError) {
+			if (!window.iclosed) {
+				if (jqxhr.status != 0) {
+					alert('server has error');
+				} else {
+					alert('maybe server offline');
+				}
+			}
+		});
+	}
+
+	function show_upload() {
+		$('#load_wrap').show();
+	}
+	function hide_upload() {
+		$('#load_wrap').hide();
+	}
+
+	if (!window.__font_awesome) {
+		window.__font_awesome = true;
+		document.write('<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">');
+	}
+
+	if (!window.__uploading_mark) {
+		window.__uploading_mark = true;
+		document.write('\n\t\t<style>\n\t\t.popup{\n\t\t\tposition: fixed;\n\t\t\ttop: 0;\n\t\t\tleft: 0;\n\t\t\tright: 0;\n\t\t\tbottom: 0;\n\t\t\tdisplay:none;\n\t\t}\n\t\t#_upload_inn{\n\t\t\tbackground: rgba(88, 88, 88, 0.2);\n\t\t\tborder-radius: 5px;\n\t\t\twidth:180px;\n\t\t\theight:120px;\n\t\t\t/*padding:30px 80px ;*/\n\t\t}\n\t\t.imiddle{\n\t    position: absolute;\n        top: 50%;\n        left: 50%;\n        transform: translate(-50%, -50%);\n        text-align: center;\n\t\t/*display: table;*/\n        z-index: 1000;\n    \t}\n    \t#_upload_mark{\n    \t\tfloat: left;\n\n    \t}\n\t\t</style>');
+		$(function () {
+			$('body').append('<div class="popup" id="load_wrap"><div id=\'_upload_inn\' class="imiddle">\n\t\t<div  id="_upload_mark" class="imiddle"><i class="fa fa-spinner fa-spin fa-3x"></i></div></div></div>');
+		});
+	}
+
+/***/ },
+/* 3 */
 /***/ function(module, exports) {
 
 	'use strict';

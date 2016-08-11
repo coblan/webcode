@@ -1,5 +1,5 @@
 var path = require( 'path' );
-
+var ExtractTextPlugin = require("extract-text-webpack-plugin");
 module.exports = 
 {
     //context:__dirname,
@@ -36,6 +36,9 @@ module.exports =
     // resolveLoader: {
     //    fallback: 'C:/Users/heyulin/AppData/Roaming/npm/node_modules'
     //},
+    plugins: [
+        new ExtractTextPlugin("styles.css")
+    ],
     module: {
 	  loaders: [
 	    {
@@ -46,7 +49,12 @@ module.exports =
 	      query: {
 	        presets: ['es2015']
 	      }
-	    }
+	    },
+	    {
+		   test: /.scss$/,
+		   loader: ExtractTextPlugin.extract('style', 'css!sass')
+		}
+	    
 	  ],
 	
 	}
