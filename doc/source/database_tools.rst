@@ -5,7 +5,7 @@ ORM Tools
 MODEL CRUD
 ===========
 
-In this example,I will build a frame to automately  manage DJANO ORM MODEL operation.For example,add a record ,modify a record and so on.This process include generating heads and field according model information in backend and resied them into Template.In user brower,we use Vuejs to render these information to DOM.
+In this example,I will build a Pattern to automatly manage DJANO ORM MODEL operation.For example,add a record ,modify a record and so on.This process include generating heads and field according model information in backend and resied them into Template.In user brower,we use Vuejs to render these information to DOM.
 
 creat djano form
 -----------------
@@ -63,7 +63,7 @@ render field
 save process
 --------------
 
-I prefer to communicat between front and back with ajsx.So we need create ajax logic in both front and end.In my opinion ,I recomend creating a file that name after ajax.py in your djaong application. In ajax.py ,we need present funtion to process SAVE operation.
+I prefer to communicate between front and back with ajax.So we need create ajax logic in both front and end.In my opinion ,I recomend creating a file that name after ajax.py in your Django application. In ajax.py ,we need present funtion to process SAVE operation.
 
 ::
 
@@ -79,13 +79,16 @@ I prefer to communicat between front and back with ajsx.So we need create ajax l
 
 As you can see,the most importent function is **save_model_form** .The function save row to Model automately becuase '_class' meta info of row represent Model class.So please make sure origin of ROW is function "to_dict".
 
-In frontend,we submit Form data by ajax .
+In frontend,we submit Row data by ajax.It will be routed to valid by form then to save into database.If has errors when validating,it will interrupted immidiatly and send errors to frontend.You can catch the errors,and it will be automatly displayed under field input.
 
 ::
 
 	var post_data=[{fun:'save',row:row}]
 	$.post('',JSON.stringify(post_data),function (data) {
-		reside_data_from_end...
+		// judge if there is errors back from server
+		if(data.save.errors){
+			update_vue_obj(self.kw.errors,data.save.errors)
+		}
 	})
 
 
