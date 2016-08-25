@@ -199,6 +199,7 @@ export function merge(mains,subs) {
 		}
 	}
 }
+window.update_vue_obj=update_vue_obj
 window.use_color = use_color
 window.show_upload =show_upload
 window.hide_upload =hide_upload

@@ -298,6 +298,7 @@
 	        }
 	    }
 	}
+	window.update_vue_obj = update_vue_obj;
 	window.use_color = _color.use_color;
 	window.show_upload = _ajax_fun.show_upload;
 	window.hide_upload = _ajax_fun.hide_upload;
