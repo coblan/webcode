@@ -48,7 +48,7 @@ $.post('',JSON.stringify(post_data),function (data) {
 import {use_color} from '../dosome/color.js'
 import {hook_ajax_msg,show_upload,hide_upload} from '../ajax_fun.js'
 import * as f from './file.js'
-//import '../css/hello.scss'
+import * as ck from './ckeditor.js'
 
 hook_ajax_msg()
 
@@ -66,10 +66,6 @@ function is_valid(form_fun_rt,errors_obj,callback) {
 		}
 	}
 }
-
-
-
-
 
 var field_base={
     props: {
@@ -201,6 +197,7 @@ export function merge(mains,subs) {
 }
 window.update_vue_obj=update_vue_obj
 window.use_color = use_color
+window.use_ckeditor= ck.use_ckeditor
 window.show_upload =show_upload
 window.hide_upload =hide_upload
 window.merge=merge;

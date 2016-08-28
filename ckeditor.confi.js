@@ -1,5 +1,5 @@
 var path = require( 'path' );
-//var ExtractTextPlugin = require("extract-text-webpack-plugin");
+
 module.exports = 
 {
     //context:__dirname,
@@ -24,37 +24,16 @@ module.exports =
     //    'jquery':true,
     //},
     watch: true,
-    //resolve: {
-    //  root:[
-    //  	path.resolve('D:\\try\\webpack'),
-    //    //path.resolve('D:/coblan/webcode/js'),
-    //    //path.resolve(sub_root)
-    //  ],
-    //  //fallback:'C:/Users/heyulin/AppData/Roaming/npm/',
-    //  //extensions: ['', '.js']
-    //},
-    // resolveLoader: {
-    //    fallback: 'C:/Users/heyulin/AppData/Roaming/npm/node_modules'
-    //},
-    //plugins: [
-    //    new ExtractTextPlugin("styles.css")
-    //],
     module: {
 	  loaders: [
 	    {
 	      test: /\.js$/,
 	      exclude: /(node_modules|bower_components)/,
-	      //loader:'babel-loader'
 	      loader: 'babel', // 'babel-loader' is also a legal name to reference
 	      query: {
 	        presets: ['es2015']
 	      }
 	    },
-	 //   {
-		//   test: /.scss$/,
-		//   loader: ExtractTextPlugin.extract('style', 'css!sass')
-		//}
-	    
 	  ],
 	
 	}

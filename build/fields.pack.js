@@ -59,11 +59,12 @@
 
 	var f = _interopRequireWildcard(_file);
 
+	var _ckeditor = __webpack_require__(4);
+
+	var ck = _interopRequireWildcard(_ckeditor);
+
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
-	//import '../css/hello.scss'
-
-	(0, _ajax_fun.hook_ajax_msg)();
 	/*
 	基本内容
 	==============
@@ -106,6 +107,8 @@
 			location=next;
 	})
 	*/
+
+	(0, _ajax_fun.hook_ajax_msg)();
 
 	function is_valid(form_fun_rt, errors_obj, callback) {
 	    if (form_fun_rt) {
@@ -300,6 +303,7 @@
 	}
 	window.update_vue_obj = update_vue_obj;
 	window.use_color = _color.use_color;
+	window.use_ckeditor = ck.use_ckeditor;
 	window.show_upload = _ajax_fun.show_upload;
 	window.hide_upload = _ajax_fun.hide_upload;
 	window.merge = merge;
@@ -454,6 +458,60 @@
 	if (!window._logo_input_css) {
 	    document.write('\n\n<style type="text/css" media="screen" >\n.up_wrap{\n    position: relative;\n    text-align: center;\n    border: 2px dashed #ccc;\n    background: #FDFDFD;\n    width:300px;\n}\n.logo-input input[type="file"]{\n    opacity: 0;\n    position: absolute;\n    top: 40px;\n    left: 40px;\n    display: block;\n    cursor: pointer;\n}\n.closeDiv{\n    width: 100%;\n    height: 100%;\n    position: absolute;\n    top: 0;\n    left: 0;\n    background-color: #ffffff;\n}\n.choose{\n    display: inline-block;\n    text-decoration: none;\n    padding: 5px;\n    border: 1px solid #0092F2;\n    border-radius: 4px;\n    font-size: 14px;\n    color: #0092F2;\n    cursor: pointer;\n}\n.choose:hover,.choose:active{\n    text-decoration: none;\n    color: #0092F2;\n}\n.close{\n    position: absolute;\n    top: 5px;\n    right: 10px;\n    cursor: pointer;\n    font-size: 14px;\n    color: #242424;\n}\n.logoImg{\n    max-height: 100px !important;\n    vertical-align: middle;\n    margin-top: 5px;\n}\n.req_star{\n    color: red;\n    font-size: 200%;\n}\n</style>\n\n      ');
 	}
+
+/***/ },
+/* 4 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	exports.use_ckeditor = use_ckeditor;
+
+	//function import_ckeditor() {
+	//	document.write("<script src='/static/ckeditor/ckeditor.js'></script>")
+	//}
+
+	//ckEditor={
+	//		import:import_ckeditor,
+	//	}
+	//module.exports=ckEditor
+
+	function use_ckeditor() {
+		document.write('<script src="http://cdn.bootcss.com/ckeditor/4.5.10/ckeditor.js"></script>');
+	}
+
+	Vue.component('ckeditor', {
+		template: '<div class=\'ckeditor\'>\n\t\t    \t<textarea class="form-control" class="form-control" name="ri" ></textarea>\n\t    \t</div>',
+		props: {
+			model: {
+				twoWay: true
+			},
+			config: {
+				default: '',
+				coerce: function coerce(val) {
+					if (val == 'complex') {
+						return 'http://ocm6l2tt6.bkt.clouddn.com/config_complex.js';
+					} else {
+						return val;
+					}
+				}
+
+			}
+		},
+		compiled: function compiled() {
+			var editor = CKEDITOR.replace($(this.$el).find('textarea')[0], { customConfig: this.config });
+			editor.setData(this.model);
+			this.editor = editor;
+		},
+		events: {
+			'sync_data': function sync_data() {
+				this.model = this.editor.getData();
+			}
+		}
+	});
 
 /***/ }
 /******/ ]);

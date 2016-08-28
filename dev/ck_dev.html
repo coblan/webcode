@@ -1,0 +1,73 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+        <title>Deposits and Withdrawals</title>
+        <script type="text/javascript" src='http://apps.bdimg.com/libs/jquery/1.9.1/jquery.min.js'></script>
+        <!--<script src="http://cdn.bootcss.com/ckeditor/4.5.10/ckeditor.js"></script>-->
+          
+		<script src="http://cdn.bootcss.com/vue/1.0.24/vue.js"></script>
+		<script src="../build/fields.pack.js"></script>
+		
+
+    <script type="text/javascript">
+	   use_ckeditor()
+    	$(function () {
+    		new Vue({
+	    		el:'body',
+	    		data:{
+		    		mm:'jj y gg'
+	    		},
+	    		methods:{
+		    		submit:function () {
+			    		this.$broadcast('sync_data')
+		    			alert(this.mm)
+		    		}
+	    		}
+    		})
+    	})
+    //	Vue.component('ckeditor',{
+	   // 	template:'#ckeditor',
+	   // 	props:{
+		  //  	model:{
+			 //   	twoWay:true
+		  //  	},
+		  //  	config:{
+			 //   	default:'',
+			 //   	coerce:function (val) {
+			 //   		if(val=='complex'){
+				//    		return 'http://ocm6l2tt6.bkt.clouddn.com/config_complex.js'
+			 //   		}else{
+				//    		return ''
+			 //   		}
+			 //   	}
+			    	
+		  //  	}
+		  //  	},
+	   // 	compiled:function () {
+	   // 		editor = CKEDITOR.replace($(this.$el).find('textarea')[0],{customConfig:this.config})
+	   // 		editor.setData(this.model)
+				//this.editor = editor
+	   // 	},
+	   // 	events:{
+		  //  	'sync_data':function () {
+		  //  		this.model=this.editor.getData()
+		  //  	}
+	   // 	}
+    //	})
+    </script>
+	</head>
+
+    <body>
+    	<ckeditor :model.sync='mm' config='http://localhost:63342/webcode/dev/config.js'></ckeditor>
+    	<button name="test" type="button" value="val" @click='submit()'>Button Text</button>
+
+    	
+    	<!--<template id='ckeditor'>
+	    	<div class='ckeditor'>
+		    	<textarea class="form-control" class="form-control" name="ri" ></textarea>
+	    	</div>
+    	</template>-->
+    </body> 
+
+</html>

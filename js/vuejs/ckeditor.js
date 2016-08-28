@@ -26,14 +26,14 @@ Vue.component('ckeditor',{
 				if(val=='complex'){
 					return 'http://ocm6l2tt6.bkt.clouddn.com/config_complex.js'
 				}else{
-					return ''
+					return val
 				}
 			}
 
 		}
 	},
 	compiled:function () {
-		editor = CKEDITOR.replace($(this.$el).find('textarea')[0],{customConfig:this.config})
+		var editor = CKEDITOR.replace($(this.$el).find('textarea')[0],{customConfig:this.config})
 		editor.setData(this.model)
 		this.editor = editor
 	},
