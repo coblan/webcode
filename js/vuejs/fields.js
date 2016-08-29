@@ -46,11 +46,12 @@ $.post('',JSON.stringify(post_data),function (data) {
 */
 
 import {use_color} from '../dosome/color.js'
-import {hook_ajax_msg,show_upload,hide_upload} from '../ajax_fun.js'
+import {hook_ajax_msg,hook_ajax_csrf,show_upload,hide_upload} from '../ajax_fun.js'
 import * as f from './file.js'
 import * as ck from './ckeditor.js'
 
 hook_ajax_msg()
+hook_ajax_csrf()
 
 function is_valid(form_fun_rt,errors_obj,callback) {
 	if(form_fun_rt){
