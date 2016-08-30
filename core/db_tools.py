@@ -176,17 +176,17 @@ def form_to_head(form):
         out.append(dc)
     return out
 
-def save_model(models,scope):
-    if '_form' in models:
-        form = scope.get(models.get('_form'))
+def save_model(row,scope):
+    if '_form' in row:
+        form = scope.get(row.get('_form'))
     else:
-        model=apps.get_model(models['_class'])
+        model=apps.get_model(row['_class'])
         for k,v in scope.items():
             if isinstance(v,type) and issubclass(v,forms.ModelForm):
                 if hasattr(v,'Meta') and v.Meta.model==model:
                     form = v
                     break
-    return model_form_save(form,models)
+    return model_form_save(form,row)
 
 
 def model_form_save(form,models,success=None,**kw):
