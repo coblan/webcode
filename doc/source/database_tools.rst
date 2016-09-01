@@ -45,19 +45,19 @@ render field
 3. render field with Vuejs::
 
 	# in script section
-	meta={
+	kw={
 		errors:{},
 		row:row,
 		heads:heads,
 	}
 	new Vue({
 		data:{
-			meta:meta,
+			kw:kw,
 			},
 	})
 
 	# in Body area，we organize and dispose these fileds
-	<field name='comment' :meta='meta'></field>
+	<field name='comment' :kw='kw'></field>
 
 	
 save process
@@ -91,6 +91,8 @@ In frontend,we submit Row data by ajax.It will be routed to valid by form then t
 		}
 	})
 
+.. _fields-js:
 
-MODEL LIST
-============
+fields
+=======
+this is very import file
