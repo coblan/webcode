@@ -17,6 +17,7 @@ Contents:
    python_code
    database_tools
    table
+   ajax_hook
 
 
 

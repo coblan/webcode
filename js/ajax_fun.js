@@ -20,9 +20,9 @@ export function hook_ajax_msg(){
     }).ajaxError(function (event,jqxhr, settings, thrownError) {
 		if(! window.iclosed){
 			if(jqxhr.status !=0){
-				alert('server has error')
+				alert('server has error, error code is '+jqxhr.status)
 			}else{
-				alert('maybe server offline')
+				alert('maybe server offline,error code is '+jqxhr.status)
 			}
 
 		}
@@ -31,7 +31,7 @@ export function hook_ajax_msg(){
 }
 
 export function hook_ajax_csrf() {
-		// using jQuery
+		// needed in django context,because django has csrf system enabled by default
 	// used for fetch and generate CSRF code for POST ,used with django CSRF middleware
 	function getCookie(name) {
 	    var cookieValue = null;

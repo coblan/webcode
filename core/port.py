@@ -51,19 +51,24 @@ class RouterAjax(object):
         
         """
         for func_dic in self.commands:
-            try:
+            if self.rt_except:
+                try:
+                    fun_name= func_dic.pop('fun')
+                    func = self.scope[fun_name]
+                    self.rt[fun_name] = self.inject_and_run(func,**func_dic)
+                except (UserWarning,TypeError,KeyError) as e:
+                    self.msgs.append(repr(e))
+            else:
                 fun_name= func_dic.pop('fun')
                 func = self.scope[fun_name]
-                self.rt[fun_name] = self.inject_and_run(func,**func_dic)
-            except (UserWarning,TypeError,KeyError) as e:
-                if self.rt_except:
-                    self.msgs.append(repr(e))
-                else:
-                    raise e
+                self.rt[fun_name] = self.inject_and_run(func,**func_dic)                
         self.rt['msg']=';'.join(self.msgs)
         return HttpResponse(json.dumps(self.rt), content_type="application/json")            
             
     def run_dict(self):
+        """beacuse dict has no order, Call order is a little tedius,
+        so use run_list replace this function"""
+        
         self.orders=self.commands.pop('order',[])
         if self.rt_except:
             try:
@@ -71,8 +76,6 @@ class RouterAjax(object):
                 self.proc_no_order()
             except (UserWarning,TypeError,KeyError) as e:
                 self.msgs.append(repr(e))
-            #except KeyError as e:
-                #self.msgs.append('no function %s'%k)
         else:
             self.proc_order()
             self.proc_no_order()

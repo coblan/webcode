@@ -47,19 +47,19 @@ render field
 3. render field with Vuejs::
 
 	# in script section
-	meta={
+	kw={
 		errors:{},
 		row:row,
 		heads:heads,
 	}
 	new Vue({
 		data:{
-			meta:meta,
+			kw:kw,
 			},
 	})
 
 	# in Body area，we organize and dispose these fileds
-	<field name='comment' :meta='meta'></field>
+	<field name='comment' :kw='kw'></field>
 
 	
 save process
