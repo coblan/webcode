@@ -7,10 +7,10 @@ MODEL CRUD
 
 In this example,I will build a Pattern to automatly manage DJANO ORM MODEL operation.For example,add a record ,modify a record and so on.This process include generating heads and field according model information in backend and resied them into Template.In user brower,we use Vuejs to render these information to DOM.
 
-creat djano form
+create djano form
 -----------------
 
-First,you need create django form class to service for Model instance::
+First,you need create django form class to manage Model instance information::
 
 	from django import forms
 	from models import ArtComment
@@ -23,6 +23,8 @@ First,you need create django form class to service for Model instance::
 	    class Meta:
 	        model=ArtComment
 	        exclude=['create_time']
+
+funtion **form_to_head** will convert form instance to head dict
 
 render field
 -------------
@@ -91,6 +93,9 @@ In frontend,we submit Row data by ajax.It will be routed to valid by form then t
 		}
 	})
 
+.. note:: Errors in here is so call valid fail information,not common errors message.
+
+	 The real Error message will be process and notified by field.pack.js .Ex :network communicate errors,server errors and so on.
 
 MODEL LIST
 ============

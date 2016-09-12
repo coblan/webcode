@@ -367,11 +367,12 @@
 				}
 			}
 		});
-		hook_ajax_csrf();
+		//hook_ajax_csrf()
 	}
 
 	function hook_ajax_csrf() {
 		// using jQuery
+		// used for fetch and generate CSRF code for POST ,used with django CSRF middleware
 		function getCookie(name) {
 			var cookieValue = null;
 			if (document.cookie && document.cookie !== '') {

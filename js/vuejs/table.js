@@ -1,0 +1,186 @@
+
+
+/*
+Argments Format:
+=================
+
+heads=[{name:'xxx',label:'label1'},
+        {name:'jb',label:'jb'}]
+rows=[{xxx:"jjy",jb:'hahaer'}]
+
+ */
+
+Vue.component('sort-table',{
+
+    props:{
+        heads:{
+            default:function () {
+                return []
+            }
+        },
+        rows:{
+            default:function () {
+                return [];
+            }
+        },
+        sort:{
+            default:function () {
+                return []
+            }
+        },
+        has_check:{
+            default:false
+        },
+        map:{
+            default:function () {
+                return function (name,row) {
+                    return row[name];
+                }
+            }
+        }
+    },
+    methods:{
+        in_sort:function (name) {
+            return this.sort.indexOf(name)!=-1
+        },
+        get_sort_pos:function (name) {
+            if(name.startsWith('-')){
+                name=name.substr(1)
+            }
+            var index = this.sort.indexOf(name)
+            if (index!=-1){
+                return index
+            }else{
+                return this.sort.indexOf("-"+name)
+            }
+        },
+        sort_col:function (name) {
+            var pos =this.get_sort_pos(name)
+            if(pos==-1){
+                this.sort.push(name)
+            }else{
+                this.sort[pos]=name
+            }
+            this.$dispatch('sort-changed')
+        },
+        rm_sort:function (name) {
+            var pos =this.get_sort_pos(name)
+            if(pos!=-1){
+                this.sort.splice(pos,1)
+            }
+            this.$dispatch('sort-changed')
+        }
+    } ,
+    template:`<div>
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<td style='width:50px' v-if='has_check'>
+						<input type="checkbox" name="test" value=""/>
+					</td>
+					<td v-for='head in heads'>
+						<span v-if='head.sortable' v-text='head.label' class='clickable' @click='sort_col(head.name)'></span>
+						<span v-else v-text='head.label'></span>
+						<span v-if='icatch=get_sort_pos(head.name),icatch!=-1'>
+							<span v-text='icatch'></span>
+							<span class="glyphicon glyphicon-chevron-up" v-if='in_sort(head.name)'
+								class='clickable' @click='sort_col("-"+head.name)'></span>
+							<span v-if='in_sort("-"+head.name)' class="glyphicon  glyphicon-chevron-down"
+								class='clickable' @click='sort_col(head.name)'></span>
+							<span v-if='in_sort(head.name)||in_sort("-"+head.name)' class="glyphicon glyphicon-remove"
+								class='clickable' @click='rm_sort(head.name)'></span>
+						</span>
+					</td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr v-for='row in rows'>
+					<td v-if='has_check'><input type="checkbox" name="test" value="" /></td>
+					<td v-for='head in heads'>
+						<component v-if='icatch = map(head.name,row),icatch.com' :is='icatch.com' :kw='icatch.kw'></component>
+						<span v-else v-html='icatch'></span>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>`,
+})
+
+/*
+Argments:
+==========
+
+nums = ['1','...','6_a','7','8','...','999']
+
+Events:
+=======
+
+goto_page,num
+
+*/
+Vue.component('paginator',{
+    props:['nums'],
+    methods:{
+        goto_page:function (num) {
+            if (!isNaN(parseInt(num)) && !num.endsWith('a')){
+                this.$dispatch('goto_page',num)
+            }
+        }
+    },
+    template:`
+    <ul class="pagination page-num">
+
+    <li v-for='num in nums' track-by="$index" :class='{"clickable": !isNaN(parseInt(num)),"active":num.endsWith("a")}' @click='goto_page(num)'>
+    <span v-text='!isNaN(parseInt(num))? parseInt(num):num' ></span>
+    </li>
+
+    </ul>
+    `
+})
+
+var build_table_args = {
+    methods:{
+        get_search_str:function () {
+            var search_str=''
+            for(x in this.filters){
+                var filter = this.filters[x]
+                if(filter.value){
+                    search_str+= filter.name+'='+filter.value+'&'
+                }
+            }
+            if(this.q){
+                search_str+='_q='+this.q+'&'
+            }
+            return search_str
+        },
+        get_sort_str:function () {
+            var sort_str=''
+            for(x in this.sort){
+                sort_str+=this.sort[x]+','
+            }
+            return sort_str
+        },
+        search:function () {
+            this.re_arg()
+        },
+        re_arg:function () {
+            var search_str=this.get_search_str()
+            var sort_str = this.get_sort_str()
+            location.search='_sort='+sort_str+'&'+search_str
+        },
+    },
+    events:{
+        'sort-changed':function () {
+            this.re_arg()
+        },
+        'goto_page':function (num) {
+            var search_str=this.get_search_str()
+            var sort_str = this.get_sort_str()
+            location.search='_sort='+sort_str+'&'+search_str+'_page='+num
+        }
+    }
+}
+
+window.build_table_args=build_table_args
+
+
