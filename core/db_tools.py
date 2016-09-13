@@ -38,7 +38,7 @@ def to_dict(instance,filt_attr=None,include=None,exclude=None):
         out={}
     for field in fields:
         if field.name in out or\
-           isinstance(field,models.ManyToManyRel):
+           isinstance(field,(models.ManyToManyRel,models.ManyToOneRel)):
             continue
         else:
             if field_map.get(field.__class__):
@@ -174,6 +174,17 @@ def form_to_head(form):
         else:
             dc.update({'type':'text'})
         out.append(dc)
+    return out
+
+def model_to_head(model,include=[],exclude=[]):
+    out = []
+    for field in model._meta.fields:
+        dc = {'name':field.name,'label':field._verbose_name,}
+        out.append(dc)
+    if include:
+        out=[x for x in out if x.get('name') in include]
+    else:
+        out=[x for x in out if x.get('name') not in exclude]
     return out
 
 def save_model(row,scope):
