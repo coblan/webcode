@@ -27,11 +27,12 @@ export function hook_ajax_msg(){
 
 		}
 	})
-	hook_ajax_csrf()
+	//hook_ajax_csrf()
 }
 
 export function hook_ajax_csrf() {
 		// needed in django context,because django has csrf system enabled by default
+	// used for fetch and generate CSRF code for POST ,used with django CSRF middleware
 	function getCookie(name) {
 	    var cookieValue = null;
 	    if (document.cookie && document.cookie !== '') {
