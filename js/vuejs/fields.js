@@ -155,7 +155,6 @@ var field_base={
 
 Vue.component('field',{
     mixins:[field_base],
-
 	template:`
 	<div for='field' class="form-group field" :class='{"error":error_data(name)}'>
 	<label :for="'id_'+name" v-text="head.label" :class='set.label_cls'  control-label"><span class="req_star" v-if='head.required'> *</span>
@@ -173,7 +172,6 @@ Vue.component('field',{
 `,
 
 })
-
 
 function update_vue_obj(vue_obj,obj) {
 	for(let x in vue_obj){
@@ -196,6 +194,7 @@ export function merge(mains,subs) {
 		}
 	}
 }
+
 window.update_vue_obj=update_vue_obj
 window.use_color = use_color
 window.use_ckeditor= ck.use_ckeditor

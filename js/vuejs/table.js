@@ -11,7 +11,6 @@ rows=[{xxx:"jjy",jb:'hahaer'}]
  */
 
 Vue.component('sort-table',{
-
     props:{
         heads:{
             default:function () {

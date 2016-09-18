@@ -57,7 +57,6 @@
 	 */
 
 	Vue.component('sort-table', {
-
 	    props: {
 	        heads: {
 	            default: function _default() {

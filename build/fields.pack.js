@@ -235,7 +235,6 @@
 
 	Vue.component('field', {
 	    mixins: [field_base],
-
 	    template: '\n\t<div for=\'field\' class="form-group field" :class=\'{"error":error_data(name)}\'>\n\t<label :for="\'id_\'+name" v-text="head.label" :class=\'set.label_cls\'  control-label"><span class="req_star" v-if=\'head.required\'> *</span>\n\t</label>\n\t<div :class="set.input_cls">\n        <component :is=\'head.type\'\n            :model.sync=\'row[name]\'\n            :name=\'name\'\n            :kw=\'head\'>\n        </component>\n\t</div>\n\t<slot> </slot>\n\t<div v-text=\'error_data(name)\' class=\'error\'></div>\n    </div>\n'
 
 	});
@@ -302,6 +301,7 @@
 	        }
 	    }
 	}
+
 	window.update_vue_obj = update_vue_obj;
 	window.use_color = _color.use_color;
 	window.use_ckeditor = ck.use_ckeditor;
@@ -361,9 +361,9 @@
 		}).ajaxError(function (event, jqxhr, settings, thrownError) {
 			if (!window.iclosed) {
 				if (jqxhr.status != 0) {
-					alert('server has error');
+					alert('server has error, error code is ' + jqxhr.status);
 				} else {
-					alert('maybe server offline');
+					alert('maybe server offline,error code is ' + jqxhr.status);
 				}
 			}
 		});
@@ -371,7 +371,7 @@
 	}
 
 	function hook_ajax_csrf() {
-		// using jQuery
+		// needed in django context,because django has csrf system enabled by default
 		// used for fetch and generate CSRF code for POST ,used with django CSRF middleware
 		function getCookie(name) {
 			var cookieValue = null;
