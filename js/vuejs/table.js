@@ -141,7 +141,8 @@ var build_table_args = {
     methods:{
         get_search_str:function () {
             var search_str=''
-            for(x in this.filters){
+            
+            for(var x=0;x<this.filters.length;x++){
                 var filter = this.filters[x]
                 if(filter.value){
                     search_str+= filter.name+'='+filter.value+'&'
@@ -154,7 +155,7 @@ var build_table_args = {
         },
         get_sort_str:function () {
             var sort_str=''
-            for(x in this.sort){
+            for(var x=0;x<this.sort.length;x++){
                 sort_str+=this.sort[x]+','
             }
             return sort_str

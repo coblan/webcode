@@ -147,7 +147,8 @@
 	    methods: {
 	        get_search_str: function get_search_str() {
 	            var search_str = '';
-	            for (x in this.filters) {
+
+	            for (var x = 0; x < this.filters.length; x++) {
 	                var filter = this.filters[x];
 	                if (filter.value) {
 	                    search_str += filter.name + '=' + filter.value + '&';
@@ -160,7 +161,7 @@
 	        },
 	        get_sort_str: function get_sort_str() {
 	            var sort_str = '';
-	            for (x in this.sort) {
+	            for (var x = 0; x < this.sort.length; x++) {
 	                sort_str += this.sort[x] + ',';
 	            }
 	            return sort_str;
