@@ -429,7 +429,62 @@
 
 	'use strict';
 
+	/*
+	file-input
+	===========
+
+
+	*/
+
 	Vue.component('file-input', {
+	    template: "<input type='file' @change='_changed'>",
+	    props: {
+	        ready: {}
+	    },
+	    methods: {
+	        _changed: function _changed(changeEvent) {
+	            var file = changeEvent.target.files[0];
+	            if (!file) return;
+	            this.file = file;
+	            this.fd = new FormData();
+	            this.fd.append('file', file);
+	            this.ready = true;
+	        },
+	        onload: function onload(callback) {
+	            var reader = new FileReader();
+	            reader.onloadend = function () {
+	                // ͼƬ�� base64 ��ʽ, ����ֱ�ӵ��� img �� src ����ֵ
+	                var dataURL = reader.result;
+	                //var img = new Image();
+	                //img.src = dataURL;
+	                // ���뵽 DOM ��Ԥ��
+	                //$('#haha')[0].src=dataURL
+	                callback(dataURL);
+	            };
+
+	            reader.readAsDataURL(this.file); // ���� base64
+	        },
+	        upload: function upload(up_url) {
+	            var self = this;
+	            $.ajax({
+	                url: up_url,
+	                type: 'post',
+	                data: this.fd,
+	                contentType: false,
+	                cache: false,
+	                success: function success(data) {
+	                    self.$dispatch('response', data);
+	                },
+	                //error:function (data) {
+	                //	alert(data.responseText)
+	                //},
+	                processData: false
+	            });
+	        }
+	    }
+	});
+
+	Vue.component('file-obj', {
 	    template: "<input model='filebody' type='file' @change='changed'>",
 	    props: {
 	        up_url: {
@@ -479,7 +534,7 @@
 
 	Vue.component('logo-input', {
 	    props: ['up_url', 'web_url', 'id'],
-	    template: '\n          <div class=\'up_wrap logo-input\'>\n            <file-input :id=\'id\'\n                accept=\'image/gif,image/jpeg,image/png\'\n                :up_url=\'up_url\'\n                @rt_url= \'get_web_url\'>\n            </file-input>\n            <div style="padding: 40px">\n                <a class=\'choose\'>Choose</a>\n            </div>\n            <div v-if=\'web_url\' class="closeDiv">\n            <div class="close" @click=\'clear()\'>X</div>\n            <img :src="web_url" alt="" class="logoImg">\n            </div>\n            </div>\n        ',
+	    template: '\n          <div class=\'up_wrap logo-input\'>\n            <file-obj :id=\'id\'\n                accept=\'image/gif,image/jpeg,image/png\'\n                :up_url=\'up_url\'\n                @rt_url= \'get_web_url\'>\n            </file-obj>\n            <div style="padding: 40px">\n                <a class=\'choose\'>Choose</a>\n            </div>\n            <div v-if=\'web_url\' class="closeDiv">\n            <div class="close" @click=\'clear()\'>X</div>\n            <img :src="web_url" alt="" class="logoImg">\n            </div>\n            </div>\n        ',
 	    methods: {
 	        get_web_url: function get_web_url(e) {
 	            this.web_url = e;

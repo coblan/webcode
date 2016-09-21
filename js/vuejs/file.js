@@ -1,7 +1,65 @@
+/*
+file-input
+===========
 
 
+*/
 
 Vue.component('file-input',{
+    template:"<input type='file' @change='_changed'>",
+    props:{
+        ready:{}
+    },
+    methods:{
+        _changed:function (changeEvent) {
+            var file=changeEvent.target.files[0];
+            if(!file)
+                return
+            this.file=file
+            this.fd = new FormData();
+            this.fd.append('file', file);
+            this.ready=true;
+        },
+        onload:function (callback) {
+        	var reader = new FileReader();
+        	reader.onloadend = function () {
+		        // 图片的 base64 格式, 可以直接当成 img 的 src 属性值
+		        var dataURL = reader.result;
+		        //var img = new Image();
+		        //img.src = dataURL;
+		        // 插入到 DOM 中预览
+		        //$('#haha')[0].src=dataURL
+		        callback(dataURL) 
+		    };
+
+		    reader.readAsDataURL(this.file); // 读出 base64
+        },
+        upload:function (up_url) {
+            var self =this;
+            $.ajax({
+                url:up_url,
+                type:'post',
+                data:this.fd,
+                contentType: false,
+                cache: false,
+                success:function (data) {
+                    self.$dispatch('response',data)
+                    
+                },
+                //error:function (data) {
+                //	alert(data.responseText)
+                //},
+                processData:false
+            })
+        }
+    }
+})
+
+
+
+
+
+Vue.component('file-obj',{
     template:"<input model='filebody' type='file' @change='changed'>",
     props:{
         up_url:{
@@ -55,11 +113,11 @@ Vue.component('file-input',{
         props:['up_url','web_url','id'],
         template:`
           <div class='up_wrap logo-input'>
-            <file-input :id='id'
+            <file-obj :id='id'
                 accept='image/gif,image/jpeg,image/png'
                 :up_url='up_url'
                 @rt_url= 'get_web_url'>
-            </file-input>
+            </file-obj>
             <div style="padding: 40px">
                 <a class='choose'>Choose</a>
             </div>
