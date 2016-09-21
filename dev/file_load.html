@@ -21,12 +21,16 @@
 						
 					},
 					pre_view:function () {
-						this.$refs.f1.preview(function (data) {
+						this.$refs.f1.read(function (data) {
 							$('#haha')[0].src = data
 						})
 					},
 					fack_click:function () {
 						$('#jjyy').click()
+					},
+					upload:function () {
+						this.$refs.f1.upload('http://localhost:8000/upload_image_demo/')
+						
 					}
 				}
         	})
@@ -39,15 +43,34 @@
     <body>
         <h1 id='tt'>Top 3 Transactions</h1>
 		<div id='there'>
-			<file-obj v-ref:f1 id='jjyy'></file-obj>
+			<file-input v-ref:f1 id='jjyy'></file-input>
 			<div><img src="" alt="" id='haha'></div>
 			<button name="test" type="button" value="val" @click='pre_view()'>Button Text</button>
 			<button name="test" type="button" value="val" @click='fack_click()'>dji</button>
+			<button name="test" type="button" value="val" @click='upload()'>upload</button>
 		</div>
 		
 
 <script type="text/javascript">
-Vue.component('file-obj',{
+(function addXhrProgressEvent($) {
+    var originalXhr = $.ajaxSettings.xhr;
+    $.ajaxSetup({
+        progress: function() { console.log("standard progress callback"); },
+        xhr: function() {
+            var req = originalXhr(), that = this;
+            if (req) {
+                if (typeof req.addEventListener == "function") {
+                    req.addEventListener("progress", function(evt) {
+                        that.progress(evt);
+                    },false);
+                }
+            }
+            return req;
+        }
+    });
+})(jQuery);
+
+Vue.component('file-input',{
     template:"<input type='file' @change='_changed'>",
     props:{
         ready:{}
@@ -62,7 +85,7 @@ Vue.component('file-obj',{
             this.fd.append('file', file);
             this.ready=true;
         },
-        preview:function (callback) {
+        read:function (callback) {
         	var reader = new FileReader();
         	reader.onloadend = function () {
 		        // 图片的 base64 格式, 可以直接当成 img 的 src 属性值
@@ -91,11 +114,30 @@ Vue.component('file-obj',{
                 //error:function (data) {
                 //	alert(data.responseText)
                 //},
-                processData:false
+                processData:false,
+	      //      progress: function(evt) {
+			    //    if (evt.lengthComputable) {
+				   //     //self.$dispatch('progress',parseInt( (evt.loaded / evt.total * 100), 10))
+			    //        console.log("Loaded " + parseInt( (evt.loaded / evt.total * 100), 10) + "%");
+			    //    }
+			    //    else {
+			    //        console.log("Length not computable.");
+			    //    }
+		    	//}
+		    	   xhrFields: {
+				        onprogress: function (e) {
+				            if (e.lengthComputable) {
+				                console.log('Loaded '+ (e.loaded / e.total * 100) + '%');
+				            } else {
+				                console.log('Length not computable.');
+				            }
+				        }
+				    }
             })
-        }
-    }
-})
+        },
+       
+    	}
+	})
         </script>
     </body>
 </html>
