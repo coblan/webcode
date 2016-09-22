@@ -53,23 +53,51 @@
 		
 
 <script type="text/javascript">
-(function addXhrProgressEvent($) {
-    var originalXhr = $.ajaxSettings.xhr;
-    $.ajaxSetup({
-        progress: function() { console.log("standard progress callback"); },
-        xhr: function() {
-            var req = originalXhr(), that = this;
-            if (req) {
-                if (typeof req.addEventListener == "function") {
-                    req.addEventListener("progress", function(evt) {
-                        that.progress(evt);
-                    },false);
-                }
-            }
-            return req;
-        }
-    });
-})(jQuery);
+//(function addXhrProgressEvent($) {
+//    var originalXhr = $.ajaxSettings.xhr;
+//    $.ajaxSetup({
+//        progress: function() { console.log("standard progress callback"); },
+//        xhr: function() {
+//            var req = originalXhr(), that = this;
+//            if (req) {
+//                if (typeof req.addEventListener == "function") {
+//                    req.addEventListener("progress", function(evt) {
+//                        that.progress(evt);
+//                    },false);
+//                }
+//            }
+//            return req;
+//        }
+//    });
+//})(jQuery);
+
+
+function upload(file,up_url){  
+        var xhr = new XMLHttpRequest();  
+  
+        var fd = new FormData();  
+  
+        fd.append("file", file);  
+  
+        //监听事件  
+        xhr.upload.addEventListener("progress", uploadProgress, false);  
+  
+        //发送文件和表单自定义参数  
+        xhr.open("POST", up_url,false);  
+  
+        xhr.send(fd);  
+    }  
+  
+    function uploadProgress(evt){  
+        if (evt.lengthComputable) {                    
+            //evt.loaded：文件上传的大小   evt.total：文件总的大小                      
+            var percentComplete = Math.round((evt.loaded) * 100 / evt.total);   
+            console.console.log(percentComplete);   
+            //加载进度条，同时显示信息            
+            //$("#percent").html(percentComplete + '%')  
+            //$("#progressNumber").css("width",""+percentComplete+"px");               
+        }  
+    }  
 
 Vue.component('file-input',{
     template:"<input type='file' @change='_changed'>",
@@ -84,8 +112,7 @@ Vue.component('file-input',{
             if(!file)
                 return
             this.file=file
-            this.fd = new FormData();
-            this.fd.append('file', file);
+            
             //this.ready=true;
         },
         read:function (callback) {
@@ -104,6 +131,9 @@ Vue.component('file-input',{
         },
         upload:function (up_url) {
             var self =this;
+            //upload(this.file,up_url)
+            this.fd = new FormData();
+            this.fd.append('file', this.file);
             $.ajax({
                 url:up_url,
                 type:'post',
@@ -114,11 +144,11 @@ Vue.component('file-input',{
                     self.$dispatch('response',data)
                     
                 },
+                processData:false,
                 //error:function (data) {
                 //	alert(data.responseText)
                 //},
-                processData:false,
-	      //      progress: function(evt) {
+	            //progress: function(evt) {
 			    //    if (evt.lengthComputable) {
 				   //     //self.$dispatch('progress',parseInt( (evt.loaded / evt.total * 100), 10))
 			    //        console.log("Loaded " + parseInt( (evt.loaded / evt.total * 100), 10) + "%");
@@ -127,15 +157,16 @@ Vue.component('file-input',{
 			    //        console.log("Length not computable.");
 			    //    }
 		    	//}
-		    	   xhrFields: {
-				        onprogress: function (e) {
-				            if (e.lengthComputable) {
-				                console.log('Loaded '+ (e.loaded / e.total * 100) + '%');
-				            } else {
-				                console.log('Length not computable.');
-				            }
-				        }
-				    }
+		    	
+	    	   xhrFields: {
+			        onprogress: function (e) {
+			            if (e.lengthComputable) {
+			                console.log('Loaded '+ (e.loaded / e.total * 100) + '%');
+			            } else {
+			                console.log('Length not computable.');
+			            }
+			        },
+			    }
             })
         },
        
