@@ -438,9 +438,7 @@
 
 	Vue.component('file-input', {
 	    template: "<input type='file' @change='_changed'>",
-	    props: {
-	        ready: {}
-	    },
+	    props: {},
 	    methods: {
 	        _changed: function _changed(changeEvent) {
 	            var file = changeEvent.target.files[0];
@@ -448,23 +446,24 @@
 	            this.file = file;
 	            this.fd = new FormData();
 	            this.fd.append('file', file);
-	            this.ready = true;
+	            this.$dispatch('ready');
+	            //this.ready=true;
 	        },
-	        onload: function onload(callback) {
+	        read: function read(callback) {
 	            var reader = new FileReader();
 	            reader.onloadend = function () {
-	                // ͼƬ�� base64 ��ʽ, ����ֱ�ӵ��� img �� src ����ֵ
+	                // 图片的 base64 格式, 可以直接当成 img 的 src 属性值
 	                var dataURL = reader.result;
 	                //var img = new Image();
 	                //img.src = dataURL;
-	                // ���뵽 DOM ��Ԥ��
+	                // 插入到 DOM 中预览
 	                //$('#haha')[0].src=dataURL
 	                callback(dataURL);
 	            };
 
-	            reader.readAsDataURL(this.file); // ���� base64
+	            reader.readAsDataURL(this.file); // 读出 base64
 	        },
-	        upload: function upload(up_url) {
+	        upload: function upload(up_url, _success) {
 	            var self = this;
 	            $.ajax({
 	                url: up_url,
@@ -473,7 +472,8 @@
 	                contentType: false,
 	                cache: false,
 	                success: function success(data) {
-	                    self.$dispatch('response', data);
+	                    _success(data);
+	                    //self.$dispatch('response',data)
 	                },
 	                //error:function (data) {
 	                //	alert(data.responseText)

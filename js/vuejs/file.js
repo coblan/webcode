@@ -8,7 +8,6 @@ file-input
 Vue.component('file-input',{
     template:"<input type='file' @change='_changed'>",
     props:{
-        ready:{}
     },
     methods:{
         _changed:function (changeEvent) {
@@ -18,23 +17,24 @@ Vue.component('file-input',{
             this.file=file
             this.fd = new FormData();
             this.fd.append('file', file);
-            this.ready=true;
+            this.$dispatch('ready')
+            //this.ready=true;
         },
-        onload:function (callback) {
+        read:function (callback) {
         	var reader = new FileReader();
         	reader.onloadend = function () {
-		        // Í¼Æ¬µÄ base64 ¸ñÊ½, ¿ÉÒÔÖ±½Óµ±³É img µÄ src ÊôĞÔÖµ
+		        // å›¾ç‰‡çš„ base64 æ ¼å¼, å¯ä»¥ç›´æ¥å½“æˆ img çš„ src å±æ€§å€¼
 		        var dataURL = reader.result;
 		        //var img = new Image();
 		        //img.src = dataURL;
-		        // ²åÈëµ½ DOM ÖĞÔ¤ÀÀ
+		        // æ’å…¥åˆ° DOM ä¸­é¢„è§ˆ
 		        //$('#haha')[0].src=dataURL
 		        callback(dataURL) 
 		    };
 
-		    reader.readAsDataURL(this.file); // ¶Á³ö base64
+		    reader.readAsDataURL(this.file); // è¯»å‡º base64
         },
-        upload:function (up_url) {
+        upload:function (up_url,success) {
             var self =this;
             $.ajax({
                 url:up_url,
@@ -43,7 +43,8 @@ Vue.component('file-input',{
                 contentType: false,
                 cache: false,
                 success:function (data) {
-                    self.$dispatch('response',data)
+	                success(data)
+                    //self.$dispatch('response',data)
                     
                 },
                 //error:function (data) {

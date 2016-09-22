@@ -15,6 +15,7 @@
 			new Vue({
 	        	el:'#there',
 	        	data:{
+		        	file_name:'',
 	        	},
 				methods:{
 					show_upload:function(){
@@ -43,11 +44,11 @@
     <body>
         <h1 id='tt'>Top 3 Transactions</h1>
 		<div id='there'>
-			<file-input v-ref:f1 id='jjyy'></file-input>
+			<file-input v-ref:f1 id='jjyy' v-model='file_name'></file-input>
 			<div><img src="" alt="" id='haha'></div>
 			<button name="test" type="button" value="val" @click='pre_view()'>Button Text</button>
 			<button name="test" type="button" value="val" @click='fack_click()'>dji</button>
-			<button name="test" type="button" value="val" @click='upload()'>upload</button>
+			<button name="test" type="button" value="val" @click='upload()' :disabled='file_name?false:true'>upload</button>
 		</div>
 		
 
@@ -73,7 +74,9 @@
 Vue.component('file-input',{
     template:"<input type='file' @change='_changed'>",
     props:{
-        ready:{}
+        //ready:{
+	       // twoWay:true
+        //}
     },
     methods:{
         _changed:function (changeEvent) {
@@ -83,7 +86,7 @@ Vue.component('file-input',{
             this.file=file
             this.fd = new FormData();
             this.fd.append('file', file);
-            this.ready=true;
+            //this.ready=true;
         },
         read:function (callback) {
         	var reader = new FileReader();
