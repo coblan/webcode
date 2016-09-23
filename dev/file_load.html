@@ -56,18 +56,36 @@
 //(function addXhrProgressEvent($) {
 //    var originalXhr = $.ajaxSettings.xhr;
 //    $.ajaxSetup({
-//        progress: function() { console.log("standard progress callback"); },
-//        xhr: function() {
+//        //progress: function() { console.log("standard progress callback"); },
+//        //xhr: function() {
+//        //    var req = originalXhr(), that = this;
+//        //    if (req) {
+//        //        if (typeof req.addEventListener == "function") {
+//        //            req.addEventListener("progress", function(evt) {
+//        //                that.progress(evt);
+//        //            },false);
+//        //        }
+//        //    }
+//        //    return req;
+//        //}
+
+//		 xhr: function() {
 //            var req = originalXhr(), that = this;
 //            if (req) {
 //                if (typeof req.addEventListener == "function") {
-//                    req.addEventListener("progress", function(evt) {
-//                        that.progress(evt);
-//                    },false);
+//                    req.upload.onprogress=function (evt) {
+//	                    if (evt.lengthComputable) {
+//				            console.log("Loaded " + parseInt( (evt.loaded / evt.total * 100), 10) + "%");
+//				        } else {
+//				            console.log("Length not computable.");
+//				        }
+//                    }
 //                }
 //            }
 //            return req;
 //        }
+
+        
 //    });
 //})(jQuery);
 
@@ -139,12 +157,13 @@ Vue.component('file-input',{
                 type:'post',
                 data:this.fd,
                 contentType: false,
-                cache: false,
+                //cache: false,
                 success:function (data) {
                     self.$dispatch('response',data)
                     
                 },
                 processData:false,
+                
                 //error:function (data) {
                 //	alert(data.responseText)
                 //},
@@ -158,15 +177,28 @@ Vue.component('file-input',{
 			    //    }
 		    	//}
 		    	
-	    	   xhrFields: {
-			        onprogress: function (e) {
-			            if (e.lengthComputable) {
-			                console.log('Loaded '+ (e.loaded / e.total * 100) + '%');
-			            } else {
-			                console.log('Length not computable.');
+	    	 //  xhrFields: {
+			    //    onprogress: function (e) {
+			    //        if (e.lengthComputable) {
+			    //            console.log('Loaded '+ (e.loaded / e.total * 100) + '%');
+			    //        } else {
+			    //            console.log('Length not computable.');
+			    //        }
+			    //    },
+			    //}
+		       xhr: function() {
+			        var xhr = new window.XMLHttpRequest();
+			        xhr.upload.addEventListener("progress", function(evt) {
+			            if (evt.lengthComputable) {
+			                var percentComplete = evt.loaded / evt.total;
+			                console.log('进度', percentComplete);
 			            }
-			        },
+			        }, false);
+
+			        return xhr;
 			    }
+
+			    
             })
         },
        
