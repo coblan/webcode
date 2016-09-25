@@ -18,6 +18,7 @@ Contents:
    database_tools
    table
    ajax_hook
+   cus_admin
 
 
 
