@@ -189,7 +189,6 @@
 	    components: {
 	        text: {
 	            props: ['name', 'model', 'kw'],
-
 	            template: '<input type="text" class="form-control" v-model="model" :id="\'id_\'+name"\n                        :placeholder="kw.placeholder" :autofocus="kw.autofocus" :maxlength=\'kw.maxlength\'>'
 	        },
 	        password: {
@@ -228,6 +227,10 @@
 	        logo: {
 	            props: ['name', 'model', 'kw'],
 	            template: '<logo-input :up_url="kw.up_url" :web_url.sync="model" :id="\'id_\'+name"></logo-input>'
+	        },
+	        sim_select: {
+	            props: ['name', 'model', 'kw'],
+	            template: '<select v-model=\'model\'  :id="\'id_\'+name">\n            \t<option :value=\'null\'>----</option>\n            \t<option v-for=\'opt in kw.options\' :value=\'opt.pk\' v-text=\'opt.label\'></option>\n            </select>'
 	        }
 	    }
 
