@@ -2,17 +2,25 @@
 table
 ======
 
-Administate System commonly include two part.Edit form and information presentation.Components in fields.pack.js is mainly used for Edit form.Table is the major formate about information presentation.The Components in table.pack.js is used for render table.includeing **sort item ,filter ,search ,and pagenations**.
+模仿Django.Admin，大致需要两个组件系统。一个是table，一个是form。
+
+table用于显示数据库中表格式数据。我会把相关功能函数都打包到 **table.pack.js**
+
+table的主要功能有:
+
+* sort
+* filter (根据字段过滤)
+* search (根据字段搜索)
+* pagenations 分页
+
 
 In my design,there has three Components.table,filter and pagenations.All Components **tied by data**,so they can be used alone.
 
-Full Example
+Example
 =============
 
 BackEnd
 --------
-
-
 
 FrontEnd
 ---------
@@ -93,7 +101,7 @@ sort:
 	A list,represent table sort by column.This can be generate by python file
 
 
-page-num
+page-num 
 =========
 useage::
 
@@ -102,4 +110,5 @@ useage::
 nums:
 	formate:['1','...','6_a','7','8','...','999']
 
-	This argment generate by python in backend.
+	由django pagenations 生成，再转换为number list.
+	
