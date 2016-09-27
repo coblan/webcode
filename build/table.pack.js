@@ -116,7 +116,7 @@
 	            this.$dispatch('sort-changed');
 	        }
 	    },
-	    template: '<div>\n\t\t<table class="table table-hover">\n\t\t\t<thead>\n\t\t\t\t<tr>\n\t\t\t\t\t<td style=\'width:50px\' v-if=\'has_check\'>\n\t\t\t\t\t\t<input type="checkbox" name="test" value=""/>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td v-for=\'head in heads\'>\n\t\t\t\t\t\t<span v-if=\'head.sortable\' v-text=\'head.label\' class=\'clickable\' @click=\'sort_col(head.name)\'></span>\n\t\t\t\t\t\t<span v-else v-text=\'head.label\'></span>\n\t\t\t\t\t\t<span v-if=\'icatch=get_sort_pos(head.name),icatch!=-1\'>\n\t\t\t\t\t\t\t<span v-text=\'icatch\'></span>\n\t\t\t\t\t\t\t<span class="glyphicon glyphicon-chevron-up" v-if=\'in_sort(head.name)\'\n\t\t\t\t\t\t\t\tclass=\'clickable\' @click=\'sort_col("-"+head.name)\'></span>\n\t\t\t\t\t\t\t<span v-if=\'in_sort("-"+head.name)\' class="glyphicon  glyphicon-chevron-down"\n\t\t\t\t\t\t\t\tclass=\'clickable\' @click=\'sort_col(head.name)\'></span>\n\t\t\t\t\t\t\t<span v-if=\'in_sort(head.name)||in_sort("-"+head.name)\' class="glyphicon glyphicon-remove"\n\t\t\t\t\t\t\t\tclass=\'clickable\' @click=\'rm_sort(head.name)\'></span>\n\t\t\t\t\t\t</span>\n\t\t\t\t\t</td>\n\t\t\t\t</tr>\n\t\t\t</thead>\n\t\t\t<tbody>\n\t\t\t\t<tr v-for=\'row in rows\'>\n\t\t\t\t\t<td v-if=\'has_check\'><input type="checkbox" name="test" value="" /></td>\n\t\t\t\t\t<td v-for=\'head in heads\'>\n\t\t\t\t\t\t<component v-if=\'icatch = map(head.name,row),icatch.com\' :is=\'icatch.com\' :kw=\'icatch.kw\'></component>\n\t\t\t\t\t\t<span v-else v-html=\'icatch\'></span>\n\t\t\t\t\t</td>\n\t\t\t\t</tr>\n\t\t\t</tbody>\n\t\t</table>\n\t</div>'
+	    template: '<div>\n\t\t<table class="table table-hover">\n\t\t\t<thead>\n\t\t\t\t<tr>\n\t\t\t\t\t<td style=\'width:50px\' v-if=\'has_check\'>\n\t\t\t\t\t\t<input type="checkbox" name="test" value=""/>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td v-for=\'head in heads\' :class=\'"td_"+head.name\'>\n\t\t\t\t\t\t<span v-if=\'head.sortable\' v-text=\'head.label\' class=\'clickable\' @click=\'sort_col(head.name)\'></span>\n\t\t\t\t\t\t<span v-else v-text=\'head.label\'></span>\n\t\t\t\t\t\t<span v-if=\'icatch=get_sort_pos(head.name),icatch!=-1\'>\n\t\t\t\t\t\t\t<span v-text=\'icatch\'></span>\n\t\t\t\t\t\t\t<span class="glyphicon glyphicon-chevron-up" v-if=\'in_sort(head.name)\'\n\t\t\t\t\t\t\t\tclass=\'clickable\' @click=\'sort_col("-"+head.name)\'></span>\n\t\t\t\t\t\t\t<span v-if=\'in_sort("-"+head.name)\' class="glyphicon  glyphicon-chevron-down"\n\t\t\t\t\t\t\t\tclass=\'clickable\' @click=\'sort_col(head.name)\'></span>\n\t\t\t\t\t\t\t<span v-if=\'in_sort(head.name)||in_sort("-"+head.name)\' class="glyphicon glyphicon-remove"\n\t\t\t\t\t\t\t\tclass=\'clickable\' @click=\'rm_sort(head.name)\'></span>\n\t\t\t\t\t\t</span>\n\t\t\t\t\t</td>\n\t\t\t\t</tr>\n\t\t\t</thead>\n\t\t\t<tbody>\n\t\t\t\t<tr v-for=\'row in rows\'>\n\t\t\t\t\t<td v-if=\'has_check\'><input type="checkbox" name="test" value="" /></td>\n\t\t\t\t\t<td v-for=\'head in heads\' :class=\'"td_"+head.name\'>\n\t\t\t\t\t\t<component v-if=\'icatch = map(head.name,row),icatch.com\' :is=\'icatch.com\' :kw=\'icatch.kw\'></component>\n\t\t\t\t\t\t<span v-else v-html=\'icatch\'></span>\n\t\t\t\t\t</td>\n\t\t\t\t</tr>\n\t\t\t</tbody>\n\t\t</table>\n\t</div>'
 	});
 
 	/*
@@ -140,7 +140,7 @@
 	            }
 	        }
 	    },
-	    template: '\n    <ul class="pagination page-num">\n\n    <li v-for=\'num in nums\' track-by="$index" :class=\'{"clickable": !isNaN(parseInt(num)),"active":num.endsWith("a")}\' @click=\'goto_page(num)\'>\n    <span v-text=\'!isNaN(parseInt(num))? parseInt(num):num\' ></span>\n    </li>\n\n    </ul>\n    '
+	    template: '\n    <ul class="pagination page-num">\n\n    <li v-for=\'num in nums\' track-by="$index" :class=\'{"clickable": !isNaN(parseInt(num))}\' @click=\'goto_page(num)\'>\n    <span v-text=\'!isNaN(parseInt(num))? parseInt(num):num\' :class=\'{"active":num.endsWith("a")}\'></span>\n    </li>\n\n    </ul>\n    '
 	});
 
 	var build_table_args = {
@@ -186,6 +186,8 @@
 	        }
 	    }
 	};
+
+	document.write('\n<style type="text/css" media="screen" id="test">\nul.pagination li {display: inline;cursor: pointer}\n\nul.pagination li span {\n    color: black;\n    float: left;\n    padding: 8px 16px;\n    text-decoration: none;\n    border: 1px solid #ddd;\n}\n\nul.pagination li span.active {\n    background-color: #4CAF50;\n    color: white;\n}\n\nul.pagination li span:hover:not(.active) {background-color: #ddd;}\n</style>\n');
 
 	window.build_table_args = build_table_args;
 

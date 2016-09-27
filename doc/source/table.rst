@@ -22,14 +22,14 @@ FrontEnd
 	q='{{q | safe |default:""}}'
 	sort={{sort | safe }}
 	heads={{ heads | safe }}
-	pages={{ pages | safe }}
+	rows={{ rows | safe }}
 	page_nums = {{ page_nums | safe}}
 
 * put those variable into Vue data section,and add **build_table_args** to manage url argments::
 
 	data:{
 		heads:heads,
-		pages:pages,
+		rows:rows,
 		crt_page:{},
 		filters:filters,
 		sort:sort,
@@ -54,7 +54,7 @@ FrontEnd
 		<option  v-for='option in filter.options' :value="option.name" v-text='option.label'></option>
 	</select>
 	<button name="test" type="button" value="val" @click='search()'>search</button>
-	<sort-table :heads='heads' :rows='pages' :map='map' :sort='sort'></sort-table>
+	<sort-table :heads='heads' :rows='rows' :map='map' :sort='sort'></sort-table>
 
 
 table

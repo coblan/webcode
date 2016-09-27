@@ -77,7 +77,7 @@ Vue.component('sort-table',{
 					<td style='width:50px' v-if='has_check'>
 						<input type="checkbox" name="test" value=""/>
 					</td>
-					<td v-for='head in heads'>
+					<td v-for='head in heads' :class='"td_"+head.name'>
 						<span v-if='head.sortable' v-text='head.label' class='clickable' @click='sort_col(head.name)'></span>
 						<span v-else v-text='head.label'></span>
 						<span v-if='icatch=get_sort_pos(head.name),icatch!=-1'>
@@ -95,7 +95,7 @@ Vue.component('sort-table',{
 			<tbody>
 				<tr v-for='row in rows'>
 					<td v-if='has_check'><input type="checkbox" name="test" value="" /></td>
-					<td v-for='head in heads'>
+					<td v-for='head in heads' :class='"td_"+head.name'>
 						<component v-if='icatch = map(head.name,row),icatch.com' :is='icatch.com' :kw='icatch.kw'></component>
 						<span v-else v-html='icatch'></span>
 					</td>
@@ -129,8 +129,8 @@ Vue.component('paginator',{
     template:`
     <ul class="pagination page-num">
 
-    <li v-for='num in nums' track-by="$index" :class='{"clickable": !isNaN(parseInt(num)),"active":num.endsWith("a")}' @click='goto_page(num)'>
-    <span v-text='!isNaN(parseInt(num))? parseInt(num):num' ></span>
+    <li v-for='num in nums' track-by="$index" :class='{"clickable": !isNaN(parseInt(num))}' @click='goto_page(num)'>
+    <span v-text='!isNaN(parseInt(num))? parseInt(num):num' :class='{"active":num.endsWith("a")}'></span>
     </li>
 
     </ul>
@@ -180,6 +180,28 @@ var build_table_args = {
         }
     }
 }
+
+document.write(`
+<style type="text/css" media="screen" id="test">
+ul.pagination li {display: inline;cursor: pointer}
+
+ul.pagination li span {
+    color: black;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+    border: 1px solid #ddd;
+}
+
+ul.pagination li span.active {
+    background-color: #4CAF50;
+    color: white;
+}
+
+ul.pagination li span:hover:not(.active) {background-color: #ddd;}
+</style>
+`)
+
 
 window.build_table_args=build_table_args
 
