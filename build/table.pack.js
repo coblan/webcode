@@ -187,7 +187,7 @@
 	    }
 	};
 
-	document.write('\n<style type="text/css" media="screen" id="test">\nul.pagination li {display: inline;cursor: pointer}\n\nul.pagination li span {\n    color: black;\n    float: left;\n    padding: 8px 16px;\n    text-decoration: none;\n    border: 1px solid #ddd;\n}\n\nul.pagination li span.active {\n    background-color: #4CAF50;\n    color: white;\n}\n\nul.pagination li span:hover:not(.active) {background-color: #ddd;}\n</style>\n');
+	document.write('\n<style type="text/css" media="screen" id="test">\nul.pagination li {display: inline;cursor: pointer}\n\nul.pagination li span {\n    color: black;\n    float: left;\n    padding: 4px 10px;\n    text-decoration: none;\n    border: 1px solid #ddd;\n}\n\nul.pagination li span.active {\n    background-color: #4CAF50;\n    color: white;\n}\n\nul.pagination li span:hover:not(.active) {background-color: #ddd;}\n</style>\n');
 
 	window.build_table_args = build_table_args;
 

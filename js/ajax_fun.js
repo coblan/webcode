@@ -3,7 +3,29 @@
  */
 
 
+function def_proc_port_msg(data) {
+	var rt = data.responseJSON
+        if(rt && rt.msg){
+            alert(rt.msg)
+        }
+}
+
+function def_proc_error(jqxhr) {
+	if(! window.iclosed){
+			if(jqxhr.status !=0){
+				alert('server has error, error code is '+jqxhr.status)
+			}else{
+				alert('maybe server offline,error code is '+jqxhr.status)
+			}
+
+		}
+}
+
+window.proc_port_error=def_proc_port_msg
+window.proc_ajax_error=def_proc_error
+
 export function hook_ajax_msg(){
+
 	if(window.hook_ajax_msg_mark){
 		return
 	}
@@ -13,19 +35,9 @@ export function hook_ajax_msg(){
 	})
 	
     $(document).ajaxSuccess(function (event,data) {
-        var rt = data.responseJSON
-        if(rt && rt.msg){
-            alert(rt.msg)
-        }
+        window.proc_port_error(data)
     }).ajaxError(function (event,jqxhr, settings, thrownError) {
-		if(! window.iclosed){
-			if(jqxhr.status !=0){
-				alert('server has error, error code is '+jqxhr.status)
-			}else{
-				alert('maybe server offline,error code is '+jqxhr.status)
-			}
-
-		}
+		window.proc_ajax_error(jqxhr)
 	})
 	//hook_ajax_csrf()
 }
@@ -100,6 +112,11 @@ if(!window.__uploading_mark){
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
+        -ms-transform:translate(-50%, -50%); 	/* IE 9 */
+		-moz-transform:translate(-50%, -50%); 	/* Firefox */
+		-webkit-transform:translate(-50%, -50%); /* Safari ºÍ Chrome */
+		-o-transform:translate(-50%, -50%); 
+		
         text-align: center;
 		/*display: table;*/
         z-index: 1000;

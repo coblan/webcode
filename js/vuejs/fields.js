@@ -76,18 +76,19 @@ var field_base={
         kw:{
             required:true
         },
-        set:{
-            default:function(){
-                return {}
-            }
-        }
+        //set:{
+        //    default:function(){
+        //        return {}
+        //    }
+        //}
     },
     computed:{
         row:function(){return this.kw.row},
         errors:function() {return this.kw.errors},
         head:function(){
             var heads = this.kw.heads
-            for (var head  of heads) {
+            for (var x=0;x<heads.length;x++) {
+	            var head = heads[x]
                 if (head.name == this.name) {
                     return head
                 }
@@ -157,14 +158,14 @@ var field_base={
     }
 
 }
-
+//'set.label_cls'   set.input_cls
 Vue.component('field',{
     mixins:[field_base],
 	template:`
 	<div for='field' class="form-group field" :class='{"error":error_data(name)}'>
-	<label :for="'id_'+name" v-text="head.label" :class='set.label_cls'  control-label"><span class="req_star" v-if='head.required'> *</span>
+	<label :for="'id_'+name" v-text="head.label" class="control-label"><span class="req_star" v-if='head.required'> *</span>
 	</label>
-	<div :class="set.input_cls">
+	<div class="field_input">
         <component :is='head.type'
             :model.sync='row[name]'
             :name='name'
@@ -200,6 +201,7 @@ export function merge(mains,subs) {
 	}
 }
 
+window.hook_ajax_msg=hook_ajax_msg
 window.update_vue_obj=update_vue_obj
 window.use_color = use_color
 window.use_ckeditor= ck.use_ckeditor

@@ -188,7 +188,7 @@ ul.pagination li {display: inline;cursor: pointer}
 ul.pagination li span {
     color: black;
     float: left;
-    padding: 8px 16px;
+    padding: 4px 10px;
     text-decoration: none;
     border: 1px solid #ddd;
 }

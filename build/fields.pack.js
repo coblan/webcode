@@ -133,11 +133,6 @@
 	        },
 	        kw: {
 	            required: true
-	        },
-	        set: {
-	            default: function _default() {
-	                return {};
-	            }
 	        }
 	    },
 	    computed: {
@@ -149,30 +144,10 @@
 	        },
 	        head: function head() {
 	            var heads = this.kw.heads;
-	            var _iteratorNormalCompletion = true;
-	            var _didIteratorError = false;
-	            var _iteratorError = undefined;
-
-	            try {
-	                for (var _iterator = heads[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-	                    var head = _step.value;
-
-	                    if (head.name == this.name) {
-	                        return head;
-	                    }
-	                }
-	            } catch (err) {
-	                _didIteratorError = true;
-	                _iteratorError = err;
-	            } finally {
-	                try {
-	                    if (!_iteratorNormalCompletion && _iterator.return) {
-	                        _iterator.return();
-	                    }
-	                } finally {
-	                    if (_didIteratorError) {
-	                        throw _iteratorError;
-	                    }
+	            for (var x = 0; x < heads.length; x++) {
+	                var head = heads[x];
+	                if (head.name == this.name) {
+	                    return head;
 	                }
 	            }
 	        }
@@ -235,10 +210,10 @@
 	    }
 
 	};
-
+	//'set.label_cls'   set.input_cls
 	Vue.component('field', {
 	    mixins: [field_base],
-	    template: '\n\t<div for=\'field\' class="form-group field" :class=\'{"error":error_data(name)}\'>\n\t<label :for="\'id_\'+name" v-text="head.label" :class=\'set.label_cls\'  control-label"><span class="req_star" v-if=\'head.required\'> *</span>\n\t</label>\n\t<div :class="set.input_cls">\n        <component :is=\'head.type\'\n            :model.sync=\'row[name]\'\n            :name=\'name\'\n            :kw=\'head\'>\n        </component>\n\t</div>\n\t<slot> </slot>\n\t<div v-text=\'error_data(name)\' class=\'error\'></div>\n    </div>\n'
+	    template: '\n\t<div for=\'field\' class="form-group field" :class=\'{"error":error_data(name)}\'>\n\t<label :for="\'id_\'+name" v-text="head.label" class="control-label"><span class="req_star" v-if=\'head.required\'> *</span>\n\t</label>\n\t<div class="field_input">\n        <component :is=\'head.type\'\n            :model.sync=\'row[name]\'\n            :name=\'name\'\n            :kw=\'head\'>\n        </component>\n\t</div>\n\t<slot> </slot>\n\t<div v-text=\'error_data(name)\' class=\'error\'></div>\n    </div>\n'
 
 	});
 
@@ -252,20 +227,20 @@
 	}
 
 	function merge(mains, subs) {
-	    var _iteratorNormalCompletion2 = true;
-	    var _didIteratorError2 = false;
-	    var _iteratorError2 = undefined;
+	    var _iteratorNormalCompletion = true;
+	    var _didIteratorError = false;
+	    var _iteratorError = undefined;
 
 	    try {
-	        for (var _iterator2 = sub[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-	            var _sub = _step2.value;
-	            var _iteratorNormalCompletion3 = true;
-	            var _didIteratorError3 = false;
-	            var _iteratorError3 = undefined;
+	        for (var _iterator = sub[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	            var _sub = _step.value;
+	            var _iteratorNormalCompletion2 = true;
+	            var _didIteratorError2 = false;
+	            var _iteratorError2 = undefined;
 
 	            try {
-	                for (var _iterator3 = mains[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-	                    var main = _step3.value;
+	                for (var _iterator2 = mains[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+	                    var main = _step2.value;
 
 	                    if (main.name == _sub.name) {
 	                        for (var k in _sub) {
@@ -275,36 +250,37 @@
 	                    }
 	                }
 	            } catch (err) {
-	                _didIteratorError3 = true;
-	                _iteratorError3 = err;
+	                _didIteratorError2 = true;
+	                _iteratorError2 = err;
 	            } finally {
 	                try {
-	                    if (!_iteratorNormalCompletion3 && _iterator3.return) {
-	                        _iterator3.return();
+	                    if (!_iteratorNormalCompletion2 && _iterator2.return) {
+	                        _iterator2.return();
 	                    }
 	                } finally {
-	                    if (_didIteratorError3) {
-	                        throw _iteratorError3;
+	                    if (_didIteratorError2) {
+	                        throw _iteratorError2;
 	                    }
 	                }
 	            }
 	        }
 	    } catch (err) {
-	        _didIteratorError2 = true;
-	        _iteratorError2 = err;
+	        _didIteratorError = true;
+	        _iteratorError = err;
 	    } finally {
 	        try {
-	            if (!_iteratorNormalCompletion2 && _iterator2.return) {
-	                _iterator2.return();
+	            if (!_iteratorNormalCompletion && _iterator.return) {
+	                _iterator.return();
 	            }
 	        } finally {
-	            if (_didIteratorError2) {
-	                throw _iteratorError2;
+	            if (_didIteratorError) {
+	                throw _iteratorError;
 	            }
 	        }
 	    }
 	}
 
+	window.hook_ajax_msg = _ajax_fun.hook_ajax_msg;
 	window.update_vue_obj = update_vue_obj;
 	window.use_color = _color.use_color;
 	window.use_ckeditor = ck.use_ckeditor;
@@ -347,7 +323,28 @@
 	 * Created by zhangrong on 2016/8/6.
 	 */
 
+	function def_proc_port_msg(data) {
+		var rt = data.responseJSON;
+		if (rt && rt.msg) {
+			alert(rt.msg);
+		}
+	}
+
+	function def_proc_error(jqxhr) {
+		if (!window.iclosed) {
+			if (jqxhr.status != 0) {
+				alert('server has error, error code is ' + jqxhr.status);
+			} else {
+				alert('maybe server offline,error code is ' + jqxhr.status);
+			}
+		}
+	}
+
+	window.proc_port_error = def_proc_port_msg;
+	window.proc_ajax_error = def_proc_error;
+
 	function hook_ajax_msg() {
+
 		if (window.hook_ajax_msg_mark) {
 			return;
 		}
@@ -357,18 +354,9 @@
 		});
 
 		$(document).ajaxSuccess(function (event, data) {
-			var rt = data.responseJSON;
-			if (rt && rt.msg) {
-				alert(rt.msg);
-			}
+			window.proc_port_error(data);
 		}).ajaxError(function (event, jqxhr, settings, thrownError) {
-			if (!window.iclosed) {
-				if (jqxhr.status != 0) {
-					alert('server has error, error code is ' + jqxhr.status);
-				} else {
-					alert('maybe server offline,error code is ' + jqxhr.status);
-				}
-			}
+			window.proc_ajax_error(jqxhr);
 		});
 		//hook_ajax_csrf()
 	}
@@ -420,7 +408,7 @@
 
 	if (!window.__uploading_mark) {
 		window.__uploading_mark = true;
-		document.write('\n\t\t<style>\n\t\t.popup{\n\t\t\tposition: fixed;\n\t\t\ttop: 0;\n\t\t\tleft: 0;\n\t\t\tright: 0;\n\t\t\tbottom: 0;\n\t\t\tdisplay:none;\n\t\t}\n\t\t#_upload_inn{\n\t\t\tbackground: rgba(88, 88, 88, 0.2);\n\t\t\tborder-radius: 5px;\n\t\t\twidth:180px;\n\t\t\theight:120px;\n\t\t\t/*padding:30px 80px ;*/\n\t\t}\n\t\t.imiddle{\n\t    position: absolute;\n        top: 50%;\n        left: 50%;\n        transform: translate(-50%, -50%);\n        text-align: center;\n\t\t/*display: table;*/\n        z-index: 1000;\n    \t}\n    \t#_upload_mark{\n    \t\tfloat: left;\n\n    \t}\n\t\t</style>');
+		document.write('\n\t\t<style>\n\t\t.popup{\n\t\t\tposition: fixed;\n\t\t\ttop: 0;\n\t\t\tleft: 0;\n\t\t\tright: 0;\n\t\t\tbottom: 0;\n\t\t\tdisplay:none;\n\t\t}\n\t\t#_upload_inn{\n\t\t\tbackground: rgba(88, 88, 88, 0.2);\n\t\t\tborder-radius: 5px;\n\t\t\twidth:180px;\n\t\t\theight:120px;\n\t\t\t/*padding:30px 80px ;*/\n\t\t}\n\t\t.imiddle{\n\t    position: absolute;\n        top: 50%;\n        left: 50%;\n        transform: translate(-50%, -50%);\n        -ms-transform:translate(-50%, -50%); \t/* IE 9 */\n\t\t-moz-transform:translate(-50%, -50%); \t/* Firefox */\n\t\t-webkit-transform:translate(-50%, -50%); /* Safari �� Chrome */\n\t\t-o-transform:translate(-50%, -50%); \n\t\t\n        text-align: center;\n\t\t/*display: table;*/\n        z-index: 1000;\n    \t}\n    \t#_upload_mark{\n    \t\tfloat: left;\n\n    \t}\n\t\t</style>');
 		$(function () {
 			$('body').append('<div class="popup" id="load_wrap"><div id=\'_upload_inn\' class="imiddle">\n\t\t<div  id="_upload_mark" class="imiddle"><i class="fa fa-spinner fa-spin fa-3x"></i></div></div></div>');
 		});
@@ -466,7 +454,7 @@
 
 	            reader.readAsDataURL(this.file); // 读出 base64
 	        },
-	        upload: function upload(up_url, _success) {
+	        upload: function upload(up_url, _success, _error) {
 	            var self = this;
 	            $.ajax({
 	                url: up_url,
@@ -474,13 +462,13 @@
 	                data: this.fd,
 	                contentType: false,
 	                cache: false,
-	                success: function success(data) {
-	                    _success(data);
+	                success: function success(data, textStatus, jqXHR) {
+	                    _success(data, textStatus, jqXHR);
 	                    //self.$dispatch('response',data)
 	                },
-	                //error:function (data) {
-	                //	alert(data.responseText)
-	                //},
+	                error: function error(jqXHR, textStatus, errorThrown) {
+	                    _error(jqXHR, textStatus, errorThrown);
+	                },
 	                processData: false
 	            });
 	        }

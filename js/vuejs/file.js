@@ -34,7 +34,7 @@ Vue.component('file-input',{
 
 		    reader.readAsDataURL(this.file); // 读出 base64
         },
-        upload:function (up_url,success) {
+        upload:function (up_url,success,error) {
             var self =this;
             $.ajax({
                 url:up_url,
@@ -42,14 +42,14 @@ Vue.component('file-input',{
                 data:this.fd,
                 contentType: false,
                 cache: false,
-                success:function (data) {
-	                success(data)
+                success:function (data,textStatus,jqXHR ) {
+	                success(data,textStatus,jqXHR)
                     //self.$dispatch('response',data)
                     
                 },
-                //error:function (data) {
-                //	alert(data.responseText)
-                //},
+                error:function (jqXHR, textStatus,errorThrown) {
+                	error(jqXHR, textStatus,errorThrown)
+                },
                 processData:false
             })
         }
