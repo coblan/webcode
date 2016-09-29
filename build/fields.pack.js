@@ -63,8 +63,13 @@
 
 	var ck = _interopRequireWildcard(_ckeditor);
 
+	var _multi_sel = __webpack_require__(5);
+
+	var multi = _interopRequireWildcard(_multi_sel);
+
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
+	(0, _ajax_fun.hook_ajax_msg)();
 	/*
 	基本内容
 	==============
@@ -108,7 +113,6 @@
 	})
 	*/
 
-	(0, _ajax_fun.hook_ajax_msg)();
 	(0, _ajax_fun.hook_ajax_csrf)();
 
 	function is_valid(form_fun_rt, errors_obj, callback) {
@@ -206,6 +210,10 @@
 	        sim_select: {
 	            props: ['name', 'model', 'kw'],
 	            template: '<select v-model=\'model\'  :id="\'id_\'+name">\n            \t<option :value=\'null\'>----</option>\n            \t<option v-for=\'opt in kw.options\' :value=\'opt.pk\' v-text=\'opt.label\'></option>\n            </select>'
+	        },
+	        tow_col: {
+	            props: ['name', 'model', 'kw'],
+	            template: '<tow-col-sel :selected.sync=\'model\' :id="\'id_\'+name" :choices=\'kw.options\' :size=\'kw.size\'></tow-col-sel>'
 	        }
 	    }
 
@@ -340,11 +348,16 @@
 		}
 	}
 
-	window.proc_port_error = def_proc_port_msg;
-	window.proc_ajax_error = def_proc_error;
+	window.__proc_port_error = def_proc_port_msg;
+	window.__proc_ajax_error = def_proc_error;
 
-	function hook_ajax_msg() {
-
+	function hook_ajax_msg(proc_port_error, proc_ajax_error) {
+		if (proc_port_error) {
+			window.__proc_port_error = proc_port_error;
+		}
+		if (proc_ajax_error) {
+			window.__proc_ajax_error = proc_ajax_error;
+		}
 		if (window.hook_ajax_msg_mark) {
 			return;
 		}
@@ -354,9 +367,9 @@
 		});
 
 		$(document).ajaxSuccess(function (event, data) {
-			window.proc_port_error(data);
+			window.__proc_port_error(data);
 		}).ajaxError(function (event, jqxhr, settings, thrownError) {
-			window.proc_ajax_error(jqxhr);
+			window.__proc_ajax_error(jqxhr);
 		});
 		//hook_ajax_csrf()
 	}
@@ -591,6 +604,94 @@
 		events: {
 			'sync_data': function sync_data() {
 				this.model = this.editor.getData();
+			}
+		}
+	});
+
+/***/ },
+/* 5 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	if (!window.__multi_sel) {
+		document.write('\n\t\n<style type="text/css" media="screen" id="test">\n._tow-col-sel .sel{\n\twidth:250px;\n\tdisplay: inline-block;\n\tvertical-align: middle;\n}\n._tow-col-sel .sel.right{\n\tborder-width:2px;\n}\n._tow-col-sel ._small_icon{\n\twidth:15px;\n}\n._tow-col-sel ._small_icon.deactive{\n\topacity: 0.5;\n\t-moz-opacity: 0.5;\n\tfilter:alpha(opacity=50);\n}\n</style>\n\n\t');
+	}
+
+	var temp_tow_col_sel = '\n<div class=\'_tow-col-sel\'>\n\t\t<select name="" id="" multiple="multiple" :size="size" class=\'sel left\' v-model=\'left_sel\'>\n\t\t\t<option v-for=\'opt in choices |orderBy "label"\' :value="opt.value" v-text=\'opt.label\' @dblclick=\'add(opt)\' ></option>\n\t\t</select>\n\t\t<div style=\'display: inline-block;vertical-align: middle;\'>\n\t\t\t<img src="http://oe8wu3kqs.bkt.clouddn.com/image/right_02.png" alt="" \n\t\t\t\t:class=\'["_small_icon",{"deactive":left_sel.length==0}]\' @click=\'batch_add()\'>\n\t\t\t<br>\n\t\t\t<img src="http://oe8wu3kqs.bkt.clouddn.com/image/left_02.png" alt="" \n\t\t\t\t:class=\'["_small_icon",{"deactive":right_sel.length==0}]\' @click=\'batch_rm()\'>\n\t\t</div>\n\t\t\n\t\t<select name="" id="" multiple="multiple" :size="size" class=\'sel right\' v-model=\'right_sel\'>\n\t\t\t<option v-for=\'opt in selected__ |orderBy "label"\' :value="opt.value" v-text=\'opt.label\' @dblclick=\'rm(opt)\'></option>\n\t\t</select>\n</div>\n';
+
+	Vue.component('tow-col-sel', {
+		template: temp_tow_col_sel,
+		props: {
+			choices: {},
+			selected: {
+				twoWay: true
+			},
+			size: {
+				default: 6
+			}
+		},
+		data: function data() {
+			return {
+				selected__: [],
+				left_sel: [],
+				right_sel: []
+			};
+		},
+		compiled: function compiled() {
+			for (var x = 0; x < this.selected.length; x++) {
+				for (var y = 0; y < this.choices.length; y++) {
+					if (this.choices[y].value == this.selected[x]) {
+						this.selected__.push(this.choices[y]);
+						this.choices.splice(y, 1);
+						break;
+					}
+				}
+			}
+		},
+		methods: {
+			add: function add(opt) {
+				this.selected__.push(opt);
+				this.selected.push(opt.value);
+				var index = this.choices.indexOf(opt);
+				if (index != -1) {
+					this.choices.splice(index, 1);
+				}
+				this.left_sel = [];
+			},
+			rm: function rm(opt) {
+				var index = this.selected__.indexOf(opt);
+				if (index != -1) {
+					this.selected__.splice(index, 1);
+				}
+				var index_2 = this.selected.indexOf(opt.value);
+				if (index_2 != -1) {
+					this.selected.splice(index_2, 1);
+				}
+				this.choices.push(opt);
+				this.right_sel = [];
+			},
+			batch_add: function batch_add() {
+				var tmp_ls = this.left_sel;
+				for (var x = 0; x < tmp_ls.length; x++) {
+					for (var y = 0; y < this.choices.length; y++) {
+						if (this.choices[y].value == tmp_ls[x]) {
+							this.add(this.choices[y]);
+							break;
+						}
+					}
+				}
+			},
+			batch_rm: function batch_rm() {
+				var tmp_ls = this.right_sel;
+				for (var x = 0; x < tmp_ls.length; x++) {
+					for (var y = 0; y < this.selected__.length; y++) {
+						if (this.selected__[y].value == tmp_ls[x]) {
+							this.rm(this.selected__[y]);
+							break;
+						}
+					}
+				}
 			}
 		}
 	});

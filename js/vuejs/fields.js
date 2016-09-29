@@ -49,6 +49,7 @@ import {use_color} from '../dosome/color.js'
 import {hook_ajax_msg,hook_ajax_csrf,show_upload,hide_upload} from '../ajax_fun.js'
 import * as f from './file.js'
 import * as ck from './ckeditor.js'
+import * as multi from './multi_sel.js'
 
 hook_ajax_msg()
 hook_ajax_csrf()
@@ -154,6 +155,10 @@ var field_base={
             	<option :value='null'>----</option>
             	<option v-for='opt in kw.options' :value='opt.pk' v-text='opt.label'></option>
             </select>`
+        },
+        tow_col:{
+	        props:['name','model','kw'],
+	        template:`<tow-col-sel :selected.sync='model' :id="'id_'+name" :choices='kw.options' :size='kw.size'></tow-col-sel>`
         }
     }
 

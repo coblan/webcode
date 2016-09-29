@@ -21,13 +21,16 @@
 					password:'',
 					pas2:'',
 					hh:'',
+					jjyy:['2'],
 				},
 				heads:[
 					{name:'username',label:'用户名',type:'text',required:true,autofocus:true},
 					{name:'password',label:'mima',type:'text',required:true,autofocus:true},
 					{name:'hh',label:'ss',type:'color',},
 					{name:'hjk',label:'ff',type:'logo',up_url:"jj"},
-					{name:'hjkK',label:'fSSf',type:'logo',up_url:"jj"}
+					{name:'hjkK',label:'fSSf',type:'logo',up_url:"jj"},
+					{name:'jjyy',label:'fufu',type:'tow_col',options:[{value:'1',label:'xxx'},{value:'2',label:'bbb'}]}
+					
 				]
 			}
 //			sub=[{name:'username',type:'area'}]
@@ -64,7 +67,7 @@
 			<field name="hh" :kw="meta"></field>
 			<field name="hjk" :kw="meta"></field>
 			<field name="hjkK" :kw="meta"></field>
-
+			<field name='jjyy' :kw='meta'></field>
 			<!--<logo-input up_url="jj"></logo-input>-->
 			<button class="btn" @click="show_upload()">show upload</button>
         </div>

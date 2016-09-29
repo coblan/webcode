@@ -21,11 +21,12 @@ function def_proc_error(jqxhr) {
 		}
 }
 
-window.proc_port_error=def_proc_port_msg
-window.proc_ajax_error=def_proc_error
+window.__proc_port_error=def_proc_port_msg
+window.__proc_ajax_error=def_proc_error
 
-export function hook_ajax_msg(){
-
+export function hook_ajax_msg(proc_port_error,proc_ajax_error){
+	if(proc_port_error){window.__proc_port_error=proc_port_error}
+	if(proc_ajax_error){window.__proc_ajax_error=proc_ajax_error}
 	if(window.hook_ajax_msg_mark){
 		return
 	}
@@ -35,9 +36,9 @@ export function hook_ajax_msg(){
 	})
 	
     $(document).ajaxSuccess(function (event,data) {
-        window.proc_port_error(data)
+        window.__proc_port_error(data)
     }).ajaxError(function (event,jqxhr, settings, thrownError) {
-		window.proc_ajax_error(jqxhr)
+		window.__proc_ajax_error(jqxhr)
 	})
 	//hook_ajax_csrf()
 }
