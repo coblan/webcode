@@ -1,4 +1,4 @@
-
+# encoding:utf-8
 from django.shortcuts import render,Http404
 from tabel import ModelTable
 from fields import ModelFields
@@ -19,8 +19,12 @@ def get_url(name):
 class Render(object):
     def __init__(self,request,url,table_temp,fields_temp):
         """
+        url:
+        -----
         name/
         name/edit/1
+        
+        @name: rigist name of model.
         """
         self.request=request
         self.url=url

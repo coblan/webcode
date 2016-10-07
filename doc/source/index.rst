@@ -12,6 +12,7 @@ Contents:
 
 .. toctree::
    :maxdepth: 2
+   :numbered: 2
 
    introduce
    python_code
