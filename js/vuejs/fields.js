@@ -45,7 +45,8 @@ $.post('',JSON.stringify(post_data),function (data) {
 })
 */
 
-import {use_color} from '../dosome/color.js'
+//import {use_color} from '../dosome/color.js'
+import {load_js,load_css} from '../dosome/pkg.js'
 import {hook_ajax_msg,hook_ajax_csrf,show_upload,hide_upload} from '../ajax_fun.js'
 import * as f from './file.js'
 import * as ck from './ckeditor.js'
@@ -142,7 +143,13 @@ var field_base={
                 }
             },
             compiled:function(){
-                this.sync_to_spec()
+	            var self=this;
+	            load_css('http://cdn.bootcss.com/spectrum/1.8.0/spectrum.min.css')
+	            load_js('http://cdn.bootcss.com/spectrum/1.8.0/spectrum.min.js',function () {
+	            	self.sync_to_spec()
+	            })
+                
+                
             },
         },
         logo:{
@@ -208,7 +215,7 @@ export function merge(mains,subs) {
 
 window.hook_ajax_msg=hook_ajax_msg
 window.update_vue_obj=update_vue_obj
-window.use_color = use_color
+//window.use_color = use_color
 window.use_ckeditor= ck.use_ckeditor
 window.show_upload =show_upload
 window.hide_upload =hide_upload

@@ -1,4 +1,7 @@
 
+
+//import {load_js} from '../pkg.js'
+
 export function use_color(){
     if (!window._color){
         window._color=true

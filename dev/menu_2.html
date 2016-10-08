@@ -1,0 +1,168 @@
+<!doctype html>
+<html>
+    <meta charset="utf-8">
+        <title>Deposits and Withdrawals</title>
+        <script type="text/javascript" src='http://apps.bdimg.com/libs/jquery/1.9.1/jquery.min.js'></script>
+        <script src="http://cdn.bootcss.com/vue/1.0.24/vue.js"></script>
+		<script src="http://cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+		<link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
+		<link href="http://cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+		<script src="../build/uis.pack.js"></script>
+
+        <script type="text/javascript">
+			Vue.config.devtools = true
+
+		menu=[{name:'aaa',label:'aaa',icon:'<i class="fa fa-blind" aria-hidden="true"></i>',url:'xxx',selected:true,
+				submenu:[
+						{name:'saaa',label:'saaa',url:'xxx',active:true},
+						{name:'sbbb',label:'sbbb',url:'xxx'}]
+					},
+			{name:'bbb',label:'bbb',icon:'<i class="fa fa-blind" aria-hidden="true"></i>',url:'xxx',
+				submenu:[
+						{name:'saaa',label:'saaa',url:'xxx',},
+						{name:'sbbb',label:'sbbb',url:'xxx'}]
+					},
+			{name:'ccc',label:'ccc',icon:'<i class="fa fa-blind" aria-hidden="true"></i>',url:'cc',
+				submenu:[
+						{name:'caaa',label:'caaa',url:'xxx',},
+						{name:'cbbb',label:'cbbb',url:'xxx'}]
+					}]
+		$(function () {
+
+			new Vue({
+	        	el:'#hello',
+	        	data:{
+		        	menu:menu
+	        	},
+				methods:{
+					
+				}
+        	})
+
+
+//			$("#custom").spectrum({
+//				color: "#f00"
+//			});
+
+		})
+
+        
+        </script>
+    </head>
+    <body>
+	    <div id='hello'>
+		    <expand_menu :menu='menu'></expand_menu>
+	    </div>
+		
+	<!--<script type="text/javascript">
+		Vue.component('expand_menu',{
+			template:'#_expand_menu_temp',
+			props:['menu'],
+			data:function () {
+				return {
+					opened_submenu:''
+				}
+			}
+		})
+		Vue.transition('expand', {
+		  beforeEnter: function (el) {
+		    $(el).slideDown(300)
+		  },
+	
+		  leave: function (el) {
+		    $(el).slideUp(300)
+		  },
+	
+		})
+	</script>-->
+	<template id='_expand_menu_temp'>
+		<div class='_expand_menu'>
+			<ul>
+				<li v-for='act in menu'>
+					<div :class='["menu_item",{"selected":act.selected,"opened_submenu":opened_submenu==act.submenu}]' 
+						@click='opened_submenu==act.submenu?opened_submenu="":opened_submenu=act.submenu'>
+						<span v-html='act.icon' class='_icon'></span><span v-text='act.label'></span>
+						<span class='left-arrow' v-if='act.selected'></span>
+					</div>
+					
+					<ul class='submenu' v-show='opened_submenu==act.submenu ||act.selected' transition="expand">
+						<li v-for='sub_act in act.submenu' :class='{"active":sub_act.active}'>
+							<div>
+								<span v-text='sub_act.label'></span>
+							</div>
+							
+						</li>
+					</ul>
+				</li>
+			</ul>
+		</div>
+	</template>
+    </body>
+
+   <style type="text/css" media="screen" id="test">
+	._expand_menu{
+		background-color: #364150;
+		color: #8f97a3;
+		width:200px;
+		
+	}
+	._expand_menu ul{
+		padding: 0px;
+	}
+	._expand_menu ._icon{
+		/*display: inline-block;*/
+		padding: 0px 10px;
+	}
+	._expand_menu li{
+		list-style-type:none;
+		cursor: pointer;
+		position: relative;
+		padding: 0px;
+	}
+	._expand_menu ul.submenu li{
+		padding: 5px 0px;
+	}
+	._expand_menu .menu_item{
+		border-top:1px solid #475563;
+		padding: 5px 0px;
+	}
+	._expand_menu .opened_submenu{
+		background-color: #2C3542;
+	}
+	._expand_menu ul.submenu{
+		padding:0px;
+	}
+	
+	._expand_menu ul.submenu li{
+		padding-left: 20px;
+		color: #B4BCC8;
+	}
+
+	._expand_menu .menu_item:hover{
+		background-color: #2C3542;
+		color: #A7BCAE;
+	}
+	._expand_menu ul.submenu li:hover , ._expand_menu .submenu .active{
+		background-color: #3E4B5C;
+	}
+	._expand_menu .menu_item.selected{
+		background-color: #1CAF9A;
+		color: white;
+	}
+   	._expand_menu .left-arrow{
+	   	position: absolute;
+	   	right:0px;
+	   	border-top:12px solid transparent;
+	   	border-bottom:12px solid transparent;
+	   	border-right: 12px solid white;
+   	}
+   	.expand-transition {
+		  transition: max-height .3s ease;
+		
+	}
+	/*.expand-enter, .expand-leave {
+		  max-height: 0;
+		}*/
+   </style>
+</html>
