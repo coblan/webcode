@@ -1,3 +1,4 @@
+
 ======
 table
 ======
@@ -22,6 +23,27 @@ Example
 BackEnd
 --------
 
+建议在admin.py文件中设置与model相关的Table::
+
+	class PageTable(ModelTable):
+	    model = MobilePage
+	    sortable=['name','label']
+	    filters = ['name','label']
+	    include= ['name','label']
+	    search_fields=['name']
+	    per_page=2
+
+Must field:
+    model,include
+
+optional:
+	sortable: 用于排序，排序按钮显示在table head处
+	filter: used to filter ,
+	per_page: defaut is 30
+
+
+.. _table-front:
+
 FrontEnd
 ---------
 * recieve data from django::
@@ -33,7 +55,7 @@ FrontEnd
 	rows={{ rows | safe }}
 	page_nums = {{ page_nums | safe}}
 
-* put those variable into Vue data section,and add **build_table_args** to manage url argments::
+* put those variable into Vue data section,and add **build_table_args** MIXIN to manage url argments::
 
 	data:{
 		heads:heads,
