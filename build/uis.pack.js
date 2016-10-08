@@ -50,11 +50,47 @@
 
 	Vue.component('expand_menu', {
 		template: template_str,
-		props: ['menu'],
-		data: function data() {
-			return {
-				opened_submenu: ''
-			};
+		props: {
+			menu: {
+				coerce: function coerce(val) {
+					var path = location.pathname;
+
+					var matched = { url: '' };
+					var matched_menu = { url: '' };
+					var matched_submenu = { url: '' };
+
+					for (var x = 0; x < val.length; x++) {
+						var url = val[x].url;
+						if (path.startsWith(url) && url.length > matched.url.length) {
+							matched = val[x];
+							matched_menu = val[x];
+							matched_submenu = { url: '' };
+						}
+						var submenu = val[x].submenu || [];
+						for (var y = 0; y < submenu.length; y++) {
+							var url = submenu[y].url;
+							if (path.startsWith(url) && url.length >= matched.url.length) {
+								matched = submenu[y];
+								matched_menu = val[x];
+								matched_submenu = submenu[y];
+							}
+						}
+					}
+					if (matched_menu.url) {
+						matched_menu.selected = true;
+					}
+					if (matched_submenu) {
+						matched_submenu.active = true;
+					}
+					return val;
+				}
+			},
+			data: function data() {
+				return {
+					opened_submenu: ''
+				};
+			}
+
 		}
 	});
 	Vue.transition('expand', {
