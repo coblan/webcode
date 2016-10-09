@@ -4,17 +4,18 @@ var template_str=`
 <div class='_expand_menu'>
 	<ul>
 		<li v-for='act in menu'>
-			<div :class='["menu_item",{"selected":act.selected,"opened_submenu":opened_submenu==act.submenu}]' 
+			<a :class='["menu_item",{"selected":act.selected,"opened_submenu":opened_submenu==act.submenu}]' 
+				:href='act.url'
 				@click='opened_submenu==act.submenu?opened_submenu="":opened_submenu=act.submenu'>
 				<span v-html='act.icon' class='_icon'></span><span v-text='act.label'></span>
 				<span class='left-arrow' v-if='act.selected'></span>
-			</div>
+			</a>
 			
 			<ul class='submenu' v-show='opened_submenu==act.submenu ||act.selected' transition="expand">
 				<li v-for='sub_act in act.submenu' :class='{"active":sub_act.active}'>
-					<div>
+					<a :href='sub_act.url' class='sub_item'>
 						<span v-text='sub_act.label'></span>
-					</div>
+					</a>
 					
 				</li>
 			</ul>
@@ -85,9 +86,13 @@ document.write(`
  <style type="text/css" media="screen" id="test">
 	._expand_menu{
 		background-color: #364150;
-		color: #8f97a3;
 		width:200px;
-		
+	}
+	._expand_menu a{
+		color: #8f97a3;
+	}
+	._expand_menu a:hover{
+		text-decoration: none;
 	}
 	._expand_menu ul{
 		padding: 0px;
@@ -107,6 +112,10 @@ document.write(`
 	._expand_menu .menu_item{
 		border-top:1px solid #475563;
 		padding: 5px 0px;
+		display:block;
+	}
+	._expand_menu .sub_item{
+		display:block;
 	}
 	._expand_menu .opened_submenu{
 		background-color: #2C3542;
