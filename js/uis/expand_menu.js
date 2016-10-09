@@ -86,7 +86,6 @@ document.write(`
  <style type="text/css" media="screen" id="test">
 	._expand_menu{
 		background-color: #364150;
-		width:200px;
 	}
 	._expand_menu a{
 		color: #8f97a3;
