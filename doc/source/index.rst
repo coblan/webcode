@@ -20,6 +20,7 @@ Contents:
    table
    ajax_hook
    cus_admin
+   authuser
 
 
 
