@@ -133,4 +133,25 @@ nums:
 	formate:['1','...','6_a','7','8','...','999']
 
 	由django pagenations 生成，再转换为number list.
+
+
+custom
+=======
+only need custom some function::
+
+	class UserTable(ModelTable):
+	    model=User
+	    include=['username','first_name']
+	    
+	    def get_heads(self):
+	        heads = super(UserTable,self).get_heads()
+	        heads.extend([{'name':'age','label':'Age'}])
+	        return heads
+	    
+	    def get_rows(self):
+	        rows=super(UserTable,self).get_rows()
+	        for user_dc in rows:
+	            user = User.objects.get(pk=user_dc['pk'])
+	            user_dc['age']=user.basicinfo.age
+	        return rows
 	
