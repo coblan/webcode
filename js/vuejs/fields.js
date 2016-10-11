@@ -160,12 +160,20 @@ var field_base={
 	        props:['name','model','kw'],
             template:`<select v-model='model'  :id="'id_'+name">
             	<option :value='null'>----</option>
-            	<option v-for='opt in kw.options' :value='opt.pk' v-text='opt.label'></option>
+            	<option v-for='opt in kw.options' :value='opt.value' v-text='opt.label'></option>
             </select>`
         },
         tow_col:{
 	        props:['name','model','kw'],
 	        template:`<tow-col-sel :selected.sync='model' :id="'id_'+name" :choices='kw.options' :size='kw.size'></tow-col-sel>`
+        },
+        bool:{
+	        props:['name','model','kw'],
+	        template:`<div class="checkbox">
+					    <label><input type="checkbox" :id="'id_'+name" v-model='model'>
+					    	<span v-text='kw.label'></span>
+					    </label>
+					  </div>`
         }
     }
 
@@ -175,7 +183,8 @@ Vue.component('field',{
     mixins:[field_base],
 	template:`
 	<div for='field' class="form-group field" :class='{"error":error_data(name)}'>
-	<label :for="'id_'+name" v-text="head.label" class="control-label"><span class="req_star" v-if='head.required'> *</span>
+	<label :for="'id_'+name" v-text="head.label" class="control-label" v-if='!head.no_auto_label'>
+		<span class="req_star" v-if='head.required'> *</span>
 	</label>
 	<div class="field_input">
         <component :is='head.type'
