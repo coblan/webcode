@@ -8,6 +8,8 @@ Welcome to webcode's documentation!
 
 This library is major used for developing website with django and vuejs.
 
+从位置来分，可以分为前端，后端以及通信模块。此外，还有很多结合了前后端的功能，例如权限控制。
+
 Contents:
 
 .. toctree::
@@ -21,6 +23,7 @@ Contents:
    ajax_hook
    cus_admin
    authuser
+   permission
 
 
 
