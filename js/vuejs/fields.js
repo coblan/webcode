@@ -113,6 +113,11 @@ var field_base={
             template: `<input type="text" class="form-control" v-model="model" :id="'id_'+name"
                         :placeholder="kw.placeholder" :autofocus="kw.autofocus" :maxlength='kw.maxlength'>`
         },
+        number: {
+            props: ['name','model','kw'],
+            template: `<input type="number" class="form-control" v-model="model" :id="'id_'+name"
+                        :placeholder="kw.placeholder" :autofocus="kw.autofocus">`
+        },
         password: {
             props: ['name','model','kw'],
             template: `<input type="password" :id="'id_'+name" class="form-control" v-model="model" :placeholder="kw.placeholder">`
