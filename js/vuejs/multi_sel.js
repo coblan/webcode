@@ -26,7 +26,7 @@ if(!window.__multi_sel){
 var temp_tow_col_sel=`
 <div class='_tow-col-sel'>
 		<select name="" id="" multiple="multiple" :size="size" class='sel left' v-model='left_sel'>
-			<option v-for='opt in choices |orderBy "label"' :value="opt.value" v-text='opt.label' @dblclick='add(opt)' ></option>
+			<option v-for='opt in can_select |orderBy "label"' :value="opt.value" v-text='opt.label' @dblclick='add(opt)' ></option>
 		</select>
 		<div style='display: inline-block;vertical-align: middle;'>
 			<img src="http://oe8wu3kqs.bkt.clouddn.com/image/right_02.png" alt="" 
@@ -57,6 +57,7 @@ Vue.component('tow-col-sel',{
 	data:function () {
 		return {
 			selected__:[],
+			can_select:JSON.parse(JSON.stringify(this.choices)),
 			left_sel:[],
 			right_sel:[]
 		}
@@ -66,7 +67,7 @@ Vue.component('tow-col-sel',{
 			for(var y =0; y<this.choices.length;y++){
 				if(this.choices[y].value==this.selected[x]){
 					this.selected__.push(this.choices[y])
-					this.choices.splice(y,1)
+					this.can_select.splice(y,1)
 					break
 				}
 			}
@@ -77,9 +78,9 @@ Vue.component('tow-col-sel',{
 		add:function (opt) {
 			this.selected__.push(opt)
 			this.selected.push(opt.value)
-			var index = this.choices.indexOf(opt)
+			var index = this.can_select.indexOf(opt)
 			if(index!=-1){
-				this.choices.splice(index,1)
+				this.can_select.splice(index,1)
 			}
 			this.left_sel=[]
 		},
@@ -92,7 +93,7 @@ Vue.component('tow-col-sel',{
 			if(index_2!=-1){
 				this.selected.splice(index_2,1)
 			}
-			this.choices.push(opt)
+			this.can_select.push(opt)
 			this.right_sel=[]
 		},
 		batch_add:function () {
