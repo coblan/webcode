@@ -153,8 +153,6 @@ var field_base={
 	            load_js('http://cdn.bootcss.com/spectrum/1.8.0/spectrum.min.js',function () {
 	            	self.sync_to_spec()
 	            })
-                
-                
             },
         },
         logo:{

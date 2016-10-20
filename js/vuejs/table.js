@@ -27,8 +27,8 @@ Vue.component('sort-table',{
                 return []
             }
         },
-        has_check:{
-            default:false
+        selected:{
+            default:''
         },
         map:{
             default:function () {
@@ -74,7 +74,7 @@ Vue.component('sort-table',{
 		<table class="table table-hover">
 			<thead>
 				<tr>
-					<td style='width:50px' v-if='has_check'>
+					<td style='width:50px' v-if='selected'>
 						<input type="checkbox" name="test" value=""/>
 					</td>
 					<td v-for='head in heads' :class='"td_"+head.name'>
@@ -94,7 +94,7 @@ Vue.component('sort-table',{
 			</thead>
 			<tbody>
 				<tr v-for='row in rows'>
-					<td v-if='has_check'><input type="checkbox" name="test" value="" /></td>
+					<td v-if='selected'><input type="checkbox" name="test" :value="row.pk" v-model='selected'/></td>
 					<td v-for='head in heads' :class='"td_"+head.name'>
 						<component v-if='icatch = map(head.name,row),icatch.com' :is='icatch.com' :kw='icatch.kw'></component>
 						<span v-else v-html='icatch'></span>
