@@ -46,7 +46,7 @@
 
 	'use strict';
 
-	var template_str = '\n<div class=\'_expand_menu\'>\n\t<ul>\n\t\t<li v-for=\'act in menu\'>\n\t\t\t<a :class=\'["menu_item",{"selected":act.selected,"opened_submenu":opened_submenu==act.submenu}]\' \n\t\t\t\t:href=\'act.url\'\n\t\t\t\t@click=\'opened_submenu==act.submenu?opened_submenu="":opened_submenu=act.submenu\'>\n\t\t\t\t<span v-html=\'act.icon\' class=\'_icon\'></span><span v-text=\'act.label\'></span>\n\t\t\t\t<span class=\'left-arrow\' v-if=\'act.selected\'></span>\n\t\t\t</a>\n\t\t\t\n\t\t\t<ul class=\'submenu\' v-show=\'opened_submenu==act.submenu ||act.selected\' transition="expand">\n\t\t\t\t<li v-for=\'sub_act in act.submenu\' :class=\'{"active":sub_act.active}\'>\n\t\t\t\t\t<a :href=\'sub_act.url\' class=\'sub_item\'>\n\t\t\t\t\t\t<span v-text=\'sub_act.label\'></span>\n\t\t\t\t\t</a>\n\t\t\t\t\t\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t</li>\n\t</ul>\n</div>\n';
+	var template_str = '\n<div class=\'_expand_menu\'>\n\t<ul>\n\t\t<li v-for=\'act in menu\'>\n\t\t\t<a :class=\'["menu_item",{"selected":act.selected,"opened_submenu":opened_submenu==act.submenu}]\' \n\t\t\t\t:href=\'act.submenu?"javascript:void(0)":act.url\'\n\t\t\t\t@click=\'main_act_click(act)\'>\n\t\t\t\t<span v-html=\'act.icon\' class=\'_icon\'></span><span v-text=\'act.label\'></span>\n\t\t\t\t<span class=\'left-arrow\' v-if=\'act.selected\'></span>\n\t\t\t</a>\n\t\t\t\n\t\t\t<ul class=\'submenu\' v-show=\'opened_submenu==act.submenu ||act.selected\' transition="expand">\n\t\t\t\t<li v-for=\'sub_act in act.submenu\' :class=\'{"active":sub_act.active}\'>\n\t\t\t\t\t<a :href=\'sub_act.url\' class=\'sub_item\'>\n\t\t\t\t\t\t<span v-text=\'sub_act.label\'></span>\n\t\t\t\t\t</a>\n\t\t\t\t\t\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t</li>\n\t</ul>\n</div>\n';
 
 	Vue.component('expand_menu', {
 		template: template_str,
@@ -84,13 +84,22 @@
 					}
 					return val;
 				}
-			},
-			data: function data() {
-				return {
-					opened_submenu: ''
-				};
 			}
-
+		},
+		data: function data() {
+			return {
+				opened_submenu: ''
+			};
+		},
+		methods: {
+			main_act_click: function main_act_click(act) {
+				if (!act.submenu) return;
+				if (this.opened_submenu == act.submenu) {
+					this.opened_submenu = '';
+				} else {
+					this.opened_submenu = act.submenu;
+				}
+			}
 		}
 	});
 	Vue.transition('expand', {

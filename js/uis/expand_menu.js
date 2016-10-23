@@ -5,8 +5,8 @@ var template_str=`
 	<ul>
 		<li v-for='act in menu'>
 			<a :class='["menu_item",{"selected":act.selected,"opened_submenu":opened_submenu==act.submenu}]' 
-				:href='act.url'
-				@click='opened_submenu==act.submenu?opened_submenu="":opened_submenu=act.submenu'>
+				:href='act.submenu?"javascript:void(0)":act.url'
+				@click='main_act_click(act)'>
 				<span v-html='act.icon' class='_icon'></span><span v-text='act.label'></span>
 				<span class='left-arrow' v-if='act.selected'></span>
 			</a>
@@ -60,14 +60,23 @@ Vue.component('expand_menu',{
 							matched_submenu.active=true
 						}
 						return val
-				}
+					}
 				},
+			},
 			data:function () {
 				return {
 					opened_submenu:''
 				}
 			},
-		
+			methods:{
+				main_act_click:function (act) {
+					if(!act.submenu)return
+					if(this.opened_submenu==act.submenu){
+						this.opened_submenu=''
+					}else{
+						this.opened_submenu=act.submenu
+					}
+				}
 			}
 		})
 Vue.transition('expand', {
