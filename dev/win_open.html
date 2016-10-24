@@ -17,6 +17,9 @@
 			function say() {
 				alert(name)
 			}
+			function change() {
+				window.opener.name='zhuliye'   // 本地文件，涉及到跨域赋值，改行不能执行
+			}
 		$(window).bind('beforeunload',function () {
 		    window.opener.name='pig'
 		})
@@ -27,6 +30,7 @@
 		
     	<button name="test" type="button" value="val" onclick='win_open()'>sss</button>
     	<button name="test" type="button" value="val" onclick='say()'>new name</button>
+    	<button name="test" type="button" value="val" onclick='change()'>change parent</button>
     </body>
 </html>
 	

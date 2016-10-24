@@ -42,6 +42,22 @@
 /************************************************************************/
 /******/ ([
 /* 0 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _expand_menu = __webpack_require__(1);
+
+	var f = _interopRequireWildcard(_expand_menu);
+
+	var _modal = __webpack_require__(2);
+
+	var a = _interopRequireWildcard(_modal);
+
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+/***/ },
+/* 1 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -117,6 +133,26 @@
 		document.write('\n <style type="text/css" media="screen" id="test">\n\t._expand_menu{\n\t\tbackground-color: #364150;\n\t}\n\t._expand_menu a{\n\t\tcolor: #8f97a3;\n\t}\n\t._expand_menu a:hover{\n\t\ttext-decoration: none;\n\t}\n\t._expand_menu ul{\n\t\tpadding: 0px;\n\t}\n\t._expand_menu ._icon{\n\t\tpadding: 0px 10px;\n\t}\n\t._expand_menu li{\n\t\tlist-style-type:none;\n\t\tcursor: pointer;\n\t\tposition: relative;\n\t\tpadding: 0px;\n\t}\n\t._expand_menu ul.submenu li{\n\t\tpadding: 5px 0px;\n\t}\n\t._expand_menu .menu_item{\n\t\tborder-top:1px solid #475563;\n\t\tpadding: 5px 0px;\n\t\tdisplay:block;\n\t}\n\t._expand_menu .sub_item{\n\t\tdisplay:block;\n\t}\n\t._expand_menu .opened_submenu{\n\t\tbackground-color: #2C3542;\n\t}\n\t._expand_menu ul.submenu{\n\t\tpadding:0px;\n\t}\n\t\n\t._expand_menu ul.submenu li{\n\t\tpadding-left: 20px;\n\t\tcolor: #B4BCC8;\n\t}\n\n\t._expand_menu .menu_item:hover{\n\t\tbackground-color: #2C3542;\n\t\tcolor: #A7BCAE;\n\t}\n\t._expand_menu ul.submenu li:hover , ._expand_menu .submenu .active{\n\t\tbackground-color: #3E4B5C;\n\t}\n\t._expand_menu .menu_item.selected{\n\t\tbackground-color: #1CAF9A;\n\t\tcolor: white;\n\t}\n   \t._expand_menu .left-arrow{\n\t   \tposition: absolute;\n\t   \tright:0px;\n\t   \tborder-top:12px solid transparent;\n\t   \tborder-bottom:12px solid transparent;\n\t   \tborder-right: 12px solid white;\n   \t}\n   \t.expand-transition {\n\t\t  transition: max-height .3s ease;\n\t\t\n\t}\n   </style>\n');
 		window.__expand_menu = true;
 	}
+
+/***/ },
+/* 2 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	if (!window.__modal_mark) {
+		window.__modal_mark = true;
+		document.write('\n\t\t<style>\n\t\t._modal_popup{\n\t\t\tposition: fixed;\n\t\t\ttop: 0;\n\t\t\tleft: 0;\n\t\t\tright: 0;\n\t\t\tbottom: 0;\n\t\t\tbackground: rgba(0, 0, 0, 0.5);\n\t\t}\n\t\t._modal_inn{\n\t\t\t//background: rgba(88, 88, 88, 0.2);\n\t\t\tborder-radius: 5px;\n\t\t\tbackground:white;\n\t\t\toverflow:auto;\n\t\n\t\t\t/*padding:30px 80px ;*/\n\t\t}\n\t\t._modal_middle{\n\t\t    position: absolute;\n\t        top: 50%;\n\t        left: 50%;\n\t        transform: translate(-50%, -50%);\n\t        -ms-transform:translate(-50%, -50%); \t/* IE 9 */\n\t\t\t-moz-transform:translate(-50%, -50%); \t/* Firefox */\n\t\t\t-webkit-transform:translate(-50%, -50%); /* Safari 和 Chrome */\n\t\t\t-o-transform:translate(-50%, -50%); \n\t        text-align: center;\n\t        z-index: 1000;\n    \t}\n    \t#_upload_mark{\n    \t\tfloat: left;\n    \t}\n\t\t</style>');
+	}
+	Vue.component('modal', {
+		template: '<div class="_modal_popup" @click=\'hide_me()\'>\n\t\t\t<div class="_modal_middle _modal_inn" :style=\'inn_style\'>\n\t\t\t<slot></slot></div>\n\t\t\t</div>',
+		props: ['inn_style'],
+		methods: {
+			hide_me: function hide_me() {
+				this.$dispatch('sd_hide');
+			}
+		}
+	});
 
 /***/ }
 /******/ ]);

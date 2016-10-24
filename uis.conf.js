@@ -4,7 +4,7 @@ module.exports =
 {
     //context:__dirname,
     entry: {
-        uis: './js/uis/expand_menu.js',
+        uis: './js/uis/ui.js',
         //file:'./js/vuejs/file.js'
         },
     output: {
