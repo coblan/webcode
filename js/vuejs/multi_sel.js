@@ -25,7 +25,7 @@ if(!window.__multi_sel){
 
 var temp_tow_col_sel=`
 <div class='_tow-col-sel'>
-		<select name="" id="" multiple="multiple" :size="size" class='sel left' v-model='left_sel'>
+		<select name="" id="" multiple="multiple" :size="size" class='sel left' v-model='left_sel' >
 			<option v-for='opt in can_select |orderBy "label"' :value="opt.value" v-text='opt.label' @dblclick='add(opt)' ></option>
 		</select>
 		<div style='display: inline-block;vertical-align: middle;'>
@@ -36,7 +36,7 @@ var temp_tow_col_sel=`
 				:class='["_small_icon",{"deactive":right_sel.length==0}]' @click='batch_rm()'>
 		</div>
 		
-		<select name="" id="" multiple="multiple" :size="size" class='sel right' v-model='right_sel'>
+		<select name="" id="" multiple="multiple" :size="size" class='sel right' v-model='right_sel' >
 			<option v-for='opt in selected__ |orderBy "label"' :value="opt.value" v-text='opt.label' @dblclick='rm(opt)'></option>
 		</select>
 </div>
@@ -52,7 +52,7 @@ Vue.component('tow-col-sel',{
 		},
 		size:{
 			default:6
-		}
+		},
 	},
 	data:function () {
 		return {
