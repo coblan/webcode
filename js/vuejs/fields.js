@@ -34,7 +34,7 @@ field_base的参数都是采用的关键字参数，结构如下：
 
 
 /*
-*配合自家的jsonpost使用，效果最好
+*配合jsonpost使用，效果最好
 */
 
 /*
@@ -69,6 +69,7 @@ function is_valid(form_fun_rt,errors_obj,callback) {
 		}
 	}
 }
+
 
 var field_base={
     props: {
@@ -169,7 +170,78 @@ var field_base={
             template:`<select v-model='model'  :id="'id_'+name" :readonly='kw.readonly'>
             	<option :value='null'>----</option>
             	<option v-for='opt in kw.options' :value='opt.value' v-text='opt.label'></option>
-            </select>`
+            </select>`,
+            // 添加，修改，删除的按钮代码，暂时不用。
+            //`<div><select v-model='model'  :id="'id_'+name" :readonly='kw.readonly'>
+            //	<option :value='null'>----</option>
+            //	<option v-for='opt in kw.options' :value='opt.value' v-text='opt.label'></option>
+            //</select>
+            //<span v-if='kw.add_url' @click='add()'><img src='http://res.enjoyst.com/image/add.png' /></span>
+            //<span v-if='kw.change_url' @click='edit()'><img src='http://res.enjoyst.com/image/edit.png' /></span>
+            //<span v-if='kw.del_url' @click='del_row()'><img src='http://res.enjoyst.com/image/delete.png' /></a>
+            //</div>`,
+            methods:{
+	            add:function () {
+		            var self=this
+	            	window.open(this.kw.add_url+'edit/?_pop=1',location.pathname,'height=500,width=800,resizable=yes,scrollbars=yes,top=200,left=300')
+	            	window.on_subwin_close=function (row) {
+		            		var post_data=[{fun:'get_rows_info',rows:[row]}]
+				            $.post('',JSON.stringify(post_data),function (data) {
+				            	var rows = data.get_rows_info
+				            	for(var i =0;i<rows.length;i++){
+					            	var row=rows[i]
+					            	self.kw.options.push({value:row.pk,label:row.label})
+					            	self.model=row.pk
+					            	break
+				            	}
+				            })
+				            window.on_subwin_close=null
+			        }
+	            },
+	            edit:function () {
+		            if(this.model){
+			            var self=this
+			            window.open(this.kw.add_url+'edit/'+this.model+'?_pop=1',location.pathname,'height=500,width=800,resizable=yes,scrollbars=yes,top=200,left=300')
+			            window.on_subwin_close=function (row) {
+				            var post_data=[{fun:'get_rows_info',rows:[row]}]
+				            $.post('',JSON.stringify(post_data),function (data) {
+				            	var rows = data.get_rows_info
+				            	for(var i =0;i<rows.length;i++){
+					            	var row=rows[i]
+					            	for(var j=0;j<self.kw.options.length;j++){
+						            	var option=self.kw.options[j]
+						            	if(row.pk==option.value){
+							            	option.label=row.label
+						            	}
+					            	}
+				            	}
+				            })
+				            window.on_subwin_close=null
+			            }
+		            }
+	            },
+	            del_row:function () {
+		            if (this.model){
+			            var self=this
+			            var rows=[{pk:this.model,_class:this.kw._class}]
+			            window.open(this.kw.del_url+'?rows='+btoa(JSON.stringify(rows))+'&_pop=1',location.pathname,'height=500,width=800,resizable=yes,scrollbars=yes,top=200,left=300')
+			            window.on_subwin_close=function (rows) {
+				            for(var i=0;i<rows.length;i++){
+					            var row=rows[i]
+					            if(row._class==self.kw._class){
+						            for(var j=0;j<self.kw.options.length;j++){
+							            var option=self.kw.options[j]
+							            if(option.value==row.pk){
+								            self.kw.options.splice(j,1)
+							            }
+						            }
+					            }
+				            }
+				           	window.on_subwin_close=null
+			            }
+		            }
+	            }
+            }
         },
         tow_col:{
 	        props:['name','model','kw'],
