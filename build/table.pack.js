@@ -116,7 +116,7 @@
 	            this.$dispatch('sort-changed');
 	        }
 	    },
-	    template: '<div>\n\t\t<table class="table table-hover">\n\t\t\t<thead>\n\t\t\t\t<tr>\n\t\t\t\t\t<td style=\'width:50px\' v-if=\'selected\'>\n\t\t\t\t\t\t<input type="checkbox" name="test" value=""/>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td v-for=\'head in heads\' :class=\'"td_"+head.name\'>\n\t\t\t\t\t\t<span v-if=\'head.sortable\' v-text=\'head.label\' class=\'clickable\' @click=\'sort_col(head.name)\'></span>\n\t\t\t\t\t\t<span v-else v-text=\'head.label\'></span>\n\t\t\t\t\t\t<span v-if=\'icatch=get_sort_pos(head.name),icatch!=-1\'>\n\t\t\t\t\t\t\t<span v-text=\'icatch\'></span>\n\t\t\t\t\t\t\t<span class="glyphicon glyphicon-chevron-up" v-if=\'in_sort(head.name)\'\n\t\t\t\t\t\t\t\tclass=\'clickable\' @click=\'sort_col("-"+head.name)\'></span>\n\t\t\t\t\t\t\t<span v-if=\'in_sort("-"+head.name)\' class="glyphicon  glyphicon-chevron-down"\n\t\t\t\t\t\t\t\tclass=\'clickable\' @click=\'sort_col(head.name)\'></span>\n\t\t\t\t\t\t\t<span v-if=\'in_sort(head.name)||in_sort("-"+head.name)\' class="glyphicon glyphicon-remove"\n\t\t\t\t\t\t\t\tclass=\'clickable\' @click=\'rm_sort(head.name)\'></span>\n\t\t\t\t\t\t</span>\n\t\t\t\t\t</td>\n\t\t\t\t</tr>\n\t\t\t</thead>\n\t\t\t<tbody>\n\t\t\t\t<tr v-for=\'row in rows\'>\n\t\t\t\t\t<td v-if=\'selected\'><input type="checkbox" name="test" :value="row.pk" v-model=\'selected\'/></td>\n\t\t\t\t\t<td v-for=\'head in heads\' :class=\'"td_"+head.name\'>\n\t\t\t\t\t\t<component v-if=\'icatch = map(head.name,row),icatch.com\' :is=\'icatch.com\' :kw=\'icatch.kw\'></component>\n\t\t\t\t\t\t<span v-else v-html=\'icatch\'></span>\n\t\t\t\t\t</td>\n\t\t\t\t</tr>\n\t\t\t</tbody>\n\t\t</table>\n\t</div>'
+	    template: '<table>\n\t\t\t<thead>\n\t\t\t\t<tr>\n\t\t\t\t\t<td style=\'width:50px\' v-if=\'selected\'>\n\t\t\t\t\t\t<input type="checkbox" name="test" value=""/>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td v-for=\'head in heads\' :class=\'"td_"+head.name\'>\n\t\t\t\t\t\t<span v-if=\'head.sortable\' v-text=\'head.label\' class=\'clickable\' @click=\'sort_col(head.name)\'></span>\n\t\t\t\t\t\t<span v-else v-text=\'head.label\'></span>\n\t\t\t\t\t\t<span v-if=\'icatch=get_sort_pos(head.name),icatch!=-1\'>\n\t\t\t\t\t\t\t<span v-text=\'icatch\'></span>\n\t\t\t\t\t\t\t<span class="glyphicon glyphicon-chevron-up" v-if=\'in_sort(head.name)\'\n\t\t\t\t\t\t\t\tclass=\'clickable\' @click=\'sort_col("-"+head.name)\'></span>\n\t\t\t\t\t\t\t<span v-if=\'in_sort("-"+head.name)\' class="glyphicon  glyphicon-chevron-down"\n\t\t\t\t\t\t\t\tclass=\'clickable\' @click=\'sort_col(head.name)\'></span>\n\t\t\t\t\t\t\t<span v-if=\'in_sort(head.name)||in_sort("-"+head.name)\' class="glyphicon glyphicon-remove"\n\t\t\t\t\t\t\t\tclass=\'clickable\' @click=\'rm_sort(head.name)\'></span>\n\t\t\t\t\t\t</span>\n\t\t\t\t\t</td>\n\t\t\t\t</tr>\n\t\t\t</thead>\n\t\t\t<tbody>\n\t\t\t\t<tr v-for=\'row in rows\'>\n\t\t\t\t\t<td v-if=\'selected\'><input type="checkbox" name="test" :value="row.pk" v-model=\'selected\'/></td>\n\t\t\t\t\t<td v-for=\'head in heads\' :class=\'"td_"+head.name\'>\n\t\t\t\t\t\t<component v-if=\'icatch = map(head.name,row),icatch.com\' :is=\'icatch.com\' :kw=\'icatch.kw\'></component>\n\t\t\t\t\t\t<span v-else v-html=\'icatch\'></span>\n\t\t\t\t\t</td>\n\t\t\t\t</tr>\n\t\t\t</tbody>\n\t\t</table>'
 	});
 
 	/*
@@ -145,19 +145,22 @@
 
 	var build_table_args = {
 	    methods: {
-	        get_search_str: function get_search_str() {
-	            var search_str = '';
-
+	        get_filter_obj: function get_filter_obj() {
+	            //var search_str=''
+	            var filter_obj = {};
 	            for (var x = 0; x < this.filters.length; x++) {
 	                var filter = this.filters[x];
 	                if (filter.value) {
-	                    search_str += filter.name + '=' + filter.value + '&';
+	                    filter_obj[filter.name] = filter.value;
+	                    //search_str+= filter.name+'='+filter.value+'&'
 	                }
 	            }
 	            if (this.q) {
-	                search_str += '_q=' + this.q + '&';
+	                filter_obj['_q'] = this.q;
+	                //search_str+='_q='+this.q+'&'
 	            }
-	            return search_str;
+	            return filter_obj;
+	            //return search_str
 	        },
 	        get_sort_str: function get_sort_str() {
 	            var sort_str = '';
@@ -167,22 +170,28 @@
 	            return sort_str;
 	        },
 	        search: function search() {
-	            this.re_arg();
+	            this.refresh_arg();
 	        },
-	        re_arg: function re_arg() {
-	            var search_str = this.get_search_str();
+	        refresh_arg: function refresh_arg() {
+	            var filter_obj = this.get_filter_obj();
 	            var sort_str = this.get_sort_str();
-	            location.search = '_sort=' + sort_str + '&' + search_str;
+	            var search_obj = { '_sort': sort_str };
+	            update(search_obj, filter_obj);
+	            location.search = searchfy(search_obj);
+	            //location.search='_sort='+sort_str+'&'+search_str
 	        }
 	    },
 	    events: {
 	        'sort-changed': function sortChanged() {
-	            this.re_arg();
+	            this.refresh_arg();
 	        },
 	        'goto_page': function goto_page(num) {
-	            var search_str = this.get_search_str();
+	            var filter_obj = this.get_filter_obj();
 	            var sort_str = this.get_sort_str();
-	            location.search = '_sort=' + sort_str + '&' + search_str + '_page=' + num;
+	            var search_obj = { '_sort': sort_str, '_page': num };
+	            update(search_obj, filter_obj);
+	            location.search = searchfy(search_obj);
+	            //location.search='_sort='+sort_str+'&'+search_str+'_page='+num
 	        }
 	    }
 	};

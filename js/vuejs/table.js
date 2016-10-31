@@ -70,8 +70,7 @@ Vue.component('sort-table',{
             this.$dispatch('sort-changed')
         }
     } ,
-    template:`<div>
-		<table class="table table-hover">
+    template:`<table>
 			<thead>
 				<tr>
 					<td style='width:50px' v-if='selected'>
@@ -101,8 +100,7 @@ Vue.component('sort-table',{
 					</td>
 				</tr>
 			</tbody>
-		</table>
-	</div>`,
+		</table>`,
 })
 
 /*
@@ -139,19 +137,22 @@ Vue.component('paginator',{
 
 var build_table_args = {
     methods:{
-        get_search_str:function () {
-            var search_str=''
-            
+        get_filter_obj:function () {
+            //var search_str=''
+            var filter_obj={}
             for(var x=0;x<this.filters.length;x++){
                 var filter = this.filters[x]
                 if(filter.value){
-                    search_str+= filter.name+'='+filter.value+'&'
+	                filter_obj[filter.name]=filter.value
+                    //search_str+= filter.name+'='+filter.value+'&'
                 }
             }
             if(this.q){
-                search_str+='_q='+this.q+'&'
+	            filter_obj['_q']=this.q
+                //search_str+='_q='+this.q+'&'
             }
-            return search_str
+            return filter_obj
+            //return search_str
         },
         get_sort_str:function () {
             var sort_str=''
@@ -161,22 +162,28 @@ var build_table_args = {
             return sort_str
         },
         search:function () {
-            this.re_arg()
+            this.refresh_arg()
         },
-        re_arg:function () {
-            var search_str=this.get_search_str()
+        refresh_arg:function () {
+            var filter_obj=this.get_filter_obj()
             var sort_str = this.get_sort_str()
-            location.search='_sort='+sort_str+'&'+search_str
+            var search_obj={'_sort':sort_str}
+            update(search_obj,filter_obj)
+            location.search = searchfy(search_obj)
+            //location.search='_sort='+sort_str+'&'+search_str
         },
     },
     events:{
         'sort-changed':function () {
-            this.re_arg()
+            this.refresh_arg()
         },
         'goto_page':function (num) {
-            var search_str=this.get_search_str()
+            var filter_obj=this.get_filter_obj()
             var sort_str = this.get_sort_str()
-            location.search='_sort='+sort_str+'&'+search_str+'_page='+num
+            var search_obj={'_sort':sort_str,'_page':num}
+            update(search_obj,filter_obj)
+            location.search=searchfy(search_obj)
+            //location.search='_sort='+sort_str+'&'+search_str+'_page='+num
         }
     }
 }
