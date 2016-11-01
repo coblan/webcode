@@ -167,7 +167,7 @@ var field_base={
         },
         sim_select:{
 	        props:['name','model','kw'],
-            template:`<select v-model='model'  :id="'id_'+name" :readonly='kw.readonly'>
+            template:`<select v-model='model'  :id="'id_'+name" :readonly='kw.readonly' class="form-control">
             	<option :value='null'>----</option>
             	<option v-for='opt in kw.options' :value='opt.value' v-text='opt.label'></option>
             </select>`,

@@ -220,7 +220,7 @@
 	    },
 	    sim_select: {
 	      props: ['name', 'model', 'kw'],
-	      template: '<select v-model=\'model\'  :id="\'id_\'+name" :readonly=\'kw.readonly\'>\n            \t<option :value=\'null\'>----</option>\n            \t<option v-for=\'opt in kw.options\' :value=\'opt.value\' v-text=\'opt.label\'></option>\n            </select>',
+	      template: '<select v-model=\'model\'  :id="\'id_\'+name" :readonly=\'kw.readonly\' class="form-control">\n            \t<option :value=\'null\'>----</option>\n            \t<option v-for=\'opt in kw.options\' :value=\'opt.value\' v-text=\'opt.label\'></option>\n            </select>',
 	      // 添加，修改，删除的按钮代码，暂时不用。
 	      //`<div><select v-model='model'  :id="'id_'+name" :readonly='kw.readonly'>
 	      //	<option :value='null'>----</option>
@@ -546,7 +546,7 @@
 
 	if (!window.__uploading_mark) {
 		window.__uploading_mark = true;
-		document.write('\n\t\t<style>\n\t\t.popup{\n\t\t\tposition: fixed;\n\t\t\ttop: 0;\n\t\t\tleft: 0;\n\t\t\tright: 0;\n\t\t\tbottom: 0;\n\t\t\tdisplay:none;\n\t\t}\n\t\t#_upload_inn{\n\t\t\tbackground: rgba(88, 88, 88, 0.2);\n\t\t\tborder-radius: 5px;\n\t\t\twidth:180px;\n\t\t\theight:120px;\n\t\t\t/*padding:30px 80px ;*/\n\t\t}\n\t\t.imiddle{\n\t    position: absolute;\n        top: 50%;\n        left: 50%;\n        transform: translate(-50%, -50%);\n        -ms-transform:translate(-50%, -50%); \t/* IE 9 */\n\t\t-moz-transform:translate(-50%, -50%); \t/* Firefox */\n\t\t-webkit-transform:translate(-50%, -50%); /* Safari \uFFFD\uFFFD Chrome */\n\t\t-o-transform:translate(-50%, -50%); \n\t\t\n        text-align: center;\n\t\t/*display: table;*/\n        z-index: 1000;\n    \t}\n    \t#_upload_mark{\n    \t\tfloat: left;\n\n    \t}\n\t\t</style>');
+		document.write('\n\t\t<style>\n\t\t.popup{\n\t\t\tposition: fixed;\n\t\t\ttop: 0;\n\t\t\tleft: 0;\n\t\t\tright: 0;\n\t\t\tbottom: 0;\n\t\t\tdisplay:none;\n\t\t}\n\t\t#_upload_inn{\n\t\t\tbackground: rgba(88, 88, 88, 0.2);\n\t\t\tborder-radius: 5px;\n\t\t\twidth:180px;\n\t\t\theight:120px;\n\t\t\t/*padding:30px 80px ;*/\n\t\t}\n\t\t.imiddle{\n\t    position: absolute;\n        top: 50%;\n        left: 50%;\n        transform: translate(-50%, -50%);\n        -ms-transform:translate(-50%, -50%); \t/* IE 9 */\n\t\t-moz-transform:translate(-50%, -50%); \t/* Firefox */\n\t\t-webkit-transform:translate(-50%, -50%); /* Safari �� Chrome */\n\t\t-o-transform:translate(-50%, -50%); \n\t\t\n        text-align: center;\n\t\t/*display: table;*/\n        z-index: 1000;\n    \t}\n    \t#_upload_mark{\n    \t\tfloat: left;\n\n    \t}\n\t\t</style>');
 		$(function () {
 			$('body').append('<div class="popup" id="load_wrap"><div id=\'_upload_inn\' class="imiddle">\n\t\t<div  id="_upload_mark" class="imiddle"><i class="fa fa-spinner fa-spin fa-3x"></i></div></div></div>');
 		});
