@@ -303,16 +303,25 @@ function update_vue_obj(vue_obj,obj) {
 }
 
 export function merge(mains,subs) {
-	for(let sub of sub){
-		for (let main of mains){
-			if(main.name==sub.name){
-				for(let k in sub){
-					main[k]=sub[k]
+	mains.each(function (first) {
+		subs.each(function (second) {
+			if(first.name==second.name){
+				for(var x in second){
+					first[x]=second[x]
 				}
-				break
 			}
-		}
-	}
+		})
+	})
+	//for(let sub of sub){
+	//	for (let main of mains){
+	//		if(main.name==sub.name){
+	//			for(let k in sub){
+	//				main[k]=sub[k]
+	//			}
+	//			break
+	//		}
+	//	}
+	//}
 }
 
 window.hook_ajax_msg=hook_ajax_msg
