@@ -26,7 +26,7 @@ if(!window.__multi_sel){
 var temp_tow_col_sel=`
 <div class='_tow-col-sel'>
 		<select name="" id="" multiple="multiple" :size="size" class='sel left' v-model='left_sel' >
-			<option v-for='opt in can_select |orderBy "label"' :value="opt.value" v-text='opt.label' @dblclick='add(opt)' ></option>
+			<option v-for='opt in orderBy(can_select,"label")' :value="opt.value" v-text='opt.label' @dblclick='add(opt)' ></option>
 		</select>
 		<div style='display: inline-block;vertical-align: middle;'>
 			<img src="http://oe8wu3kqs.bkt.clouddn.com/image/right_02.png" alt="" 
@@ -37,7 +37,7 @@ var temp_tow_col_sel=`
 		</div>
 		
 		<select name="" id="" multiple="multiple" :size="size" class='sel right' v-model='right_sel' >
-			<option v-for='opt in selected__ |orderBy "label"' :value="opt.value" v-text='opt.label' @dblclick='rm(opt)'></option>
+			<option v-for='opt in orderBy(selected__,"label")' :value="opt.value" v-text='opt.label' @dblclick='rm(opt)'></option>
 		</select>
 </div>
 `
@@ -62,7 +62,7 @@ Vue.component('tow-col-sel',{
 			right_sel:[]
 		}
 	},
-	compiled:function () {
+	mounted:function () {
 		for (var x=0;x<this.selected.length;x++){
 			for(var y =0; y<this.choices.length;y++){
 				if(this.choices[y].value==this.selected[x]){
@@ -74,7 +74,19 @@ Vue.component('tow-col-sel',{
 		}
 		
 	},
+	
 	methods:{
+		orderBy:function (array,key) {
+			return  array.slice().sort(function (a,b) {
+				if(a[key]>b[key]){
+					return 1
+				}else if(a[key]<b[key]){
+					return -1
+				}else{
+					return 0
+				}
+			})
+		},
 		add:function (opt) {
 			this.selected__.push(opt)
 			this.selected.push(opt.value)

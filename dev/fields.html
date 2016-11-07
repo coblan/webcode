@@ -3,7 +3,10 @@
     <meta charset="utf-8">
         <title>Deposits and Withdrawals</title>
         <script type="text/javascript" src='http://apps.bdimg.com/libs/jquery/1.9.1/jquery.min.js'></script>
-        <script src="http://cdn.bootcss.com/vue/1.0.24/vue.js"></script>
+        <!--<script src="http://cdn.bootcss.com/vue/1.0.24/vue.js"></script>-->
+        <!--<script src="http://cdn.bootcss.com/vue/2.0.5/vue.js"></script>-->
+        <script src="//cdn.bootcss.com/vue/2.0.5/vue.js"></script>
+        <script src="//cdn.bootcss.com/lodash.js/4.16.6/lodash.min.js"></script>
 		<script src="http://cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 		<link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
 		<script src="../build/fields.pack.js"></script>
@@ -11,7 +14,7 @@
 
         <script type="text/javascript">
 			Vue.config.devtools = true
-			use_color()
+			//use_color()
 //			field ({name:'dog',template:field_str('horizon',l='col-md-1')})
 //			field()
 	        meta={
@@ -24,8 +27,8 @@
 					jjyy:['2'],
 				},
 				heads:[
-					{name:'username',label:'用户名',type:'text',required:true,autofocus:true},
-					{name:'password',label:'mima',type:'text',required:true,autofocus:true},
+					{name:'username',label:'用户名',type:'line-text',required:true,autofocus:true},
+					{name:'password',label:'mima',type:'line-text',required:true,autofocus:true},
 					{name:'hh',label:'ss',type:'color',},
 					{name:'hjk',label:'ff',type:'logo',up_url:"jj"},
 					{name:'hjkK',label:'fSSf',type:'logo',up_url:"jj"},
@@ -62,7 +65,7 @@
     <body>
         <h1 id='tt'>Top 3 Transactions</h1>
         <div id='hello' class="container">
-	        <field name='username' :kw='meta' :set="{label_cls:'col-md-2',input_cls:'col-md-10'}"></field>
+	        <field name='username' v-bind:kw='meta' ></field>
 			<field name="password" :kw="meta"></field>
 			<field name="hh" :kw="meta"></field>
 			<field name="hjk" :kw="meta"></field>

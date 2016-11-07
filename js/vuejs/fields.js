@@ -109,7 +109,7 @@ var field_base={
         }
     },
     components: {
-        text: {
+        lineText: {
             props: ['name','model','kw'],
             template:`<div>
             			<span v-text='model' v-if='kw.readonly'></span>
@@ -128,7 +128,7 @@ var field_base={
             props: ['name','model','kw'],
             template: `<input type="password" :id="'id_'+name" class="form-control" v-model="model" :placeholder="kw.placeholder" :readonly='kw.readonly'>`
         },
-        area: {
+        blockText: {
             props: ['name','model','kw'],
             template: `<textarea class="form-control" rows="3" :id="'id_'+name" v-model="model" :placeholder="kw.placeholder" :readonly='kw.readonly'></textarea>`
         },
@@ -153,7 +153,7 @@ var field_base={
                     })
                 }
             },
-            compiled:function(){
+            mounted:function(){
 	            var self=this;
 	            load_css('http://cdn.bootcss.com/spectrum/1.8.0/spectrum.min.css')
 	            load_js('http://cdn.bootcss.com/spectrum/1.8.0/spectrum.min.js',function () {
@@ -291,6 +291,15 @@ Vue.component('field',{
     </div>
 `,
 
+})
+
+Vue.component('itext',{
+    props: ['name','model','kw'],
+    template:`<div>
+				jjjy
+               </div>`
+    	
+             
 })
 
 function update_vue_obj(vue_obj,obj) {
