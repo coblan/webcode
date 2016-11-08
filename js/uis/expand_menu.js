@@ -3,7 +3,7 @@
 var template_str=`
 <div class='_expand_menu'>
 	<ul>
-		<li v-for='act in menu'>
+		<li v-for='act in normed_menu'>
 			<a :class='["menu_item",{"selected":act.selected,"opened_submenu":opened_submenu==act.submenu}]' 
 				:href='act.submenu?"javascript:void(0)":act.url'
 				@click='main_act_click(act)'>
@@ -27,42 +27,42 @@ var template_str=`
 
 Vue.component('expand_menu',{
 			template:template_str,
-			props:{
-				menu:{
-					coerce:function (val) {
-						var path = location.pathname
-						
-						var matched={url:''}
-						var matched_menu={url:''}
-						var matched_submenu={url:''}
-						
-						for (var x=0;x<val.length;x++){
-							var url = val[x].url
-							if(path.startsWith(url)&&url.length>matched.url.length){
-								matched=val[x]
-								matched_menu=val[x]
-								matched_submenu={url:''}
+			props:['menu'],
+			computed:{
+				normed_menu:function () {
+					var path = location.pathname
+					
+					var matched={url:''}
+					var matched_menu={url:''}
+					var matched_submenu={url:''}
+					
+					for (var x=0;x<this.menu.length;x++){
+						var url = this.menu[x].url
+						if(path.startsWith(url)&&url.length>matched.url.length){
+							matched=this.menu[x]
+							matched_menu=this.menu[x]
+							matched_submenu={url:''}
+						}
+						var submenu=this.menu[x].submenu || []
+						for(var y=0;y<submenu.length;y++){
+							var url = submenu[y].url
+							if(path.startsWith(url)&&url.length>=matched.url.length){
+								matched=submenu[y]
+								matched_menu=this.menu[x]
+								matched_submenu=submenu[y]
 							}
-							var submenu=val[x].submenu || []
-							for(var y=0;y<submenu.length;y++){
-								var url = submenu[y].url
-								if(path.startsWith(url)&&url.length>=matched.url.length){
-									matched=submenu[y]
-									matched_menu=val[x]
-									matched_submenu=submenu[y]
-								}
-							}
 						}
-						if(matched_menu.url){
-							matched_menu.selected=true
-						}
-						if(matched_submenu){
-							matched_submenu.active=true
-						}
-						return val
 					}
-				},
+					if(matched_menu.url){
+						matched_menu.selected=true
+					}
+					if(matched_submenu){
+						matched_submenu.active=true
+					}
+					return this.menu
+				}
 			},
+			
 			data:function () {
 				return {
 					opened_submenu:''
@@ -79,16 +79,16 @@ Vue.component('expand_menu',{
 				}
 			}
 		})
-Vue.transition('expand', {
-  beforeEnter: function (el) {
-    $(el).slideDown(300)
-  },
+//Vue.transition('expand', {
+//  beforeEnter: function (el) {
+//    $(el).slideDown(300)
+//  },
 
-  leave: function (el) {
-    $(el).slideUp(300)
-  },
+//  leave: function (el) {
+//    $(el).slideUp(300)
+//  },
 
-})
+//})
 
 if(! window.__expand_menu){
 document.write(`

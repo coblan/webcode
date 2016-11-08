@@ -47,7 +47,7 @@
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
-	  value: true
+		value: true
 	});
 	exports.merge = merge;
 
@@ -118,244 +118,266 @@
 	(0, _ajax_fun.hook_ajax_csrf)();
 
 	function is_valid(form_fun_rt, errors_obj, callback) {
-	  if (form_fun_rt) {
-	    if (form_fun_rt.errors) {
-	      for (x in errors_obj) {
-	        Vue.delete(errors_obj, x);
-	      }
-	      for (x in form_fun_rt.errors) {
-	        Vue.set(errors_obj, x, form_fun_rt.errors[x]);
-	      }
-	    } else {
-	      callback();
-	    }
-	  }
+		if (form_fun_rt) {
+			if (form_fun_rt.errors) {
+				for (x in errors_obj) {
+					Vue.delete(errors_obj, x);
+				}
+				for (x in form_fun_rt.errors) {
+					Vue.set(errors_obj, x, form_fun_rt.errors[x]);
+				}
+			} else {
+				callback();
+			}
+		}
 	}
 
+	var watch_model = {
+		props: ['name', 'value', 'kw'],
+		data: function data() {
+			return {
+				model: this.value
+			};
+		},
+		watch: {
+			model: function model(v) {
+				this.$emit('input', v);
+				console.log('from mixin');
+			}
+		}
+	};
+
 	var field_base = {
-	  props: {
-	    name: {
-	      required: true
-	    },
-	    kw: {
-	      required: true
-	    }
-	  },
-	  computed: {
-	    row: function row() {
-	      return this.kw.row;
-	    },
-	    errors: function errors() {
-	      return this.kw.errors;
-	    },
-	    head: function head() {
-	      var heads = this.kw.heads;
-	      for (var x = 0; x < heads.length; x++) {
-	        var head = heads[x];
-	        if (head.name == this.name) {
-	          return head;
-	        }
-	      }
-	    }
-	  },
-	  methods: {
-	    error_data: function error_data(name) {
-	      if (this.errors[name]) {
-	        return this.errors[name];
-	      } else {
-	        return '';
-	      }
-	    }
-	  },
-	  components: {
-	    lineText: {
-	      props: ['name', 'model', 'kw'],
-	      template: '<div>\n            \t\t\t<span v-text=\'model\' v-if=\'kw.readonly\'></span>\n            \t\t\t<input v-else type="text" class="form-control" v-model="model" :id="\'id_\'+name"\n                        \t:placeholder="kw.placeholder" :autofocus="kw.autofocus" :maxlength=\'kw.maxlength\'>\n                       </div>'
+		props: {
+			name: {
+				required: true
+			},
+			kw: {
+				required: true
+			}
+		},
+		computed: {
+			row: function row() {
+				return this.kw.row;
+			},
+			errors: function errors() {
+				return this.kw.errors;
+			},
+			head: function head() {
+				var heads = this.kw.heads;
+				for (var x = 0; x < heads.length; x++) {
+					var head = heads[x];
+					if (head.name == this.name) {
+						return head;
+					}
+				}
+			}
+		},
+		methods: {
+			error_data: function error_data(name) {
+				if (this.errors[name]) {
+					return this.errors[name];
+				} else {
+					return '';
+				}
+			}
+		},
+		components: {
+			linetext: {
+				mixins: [watch_model],
+				template: '<div>\n            \t\t\t<span v-text=\'model\' v-if=\'kw.readonly\'></span>\n            \t\t\t<input v-else type="text" class="form-control" v-model="model" :id="\'id_\'+name"\n                        \t:placeholder="kw.placeholder" :autofocus="kw.autofocus" :maxlength=\'kw.maxlength\'>\n                       </div>',
 
-	    },
-	    number: {
-	      props: ['name', 'model', 'kw'],
-	      template: '<input type="number" class="form-control" v-model="model" :id="\'id_\'+name"\n                        :placeholder="kw.placeholder" :autofocus="kw.autofocus" :readonly=\'kw.readonly\'>'
-	    },
-	    password: {
-	      props: ['name', 'model', 'kw'],
-	      template: '<input type="password" :id="\'id_\'+name" class="form-control" v-model="model" :placeholder="kw.placeholder" :readonly=\'kw.readonly\'>'
-	    },
-	    blockText: {
-	      props: ['name', 'model', 'kw'],
-	      template: '<textarea class="form-control" rows="3" :id="\'id_\'+name" v-model="model" :placeholder="kw.placeholder" :readonly=\'kw.readonly\'></textarea>'
-	    },
-	    color: {
-	      props: ['name', 'model', 'kw'],
-	      template: '<input type="text" v-model="model" :id="\'id_\'+name" :readonly=\'kw.readonly\'>',
-	      watch: {
-	        'model': function model() {
-	          this.sync_to_spec();
-	        }
-	      },
-	      methods: {
-	        sync_to_spec: function sync_to_spec() {
-	          var self = this;
-	          Vue.nextTick(function () {
-	            $(self.$el).spectrum({
-	              color: this.model,
-	              showInitial: true,
-	              showInput: true,
-	              preferredFormat: "name"
-	            });
-	          });
-	        }
-	      },
-	      mounted: function mounted() {
-	        var self = this;
-	        (0, _pkg.load_css)('http://cdn.bootcss.com/spectrum/1.8.0/spectrum.min.css');
-	        (0, _pkg.load_js)('http://cdn.bootcss.com/spectrum/1.8.0/spectrum.min.js', function () {
-	          self.sync_to_spec();
-	        });
-	      }
-	    },
-	    logo: {
-	      props: ['name', 'model', 'kw'],
-	      template: '<logo-input :up_url="kw.up_url" :web_url.sync="model" :id="\'id_\'+name"></logo-input>'
-	    },
-	    sim_select: {
-	      props: ['name', 'model', 'kw'],
-	      template: '<select v-model=\'model\'  :id="\'id_\'+name" :readonly=\'kw.readonly\' class="form-control">\n            \t<option :value=\'null\'>----</option>\n            \t<option v-for=\'opt in kw.options\' :value=\'opt.value\' v-text=\'opt.label\'></option>\n            </select>',
-	      // 添加，修改，删除的按钮代码，暂时不用。
-	      //`<div><select v-model='model'  :id="'id_'+name" :readonly='kw.readonly'>
-	      //	<option :value='null'>----</option>
-	      //	<option v-for='opt in kw.options' :value='opt.value' v-text='opt.label'></option>
-	      //</select>
-	      //<span v-if='kw.add_url' @click='add()'><img src='http://res.enjoyst.com/image/add.png' /></span>
-	      //<span v-if='kw.change_url' @click='edit()'><img src='http://res.enjoyst.com/image/edit.png' /></span>
-	      //<span v-if='kw.del_url' @click='del_row()'><img src='http://res.enjoyst.com/image/delete.png' /></a>
-	      //</div>`,
-	      methods: {
-	        add: function add() {
-	          var self = this;
-	          window.open(this.kw.add_url + 'edit/?_pop=1', location.pathname, 'height=500,width=800,resizable=yes,scrollbars=yes,top=200,left=300');
-	          window.on_subwin_close = function (row) {
-	            var post_data = [{ fun: 'get_rows_info', rows: [row] }];
-	            $.post('', JSON.stringify(post_data), function (data) {
-	              var rows = data.get_rows_info;
-	              for (var i = 0; i < rows.length; i++) {
-	                var row = rows[i];
-	                self.kw.options.push({ value: row.pk, label: row.label });
-	                self.model = row.pk;
-	                break;
-	              }
-	            });
-	            window.on_subwin_close = null;
-	          };
-	        },
-	        edit: function edit() {
-	          if (this.model) {
-	            var self = this;
-	            window.open(this.kw.add_url + 'edit/' + this.model + '?_pop=1', location.pathname, 'height=500,width=800,resizable=yes,scrollbars=yes,top=200,left=300');
-	            window.on_subwin_close = function (row) {
-	              var post_data = [{ fun: 'get_rows_info', rows: [row] }];
-	              $.post('', JSON.stringify(post_data), function (data) {
-	                var rows = data.get_rows_info;
-	                for (var i = 0; i < rows.length; i++) {
-	                  var row = rows[i];
-	                  for (var j = 0; j < self.kw.options.length; j++) {
-	                    var option = self.kw.options[j];
-	                    if (row.pk == option.value) {
-	                      option.label = row.label;
-	                    }
-	                  }
-	                }
-	              });
-	              window.on_subwin_close = null;
-	            };
-	          }
-	        },
-	        del_row: function del_row() {
-	          if (this.model) {
-	            var self = this;
-	            var rows = [{ pk: this.model, _class: this.kw._class }];
-	            window.open(this.kw.del_url + '?rows=' + btoa(JSON.stringify(rows)) + '&_pop=1', location.pathname, 'height=500,width=800,resizable=yes,scrollbars=yes,top=200,left=300');
-	            window.on_subwin_close = function (rows) {
-	              for (var i = 0; i < rows.length; i++) {
-	                var row = rows[i];
-	                if (row._class == self.kw._class) {
-	                  for (var j = 0; j < self.kw.options.length; j++) {
-	                    var option = self.kw.options[j];
-	                    if (option.value == row.pk) {
-	                      self.kw.options.splice(j, 1);
-	                    }
-	                  }
-	                }
-	              }
-	              window.on_subwin_close = null;
-	            };
-	          }
-	        }
-	      }
-	    },
-	    tow_col: {
-	      props: ['name', 'model', 'kw'],
-	      template: '<div>\n\t        \t<ul v-if=\'kw.readonly\'><li v-for=\'value in model\' v-text=\'get_label(value)\'></li></ul>\n\t        \t<tow-col-sel v-else :selected.sync=\'model\' :id="\'id_\'+name" :choices=\'kw.options\' :size=\'kw.size\' ></tow-col-sel>\n\t        \t</div>',
-	      methods: {
-	        get_label: function get_label(value) {
+				watch: {
+					model: function model(v) {
+						console.log('from self');
+					}
+				}
 
-	          for (var i = 0; i < this.kw.options.length; i++) {
-	            if (this.kw.options[i].value == value) {
-	              return this.kw.options[i].label;
-	            }
-	          }
-	        }
-	      }
-	    },
-	    bool: {
-	      props: ['name', 'model', 'kw'],
-	      template: '<div class="checkbox">\n\t\t\t\t\t    <label><input type="checkbox" :id="\'id_\'+name" v-model=\'model\' disabled="kw.readonly">\n\t\t\t\t\t    \t<span v-text=\'kw.label\'></span>\n\t\t\t\t\t    </label>\n\t\t\t\t\t  </div>'
-	    }
-	  }
+			},
+			number: {
+				mixins: [watch_model],
+				//props: ['name','model','kw'],
+				template: '<input type="number" class="form-control" v-model="model" :id="\'id_\'+name"\n                        :placeholder="kw.placeholder" :autofocus="kw.autofocus" :readonly=\'kw.readonly\'>'
+			},
+			password: {
+				mixins: [watch_model],
+				//props: ['name','model','kw'],
+				template: '<input type="password" :id="\'id_\'+name" class="form-control" v-model="model" :placeholder="kw.placeholder" :readonly=\'kw.readonly\'>'
+			},
+			blocktext: {
+				mixins: [watch_model],
+				//props: ['name','model','kw'],
+				template: '<textarea class="form-control" rows="3" :id="\'id_\'+name" v-model="model" :placeholder="kw.placeholder" :readonly=\'kw.readonly\'></textarea>'
+			},
+			color: {
+				mixins: [watch_model],
+				//props:['name','model','kw'],
+				template: '<input type="text" v-model="model" :id="\'id_\'+name" :readonly=\'kw.readonly\'>',
+				watch: {
+					'model': function model() {
+						this.sync_to_spec();
+					}
+				},
+				methods: {
+					sync_to_spec: function sync_to_spec() {
+						var self = this;
+						Vue.nextTick(function () {
+							$(self.$el).spectrum({
+								color: this.model,
+								showInitial: true,
+								showInput: true,
+								preferredFormat: "name"
+							});
+						});
+					}
+				},
+				mounted: function mounted() {
+					var self = this;
+					(0, _pkg.load_css)('http://cdn.bootcss.com/spectrum/1.8.0/spectrum.min.css');
+					(0, _pkg.load_js)('http://cdn.bootcss.com/spectrum/1.8.0/spectrum.min.js', function () {
+						self.sync_to_spec();
+					});
+				}
+			},
+			logo: {
+				//props:['name','model','kw'],
+				mixins: [watch_model],
+				template: '<logo-input :up_url="kw.up_url" :web_url.sync="model" :id="\'id_\'+name"></logo-input>'
+			},
+			sim_select: {
+				//props:['name','model','kw'],
+				mixins: [watch_model],
+				template: '<select v-model=\'model\'  :id="\'id_\'+name" :readonly=\'kw.readonly\' class="form-control">\n            \t<option :value=\'null\'>----</option>\n            \t<option v-for=\'opt in kw.options\' :value=\'opt.value\' v-text=\'opt.label\'></option>\n            </select>',
+				// 添加，修改，删除的按钮代码，暂时不用。
+				//`<div><select v-model='model'  :id="'id_'+name" :readonly='kw.readonly'>
+				//	<option :value='null'>----</option>
+				//	<option v-for='opt in kw.options' :value='opt.value' v-text='opt.label'></option>
+				//</select>
+				//<span v-if='kw.add_url' @click='add()'><img src='http://res.enjoyst.com/image/add.png' /></span>
+				//<span v-if='kw.change_url' @click='edit()'><img src='http://res.enjoyst.com/image/edit.png' /></span>
+				//<span v-if='kw.del_url' @click='del_row()'><img src='http://res.enjoyst.com/image/delete.png' /></a>
+				//</div>`,
+				methods: {
+					add: function add() {
+						var self = this;
+						window.open(this.kw.add_url + 'edit/?_pop=1', location.pathname, 'height=500,width=800,resizable=yes,scrollbars=yes,top=200,left=300');
+						window.on_subwin_close = function (row) {
+							var post_data = [{ fun: 'get_rows_info', rows: [row] }];
+							$.post('', JSON.stringify(post_data), function (data) {
+								var rows = data.get_rows_info;
+								for (var i = 0; i < rows.length; i++) {
+									var row = rows[i];
+									self.kw.options.push({ value: row.pk, label: row.label });
+									self.model = row.pk;
+									break;
+								}
+							});
+							window.on_subwin_close = null;
+						};
+					},
+					edit: function edit() {
+						if (this.model) {
+							var self = this;
+							window.open(this.kw.add_url + 'edit/' + this.model + '?_pop=1', location.pathname, 'height=500,width=800,resizable=yes,scrollbars=yes,top=200,left=300');
+							window.on_subwin_close = function (row) {
+								var post_data = [{ fun: 'get_rows_info', rows: [row] }];
+								$.post('', JSON.stringify(post_data), function (data) {
+									var rows = data.get_rows_info;
+									for (var i = 0; i < rows.length; i++) {
+										var row = rows[i];
+										for (var j = 0; j < self.kw.options.length; j++) {
+											var option = self.kw.options[j];
+											if (row.pk == option.value) {
+												option.label = row.label;
+											}
+										}
+									}
+								});
+								window.on_subwin_close = null;
+							};
+						}
+					},
+					del_row: function del_row() {
+						if (this.model) {
+							var self = this;
+							var rows = [{ pk: this.model, _class: this.kw._class }];
+							window.open(this.kw.del_url + '?rows=' + btoa(JSON.stringify(rows)) + '&_pop=1', location.pathname, 'height=500,width=800,resizable=yes,scrollbars=yes,top=200,left=300');
+							window.on_subwin_close = function (rows) {
+								for (var i = 0; i < rows.length; i++) {
+									var row = rows[i];
+									if (row._class == self.kw._class) {
+										for (var j = 0; j < self.kw.options.length; j++) {
+											var option = self.kw.options[j];
+											if (option.value == row.pk) {
+												self.kw.options.splice(j, 1);
+											}
+										}
+									}
+								}
+								window.on_subwin_close = null;
+							};
+						}
+					}
+				}
+			},
+			tow_col: {
+				//props:['name','model','kw'],
+				mixins: [watch_model],
+				template: '<div>\n\t        \t<ul v-if=\'kw.readonly\'><li v-for=\'value in model\' v-text=\'get_label(value)\'></li></ul>\n\t        \t<tow-col-sel v-else :selected.sync=\'model\' :id="\'id_\'+name" :choices=\'kw.options\' :size=\'kw.size\' ></tow-col-sel>\n\t        \t</div>',
+				methods: {
+					get_label: function get_label(value) {
+
+						for (var i = 0; i < this.kw.options.length; i++) {
+							if (this.kw.options[i].value == value) {
+								return this.kw.options[i].label;
+							}
+						}
+					}
+				}
+			},
+			bool: {
+				mixins: [watch_model],
+				template: '<div class="checkbox">\n\t\t\t\t\t    <label><input type="checkbox" :id="\'id_\'+name" v-model=\'model\' disabled="kw.readonly">\n\t\t\t\t\t    \t<span v-text=\'kw.label\'></span>\n\t\t\t\t\t    </label>\n\t\t\t\t\t  </div>'
+			}
+		}
 
 	};
 	//'set.label_cls'   set.input_cls
 	Vue.component('field', {
-	  mixins: [field_base],
-	  template: '\n\t<div for=\'field\' class="form-group field" :class=\'{"error":error_data(name)}\'>\n\t<label :for="\'id_\'+name" v-text="head.label" class="control-label" v-if=\'!head.no_auto_label\'>\n\t\t<span class="req_star" v-if=\'head.required\'> *</span>\n\t</label>\n\t<div class="field_input">\n        <component :is=\'head.type\'\n            :model.sync=\'row[name]\'\n            :name=\'name\'\n            :kw=\'head\'>\n        </component>\n\t</div>\n\t<slot> </slot>\n\t<div v-text=\'error_data(name)\' class=\'error\'></div>\n    </div>\n'
-
-	});
-
-	Vue.component('itext', {
-	  props: ['name', 'model', 'kw'],
-	  template: '<div>\n\t\t\t\tjjjy\n               </div>'
+		mixins: [field_base],
+		template: '\n\t<div for=\'field\' class="form-group field" :class=\'{"error":error_data(name)}\'>\n\t<label :for="\'id_\'+name" v-text="head.label" class="control-label" v-if=\'!head.no_auto_label\'>\n\t\t<span class="req_star" v-if=\'head.required\'> *</span>\n\t</label>\n\t<div class="field_input">\n        <component :is=\'head.type\'\n            v-model=\'row[name]\'\n            :name=\'name\'\n            :kw=\'head\'>\n        </component>\n\t</div>\n\t<slot> </slot>\n\t<div v-text=\'error_data(name)\' class=\'error\'></div>\n    </div>\n'
 
 	});
 
 	function update_vue_obj(vue_obj, obj) {
-	  for (var _x in vue_obj) {
-	    Vue.delete(vue_obj, _x);
-	  }
-	  for (var _x2 in obj) {
-	    Vue.set(vue_obj, _x2, obj[_x2]);
-	  }
+		for (var _x in vue_obj) {
+			Vue.delete(vue_obj, _x);
+		}
+		for (var _x2 in obj) {
+			Vue.set(vue_obj, _x2, obj[_x2]);
+		}
 	}
 
 	function merge(mains, subs) {
-	  mains.each(function (first) {
-	    subs.each(function (second) {
-	      if (first.name == second.name) {
-	        for (var x in second) {
-	          first[x] = second[x];
-	        }
-	      }
-	    });
-	  });
-	  //for(let sub of sub){
-	  //	for (let main of mains){
-	  //		if(main.name==sub.name){
-	  //			for(let k in sub){
-	  //				main[k]=sub[k]
-	  //			}
-	  //			break
-	  //		}
-	  //	}
-	  //}
+		mains.each(function (first) {
+			subs.each(function (second) {
+				if (first.name == second.name) {
+					for (var x in second) {
+						first[x] = second[x];
+					}
+				}
+			});
+		});
+		//for(let sub of sub){
+		//	for (let main of mains){
+		//		if(main.name==sub.name){
+		//			for(let k in sub){
+		//				main[k]=sub[k]
+		//			}
+		//			break
+		//		}
+		//	}
+		//}
 	}
 
 	window.hook_ajax_msg = _ajax_fun.hook_ajax_msg;
@@ -520,7 +542,7 @@
 
 	if (!window.__uploading_mark) {
 		window.__uploading_mark = true;
-		document.write('\n\t\t<style>\n\t\t.popup{\n\t\t\tposition: fixed;\n\t\t\ttop: 0;\n\t\t\tleft: 0;\n\t\t\tright: 0;\n\t\t\tbottom: 0;\n\t\t\tdisplay:none;\n\t\t}\n\t\t#_upload_inn{\n\t\t\tbackground: rgba(88, 88, 88, 0.2);\n\t\t\tborder-radius: 5px;\n\t\t\twidth:180px;\n\t\t\theight:120px;\n\t\t\t/*padding:30px 80px ;*/\n\t\t}\n\t\t.imiddle{\n\t    position: absolute;\n        top: 50%;\n        left: 50%;\n        transform: translate(-50%, -50%);\n        -ms-transform:translate(-50%, -50%); \t/* IE 9 */\n\t\t-moz-transform:translate(-50%, -50%); \t/* Firefox */\n\t\t-webkit-transform:translate(-50%, -50%); /* Safari \uFFFD\uFFFD Chrome */\n\t\t-o-transform:translate(-50%, -50%); \n\t\t\n        text-align: center;\n\t\t/*display: table;*/\n        z-index: 1000;\n    \t}\n    \t#_upload_mark{\n    \t\tfloat: left;\n\n    \t}\n\t\t</style>');
+		document.write('\n\t\t<style>\n\t\t.popup{\n\t\t\tposition: fixed;\n\t\t\ttop: 0;\n\t\t\tleft: 0;\n\t\t\tright: 0;\n\t\t\tbottom: 0;\n\t\t\tdisplay:none;\n\t\t}\n\t\t#_upload_inn{\n\t\t\tbackground: rgba(88, 88, 88, 0.2);\n\t\t\tborder-radius: 5px;\n\t\t\twidth:180px;\n\t\t\theight:120px;\n\t\t\t/*padding:30px 80px ;*/\n\t\t}\n\t\t.imiddle{\n\t    position: absolute;\n        top: 50%;\n        left: 50%;\n        transform: translate(-50%, -50%);\n        -ms-transform:translate(-50%, -50%); \t/* IE 9 */\n\t\t-moz-transform:translate(-50%, -50%); \t/* Firefox */\n\t\t-webkit-transform:translate(-50%, -50%); /* Safari �� Chrome */\n\t\t-o-transform:translate(-50%, -50%); \n\t\t\n        text-align: center;\n\t\t/*display: table;*/\n        z-index: 1000;\n    \t}\n    \t#_upload_mark{\n    \t\tfloat: left;\n\n    \t}\n\t\t</style>');
 		$(function () {
 			$('body').append('<div class="popup" id="load_wrap"><div id=\'_upload_inn\' class="imiddle">\n\t\t<div  id="_upload_mark" class="imiddle"><i class="fa fa-spinner fa-spin fa-3x"></i></div></div></div>');
 		});

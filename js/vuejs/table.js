@@ -38,6 +38,11 @@ Vue.component('sort-table',{
             }
         }
     },
+    data:function () {
+    	return {
+	    	icatch:''
+    	}
+    },
     methods:{
         in_sort:function (name) {
             return this.sort.indexOf(name)!=-1
@@ -68,7 +73,9 @@ Vue.component('sort-table',{
                 this.sort.splice(pos,1)
             }
             this.$dispatch('sort-changed')
-        }
+        },
+ 
+        
     } ,
     template:`<table>
 			<thead>
@@ -79,14 +86,14 @@ Vue.component('sort-table',{
 					<td v-for='head in heads' :class='"td_"+head.name'>
 						<span v-if='head.sortable' v-text='head.label' class='clickable' @click='sort_col(head.name)'></span>
 						<span v-else v-text='head.label'></span>
-						<span v-if='icatch=get_sort_pos(head.name),icatch!=-1'>
+						<span v-if='icatch = get_sort_pos(head.name),icatch!=-1'>
 							<span v-text='icatch'></span>
-							<span class="glyphicon glyphicon-chevron-up" v-if='in_sort(head.name)'
-								class='clickable' @click='sort_col("-"+head.name)'></span>
-							<span v-if='in_sort("-"+head.name)' class="glyphicon  glyphicon-chevron-down"
-								class='clickable' @click='sort_col(head.name)'></span>
-							<span v-if='in_sort(head.name)||in_sort("-"+head.name)' class="glyphicon glyphicon-remove"
-								class='clickable' @click='rm_sort(head.name)'></span>
+							<span class="glyphicon glyphicon-chevron-up clickable" v-if='in_sort(head.name)'
+								 @click='sort_col("-"+head.name)'></span>
+							<span v-if='in_sort("-"+head.name)' class="glyphicon  glyphicon-chevron-down clickable"
+								 @click='sort_col(head.name)'></span>
+							<span v-if='in_sort(head.name)||in_sort("-"+head.name)' class="glyphicon glyphicon-remove clickable"
+								 @click='rm_sort(head.name)'></span>
 						</span>
 					</td>
 				</tr>
@@ -95,13 +102,15 @@ Vue.component('sort-table',{
 				<tr v-for='row in rows'>
 					<td v-if='selected'><input type="checkbox" name="test" :value="row.pk" v-model='selected'/></td>
 					<td v-for='head in heads' :class='"td_"+head.name'>
-						<component v-if='icatch = map(head.name,row),icatch.com' :is='icatch.com' :kw='icatch.kw'></component>
-						<span v-else v-html='icatch'></span>
+						
+						<span v-html='map(head.name,row)'></span>
 					</td>
 				</tr>
 			</tbody>
 		</table>`,
 })
+
+//<component v-if='icatch = map(head.name,row),icatch.com' :is='icatch.com' :kw='icatch.kw'></component>
 
 /*
 Argments:
