@@ -70,20 +70,20 @@ function is_valid(form_fun_rt,errors_obj,callback) {
 	}
 }
 
-var watch_model={
-	props: ['name','value','kw'],
-	data:function () {
-		return {
-			model:this.value
-		}
-	},
-	watch:{
-            model:function (v) {
-            	this.$emit('input',v)
-            	console.log('from mixin')
-            }
-        }
-}
+//var watch_model={
+//	props: ['name','value','kw'],
+//	data:function () {
+//		return {
+//			model:this.value
+//		}
+//	},
+//	watch:{
+//        model:function (v) {
+//        	this.$emit('input',v)
+//        	console.log('from mixin')
+//        }
+//       }
+//}
 
 var field_base={
     props: {
@@ -119,54 +119,42 @@ var field_base={
     },
     components: {
         linetext: {
-            mixins:[watch_model],
+	        props:['name','row','kw'],
             template:`<div>
-            			<span v-text='model' v-if='kw.readonly'></span>
-            			<input v-else type="text" class="form-control" v-model="model" :id="'id_'+name"
+            			<span v-text='row[name]' v-if='kw.readonly'></span>
+            			<input v-else type="text" class="form-control" v-model="row[name]" :id="'id_'+name"
                         	:placeholder="kw.placeholder" :autofocus="kw.autofocus" :maxlength='kw.maxlength'>
                        </div>`,
-            
-            watch:{
-	            model:function (v) {
-	            	console.log('from self')
-	            },
-            }
-             
         },
         number: {
-	        mixins:[watch_model],
-            //props: ['name','model','kw'],
-            template: `<input type="number" class="form-control" v-model="model" :id="'id_'+name"
+	        props:['name','row','kw'],
+
+            template: `<input type="number" class="form-control" v-model="row[name]" :id="'id_'+name"
                         :placeholder="kw.placeholder" :autofocus="kw.autofocus" :readonly='kw.readonly'>`
         },
         password: {
-	        mixins:[watch_model],
-            //props: ['name','model','kw'],
-            template: `<input type="password" :id="'id_'+name" class="form-control" v-model="model" :placeholder="kw.placeholder" :readonly='kw.readonly'>`
+	        props:['name','row','kw'],
+            template: `<input type="password" :id="'id_'+name" class="form-control" v-model="row[name]" :placeholder="kw.placeholder" :readonly='kw.readonly'>`
         },
         blocktext: {
-	        mixins:[watch_model],
-            //props: ['name','model','kw'],
-            template: `<textarea class="form-control" rows="3" :id="'id_'+name" v-model="model" :placeholder="kw.placeholder" :readonly='kw.readonly'></textarea>`
+	        props:['name','row','kw'],
+            template: `<textarea class="form-control" rows="3" :id="'id_'+name" v-model="row[name]" :placeholder="kw.placeholder" :readonly='kw.readonly'></textarea>`
         },
         color:{
-	        mixins:[watch_model],
-            //props:['name','model','kw'],
-            template: `<input type="text" v-model="model" :id="'id_'+name" :readonly='kw.readonly'>`,
-            watch:{
-                'model':function (){
-                    this.sync_to_spec()
-                }
-            },
+	        props:['name','row','kw'],
+            template: `<input type="text" v-model="row[name]" :id="'id_'+name" :readonly='kw.readonly'>`,
             methods:{
-                sync_to_spec:function(){
+                init_and_listen:function(){
                     var self = this
                     Vue.nextTick(function(){
                         $(self.$el).spectrum({
-                            color: this.model,
+                            color: self.row[self.name],
                             showInitial: true,
                             showInput: true,
                             preferredFormat: "name",
+                            change: function(color) {
+								    self.row[self.name] = color.toHexString();
+								}
                         });
                     })
                 }
@@ -175,18 +163,21 @@ var field_base={
 	            var self=this;
 	            load_css('http://cdn.bootcss.com/spectrum/1.8.0/spectrum.min.css')
 	            load_js('http://cdn.bootcss.com/spectrum/1.8.0/spectrum.min.js',function () {
-	            	self.sync_to_spec()
+	            	self.init_and_listen()
 	            })
             },
         },
         logo:{
-            //props:['name','model','kw'],
-            mixins:[watch_model],
-            template:`<logo-input :up_url="kw.up_url" :web_url.sync="model" :id="'id_'+name"></logo-input>`
+	        props:['name','row','kw'],
+            template:`<logo-input :up_url="kw.up_url" :web_url.sync="row[name]" :id="'id_'+name"></logo-input>`
         },
         sim_select:{
-	        //props:['name','model','kw'],
-	        mixins:[watch_model],
+	        props:['name','row','kw'],
+	        data:function(){
+		        return {
+			        model:this.row[this.name]
+		        }
+	        },
             template:`<select v-model='model'  :id="'id_'+name" :readonly='kw.readonly' class="form-control">
             	<option :value='null'>----</option>
             	<option v-for='opt in kw.options' :value='opt.value' v-text='opt.label'></option>
@@ -264,15 +255,13 @@ var field_base={
             }
         },
         tow_col:{
-	        //props:['name','model','kw'],
-	        mixins:[watch_model],
+	        props:['name','row','kw'],
 	        template:`<div>
-	        	<ul v-if='kw.readonly'><li v-for='value in model' v-text='get_label(value)'></li></ul>
-	        	<tow-col-sel v-else :selected.sync='model' :id="'id_'+name" :choices='kw.options' :size='kw.size' ></tow-col-sel>
+	        	<ul v-if='kw.readonly'><li v-for='value in row[name]' v-text='get_label(value)'></li></ul>
+	        	<tow-col-sel v-else :selected='row[name]' :id="'id_'+name" :choices='kw.options' :size='kw.size' ></tow-col-sel>
 	        	</div>`,
 	        methods:{
 		        get_label:function (value) {
-			        
 		        	for(var i =0;i<this.kw.options.length;i++){
 			        	if(this.kw.options[i].value==value){
 				        	return this.kw.options[i].label
@@ -282,9 +271,9 @@ var field_base={
 	        }
         },
         bool:{
-			mixins:[watch_model],
+	        props:['name','row','kw'],
 	        template:`<div class="checkbox">
-					    <label><input type="checkbox" :id="'id_'+name" v-model='model' disabled="kw.readonly">
+					    <label><input type="checkbox" :id="'id_'+name" v-model='row[name]' disabled="kw.readonly">
 					    	<span v-text='kw.label'></span>
 					    </label>
 					  </div>`
@@ -302,7 +291,7 @@ Vue.component('field',{
 	</label>
 	<div class="field_input">
         <component :is='head.type'
-            v-model='row[name]'
+            :row='row'
             :name='name'
             :kw='head'>
         </component>

@@ -48,7 +48,6 @@ Vue.component('tow-col-sel',{
 	props:{
 		choices:{},
 		selected:{
-			twoWay:true
 		},
 		size:{
 			default:6

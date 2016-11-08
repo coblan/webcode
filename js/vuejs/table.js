@@ -129,7 +129,7 @@ Vue.component('paginator',{
     methods:{
         goto_page:function (num) {
             if (!isNaN(parseInt(num)) && !num.endsWith('a')){
-                this.$dispatch('goto_page',num)
+                this.$emit('goto_page',num)
             }
         }
     },
@@ -181,19 +181,20 @@ var build_table_args = {
             location.search = searchfy(search_obj)
             //location.search='_sort='+sort_str+'&'+search_str
         },
-    },
-    events:{
-        'sort-changed':function () {
-            this.refresh_arg()
-        },
-        'goto_page':function (num) {
+         goto_page:function (num) {
             var filter_obj=this.get_filter_obj()
             var sort_str = this.get_sort_str()
             var search_obj={'_sort':sort_str,'_page':num}
             update(search_obj,filter_obj)
             location.search=searchfy(search_obj)
             //location.search='_sort='+sort_str+'&'+search_str+'_page='+num
-        }
+        },
+    },
+    events:{
+        'sort-changed':function () {
+            this.refresh_arg()
+        },
+       
     }
 }
 

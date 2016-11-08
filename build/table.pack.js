@@ -144,7 +144,7 @@
 	    methods: {
 	        goto_page: function goto_page(num) {
 	            if (!isNaN(parseInt(num)) && !num.endsWith('a')) {
-	                this.$dispatch('goto_page', num);
+	                this.$emit('goto_page', num);
 	            }
 	        }
 	    },
@@ -187,13 +187,8 @@
 	            update(search_obj, filter_obj);
 	            location.search = searchfy(search_obj);
 	            //location.search='_sort='+sort_str+'&'+search_str
-	        }
-	    },
-	    events: {
-	        'sort-changed': function sortChanged() {
-	            this.refresh_arg();
 	        },
-	        'goto_page': function goto_page(num) {
+	        goto_page: function goto_page(num) {
 	            var filter_obj = this.get_filter_obj();
 	            var sort_str = this.get_sort_str();
 	            var search_obj = { '_sort': sort_str, '_page': num };
@@ -201,6 +196,12 @@
 	            location.search = searchfy(search_obj);
 	            //location.search='_sort='+sort_str+'&'+search_str+'_page='+num
 	        }
+	    },
+	    events: {
+	        'sort-changed': function sortChanged() {
+	            this.refresh_arg();
+	        }
+
 	    }
 	};
 
