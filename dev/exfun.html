@@ -1,0 +1,46 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+        <title>Deposits and Withdrawals</title>
+        <script type="text/javascript" src='http://apps.bdimg.com/libs/jquery/1.9.1/jquery.min.js'></script>
+        <!--<script src="http://cdn.bootcss.com/vue/1.0.24/vue.js"></script>-->
+		<script src="http://cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+		<link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
+		<script src="../js/exfun.js"></script>
+
+	<script type="text/javascript">
+		alert(ex.template('hello {user}',{user:'heyulin'}))
+		alert(ex.template("aaa{0}bbb{1}ccc",["","333"]))
+		var src1=[{name:'dog',age:'18'}]
+		var src2=[{name:'dog',label:'dog_label'},
+				{name:'pig',label:'jj'}]
+		alert(ex.merge(src1,src2))
+		alert(ex.searchfy(src1[0]))
+		ex.loadjs('http://cdn.bootcss.com/vue/1.0.24/vue.js',function () {
+			alert(Vue)
+		})
+		var data = [
+    { "name": "abc", "type": "1", "value": "haha1" },
+    { "name": "abc", "type": "2", "value": "haha2" },
+    { "name": "abc1", "type": "1", "value": "haha2" },
+    { "name": "abc1", "type": "3", "value": "haha3" },
+    { "name": "abc2", "type": "2", "value": "haha3" },
+    { "name": "abc2", "type": "3", "value": "haha3" },
+    { "name": "abc2", "type": "4", "value": "haha4" },
+    { "name": "abc3", "type": "1", "value": "haha4" },
+    { "name": "abc3", "type": "2", "value": "haha5" },
+    { "name": "abc3", "type": "3", "value": "haha5" },
+    { "name": "abc3", "type": "2", "value": "haha6" },
+    { "name": "abc4", "type": "5", "value": "haha6" }
+]
+	ex.each( ex.find(data,{value:'haha3',type:'2'}),function (v) {
+		console.log(v)
+	})
+	</script>
+	</head>
+    <body>
+		
+    </body>
+</html>
+	
