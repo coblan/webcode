@@ -1,0 +1,63 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+        <title>Deposits and Withdrawals</title>
+        <script type="text/javascript" src='http://apps.bdimg.com/libs/jquery/1.9.1/jquery.min.js'></script>
+        <!--<script src="http://cdn.bootcss.com/vue/1.0.24/vue.js"></script>-->
+		<script src="http://cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+		<link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
+		<script src="../js/exfun.js"></script>
+		<link href="http://cdn.bootcss.com/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker.min.css" rel="stylesheet">
+			<script src="http://cdn.bootcss.com/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.min.js"></script>
+			<script src="http://cdn.bootcss.com/bootstrap-datepicker/1.6.4/locales/bootstrap-datepicker.zh-CN.min.js"></script>
+	<script type="text/javascript">
+	$(function () {
+		$('#sandbox-container input').datepicker({
+		    language: "zh-CN",
+		     format: "yyyy/mm/dd",
+		})
+
+
+		$('#sandbox-container .input-group.date').datepicker({
+		    format: "yyyy/mm/dd",
+		    weekStart: 0,
+		    language: "zh-CN",
+		    daysOfWeekHighlighted: "0,6",
+		    autoclose: true,
+		    todayHighlight: true
+		});
+
+
+		$('#sandbox-container .input-daterange').datepicker({
+		    format: "yyyy/mm/dd",
+		    weekStart: 5,
+		    language: "zh-CN",
+		    calendarWeeks: true,
+		    autoclose: true,
+		    todayHighlight: true
+		});
+
+	
+	})
+		
+	</script>
+	</head>
+    <body>
+	    <div id='sandbox-container'>
+		    <input type="text" class="form-control">
+
+			<div class="input-group date">
+			  <input type="text" class="form-control"><span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+			</div>
+
+			 <div class="input-daterange input-group" id="datepicker">
+			    <input type="text" class="input-sm form-control" name="start" />
+			    <span class="input-group-addon">to</span>
+			    <input type="text" class="input-sm form-control" name="end" />
+			</div>
+	    </div>
+		
+    </body>
+</html>
+	

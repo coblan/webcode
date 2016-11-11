@@ -12,6 +12,7 @@ rows=[{xxx:"jjy",jb:'hahaer'}]
 
 Vue.component('sort-table',{
     props:{
+	    value:{},
         heads:{
             default:function () {
                 return []
@@ -27,9 +28,6 @@ Vue.component('sort-table',{
                 return []
             }
         },
-        selected:{
-            default:''
-        },
         map:{
             default:function () {
                 return function (name,row) {
@@ -40,7 +38,8 @@ Vue.component('sort-table',{
     },
     data:function () {
     	return {
-	    	icatch:''
+	    	icatch:'',
+	    	selected:this.value,
     	}
     },
     methods:{
@@ -74,9 +73,12 @@ Vue.component('sort-table',{
             }
             this.$dispatch('sort-changed')
         },
- 
-        
     } ,
+    watch:{
+	    selected:function (v) {
+	    	this.$emit('input',v)
+	    }
+    },
     template:`<table>
 			<thead>
 				<tr>

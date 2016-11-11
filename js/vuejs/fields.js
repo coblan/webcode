@@ -273,7 +273,7 @@ var field_base={
         bool:{
 	        props:['name','row','kw'],
 	        template:`<div class="checkbox">
-					    <label><input type="checkbox" :id="'id_'+name" v-model='row[name]' disabled="kw.readonly">
+					    <label><input type="checkbox" :id="'id_'+name" v-model='row[name]' :disabled="kw.readonly">
 					    	<span v-text='kw.label'></span>
 					    </label>
 					  </div>`
