@@ -18,12 +18,13 @@ Contents:
 
    introduce
    python_code
-   database_tools
+   fields
    table
    ajax_hook
    cus_admin
    authuser
    permission
+   exfun
 
 
 
