@@ -11,7 +11,9 @@ ex={
 	    // Convert the array of strings into an object
 	    for (var i = 0; i < queries.length; i++ ) {
 		    var mt = /([^=]+?)=(.+)/.exec(queries[i])
-	        params[mt[1]] = mt[2];
+		    if(mt){
+			    params[mt[1]] = mt[2];
+		    }
 	    }
 	    return params;
 	},
