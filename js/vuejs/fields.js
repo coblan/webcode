@@ -178,7 +178,7 @@ var field_base={
 			        model:this.row[this.name]
 		        }
 	        },
-            template:`<select v-model='model'  :id="'id_'+name" :readonly='kw.readonly' class="form-control">
+            template:`<select v-model='row[name]'  :id="'id_'+name" :readonly='kw.readonly' class="form-control">
             	<option :value='null'>----</option>
             	<option v-for='opt in kw.options' :value='opt.value' v-text='opt.label'></option>
             </select>`,

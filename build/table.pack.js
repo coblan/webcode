@@ -143,7 +143,7 @@
 
 	*/
 	Vue.component('paginator', {
-	    props: ['nums'],
+	    props: ['nums', 'crt'],
 	    methods: {
 	        goto_page: function goto_page(num) {
 	            if (!isNaN(parseInt(num)) && !num.endsWith('a')) {
@@ -151,7 +151,7 @@
 	            }
 	        }
 	    },
-	    template: '\n    <ul class="pagination page-num">\n\n    <li v-for=\'num in nums\' track-by="$index" :class=\'{"clickable": !isNaN(parseInt(num))}\' @click=\'goto_page(num)\'>\n    <span v-text=\'!isNaN(parseInt(num))? parseInt(num):num\' :class=\'{"active":num.endsWith("a")}\'></span>\n    </li>\n\n    </ul>\n    '
+	    template: '\n    <ul class="pagination page-num">\n\n    <li v-for=\'num in nums\' track-by="$index" :class=\'{"clickable": !isNaN(parseInt(num))}\' @click=\'goto_page(num)\'>\n    <span v-text=\'!isNaN(parseInt(num))? parseInt(num):num\' :class=\'{"active":parseInt(num) ==parseInt(crt)}\'></span>\n    </li>\n\n    </ul>\n    '
 	});
 
 	var build_table_args = {

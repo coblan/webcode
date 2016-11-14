@@ -127,7 +127,7 @@ goto_page,num
 
 */
 Vue.component('paginator',{
-    props:['nums'],
+    props:['nums','crt'],
     methods:{
         goto_page:function (num) {
             if (!isNaN(parseInt(num)) && !num.endsWith('a')){
@@ -139,7 +139,7 @@ Vue.component('paginator',{
     <ul class="pagination page-num">
 
     <li v-for='num in nums' track-by="$index" :class='{"clickable": !isNaN(parseInt(num))}' @click='goto_page(num)'>
-    <span v-text='!isNaN(parseInt(num))? parseInt(num):num' :class='{"active":num.endsWith("a")}'></span>
+    <span v-text='!isNaN(parseInt(num))? parseInt(num):num' :class='{"active":parseInt(num) ==parseInt(crt)}'></span>
     </li>
 
     </ul>
