@@ -172,9 +172,6 @@ var build_table_args = {
             }
             return sort_str
         },
-        search:function () {
-            this.refresh_arg()
-        },
         refresh_arg:function () {
             var filter_obj=this.get_filter_obj()
             var sort_str = this.get_sort_str()
@@ -221,7 +218,74 @@ ul.pagination li span:hover:not(.active) {background-color: #ddd;}
 </style>
 `)
 
+var table_fun={
+	methods:{
+		is_sel:function (sortable,name) {
+			/*
+			@sortable: array
+			*/
+			return sortable.indexOf(name)!=1
+		},
+		toggle:function (sorted,name) {
+			var out=[]
+			var find =false
+			for(var x=0;x<sorted.length;x++){
+				var org_name=sorted[x]
+				if(org_name.startsWith('-')){
+					var norm_name=org_name.slice(1)
+					var plus=false
+				}else{
+					var norm_name=org_name
+					var plus=true
+				}
+				if(name==norm_name){
+					find=true
+				}
+				if(name==norm_name && plus){
+					out.push('-'+norm_name)
+				}else{
+					out.push(norm_name)
+				}
+			}
+			if(!find){  // 如果没找到，说明是激活排序
+				out.push(name)
+			}
+			return out
+		}
+	}
 
+}
+
+Vue.component('sort-mark',{
+	props:['sorted','name'],
+	template:`<div><img v-if='get_status()=="up"' src='http://res.enjoyst.com/image/up_01.png' />
+			<img v-if='get_status()=="down"' src='http://res.enjoyst.com/image/down_01.png' />
+			</div>
+	`,
+	methods:{
+		get_status:function () {
+			for(var x=0;x<this.sorted.length;x++){
+				var org_name=this.sorted[x]
+				if(org_name.startsWith('-')){
+					var name=org_name.slice(1)
+					var minus='up'
+				}else{
+					var name=org_name
+					var minus='down'
+				}
+				if(name==this.name){
+					return minus
+				}
+			}
+			return 'no_sel'
+		}
+	}
+	
+})
+
+
+
+window.table_fun=table_fun
 window.build_table_args=build_table_args
 
 
