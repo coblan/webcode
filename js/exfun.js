@@ -12,7 +12,7 @@ ex={
 	    for (var i = 0; i < queries.length; i++ ) {
 		    var mt = /([^=]+?)=(.+)/.exec(queries[i])
 		    if(mt){
-			    params[mt[1]] = mt[2];
+			    params[mt[1]] = decodeURI(mt[2]);
 		    }
 	    }
 	    return params;
@@ -26,6 +26,8 @@ ex={
 		}
 		if(outstr.endsWith('&')){
 			return outstr.slice(0,-1)
+		}else if(outstr==pre){
+			return ''
 		}else{
 			return outstr
 		}
