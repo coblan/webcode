@@ -126,6 +126,13 @@ ex={
 			func(array[i])
 		}
 	},
+	map:function (array,func) {
+		var out=[]
+		for(var i=0;i<array.length;i++){
+			out.push(func(array[i]))
+		}
+		return out
+	},
 	loadjs: function(src,success) {
 		success = success || function(){};
 		var name = btoa(src)

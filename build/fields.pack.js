@@ -546,14 +546,97 @@
 	/*
 	file-input
 	===========
+	预览图片
+		从file-input读出数据，然后赋予图片的src ::
+		
+			f1.read(file,function (data) {
+					$('#haha')[0].src = data
+					}
+
 
 
 	*/
+	var fl = {
+	    read: function read(file, callback) {
+	        var reader = new FileReader();
+	        reader.onloadend = function () {
+	            // 图片的 base64 格式, 可以直接当成 img 的 src 属性值
+	            var dataURL = reader.result;
+	            //var img = new Image();
+	            //img.src = dataURL;
+	            // 插入到 DOM 中预览
+	            //$('#haha')[0].src=dataURL
+	            callback(dataURL);
+	        };
+	        reader.readAsDataURL(file); // 读出 base64
+	    },
+	    upload: function upload(file, url, success) {
+	        var fd = new FormData();
+	        fd.append('file', file);
+	        $.ajax({
+	            url: url,
+	            type: 'post',
+	            data: fd,
+	            contentType: false,
+	            success: success,
+	            //success:function (data) {
+	            //    success(data)
+	            //},
+	            processData: false,
+	            xhr: function xhr() {
+	                var xhr = new window.XMLHttpRequest();
+	                xhr.upload.addEventListener("progress", function (evt) {
+	                    if (evt.lengthComputable) {
+	                        var percentComplete = evt.loaded / evt.total;
+	                        console.log('进度', percentComplete);
+	                    }
+	                }, false);
+
+	                return xhr;
+	            }
+	        });
+	    },
+	    uploads: function uploads(files, url, success) {
+	        var fd = new FormData();
+	        for (var x = 0; x < files.length; x++) {
+	            var file = files[x];
+	            fd.append(file.name, file);
+	        }
+	        $.ajax({
+	            url: url,
+	            type: 'post',
+	            data: fd,
+	            contentType: false,
+	            success: success,
+	            processData: false,
+	            xhr: function xhr() {
+	                var xhr = new window.XMLHttpRequest();
+	                xhr.upload.addEventListener("progress", function (evt) {
+	                    if (evt.lengthComputable) {
+	                        var percentComplete = evt.loaded / evt.total;
+	                        console.log('进度', percentComplete);
+	                    }
+	                }, false);
+
+	                return xhr;
+	            }
+	        });
+	    }
+	};
 
 	Vue.component('file-input', {
-	    template: "<input type='file' @change='_changed'>",
-	    props: {},
+	    template: "<input type='file' @change='on_change($event)'>",
+	    props: ['value'],
+	    data: function data() {
+	        return {
+	            files: []
+	        };
+	    },
 	    methods: {
+	        on_change: function on_change(event) {
+	            this.files = event.target.files;
+	            this.$emit('input', this.files);
+	        },
 	        _changed: function _changed(changeEvent) {
 	            var file = changeEvent.target.files[0];
 	            if (!file) return;
@@ -663,6 +746,8 @@
 	if (!window._logo_input_css) {
 	    document.write('\n\n<style type="text/css" media="screen" >\n.up_wrap{\n    position: relative;\n    text-align: center;\n    border: 2px dashed #ccc;\n    background: #FDFDFD;\n    width:300px;\n}\n.logo-input input[type="file"]{\n    opacity: 0;\n    position: absolute;\n    top: 40px;\n    left: 40px;\n    display: block;\n    cursor: pointer;\n}\n.closeDiv{\n    width: 100%;\n    height: 100%;\n    position: absolute;\n    top: 0;\n    left: 0;\n    background-color: #ffffff;\n}\n.choose{\n    display: inline-block;\n    text-decoration: none;\n    padding: 5px;\n    border: 1px solid #0092F2;\n    border-radius: 4px;\n    font-size: 14px;\n    color: #0092F2;\n    cursor: pointer;\n}\n.choose:hover,.choose:active{\n    text-decoration: none;\n    color: #0092F2;\n}\n.close{\n    position: absolute;\n    top: 5px;\n    right: 10px;\n    cursor: pointer;\n    font-size: 14px;\n    color: #242424;\n}\n.logoImg{\n    max-height: 100px !important;\n    vertical-align: middle;\n    margin-top: 5px;\n}\n.req_star{\n    color: red;\n    font-size: 200%;\n}\n</style>\n\n      ');
 	}
+
+	window.fl = fl;
 
 /***/ },
 /* 4 */

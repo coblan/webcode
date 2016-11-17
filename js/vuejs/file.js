@@ -1,15 +1,97 @@
 /*
 file-input
 ===========
+预览图片
+	从file-input读出数据，然后赋予图片的src ::
+	
+		f1.read(file,function (data) {
+				$('#haha')[0].src = data
+				}
+
 
 
 */
+var fl={
+	read:function (file,callback) {
+		var reader = new FileReader();
+    	reader.onloadend = function () {
+	        // 图片的 base64 格式, 可以直接当成 img 的 src 属性值
+	        var dataURL = reader.result;
+	        //var img = new Image();
+	        //img.src = dataURL;
+	        // 插入到 DOM 中预览
+	        //$('#haha')[0].src=dataURL
+	        callback(dataURL) 
+	    };
+	    reader.readAsDataURL(file); // 读出 base64
+	},
+	upload:function (file,url,success) {
+            var fd = new FormData();
+            fd.append('file',file);
+            $.ajax({
+                url:url,
+                type:'post',
+                data:fd,
+                contentType: false,
+                success:success,
+                //success:function (data) {
+                //    success(data)
+                //},
+                processData:false, 
+		       xhr:function() {
+			        var xhr = new window.XMLHttpRequest();
+			        xhr.upload.addEventListener("progress", function(evt) {
+			            if (evt.lengthComputable) {
+			                var percentComplete = evt.loaded / evt.total;
+			                console.log('进度', percentComplete);
+			            }
+			        }, false);
+
+			        return xhr;
+			}
+		})
+	},
+	uploads:function (files,url,success) {
+        	var fd = new FormData();
+        	for(var x=0;x<files.length;x++){
+	        	var file=files[x]
+	        	 fd.append(file.name,file);
+        	}
+            $.ajax({
+                url:url,
+                type:'post',
+                data:fd,
+                contentType: false,
+                success:success,
+                processData:false, 
+		       xhr:function() {
+			        var xhr = new window.XMLHttpRequest();
+			        xhr.upload.addEventListener("progress", function(evt) {
+			            if (evt.lengthComputable) {
+			                var percentComplete = evt.loaded / evt.total;
+			                console.log('进度', percentComplete);
+			            }
+			        }, false);
+
+			        return xhr;
+				}
+			})
+        }
+}
 
 Vue.component('file-input',{
-    template:"<input type='file' @change='_changed'>",
-    props:{
+    template:"<input type='file' @change='on_change($event)'>",
+   	props:['value'],
+    data:function () {
+    	return {
+	    	files:[]
+    	}
     },
     methods:{
+	    on_change:function (event) {
+	    	this.files=event.target.files
+	    	this.$emit('input',this.files)
+	    },
         _changed:function (changeEvent) {
             var file=changeEvent.target.files[0];
             if(!file)
@@ -52,7 +134,7 @@ Vue.component('file-input',{
                 },
                 processData:false
             })
-        }
+        },
     }
 })
 
@@ -203,3 +285,4 @@ Vue.component('file-obj',{
   }
 
 
+window.fl=fl
