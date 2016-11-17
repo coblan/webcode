@@ -220,14 +220,25 @@ ul.pagination li span:hover:not(.active) {background-color: #ddd;}
 
 var table_fun={
 	methods:{
-		is_sel:function (sortable,name) {
+		ig_ms_in:function (sorted,name) {
 			/*
 			@sortable: array
 			*/
-			return sortable.indexOf(name)!=1
+			for(var x=0;x<sorted.length;x++){
+				var org_name=sorted[x]
+				if(org_name.startsWith('-')){
+					var norm_name=org_name.slice(1)
+				}else{
+					var norm_name=org_name
+				}
+				if(name==norm_name){
+					return true
+				}
+			}
+			return false
+			
 		},
 		toggle:function (sorted,name) {
-			var out=[]
 			var find =false
 			for(var x=0;x<sorted.length;x++){
 				var org_name=sorted[x]
@@ -239,18 +250,38 @@ var table_fun={
 					var plus=true
 				}
 				if(name==norm_name){
+					if(plus){
+						sorted.splice(x,1,'-'+norm_name)
+					}else{
+						sorted.splice(x,1,norm_name)
+					}
 					find=true
-				}
-				if(name==norm_name && plus){
-					out.push('-'+norm_name)
-				}else{
-					out.push(norm_name)
+					break
 				}
 			}
 			if(!find){  // 如果没找到，说明是激活排序
-				out.push(name)
+				sorted.push(name)
 			}
-			return out
+		},
+		remove_sort:function (sorted,name) {
+			var index=-1
+			for(var x=0;x<sorted.length;x++){
+				var org_name=sorted[x]
+				if(org_name.startsWith('-')){
+					var norm_name=org_name.slice(1)
+					var plus=false
+				}else{
+					var norm_name=org_name
+					var plus=true
+				}
+				if(name==norm_name){
+					index=x
+					break
+				}
+			}
+			if(index!=-1){ 
+				sorted.splice(index,1)
+			}
 		}
 	}
 
@@ -258,8 +289,17 @@ var table_fun={
 
 Vue.component('sort-mark',{
 	props:['sorted','name'],
-	template:`<div><img v-if='get_status()=="up"' src='http://res.enjoyst.com/image/up_01.png' />
-			<img v-if='get_status()=="down"' src='http://res.enjoyst.com/image/down_01.png' />
+	data:function () {
+		return {
+			index:-1
+		}
+	},
+	mixins:[table_fun],
+	template:`<div class='sort-mark'>
+			<span v-if='index>0' v-text='index'></span>
+			<img v-if='get_status()=="up"' src='http://res.enjoyst.com/image/up_01.png' @click='toggle(sorted,name)'/>
+			<img v-if='get_status()=="down"' src='http://res.enjoyst.com/image/down_01.png' @click='toggle(sorted,name)'/>
+			<img v-if='get_status()!="no_sort"' src='http://res.enjoyst.com/image/cross.png' @click='remove_sort(sorted,name)'/>
 			</div>
 	`,
 	methods:{
@@ -274,15 +314,22 @@ Vue.component('sort-mark',{
 					var minus='down'
 				}
 				if(name==this.name){
+					this.index=x+1
 					return minus
 				}
 			}
-			return 'no_sel'
+			return 'no_sort'
 		}
 	}
 	
 })
-
+document.write(`
+<style type="text/css" media="screen">
+	.sort-mark img{
+		width:20px;
+	}
+</style>
+`)
 
 
 window.table_fun=table_fun
