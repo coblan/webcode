@@ -142,16 +142,11 @@
 
 	if (!window.__modal_mark) {
 		window.__modal_mark = true;
-		document.write('\n\t\t<style>\n\t\t._modal_popup{\n\t\t\tposition: fixed;\n\t\t\ttop: 0;\n\t\t\tleft: 0;\n\t\t\tright: 0;\n\t\t\tbottom: 0;\n\t\t\tbackground: rgba(0, 0, 0, 0.5);\n\t\t}\n\t\t._modal_inn{\n\t\t\t//background: rgba(88, 88, 88, 0.2);\n\t\t\tborder-radius: 5px;\n\t\t\tbackground:white;\n\t\t\toverflow:auto;\n\t\n\t\t\t/*padding:30px 80px ;*/\n\t\t}\n\t\t._modal_middle{\n\t\t    position: absolute;\n\t        top: 50%;\n\t        left: 50%;\n\t        transform: translate(-50%, -50%);\n\t        -ms-transform:translate(-50%, -50%); \t/* IE 9 */\n\t\t\t-moz-transform:translate(-50%, -50%); \t/* Firefox */\n\t\t\t-webkit-transform:translate(-50%, -50%); /* Safari 和 Chrome */\n\t\t\t-o-transform:translate(-50%, -50%); \n\t        text-align: center;\n\t        z-index: 1000;\n    \t}\n    \t#_upload_mark{\n    \t\tfloat: left;\n    \t}\n\t\t</style>');
+		document.write('\n\t\t<style>\n\t\t._modal_popup{\n\t\t\tposition: fixed;\n\t\t\ttop: 0;\n\t\t\tleft: 0;\n\t\t\tright: 0;\n\t\t\tbottom: 0;\n\t\t\tbackground: rgba(0, 0, 0, 0.5);\n\t\t\tz-index:900;\n\t\t}\n\t\t._modal_inn{\n\t\t\t//background: rgba(88, 88, 88, 0.2);\n\t\t\tborder-radius: 5px;\n\t\t\tbackground:white;\n\t\t\toverflow:auto;\n\t\n\t\t\t/*padding:30px 80px ;*/\n\t\t}\n\t\t._modal_middle{\n\t\t    position: absolute;\n\t        top: 50%;\n\t        left: 50%;\n\t        transform: translate(-50%, -50%);\n\t        -ms-transform:translate(-50%, -50%); \t/* IE 9 */\n\t\t\t-moz-transform:translate(-50%, -50%); \t/* Firefox */\n\t\t\t-webkit-transform:translate(-50%, -50%); /* Safari 和 Chrome */\n\t\t\t-o-transform:translate(-50%, -50%); \n\t        text-align: center;\n\t        z-index: 1000;\n    \t}\n    \t#_upload_mark{\n    \t\tfloat: left;\n    \t}\n\t\t</style>');
 	}
 	Vue.component('modal', {
-		template: '<div class="_modal_popup" @click=\'hide_me()\'>\n\t\t\t<div class="_modal_middle _modal_inn" :style=\'inn_style\'>\n\t\t\t<slot></slot></div>\n\t\t\t</div>',
-		props: ['inn_style'],
-		methods: {
-			hide_me: function hide_me() {
-				this.$dispatch('sd_hide');
-			}
-		}
+		template: '<div class="_modal_popup" >\n\t\t\t<div class="_modal_middle _modal_inn" :style=\'inn_style\'>\n\t\t\t<slot></slot></div>\n\t\t\t</div>',
+		props: ['inn_style']
 	});
 
 /***/ }

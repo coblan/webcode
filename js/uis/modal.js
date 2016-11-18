@@ -10,6 +10,7 @@ if(!window.__modal_mark){
 			right: 0;
 			bottom: 0;
 			background: rgba(0, 0, 0, 0.5);
+			z-index:900;
 		}
 		._modal_inn{
 			//background: rgba(88, 88, 88, 0.2);
@@ -37,14 +38,14 @@ if(!window.__modal_mark){
 		</style>`)
 }
 Vue.component('modal',{
-	template:`<div class="_modal_popup" @click='hide_me()'>
+	template:`<div class="_modal_popup" >
 			<div class="_modal_middle _modal_inn" :style='inn_style'>
 			<slot></slot></div>
 			</div>`,
 	props:['inn_style'],
-	methods:{
-		hide_me:function () {
-			this.$dispatch('sd_hide')
-		}
-	}
+	//methods:{
+	//	hide_me:function () {
+	//		this.$dispatch('sd_hide')
+	//	}
+	//}@click='hide_me()'
 })
