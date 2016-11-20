@@ -220,92 +220,66 @@ ul.pagination li span:hover:not(.active) {background-color: #ddd;}
 
 var table_fun={
 	methods:{
-		ig_ms_in:function (sorted,name) {
-			/*
-			@sortable: array
-			*/
-			for(var x=0;x<sorted.length;x++){
-				var org_name=sorted[x]
-				if(org_name.startsWith('-')){
-					var norm_name=org_name.slice(1)
-				}else{
-					var norm_name=org_name
-				}
-				if(name==norm_name){
-					return true
-				}
-			}
-			return false
-			
-		},
-		toggle:function (sorted,name) {
-			var find =false
-			for(var x=0;x<sorted.length;x++){
-				var org_name=sorted[x]
-				if(org_name.startsWith('-')){
-					var norm_name=org_name.slice(1)
-					var plus=false
-				}else{
-					var norm_name=org_name
-					var plus=true
-				}
-				if(name==norm_name){
-					if(plus){
-						sorted.splice(x,1,'-'+norm_name)
+		filter_minus:function (array) {
+			return ex.map(array,function (v) {
+					if(v.startsWith('-')){
+						return v.slice(1)
 					}else{
-						sorted.splice(x,1,norm_name)
+						return v
 					}
-					find=true
-					break
-				}
-			}
-			if(!find){  // 如果没找到，说明是激活排序
-				sorted.push(name)
-			}
+				})
 		},
-		remove_sort:function (sorted,name) {
-			var index=-1
-			for(var x=0;x<sorted.length;x++){
-				var org_name=sorted[x]
-				if(org_name.startsWith('-')){
-					var norm_name=org_name.slice(1)
-					var plus=false
-				}else{
-					var norm_name=org_name
-					var plus=true
-				}
-				if(name==norm_name){
-					index=x
-					break
-				}
+		is_sorted:function (sort_str,name) {
+			var ls=sort_str.split(',')
+			var norm_ls=this.filter_minus(ls)
+			return ex.isin(name,norm_ls)
+		},
+		toggle:function (sort_str,name) {
+			var ls=ex.split(sort_str,',')
+			var norm_ls=this.filter_minus(ls)
+			var idx = norm_ls.indexOf(name)
+			if(idx!=-1){
+				ls[idx]=ls[idx].startsWith('-')?name:'-'+name
+			}else{
+				ls.push(name)
 			}
-			if(index!=-1){ 
-				sorted.splice(index,1)
-			}
+			return ls.join(',')
+		},
+		remove_sort:function (sort_str,name) {
+			var ls=ex.split(sort_str,',')
+			ls=ex.filter(ls,function (v) {
+					return v!='-'+name && v!=name
+				})
+			return ls.join(',')
 		}
 	}
 
 }
 
 Vue.component('sort-mark',{
-	props:['sorted','name'],
+	props:['value','name'],
 	data:function () {
 		return {
-			index:-1
+			index:-1,
+			sort_str:this.value,
 		}
 	},
 	mixins:[table_fun],
 	template:`<div class='sort-mark'>
 			<span v-if='index>0' v-text='index'></span>
-			<img v-if='get_status()=="up"' src='http://res.enjoyst.com/image/up_01.png' @click='toggle(sorted,name)'/>
-			<img v-if='get_status()=="down"' src='http://res.enjoyst.com/image/down_01.png' @click='toggle(sorted,name)'/>
-			<img v-if='get_status()!="no_sort"' src='http://res.enjoyst.com/image/cross.png' @click='remove_sort(sorted,name)'/>
+			<img v-if='status=="up"' src='http://res.enjoyst.com/image/up_01.png'
+					 @click='sort_str=toggle(sort_str,name);$emit("input",sort_str)'/>
+			<img v-if='status=="down"' src='http://res.enjoyst.com/image/down_01.png'
+					 @click='sort_str=toggle(sort_str,name);$emit("input",sort_str)'/>
+			<img v-if='status!="no_sort"' src='http://res.enjoyst.com/image/cross.png' 
+					@click='sort_str=remove_sort(sort_str,name);$emit("input",sort_str)'/>
 			</div>
 	`,
-	methods:{
-		get_status:function () {
-			for(var x=0;x<this.sorted.length;x++){
-				var org_name=this.sorted[x]
+	computed:{
+		status:function () {
+			var sorted=this.value.split(',')
+			for(var x=0;x<sorted.length;x++){
+				var org_name=sorted[x]
 				if(org_name.startsWith('-')){
 					var name=org_name.slice(1)
 					var minus='up'
@@ -319,8 +293,29 @@ Vue.component('sort-mark',{
 				}
 			}
 			return 'no_sort'
-		}
-	}
+		}	
+	},
+	//methods:{
+		
+	//	get_status:function () {
+	//		var sorted=this.sort_str.split(',')
+	//		for(var x=0;x<sorted.length;x++){
+	//			var org_name=sorted[x]
+	//			if(org_name.startsWith('-')){
+	//				var name=org_name.slice(1)
+	//				var minus='up'
+	//			}else{
+	//				var name=org_name
+	//				var minus='down'
+	//			}
+	//			if(name==this.name){
+	//				this.index=x+1
+	//				return minus
+	//			}
+	//		}
+	//		return 'no_sort'
+	//	}
+	//}
 	
 })
 document.write(`

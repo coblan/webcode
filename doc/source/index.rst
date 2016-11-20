@@ -14,17 +14,12 @@ Contents:
 
 .. toctree::
    :maxdepth: 2
-   :numbered: 2
+   :numbered: 3
 
-   introduce
-   python_code
-   fields
-   table
-   ajax_hook
-   cus_admin
-   authuser
-   permission
-   exfun
+   admin/index
+   backend/index
+   frontend/index
+   uis/index
 
 
 
