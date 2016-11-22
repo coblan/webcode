@@ -313,7 +313,7 @@
 			},
 			tow_col: {
 				props: ['name', 'row', 'kw'],
-				template: '<div>\n\t        \t<ul v-if=\'kw.readonly\'><li v-for=\'value in row[name]\' v-text=\'get_label(value)\'></li></ul>\n\t        \t<tow-col-sel v-else :selected=\'row[name]\' :id="\'id_\'+name" :choices=\'kw.options\' :size=\'kw.size\' ></tow-col-sel>\n\t        \t</div>',
+				template: '<div>\n\t        \t<ul v-if=\'kw.readonly\'><li v-for=\'value in row[name]\' v-text=\'get_label(value)\'></li></ul>\n\t        \t<tow-col-sel v-else v-model=\'row[name]\' :id="\'id_\'+name" :choices=\'kw.options\' :size=\'kw.size\' ></tow-col-sel>\n\t        \t</div>',
 				methods: {
 					get_label: function get_label(value) {
 						for (var i = 0; i < this.kw.options.length; i++) {
@@ -531,7 +531,7 @@
 
 	if (!window.__uploading_mark) {
 		window.__uploading_mark = true;
-		document.write('\n\t\t<style>\n\t\t.popup{\n\t\t\tposition: fixed;\n\t\t\ttop: 0;\n\t\t\tleft: 0;\n\t\t\tright: 0;\n\t\t\tbottom: 0;\n\t\t\tdisplay:none;\n\t\t}\n\t\t#_upload_inn{\n\t\t\tbackground: rgba(88, 88, 88, 0.2);\n\t\t\tborder-radius: 5px;\n\t\t\twidth:180px;\n\t\t\theight:120px;\n\t\t\t/*padding:30px 80px ;*/\n\t\t}\n\t\t.imiddle{\n\t    position: absolute;\n        top: 50%;\n        left: 50%;\n        transform: translate(-50%, -50%);\n        -ms-transform:translate(-50%, -50%); \t/* IE 9 */\n\t\t-moz-transform:translate(-50%, -50%); \t/* Firefox */\n\t\t-webkit-transform:translate(-50%, -50%); /* Safari �� Chrome */\n\t\t-o-transform:translate(-50%, -50%); \n\t\t\n        text-align: center;\n\t\t/*display: table;*/\n        z-index: 1000;\n    \t}\n    \t#_upload_mark{\n    \t\tfloat: left;\n\n    \t}\n\t\t</style>');
+		document.write('\n\t\t<style>\n\t\t.popup{\n\t\t\tposition: fixed;\n\t\t\ttop: 0;\n\t\t\tleft: 0;\n\t\t\tright: 0;\n\t\t\tbottom: 0;\n\t\t\tdisplay:none;\n\t\t}\n\t\t#_upload_inn{\n\t\t\tbackground: rgba(88, 88, 88, 0.2);\n\t\t\tborder-radius: 5px;\n\t\t\twidth:180px;\n\t\t\theight:120px;\n\t\t\t/*padding:30px 80px ;*/\n\t\t}\n\t\t.imiddle{\n\t    position: absolute;\n        top: 50%;\n        left: 50%;\n        transform: translate(-50%, -50%);\n        -ms-transform:translate(-50%, -50%); \t/* IE 9 */\n\t\t-moz-transform:translate(-50%, -50%); \t/* Firefox */\n\t\t-webkit-transform:translate(-50%, -50%); /* Safari \uFFFD\uFFFD Chrome */\n\t\t-o-transform:translate(-50%, -50%); \n\t\t\n        text-align: center;\n\t\t/*display: table;*/\n        z-index: 1000;\n    \t}\n    \t#_upload_mark{\n    \t\tfloat: left;\n\n    \t}\n\t\t</style>');
 		$(function () {
 			$('body').append('<div class="popup" id="load_wrap"><div id=\'_upload_inn\' class="imiddle">\n\t\t<div  id="_upload_mark" class="imiddle"><i class="fa fa-spinner fa-spin fa-3x"></i></div></div></div>');
 		});
@@ -819,13 +819,18 @@
 		template: temp_tow_col_sel,
 		props: {
 			choices: {},
-			selected: {},
+			value: {
+				default: function _default() {
+					return [];
+				}
+			},
 			size: {
 				default: 6
 			}
 		},
 		data: function data() {
 			return {
+				selected: this.value,
 				selected__: [],
 				can_select: JSON.parse(JSON.stringify(this.choices)),
 				left_sel: [],
@@ -833,14 +838,14 @@
 			};
 		},
 		mounted: function mounted() {
-			for (var x = 0; x < this.selected.length; x++) {
-				for (var y = 0; y < this.choices.length; y++) {
-					if (this.choices[y].value == this.selected[x]) {
-						this.selected__.push(this.choices[y]);
-						this.can_select.splice(y, 1);
-						break;
-					}
-				}
+			var self = this;
+			this.selected__ = ex.remove(this.can_select, function (item) {
+				return ex.isin(item.value, self.value);
+			});
+		},
+		watch: {
+			selected: function selected(v) {
+				this.$emit('input', v);
 			}
 		},
 

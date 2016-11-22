@@ -128,6 +128,13 @@ ex={
 			func(array[i])
 		}
 	},
+	split:function (base_str,sep) {
+		if(base_str==''){
+			return []
+		}else{
+			return base_str.split(sep)
+		}
+	},
 	map:function (array,func) {
 		var out=[]
 		for(var i=0;i<array.length;i++){
@@ -135,8 +142,17 @@ ex={
 		}
 		return out
 	},
-	isin:function (obj,array) {
-		return array.indexOf(obj)!=-1
+	isin:function (obj,array,func) {
+		if(func){
+			for(var i=0;i<array.length;i++){
+				if(func(obj,array[i])){
+					return true
+				}
+			}
+			return false
+		}else{
+			return array.indexOf(obj)!=-1
+		}
 	},
 	filter:function (array,func) {
 		var out=[]
@@ -146,6 +162,34 @@ ex={
 			}
 		}
 		return out
+	},
+	isfun:function function_name(func) {
+		return typeof func == 'function'
+	},
+	remove:function (array,func_or_obj) {
+		var index_ls=[]
+		if (typeof func_or_obj == 'function'){
+			var func=func_or_obj
+			for(var i=0;i<array.length;i++){
+				if(func(array[i])){
+					index_ls.push(i)
+				}
+			}
+		}else{
+			var obj=func_or_obj
+			for(var i=0;i<array.length;i++){
+				if(array[i]==obj){
+					index_ls.push(i)
+				}
+			}
+		}
+		var rm_item=[]
+		index_ls.reverse()
+		for(var x=0;x<index_ls.length;x++){
+			var rm=array.splice(index_ls[x],1)
+			rm_item= rm.concat(rm_item)
+		}
+		return rm_item
 	},
 	loadjs: function(src,success) {
 		success = success || function(){};

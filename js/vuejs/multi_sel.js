@@ -47,7 +47,10 @@ Vue.component('tow-col-sel',{
 	template:temp_tow_col_sel,
 	props:{
 		choices:{},
-		selected:{
+		value:{
+			default:function () {
+				return []
+			}
 		},
 		size:{
 			default:6
@@ -55,6 +58,7 @@ Vue.component('tow-col-sel',{
 	},
 	data:function () {
 		return {
+			selected:this.value,
 			selected__:[],
 			can_select:JSON.parse(JSON.stringify(this.choices)),
 			left_sel:[],
@@ -62,16 +66,15 @@ Vue.component('tow-col-sel',{
 		}
 	},
 	mounted:function () {
-		for (var x=0;x<this.selected.length;x++){
-			for(var y =0; y<this.choices.length;y++){
-				if(this.choices[y].value==this.selected[x]){
-					this.selected__.push(this.choices[y])
-					this.can_select.splice(y,1)
-					break
-				}
-			}
+		var self=this
+		this.selected__ = ex.remove(this.can_select,function (item) {
+				return ex.isin(item.value,self.value)
+			})
+	},
+	watch:{
+		selected:function (v) {
+			this.$emit('input',v)
 		}
-		
 	},
 	
 	methods:{

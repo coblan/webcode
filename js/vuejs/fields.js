@@ -258,7 +258,7 @@ var field_base={
 	        props:['name','row','kw'],
 	        template:`<div>
 	        	<ul v-if='kw.readonly'><li v-for='value in row[name]' v-text='get_label(value)'></li></ul>
-	        	<tow-col-sel v-else :selected='row[name]' :id="'id_'+name" :choices='kw.options' :size='kw.size' ></tow-col-sel>
+	        	<tow-col-sel v-else v-model='row[name]' :id="'id_'+name" :choices='kw.options' :size='kw.size' ></tow-col-sel>
 	        	</div>`,
 	        methods:{
 		        get_label:function (value) {
