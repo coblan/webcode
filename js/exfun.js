@@ -20,7 +20,7 @@ ex={
 	searchfy:function (obj,pre) {
 		var outstr=pre||''
 		for(x in obj){
-			if(obj[x]){
+			if(obj[x]!==''&&obj[x]!=null){
 				outstr+=x.toString()+'='+ obj[x].toString()+'&';
 			}
 		}
