@@ -130,7 +130,7 @@ Vue.component('paginator',{
     props:['nums','crt'],
     methods:{
         goto_page:function (num) {
-            if (!isNaN(parseInt(num)) && !num.endsWith('a')){
+            if (!isNaN(parseInt(num))){
                 this.$emit('goto_page',num)
             }
         }

@@ -80,8 +80,14 @@ export function hook_ajax_csrf() {
 export function show_upload(){
 	$('#load_wrap').show()
 }
-export function hide_upload(){
-	$('#load_wrap').hide()
+export function hide_upload(second){
+	if(second){
+		setTimeout(function () {
+			$('#load_wrap').hide()
+		}, second);
+	}else{
+		$('#load_wrap').hide()
+	}
 }
 
 if(!window.__font_awesome){
@@ -100,27 +106,29 @@ if(!window.__uploading_mark){
 			right: 0;
 			bottom: 0;
 			display:none;
+			z-index: 9000;
 		}
 		#_upload_inn{
 			background: rgba(88, 88, 88, 0.2);
 			border-radius: 5px;
 			width:180px;
 			height:120px;
+			z-index: 9500;
 			/*padding:30px 80px ;*/
 		}
 		.imiddle{
-	    position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        -ms-transform:translate(-50%, -50%); 	/* IE 9 */
-		-moz-transform:translate(-50%, -50%); 	/* Firefox */
-		-webkit-transform:translate(-50%, -50%); /* Safari ºÍ Chrome */
-		-o-transform:translate(-50%, -50%); 
-		
-        text-align: center;
-		/*display: table;*/
-        z-index: 1000;
+		    position: absolute;
+	        top: 50%;
+	        left: 50%;
+	        transform: translate(-50%, -50%);
+	        -ms-transform:translate(-50%, -50%); 	/* IE 9 */
+			-moz-transform:translate(-50%, -50%); 	/* Firefox */
+			-webkit-transform:translate(-50%, -50%); /* Safari ºÍ Chrome */
+			-o-transform:translate(-50%, -50%); 
+			
+	        text-align: center;
+			/*display: table;*/
+	        z-index: 10000;
     	}
     	#_upload_mark{
     		float: left;
