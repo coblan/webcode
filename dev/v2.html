@@ -1,0 +1,43 @@
+<!doctype html>
+<html>
+	<head>
+    	<meta charset="utf-8">
+        <title>test</title>
+        <script src="//cdn.bootcss.com/vue/2.0.6/vue.js"></script>
+        <script type="text/javascript">
+			Vue.config.devtools = true
+			var ls=[{'label':'1024','url':'aa'},
+			         {'label':'2048','url':''}]
+			var ls_tmp=[{'label':'1024','url':'xxx'},
+             			{'label':'2048','url':'xxx'}]
+                               
+         window.onload=function () {
+         	new Vue({
+	        	el:'#hello',
+	        	data:{
+		        	im_ls:[]
+		        	
+	        	},
+				methods:{
+					load_ls:function () {
+						this.im_ls=ls
+					},
+					load_tmp:function () {
+						this.im_ls=ls_tmp
+					}
+				}
+        	})
+         }
+        </script>
+    </head>
+    <body>
+        <div id='hello'>
+	        <button  type="button" @click='load_ls()'>load_ls</button>
+	        <button  type="button" @click='load_tmp()'>load_tmp</button>
+			<span v-for='image in im_ls'> 
+				<span v-if='image.url' v-text='image.label' key='jj'></span>
+				<span v-else v-text='image.label' style='background-color: #999;' key='ff'></span>
+			</span>
+		</div>
+    </body>
+</html>
