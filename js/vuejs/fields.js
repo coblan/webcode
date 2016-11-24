@@ -297,7 +297,7 @@ Vue.component('field',{
         </component>
 	</div>
 	<slot> </slot>
-	<div v-text='error_data(name)' class='error'></div>
+	<div v-for='error in error_data(name)' v-text='error' class='error'></div>
     </div>
 `,
 
