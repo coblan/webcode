@@ -15,8 +15,9 @@
          	new Vue({
 	        	el:'#hello',
 	        	data:{
-		        	im_ls:[]
-		        	
+		        	im_ls:[],
+		        	loginType:'nnn',
+		        	hehe:''
 	        	},
 				methods:{
 					load_ls:function () {
@@ -24,6 +25,13 @@
 					},
 					load_tmp:function () {
 						this.im_ls=ls_tmp
+					},
+					sswitch:function () {
+						if(this.loginType=='username'){
+							this.loginType='nnn'
+						}else{
+							this.loginType='username'
+						}
 					}
 				}
         	})
@@ -38,6 +46,18 @@
 				<span v-if='image.url' v-text='image.label' key='jj'></span>
 				<span v-else v-text='image.label' style='background-color: #999;' key='ff'></span>
 			</span>
+			<div>
+				<button name="test" type="button" value="val" @click='sswitch()'>Button Text</button>
+				<template v-if="loginType === 'username'">
+				  <label>Username</label>
+				  <input placeholder="Enter your username" v-model='hehe'>
+				</template>
+				<template v-else>
+				  <label>Email</label>
+				  <input placeholder="Enter your email address" v-model='hehe' style='background-color: #999;'>
+				</template>
+			</div>
+			
 		</div>
     </body>
 </html>
