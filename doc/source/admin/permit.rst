@@ -29,4 +29,6 @@ model表的数据结构
 		'user_admin.basicinfo':['can_create','can_delete','name_read','name_write'],
 		'spcial':['xxx','jjj'],
 	}
-		
+
+
+
