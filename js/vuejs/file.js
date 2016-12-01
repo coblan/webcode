@@ -80,12 +80,19 @@ var fl={
 }
 
 Vue.component('file-input',{
-    template:"<input type='file' @change='on_change($event)'>",
+    template:"<input class='file-input' type='file' @change='on_change($event)'>",
    	props:['value'],
     data:function () {
     	return {
 	    	files:[]
     	}
+    },
+    watch:{
+	    value:function (v) {
+		    if(v==''){
+			    this.$el.value=v
+		    }
+	    },
     },
     methods:{
 	    on_change:function (event) {
