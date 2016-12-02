@@ -191,18 +191,17 @@ ex={
 		}
 		return rm_item
 	},
-	loadjs: function(src,success) {
+	load_js: function(src,success) {
 		success = success || function(){};
 		var name = btoa(src)
 		if(window['__src_'+name]){
 			return success()
 		}
-		window['__src_'+name]=true
-
 		var domScript = document.createElement('script');
 		  domScript.src = src;
 		  domScript.onload = domScript.onreadystatechange = function() {
 		    if (!this.readyState || 'loaded' === this.readyState || 'complete' === this.readyState) {
+			  window['__src_'+name]=true
 		      success();
 		      this.onload = this.onreadystatechange = null;
 		      this.parentNode.removeChild(this);
@@ -211,7 +210,7 @@ ex={
 		  document.getElementsByTagName('head')[0].appendChild(domScript);
 		
 	},
-	loadcss:function (src) {
+	load_css:function (src) {
 		var name = btoa(src)
 		if(window['__src_'+name]){
 			return
@@ -272,6 +271,7 @@ Array.prototype.each = function(fn)
 { 
 return this.length ? [fn(this.slice(0,1))].concat(this.slice(1).each(fn)) : []; 
 };
+
 
  /*两种调用方式
  var template1="我是{0}，今年{1}了";

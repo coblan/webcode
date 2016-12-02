@@ -46,7 +46,7 @@ $.post('',JSON.stringify(post_data),function (data) {
 */
 
 //import {use_color} from '../dosome/color.js'
-import {load_js,load_css} from '../dosome/pkg.js'
+//import {load_js,load_css} from '../dosome/pkg.js'
 import {hook_ajax_msg,hook_ajax_csrf,show_upload,hide_upload} from '../ajax_fun.js'
 import * as f from './file.js'
 import * as ck from './ckeditor.js'
@@ -161,8 +161,8 @@ var field_base={
             },
             mounted:function(){
 	            var self=this;
-	            load_css('http://cdn.bootcss.com/spectrum/1.8.0/spectrum.min.css')
-	            load_js('http://cdn.bootcss.com/spectrum/1.8.0/spectrum.min.js',function () {
+	            ex.load_css('http://cdn.bootcss.com/spectrum/1.8.0/spectrum.min.css')
+	            ex.load_js('http://cdn.bootcss.com/spectrum/1.8.0/spectrum.min.js',function () {
 	            	self.init_and_listen()
 	            })
             },

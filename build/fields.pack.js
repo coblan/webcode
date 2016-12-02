@@ -51,8 +51,6 @@
 	});
 	exports.merge = merge;
 
-	var _pkg = __webpack_require__(1);
-
 	var _ajax_fun = __webpack_require__(2);
 
 	var _file = __webpack_require__(3);
@@ -69,7 +67,6 @@
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
-	(0, _ajax_fun.hook_ajax_msg)();
 	/*
 	基本内容
 	==============
@@ -114,7 +111,8 @@
 	*/
 
 	//import {use_color} from '../dosome/color.js'
-
+	//import {load_js,load_css} from '../dosome/pkg.js'
+	(0, _ajax_fun.hook_ajax_msg)();
 	(0, _ajax_fun.hook_ajax_csrf)();
 
 	function is_valid(form_fun_rt, errors_obj, callback) {
@@ -221,8 +219,8 @@
 				},
 				mounted: function mounted() {
 					var self = this;
-					(0, _pkg.load_css)('http://cdn.bootcss.com/spectrum/1.8.0/spectrum.min.css');
-					(0, _pkg.load_js)('http://cdn.bootcss.com/spectrum/1.8.0/spectrum.min.js', function () {
+					ex.load_css('http://cdn.bootcss.com/spectrum/1.8.0/spectrum.min.css');
+					ex.load_js('http://cdn.bootcss.com/spectrum/1.8.0/spectrum.min.js', function () {
 						self.init_and_listen();
 					});
 				}
@@ -378,53 +376,7 @@
 	window.merge = merge;
 
 /***/ },
-/* 1 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-	exports.load_js = load_js;
-	exports.load_css = load_css;
-	function load_js(src, success) {
-		success = success || function () {};
-
-		var name = btoa(src);
-		if (window['__src_' + name]) {
-			return success();
-		}
-		window['__src_' + name] = true;
-
-		var domScript = document.createElement('script');
-		domScript.src = src;
-
-		domScript.onload = domScript.onreadystatechange = function () {
-			if (!this.readyState || 'loaded' === this.readyState || 'complete' === this.readyState) {
-				success();
-				this.onload = this.onreadystatechange = null;
-				this.parentNode.removeChild(this);
-			}
-		};
-		document.getElementsByTagName('head')[0].appendChild(domScript);
-	}
-
-	function load_css(src) {
-		var name = btoa(src);
-		if (window['__src_' + name]) {
-			return;
-		}
-		window['__src_' + name] = true;
-		$('head').append('<link rel="stylesheet" href="' + src + '" type="text/css" />');
-	}
-
-	//var s = document.createElement("script");
-	//s.type = "text/javascript";
-	//s.src = "http://somedomain.com/somescript";
-	//$("head").append(s);
-
-/***/ },
+/* 1 */,
 /* 2 */
 /***/ function(module, exports) {
 
