@@ -10,9 +10,9 @@ if(!window.__modal_mark){
 			right: 0;
 			bottom: 0;
 			background: rgba(0, 0, 0, 0.5);
-			z-index:900;
+			z-index:1000;
 		}
-		._modal_inn{
+		._modal_popup>._modal_inn{
 			//background: rgba(88, 88, 88, 0.2);
 			border-radius: 5px;
 			background:white;
@@ -20,7 +20,7 @@ if(!window.__modal_mark){
 	
 			/*padding:30px 80px ;*/
 		}
-		._modal_middle{
+		._modal_popup>._modal_middle{
 		    position: absolute;
 	        top: 50%;
 	        left: 50%;
@@ -30,7 +30,7 @@ if(!window.__modal_mark){
 			-webkit-transform:translate(-50%, -50%); /* Safari 和 Chrome */
 			-o-transform:translate(-50%, -50%); 
 	        text-align: center;
-	        z-index: 1000;
+	        //z-index: 1000;
     	}
     	#_upload_mark{
     		float: left;
