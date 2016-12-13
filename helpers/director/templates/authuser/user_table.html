@@ -1,0 +1,35 @@
+{% extends 'table.html' %}
+
+{% block extra %}
+
+<script type="text/javascript">
+var filter={
+	username:function (name,row) {
+		return ex.template('<a href="edit/{pk}?next={next}">{value}</a>',
+									{	pk:row.pk,
+										next:btoa(location.pathname+location.search),
+										value:row[name]
+							})
+	},
+	groups:function (name,row) {
+		if(row['groups']){
+			return row['groups'].join('<br>')
+		}else{
+			return ''
+		}
+	},
+	
+}
+function  map(name,row) {
+	if(filter[name]){
+		return filter[name](name,row)
+	}else{
+		return row[name]
+	}
+}
+$(function () {
+	table.map=map
+})
+
+</script>
+{% endblock %}
