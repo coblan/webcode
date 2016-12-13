@@ -1,0 +1,251 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN" ng-app="share">
+
+	<head>
+		<meta charset='utf-8' />
+		<script src="http://cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+        <script src="http://cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+		<!--<script src="//cdn.bootcss.com/vue/1.0.24/vue.min.js"></script>-->
+		<script src="http://cdn.bootcss.com/vue/2.1.4/vue.min.js"></script>
+		<script src="../js/uis/cus_drag.js"></script>
+
+	<script type="text/javascript">
+		//function clear_sel() {
+		//	if (window.getSelection) {
+		//	  if (window.getSelection().empty) {  // Chrome
+		//	    window.getSelection().empty();
+		//	  } else if (window.getSelection().removeAllRanges) {  // Firefox
+		//	    window.getSelection().removeAllRanges();
+		//	  }
+		//	} else if (document.selection) {  // IE?
+		//	  document.selection.empty();
+		//	}
+		//}
+		//function array_remove(array,item) {
+		//	if(array ){
+		//		var idx = array.indexOf(item)
+		//		if(idx!=-1){
+		//			array.splice(idx,1)
+		//		}
+		//	}
+		//}
+		function array_insert(array,idx,item) {
+			if(array){
+				array.splice(idx,0,item)
+			}
+		}
+
+		////@mouseup='onmouseup($event)'
+		
+		//drag_mix={
+		//	compiled:function () {
+		//				//$('#tail').hide()
+		//			var self =this
+		//			$(document).bind('mousemove', function(e){
+		//				self.x=e.clientX //pageX
+		//				self.y=e.clientY //pageY
+		//				self.drag_engin(e.pageX, e.pageY)
+		//				if(self.is_drag){
+		//					e.preventDefault()
+		//				}
+		//			}).bind('mouseup',function (e) {
+		//				self.is_down=false
+		//				if(self.is_drag){
+		//					self._drag_end()
+		//					e.preventDefault()
+		//				}
+		//			})
+		//			$(window).scroll(function (e) {
+		//				self.drag_engin(self.x+$(document).scrollLeft(),self.y+$(document).scrollTop())
+		//			})
+		//	},
+		//	data:{
+		//		moveing_block:{},
+		//	},
+		//	methods:{
+		//		drag_engin:function (x,y) {
+		//			if(!this.is_drag &&this.is_down ){
+		//				var del_x = x-this.last_start_x
+		//				var del_y = y-this.last_start_y
+		//				if(Math.sqrt(del_x*del_x+del_y*del_y) > 10){
+		//					this._drag_start()
+		//				}
+		//			}
+		//			if(this.is_drag){
+		//				this.drag(x,y)
+		//			}
+		//		},
+		//		_drag_start:function () {
+		//			this.is_drag=true
+		//			this.face.show()
+		//			$('body').css('cursor','move')
+		//			this.drag_start()
+		//		},
+		//		drag:function (x,y) {	
+		//				clear_sel()		
+		//				this.face.css({
+		//				       left:  x -this.det_x,
+		//				       top:   y -this.det_y,
+		//				    });
+		//			},
+		//		_drag_end:function () {
+		//				this.drag_end()
+		//				this.is_drag=false;
+		//				this.face.hide()
+		//				this.moveing_block={}
+		//				$('body').css('cursor','auto')
+		//			},
+		//		onmousedown:function (ev){
+		//				this.is_down=true
+		//				this.last_start_x= ev.pageX
+		//				this.last_start_y= ev.pageY
+		//				var div_x = $(ev.target).offset().left
+		//				var div_y= $(ev.target).offset().top
+		//				this.det_x = ev.pageX - div_x
+		//				this.det_y = ev.pageY - div_y
+		//				//this.catch_block= block
+		//			},
+		//		//onmouseup:function (ev) {
+		//		//		this.is_down=false
+		//		//	},
+		//	}
+		//}
+		
+		$(function () {
+			//det_x = 0
+			//det_y = 0
+			
+			vm =new Vue({
+				el:'#content',
+				data:{
+					hello:'hello world',
+					//is_drag:false,
+					blocks:[{label:'aaaaaa',color:'white'},
+							{label:'bbbbbb',color:'white'},
+							{label:'cccccc',color:'white'},
+							{label:'dddddd',color:'white'},
+							{label:'eeeeee',color:'white'},
+							{label:'fffff',color:'white'},
+							{label:'gggggg',color:'white'},
+							{label:'hhhhh',color:'white'},
+							{label:'iiiiiii',color:'white'},
+							],
+					view_style:{
+						marginLeft:'20px',
+						float:'left',
+						minHeight:'500px',
+						backgroundColor:'pink'
+					},
+					li_style:{
+						width:'400px',
+						margin:'10px'
+					},
+					
+					virtual:{label:'',color:'yellow'},
+					//face:$('#tail'),
+				},
+				mixins:[drag_mix],
+				computed:{
+					face:function () {
+						return $('#tail')
+					}
+				},
+				methods:{
+					//onmouseenter:function (idx,ev){
+					//	if(this.is_drag){
+					//		array_move(this.blocks,this.virtual,idx)
+					//		ev.preventDefault();
+					//	}
+					//},
+					//ulleave:function () {
+					//	array_remove(this.blocks,this.virtual)
+					//},
+					//onmousedown:function (ev,block) {
+					//	drag_mix.methods.onmousedown.call(this,ev)
+					//	this.moveing_block = block
+					//	this.face = $('#tail')
+					//	this.drag_start=function () {
+					//		array_replace(this.blocks,this.moveing_block,this.virtual)
+					//	}
+					//	this.drag_end=function () {
+					//		console.log('jjj yyyy')
+					//		array_replace(this.blocks,this.virtual,this.moveing_block)
+					//	}
+					//},
+					divmousedown:function (ev,block) {
+						drag_mix.methods.onmousedown.call(this,ev)
+						this.moveing_block=block
+						this.face=$('#yy')
+						this.drag_start=function () {
+							$('#hyy').hide()
+							//this.moveing_block=block
+							//array_replace(this.blocks,this.moveing_block,this.virtual)
+						}
+						this.drag_end=function () {
+							array_replace(this.blocks,this.virtual,{label:'fffff',color:'red'})
+							$('#hyy').show()
+							//array_remove(this.blocks,this.virtual)
+							//array_replace(this.blocks,this.virtual,this.moveing_block)
+						}
+					}
+				}
+			})
+	})
+
+</script>
+<style type="text/css" media="screen" id="test">
+	#tail,#yy{
+	    position: absolute;
+	    float: left;
+	    pointer-events:none;
+	    transform:rotate(1deg);
+	    display: none;
+	}
+	#yy{
+		background-color: red;
+	}
+</style>
+</head>
+	<body>
+		<!--<div id="tail">mouse tail</div>-->
+		<div id='content'>
+			<div id='view'  :style='view_style'>
+				<ul id='dog' @mouseleave='ulleave()'>
+
+					<li v-for='(block,index) in blocks'
+						@mouseenter="onmouseenter(index,$event)" 
+						@mousedown="onmousedown($event,block)"
+						:style='li_style'>
+						<div :style='{height:"100px",backgroundColor:block.color}'>
+							<span v-text='block.label'></span>
+							<a href="www.qq.com" >ss</a>
+						</div>
+					</li>
+					<li id='tail' :style='li_style' >
+						<div :style='[{height:"100px",backgroundColor:moveing_block.color},{border: "1px solid #999"}]'>
+							<span v-text='moveing_block.label'></span>
+						</div>
+					</li>
+
+				</ul>
+			</div>
+
+			<div id='control'>
+				<input type="text" name="test"  v-model='li_style.width'/>
+				<ul style='float:left;' id='hyy'>
+					<li @mousedown='divmousedown($event,hello)'
+						 v-text='hello'>
+					</li>
+				</ul>
+				<span id='yy' v-text='moveing_block' >
+				</span>
+			</div>
+		</div>
+		
+		
+	</body>
+	
+</html>
