@@ -43,6 +43,8 @@ function array_replace(array,src,dst) {
 	}
 }
 /*
+样例代码：
+
 data:function(){
 	return {
 		blocks:[],
