@@ -17,9 +17,9 @@ function proc_msg(func) {
 	}
 	return _inn
 }
+window.proc_msg=proc_msg
 
-
-function def_proc_port_msg(data) {
+function def_proc_port_msg(data,event) {
 	var rt = data.responseJSON
         if(rt && rt.msg){
             alert(rt.msg)
@@ -52,9 +52,9 @@ export function hook_ajax_msg(proc_port_error,proc_ajax_error){
 	})
 	
     //$(document).ajaxSuccess(function (event,data) {
-    //    window.__proc_port_error(data)
+    //    window.__proc_port_error(data,event)
     //})
-    $(document).ajaxError(function (event,jqxhr, settings, thrownError) {
+     $(document).ajaxError(function (event,jqxhr, settings, thrownError) {
 		window.__proc_ajax_error(jqxhr)
 	})
 	//hook_ajax_csrf()
@@ -107,10 +107,11 @@ export function hide_upload(second){
 	}
 }
 
-if(!window.__font_awesome){
-	window.__font_awesome=true
-	document.write(`<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">`)
-}
+ex.load_css('https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css')
+//if(!window.__font_awesome){
+//	window.__font_awesome=true
+//	document.write(`<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">`)
+//}
 
 if(!window.__uploading_mark){
 	window.__uploading_mark=true
