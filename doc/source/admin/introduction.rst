@@ -10,13 +10,15 @@ render:
 	路由请求到table_page,form_page,del_page
 
 page:
-	代表一个web页面，属性有:template，get_context()
+	代表一个web页面，最主要属性有:template，get_context()
 
 fields:
 	代表一个form表单，管理数据表的row的显示与修改等。
 
 table:
 	显示一个数据表row的列表，具备搜索，过滤，排序，分页功能。
+
+
 	
 完整样例
 ========
@@ -82,13 +84,13 @@ fields页面数据
 
 	from director.model_admin.render import model_page_dc,model_dc
 	# 显示table的页面
-    class BaseinfoTablePage(TablePage):
-    	tableCls=BasicInfoTable
+	class BaseinfoTablePage(TablePage):
+		tableCls=BasicInfoTable
 
 	# 用于修改单条记录的form页面
-    class BaseinfoFormPage(FormPage):
-    	fieldsCls=BasicInfoFields
-    	
+	class BaseinfoFormPage(FormPage):
+		fieldsCls=BasicInfoFields
+		
     # 将该fields注册为model的管理类
 	model_dc[BasicInfo]={'fields':BasicInfoFields}
 

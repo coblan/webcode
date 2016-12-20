@@ -1,4 +1,3 @@
-==========
 模拟admin
 ==========
 
@@ -7,5 +6,6 @@
 
    introduction
    simple_fields
+   fields
    table
    permit
