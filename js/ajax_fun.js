@@ -5,19 +5,31 @@
 /*
 新增一个wrap函数，用户封装调用函数
 */
-function proc_msg(func) {
-	function _inn(data) {
-		if(data.status && data.status!='success'){
-			if(data.msg){
-				alert(data.msg)
-			}
-		}else{
-			func(data)
+//function proc_msg(func) {
+//	function _inn(data) {
+//		if(data.status && data.status!='success'){
+//			if(data.msg){
+//				alert(data.msg)
+//			}
+//		}else{
+//			func(data)
+//		}
+//	}
+//	return _inn
+//}
+
+function has_error(data) {
+	if(data.status && data.status!='success'){
+		if(data.msg){
+			alert(data.msg)
 		}
+		return true
+	}else{
+		return false
 	}
-	return _inn
 }
-window.proc_msg=proc_msg
+
+window.has_error=has_error
 
 function def_proc_port_msg(data,event) {
 	var rt = data.responseJSON

@@ -166,8 +166,13 @@ ex={
 		}
 		return out
 	},
-	isfun:function function_name(func) {
-		return typeof func == 'function'
+	any:function(array,func) {
+		for(var x=0;x<array.length;x++){
+			if(func(array[x])){
+				return true
+			}
+		}
+		return false
 	},
 	remove:function (array,func_or_obj) {
 		var index_ls=[]

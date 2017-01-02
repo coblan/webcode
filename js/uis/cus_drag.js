@@ -134,7 +134,7 @@ drag_mix={
 		drag:function (x,y) {	
 				clear_sel()	
 				this.face.offset({left:x -this.det_x,
-								top:y -this.det_y,})	
+								top:y - this.det_y,})	
 				//this.face.css({
 				//       left:  x -this.det_x,
 				//       top:   y -this.det_y,
@@ -147,7 +147,7 @@ drag_mix={
 				this.moveing_block= this.virtual//{}
 				$('body').css('cursor','auto')
 			},
-		onmousedown:function (ev,block,target){
+		onmousedown:function (ev,block,target,adapt_x,adapt_y){
 			//记录下点击点的位置，为了开始拖动时，不跳动。
 				this.is_down=true
 				this.last_start_x= ev.pageX
@@ -155,8 +155,10 @@ drag_mix={
 				target = target || ev.target
 				var div_x = $(target).offset().left
 				var div_y= $(target).offset().top
-				this.det_x = ev.pageX - div_x
-				this.det_y = ev.pageY - div_y
+				var adapt_x= adapt_x ||0
+				var adapt_y = adapt_y ||0
+				this.det_x = ev.pageX - div_x +adapt_x
+				this.det_y = ev.pageY - div_y + adapt_y
 				//console.log($(ev.target))
 				//console.log(ev.pageY)
 				//console.log(div_y)
