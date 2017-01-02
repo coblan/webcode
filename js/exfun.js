@@ -281,6 +281,9 @@ if (!String.prototype.startsWith) {
       position = position || 0;
       return this.substr(position, searchString.length) === searchString;
   };
+  String.prototype.endsWith = function(str){
+	return (this.match(str+"$")==str)
+	};
 }
 
 Array.prototype.each = function(fn) 
