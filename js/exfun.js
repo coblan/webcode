@@ -186,9 +186,18 @@ ex={
 		}else{
 			var obj=func_or_obj
 			for(var i=0;i<array.length;i++){
-				if(array[i]==obj){
+				var match=true
+				for(var key in obj){
+					if(obj[key]!=array[i][key]){
+						match=false
+					}
+				}
+				if(match){
 					index_ls.push(i)
 				}
+				//if(array[i]==obj){
+				//	index_ls.push(i)
+				//}
 			}
 		}
 		var rm_item=[]
