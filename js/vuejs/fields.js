@@ -121,7 +121,7 @@ var field_base={
         linetext: {
 	        props:['name','row','kw'],
             template:`<div>
-            			<span v-text='row[name]' v-if='kw.readonly'></span>
+            			<span v-if='kw.readonly' v-text='row[name]'></span>
             			<input v-else type="text" class="form-control" v-model="row[name]" :id="'id_'+name"
                         	:placeholder="kw.placeholder" :autofocus="kw.autofocus" :maxlength='kw.maxlength'>
                        </div>`,
@@ -138,7 +138,10 @@ var field_base={
         },
         blocktext: {
 	        props:['name','row','kw'],
-            template: `<textarea class="form-control" rows="3" :id="'id_'+name" v-model="row[name]" :placeholder="kw.placeholder" :readonly='kw.readonly'></textarea>`
+            template: `<div>
+            <span v-if='kw.readonly' v-text='row[name]'></span>
+            <textarea v-else class="form-control" rows="3" :id="'id_'+name" v-model="row[name]" :placeholder="kw.placeholder" :readonly='kw.readonly'></textarea>
+            </div>`
         },
         color:{
 	        props:['name','row','kw'],
@@ -178,10 +181,13 @@ var field_base={
 			        model:this.row[this.name]
 		        }
 	        },
-            template:`<select v-model='row[name]'  :id="'id_'+name" :readonly='kw.readonly' class="form-control">
+            template:`<div>
+            <span v-if='kw.readonly' v-text='get_label(kw.options,row[name])'></span>
+            <select v-else v-model='row[name]'  :id="'id_'+name" :readonly='kw.readonly' class="form-control">
             	<option :value='null'>----</option>
             	<option v-for='opt in kw.options' :value='opt.value' v-text='opt.label'></option>
-            </select>`,
+            </select>
+            </div>`,
             // 添加，修改，删除的按钮代码，暂时不用。
             //`<div><select v-model='model'  :id="'id_'+name" :readonly='kw.readonly'>
             //	<option :value='null'>----</option>
@@ -192,6 +198,14 @@ var field_base={
             //<span v-if='kw.del_url' @click='del_row()'><img src='http://res.enjoyst.com/image/delete.png' /></a>
             //</div>`,
             methods:{
+            	get_label:function(options,value){
+            		var option = ex.findone(options,{value:value})
+            		if(!option){
+            			return '---'
+            		}else{
+            			return option.label
+            		}
+            	},
 	            add:function () {
 		            var self=this
 	            	window.open(this.kw.add_url+'edit/?_pop=1',location.pathname,'height=500,width=800,resizable=yes,scrollbars=yes,top=200,left=300')

@@ -183,7 +183,7 @@
 		components: {
 			linetext: {
 				props: ['name', 'row', 'kw'],
-				template: '<div>\n            \t\t\t<span v-text=\'row[name]\' v-if=\'kw.readonly\'></span>\n            \t\t\t<input v-else type="text" class="form-control" v-model="row[name]" :id="\'id_\'+name"\n                        \t:placeholder="kw.placeholder" :autofocus="kw.autofocus" :maxlength=\'kw.maxlength\'>\n                       </div>'
+				template: '<div>\n            \t\t\t<span v-if=\'kw.readonly\' v-text=\'row[name]\'></span>\n            \t\t\t<input v-else type="text" class="form-control" v-model="row[name]" :id="\'id_\'+name"\n                        \t:placeholder="kw.placeholder" :autofocus="kw.autofocus" :maxlength=\'kw.maxlength\'>\n                       </div>'
 			},
 			number: {
 				props: ['name', 'row', 'kw'],
@@ -196,7 +196,7 @@
 			},
 			blocktext: {
 				props: ['name', 'row', 'kw'],
-				template: '<textarea class="form-control" rows="3" :id="\'id_\'+name" v-model="row[name]" :placeholder="kw.placeholder" :readonly=\'kw.readonly\'></textarea>'
+				template: '<div>\n            <span v-if=\'kw.readonly\' v-text=\'row[name]\'></span>\n            <textarea v-else class="form-control" rows="3" :id="\'id_\'+name" v-model="row[name]" :placeholder="kw.placeholder" :readonly=\'kw.readonly\'></textarea>\n            </div>'
 			},
 			color: {
 				props: ['name', 'row', 'kw'],
@@ -236,7 +236,7 @@
 						model: this.row[this.name]
 					};
 				},
-				template: '<select v-model=\'row[name]\'  :id="\'id_\'+name" :readonly=\'kw.readonly\' class="form-control">\n            \t<option :value=\'null\'>----</option>\n            \t<option v-for=\'opt in kw.options\' :value=\'opt.value\' v-text=\'opt.label\'></option>\n            </select>',
+				template: '<div>\n            <span v-if=\'kw.readonly\' v-text=\'get_label(kw.options,row[name])\'></span>\n            <select v-else v-model=\'row[name]\'  :id="\'id_\'+name" :readonly=\'kw.readonly\' class="form-control">\n            \t<option :value=\'null\'>----</option>\n            \t<option v-for=\'opt in kw.options\' :value=\'opt.value\' v-text=\'opt.label\'></option>\n            </select>\n            </div>',
 				// 添加，修改，删除的按钮代码，暂时不用。
 				//`<div><select v-model='model'  :id="'id_'+name" :readonly='kw.readonly'>
 				//	<option :value='null'>----</option>
@@ -247,6 +247,14 @@
 				//<span v-if='kw.del_url' @click='del_row()'><img src='http://res.enjoyst.com/image/delete.png' /></a>
 				//</div>`,
 				methods: {
+					get_label: function get_label(options, value) {
+						var option = ex.findone(options, { value: value });
+						if (!option) {
+							return '---';
+						} else {
+							return option.label;
+						}
+					},
 					add: function add() {
 						var self = this;
 						window.open(this.kw.add_url + 'edit/?_pop=1', location.pathname, 'height=500,width=800,resizable=yes,scrollbars=yes,top=200,left=300');
