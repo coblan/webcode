@@ -169,8 +169,9 @@ drag_mix={
 					array_replace(this.blocks,this.moveing_block,this.virtual)
 				}
 				this.drag_end=function () {
-					console.log('jjj yyyy')
+					console.log('drag is over')
 					array_replace(this.blocks,this.virtual,this.moveing_block)
+					this.$emit('drag_over',this)
 				}
 			},
 		onmouseenter:function (idx,ev){
