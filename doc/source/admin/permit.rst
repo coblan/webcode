@@ -13,6 +13,7 @@ model表的数据结构
 		]}
 	]
 
+在permit赋予页面，由head来控制待选项::
 
 	heads=[
 		{name:'user_admin.basicinfo',label:'员工基本信息',type:'model',fields:[
@@ -24,6 +25,7 @@ model表的数据结构
 			]}
 	]
 
+存储于数据库的permit数据结构::
 
 	permit={
 		'user_admin.basicinfo':['can_create','can_delete','name_read','name_write'],

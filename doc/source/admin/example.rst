@@ -1,23 +1,6 @@
 ==========
-admin模拟
+基本样例
 ==========
-
-webcode的model_admin模块，模拟django的admin，但是更加灵活。
-
-主要元素有:
-
-render:
-	路由请求到table_page,form_page,del_page
-
-page:
-	代表一个web页面，最主要属性有:template，get_context()
-
-fields:
-	代表一个form表单，管理数据表的row的显示与修改等。
-
-table:
-	显示一个数据表row的列表，具备搜索，过滤，排序，分页功能。
-
 
 	
 完整样例
@@ -25,7 +8,7 @@ table:
 
 配置render的url
 ----------------
-
+使用时，需要为模块分配一个prefix url。
 ::
 
 	from director import urls as director_urls
