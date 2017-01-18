@@ -129,8 +129,9 @@ var field_base={
         number: {
 	        props:['name','row','kw'],
 
-            template: `<input type="number" class="form-control" v-model="row[name]" :id="'id_'+name"
-                        :placeholder="kw.placeholder" :autofocus="kw.autofocus" :readonly='kw.readonly'>`
+            template: `<div><span v-if='kw.readonly' v-text='row[name]'></span>
+            		<input v-else type="number" class="form-control" v-model="row[name]" :id="'id_'+name"
+                        :placeholder="kw.placeholder" :autofocus="kw.autofocus"></div>`
         },
         password: {
 	        props:['name','row','kw'],
