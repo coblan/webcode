@@ -157,11 +157,24 @@ var field_base={
                             showInput: true,
                             preferredFormat: "name",
                             change: function(color) {
+	                            	self.src_color=color.toHexString()
 								    self.row[self.name] = color.toHexString();
 								}
                         });
                     })
                 }
+            },
+            watch:{
+	          	input_value:function (value) {
+	          		if(this.src_color !=value){
+		          		this.init_and_listen()
+	          		}
+	          	}  
+            },
+            computed:{
+	            input_value:function () {
+	            	return this.row[this.name]
+	            }
             },
             mounted:function(){
 	            var self=this;
