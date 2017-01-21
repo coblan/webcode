@@ -4,7 +4,8 @@
 		<meta charset="utf-8">
         <title>Deposits and Withdrawals</title>
         <script type="text/javascript" src='http://apps.bdimg.com/libs/jquery/1.9.1/jquery.min.js'></script>
-        <!--<script src="http://cdn.bootcss.com/vue/1.0.24/vue.js"></script>-->
+        <!--<script src="http://cdn.bootcss.com/vue/2.0.24/vue.js"></script>-->
+        <script src="http://cdn.bootcss.com/vue/2.1.6/vue.js"></script>
 		<script src="http://cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 		<link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
 		<script src="../js/exfun.js"></script>
@@ -31,19 +32,50 @@
 
 		$('#sandbox-container .input-daterange').datepicker({
 		    format: "yyyy/mm/dd",
-		    weekStart: 5,
+		    weekStart: 0,
 		    language: "zh-CN",
 		    calendarWeeks: true,
 		    autoclose: true,
 		    todayHighlight: true
 		});
 
-	
+		new Vue({
+			el:'#there',
+			data:{
+				date:'',
+			},
+			methods:{
+				input_value:function () {
+					this.date='2017/01-19'
+				}
+			}
+		})
 	})
-		
+	Vue.component('com-datepicker',{
+		template:'#com-datepicker',
+		props:['value'],
+		mounted:function () {
+			var self=this
+			self.input=$(this.$el)
+			$(this.$el).datepicker({
+				    language: "zh-CN",
+				     format: "yyyy/mm/dd",
+				     autoclose: true,
+				     todayHighlight: true,
+				}).on('changeDate', function(e) {
+					self.$emit('input',self.input.val())
+    		})
+		},
+		watch:{
+			value:function (n) {
+				this.input.val(n)
+			}
+		}
+	})
+	
 	</script>
 	</head>
-    <body>
+    <body >
 	    <div id='sandbox-container'>
 		    <input type="text" class="form-control">
 
@@ -57,7 +89,21 @@
 			    <input type="text" class="input-sm form-control" name="end" />
 			</div>
 	    </div>
+
+	    <div id="there" class="test">
+		    <com-datepicker v-model='date'></com-datepicker>
+	    	<button name="test" type="button" value="val" @click='input_value()'>Button Text</button>
+	    </div>
+
+		<template id='com-datepicker'>
+			<input type="text" class="form-control">
+		</template>
 		
     </body>
+    <style type="text/css" media="screen" id="test">
+    	.datepicker table tr td.highlighted{
+	    	background-color: #E7E7E7;
+    	}
+    </style>
 </html>
 	

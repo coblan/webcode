@@ -15,21 +15,27 @@
 3. 定义一个face元素，用于跟随鼠标移动。注意该元素的css要求。
 4. 捕捉鼠标事件
 
-使用样例::
+使用样例
 
-	data:function(){
-		return {
-			blocks:[],
-			virtual:{label:'',color:'yellow'},
-		}
+.. code-block:: guess 
+
+	<script>
+	Vue={
+		data:function(){
+				return {
+					blocks:[],
+					virtual:{label:'',color:'yellow'},
+				}
+			}
+		mixins:[drag_mix],
+		computed:{
+			face:function () {
+				return $('#tail')
+			}
+		},
 	}
-	mixins:[drag_mix],
-	computed:{
-		face:function () {
-			return $('#tail')
-		}
-	},
-
+		
+	</script>
 	<ul id='dog' @mouseleave='ulleave()'>
 		<li v-for='(block,index) in blocks'
 			@mouseenter="onmouseenter(index,$event)" 
