@@ -147,6 +147,7 @@ Vue.component('paginator',{
 })
 
 var build_table_args = {
+	// 这个函数应该没用了 ，其功能被 filters object 属性 取代了。--2017/1/19日
     methods:{
         get_filter_obj:function () {
             //var search_str=''

@@ -9,3 +9,4 @@
 
    modal
    drag
+   page
