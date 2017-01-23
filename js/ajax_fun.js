@@ -18,25 +18,55 @@
 //	return _inn
 //}
 
-function has_error(data) {
-	if(data.status && data.status!='success'){
-		if(data.msg){
-			alert(data.msg)
-		}
-		return true
-	}else{
-		return false
-	}
-}
+//function has_error(data) {
+//	if(data.status && data.status!='success'){
+//		if(data.msg){
+//			alert(data.msg)
+//		}
+//		return true
+//	}else{
+//		return false
+//	}
+//}
 
-window.has_error=has_error
 
-function def_proc_port_msg(data,event) {
-	var rt = data.responseJSON
-        if(rt && rt.msg){
-            alert(rt.msg)
-        }
-}
+
+//var org_get=$.get
+//$.get=function (url,callback) {
+//	var wrap_callback=function (resp) {
+//		if(resp.msg){
+//			alert(resp.msg)
+//		}
+//		if(resp.status && resp.status!='success'){
+//			return
+//		}else{
+//			callback(resp)
+//		}
+//	}
+//	org_get(url,wrap_callback)
+//}
+//var org_post=$.post
+//$.post=function (url,data,callback) {
+//	var wrap_callback=function (resp) {
+//		if(resp.msg){
+//			alert(resp.msg)
+//		}
+//		if(resp.status && resp.status!='success'){
+//			return
+//		}else{
+//			callback(resp)
+//		}
+//	}
+//	org_post(url,data,wrap_callback) 
+//}
+
+
+//function def_proc_port_msg(data,event) {
+//	var rt = data.responseJSON
+//        if(rt && rt.msg){
+//            alert(rt.msg)
+//        }
+//}
 
 function def_proc_error(jqxhr) {
 	if(! window.iclosed){
@@ -49,7 +79,7 @@ function def_proc_error(jqxhr) {
 		}
 }
 
-window.__proc_port_error=def_proc_port_msg
+//window.__proc_port_error=def_proc_port_msg
 window.__proc_ajax_error=def_proc_error
 
 export function hook_ajax_msg(proc_port_error,proc_ajax_error){

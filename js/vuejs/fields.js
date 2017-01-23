@@ -198,11 +198,10 @@ var field_base={
             template:`<div>
             <span v-if='kw.readonly' v-text='get_label(kw.options,row[name])'></span>
             <select v-else v-model='row[name]'  :id="'id_'+name" :readonly='kw.readonly' class="form-control">
-            	<option :value='null'>----</option>
             	<option v-for='opt in kw.options' :value='opt.value' v-text='opt.label'></option>
             </select>
             </div>`,
-            // 添加，修改，删除的按钮代码，暂时不用。
+            // 添加，修改，删除的按钮代码，暂时不用。<option :value='null'>----</option>
             //`<div><select v-model='model'  :id="'id_'+name" :readonly='kw.readonly'>
             //	<option :value='null'>----</option>
             //	<option v-for='opt in kw.options' :value='opt.value' v-text='opt.label'></option>

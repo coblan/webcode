@@ -251,8 +251,42 @@ ex={
 	is_fun:function (v) {
 		return typeof v === "function"
 	},
+	get:function(url,callback){
+		//replace $.get
+		var self=this
+		var wrap_callback=function (resp) {
+			if (resp.msg) {
+				self.show_msg(resp.msg)
+			}
+			if (resp.status && typeof resp.status == 'string' && resp.status != 'success') {
+				return
+			} else {
+				callback(resp)
+			}
+		}
+		return $.get(url,wrap_callback)
+	},
+	post:function(url,data,callback){
+		var self=this
+		var wrap_callback=function (resp) {
+			if (resp.msg) {
+				self.show_msg(resp.msg)
+			}
+			if (resp.status && typeof resp.status == 'string' && resp.status != 'success') {
+				return
+			} else {
+				callback(resp)
+			}
+		}
+		return $.post(url,data,wrap_callback)
+	},
+	show_msg:function(msg){
+		alert(msg)
+	}
+
 
 }
+
 function parseSearch(queryString) {
 	var queryString = queryString || location.search
 	if(queryString.startsWith('?')){
