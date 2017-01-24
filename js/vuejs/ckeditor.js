@@ -33,8 +33,10 @@ window.ck_complex = {
 		{ name: 'paragraph',   groups: [ 'list', 'indent', 'blocks', 'align', 'bidi' ] },
 		{ name: 'styles' },
 		{ name: 'colors' },
-		{ name: 'about' }
+		{ name: 'about' },
 	],
+
+
 
 	// Remove some buttons provided by the standard plugins, which are
 	// not needed in the Standard(s) toolbar.
@@ -47,10 +49,15 @@ window.ck_complex = {
 	removeDialogTabs : 'image:advanced;link:advanced',
 	image_previewText:'image preview',
 	filebrowserImageUploadUrl: '/blog/upload/image/',
-	extraPlugins : 'justify,codesnippet,lineutils,mathjax',
+	extraPlugins : 'justify,codesnippet,lineutils,mathjax,colorbutton', //autogrow,
 	mathJaxLib : '//cdn.mathjax.org/mathjax/2.6-latest/MathJax.js?config=TeX-AMS_HTML',
 	extraAllowedContent :'img[class]',
+	//autoGrow_maxHeight : 800,
+	//autoGrow_onStartup:true,
+	//autoGrow_bottomSpace:100,
+	height:800,
 };
+
 
 Vue.component('ckeditor',{
 	template:`<div class='ckeditor'>
@@ -77,6 +84,7 @@ Vue.component('ckeditor',{
 		var config=config_obj[self.config]
 
 		ex.load_js('//cdn.bootcss.com/ckeditor/4.6.2/ckeditor.js',function(){
+			CKEDITOR.timestamp='ABCDFDGff'
 			var editor = CKEDITOR.replace(self.input,ck_complex)
 			editor.setData(self.value)
 			self.editor = editor
