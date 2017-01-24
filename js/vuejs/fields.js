@@ -51,6 +51,8 @@ import {hook_ajax_msg,hook_ajax_csrf,show_upload,hide_upload} from '../ajax_fun.
 import * as f from './file.js'
 import * as ck from './ckeditor.js'
 import * as multi from './multi_sel.js'
+import * as inputs from './inputs.js'
+
 
 hook_ajax_msg()
 hook_ajax_csrf()
@@ -304,7 +306,21 @@ var field_base={
 					    	<span v-text='kw.label'></span>
 					    </label>
 					  </div>`
-        }
+        },
+		date: {
+			props:['name','row','kw'],
+			template:`<div><span v-if='kw.readonly' v-text='row[name]'></span>
+            			<date class="form-control" v-model="row[name]" :id="'id_'+name"
+                        	:placeholder="kw.placeholder"></date>
+                       </div>`,
+		},
+		datetime:{
+			props:['name','row','kw'],
+			template:`<div><span v-if='kw.readonly' v-text='row[name]'></span>
+            			<datetime class="form-control" v-model="row[name]" :id="'id_'+name"
+                        	:placeholder="kw.placeholder"></datetime>
+                       </div>`,
+		},
     }
 
 }

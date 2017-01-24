@@ -65,8 +65,13 @@
 
 	var multi = _interopRequireWildcard(_multi_sel);
 
+	var _inputs = __webpack_require__(5);
+
+	var inputs = _interopRequireWildcard(_inputs);
+
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
+	(0, _ajax_fun.hook_ajax_msg)();
 	/*
 	基本内容
 	==============
@@ -112,7 +117,7 @@
 
 	//import {use_color} from '../dosome/color.js'
 	//import {load_js,load_css} from '../dosome/pkg.js'
-	(0, _ajax_fun.hook_ajax_msg)();
+
 	(0, _ajax_fun.hook_ajax_csrf)();
 
 	function is_valid(form_fun_rt, errors_obj, callback) {
@@ -346,6 +351,14 @@
 			bool: {
 				props: ['name', 'row', 'kw'],
 				template: '<div class="checkbox">\n\t\t\t\t\t    <label><input type="checkbox" :id="\'id_\'+name" v-model=\'row[name]\' :disabled="kw.readonly">\n\t\t\t\t\t    \t<span v-text=\'kw.label\'></span>\n\t\t\t\t\t    </label>\n\t\t\t\t\t  </div>'
+			},
+			date: {
+				props: ['name', 'row', 'kw'],
+				template: '<div><span v-if=\'kw.readonly\' v-text=\'row[name]\'></span>\n            \t\t\t<date class="form-control" v-model="row[name]" :id="\'id_\'+name"\n                        \t:placeholder="kw.placeholder"></date>\n                       </div>'
+			},
+			datetime: {
+				props: ['name', 'row', 'kw'],
+				template: '<div><span v-if=\'kw.readonly\' v-text=\'row[name]\'></span>\n            \t\t\t<datetime class="form-control" v-model="row[name]" :id="\'id_\'+name"\n                        \t:placeholder="kw.placeholder"></datetime>\n                       </div>'
 			}
 		}
 
@@ -800,11 +813,6 @@
 
 	'use strict';
 
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-	exports.use_ckeditor = use_ckeditor;
-
 	//function import_ckeditor() {
 	//	document.write("<script src='/static/ckeditor/ckeditor.js'></script>")
 	//}
@@ -814,37 +822,76 @@
 	//	}
 	//module.exports=ckEditor
 
-	function use_ckeditor() {
-		document.write('<script src="http://cdn.bootcss.com/ckeditor/4.5.10/ckeditor.js"></script>');
-	}
+	//export function use_ckeditor() {
+	//	document.write('<script src="//cdn.bootcss.com/ckeditor/4.5.10/ckeditor.js"></script>')
+	//}
+
+
+	window.ck_complex = {
+		// Define changes to default configuration here.
+		// For complete reference see:
+		// http://docs.ckeditor.com/#!/api/CKEDITOR.config
+
+		// The toolbar groups arrangement, optimized for two toolbar rows.
+		toolbarGroups: [{ name: 'clipboard', groups: ['clipboard', 'undo'] }, { name: 'editing', groups: ['find', 'selection', 'spellchecker'] }, { name: 'links' }, { name: 'insert' }, { name: 'forms' }, { name: 'tools' }, { name: 'document', groups: ['mode', 'document', 'doctools'] }, { name: 'others' }, '/', { name: 'basicstyles', groups: ['basicstyles', 'cleanup'] }, { name: 'paragraph', groups: ['list', 'indent', 'blocks', 'align', 'bidi'] }, { name: 'styles' }, { name: 'colors' }, { name: 'about' }],
+
+		// Remove some buttons provided by the standard plugins, which are
+		// not needed in the Standard(s) toolbar.
+		removeButtons: 'Underline,Subscript,Superscript',
+
+		// Set the most common block elements.
+		format_tags: 'p;h1;h2;h3;pre',
+
+		// Simplify the dialog windows.
+		removeDialogTabs: 'image:advanced;link:advanced',
+		image_previewText: 'image preview',
+		filebrowserImageUploadUrl: '/blog/upload/image/',
+		extraPlugins: 'justify,codesnippet,lineutils,mathjax',
+		mathJaxLib: '//cdn.mathjax.org/mathjax/2.6-latest/MathJax.js?config=TeX-AMS_HTML',
+		extraAllowedContent: 'img[class]'
+	};
 
 	Vue.component('ckeditor', {
-		template: '<div class=\'ckeditor\'>\n\t\t    \t<textarea class="form-control" class="form-control" name="ri" ></textarea>\n\t    \t</div>',
+		template: '<div class=\'ckeditor\'>\n\t\t    \t<textarea class="form-control" name="ri" ></textarea>\n\t    \t</div>',
 		props: {
-			model: {
-				twoWay: true
-			},
+			value: {},
 			config: {
-				default: '',
-				coerce: function coerce(val) {
-					if (val == 'complex') {
-						return 'http://ocm6l2tt6.bkt.clouddn.com/config_complex.js';
-					} else {
-						return val;
-					}
-				}
+				default: 'complex'
+			}
+		},
+		created: function created() {
+			var self = this;
+			bus.$on('sync_data', function () {
+				self.$emit('input', self.editor.getData());
+			});
+		},
+		mounted: function mounted() {
+			var self = this;
+			self.input = $(this.$el).find('textarea')[0];
+			var config_obj = {
+				'complex': '//res.enjoyst.com/js/ck/config_complex.js'
+			};
+			var config = config_obj[self.config];
 
-			}
-		},
-		compiled: function compiled() {
-			var editor = CKEDITOR.replace($(this.$el).find('textarea')[0], { customConfig: this.config });
-			editor.setData(this.model);
-			this.editor = editor;
-		},
-		events: {
-			'sync_data': function sync_data() {
-				this.model = this.editor.getData();
-			}
+			ex.load_js('//cdn.bootcss.com/ckeditor/4.6.2/ckeditor.js', function () {
+				var editor = CKEDITOR.replace(self.input, ck_complex);
+				editor.setData(self.value);
+				self.editor = editor;
+
+				//var is_changed=false
+				//editor.on( 'change', function( evt ) {
+				//	// getData() returns CKEditor's HTML content.
+				//	is_changed=true
+				//	//self.$emit('input',editor.getData())
+				//});
+				//
+				//setInterval(function(){
+				//	if(is_changed){
+				//		self.$emit('input',editor.getData())
+				//		is_changed=false
+				//	}
+				//},3000)
+			});
 		}
 	});
 
@@ -950,6 +997,90 @@
 				}
 			}
 		}
+	});
+
+/***/ },
+/* 5 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	/**
+	 * Created by heyulin on 2017/1/24.
+	 */
+
+	Vue.component('date', {
+	    template: '<input type="text" class="form-control">',
+	    props: ['value', 'config'],
+	    mounted: function mounted() {
+	        var self = this;
+	        var def_conf = {
+	            language: "zh-CN",
+	            format: "yyyy/mm/dd",
+	            autoclose: true,
+	            todayHighlight: true
+	        };
+	        if (this.config) {
+	            ex.assign(def_conf, this.config);
+	        }
+	        self.input = $(this.$el);
+
+	        ex.load_css('//cdn.bootcss.com/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker.min.css');
+
+	        ex.load_js('//cdn.bootcss.com/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.min.js', function () {
+	            ex.load_js('//cdn.bootcss.com/bootstrap-datepicker/1.6.4/locales/bootstrap-datepicker.zh-CN.min.js', function () {
+	                self.input.datepicker(def_conf).on('changeDate', function (e) {
+	                    self.$emit('input', self.input.val());
+	                });
+	            });
+	        });
+	    },
+	    watch: {
+	        value: function value(n) {
+	            this.input.val(n);
+	        }
+	    }
+	});
+
+	Vue.component('datetime', {
+	    data: function data() {
+	        return {
+	            input_value: ''
+	        };
+	    },
+	    template: '<input type="text" class="form-control" v-model="input_value">',
+	    props: ['value', 'config'],
+	    mounted: function mounted() {
+	        var self = this;
+	        var def_conf = {
+	            language: "zh-CN",
+	            format: "yyyy/mm/dd hh:ii",
+	            autoclose: true,
+	            todayHighlight: true
+	        };
+	        if (self.config) {
+	            ex.assign(def_conf, this.config);
+	        }
+	        self.input = $(this.$el);
+
+	        ex.load_css('//cdn.bootcss.com/smalot-bootstrap-datetimepicker/2.4.3/css/bootstrap-datetimepicker.min.css');
+	        ex.load_js('//cdn.bootcss.com/moment.js/2.17.1/moment.min.js');
+	        ex.load_js('//cdn.bootcss.com/smalot-bootstrap-datetimepicker/2.4.3/js/bootstrap-datetimepicker.min.js', function () {
+
+	            self.input.datetimepicker(def_conf).on('changeDate', function (e) {
+	                self.$emit('input', self.input.val());
+	            });
+	        });
+	    },
+
+	    watch: {
+	        value: function value(n) {
+	            this.input.val(n);
+	        },
+	        input_value: function input_value(n) {
+	            this.$emit('input', n);
+	        }
+	    }
 	});
 
 /***/ }

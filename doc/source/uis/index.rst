@@ -10,3 +10,4 @@
    modal
    drag
    page
+   input

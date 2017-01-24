@@ -9,40 +9,42 @@
 		<script src="http://cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 		<link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
 		<script src="../js/exfun.js"></script>
-		<link href="http://cdn.bootcss.com/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker.min.css" rel="stylesheet">
-			<script src="http://cdn.bootcss.com/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.min.js"></script>
-			<script src="http://cdn.bootcss.com/bootstrap-datepicker/1.6.4/locales/bootstrap-datepicker.zh-CN.min.js"></script>
+		<script src="../build/fields.pack.js"></script>
+		<!--<link href="http://cdn.bootcss.com/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker.min.css" rel="stylesheet">-->
+			<!--<script src="//cdn.bootcss.com/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.min.js"></script>-->
+			<!--<script src="//cdn.bootcss.com/bootstrap-datepicker/1.6.4/locales/bootstrap-datepicker.zh-CN.min.js"></script>-->
 	<script type="text/javascript">
 	$(function () {
-		$('#sandbox-container input').datepicker({
-		    language: "zh-CN",
-		     format: "yyyy/mm/dd",
-		})
-
-
-		$('#sandbox-container .input-group.date').datepicker({
-		    format: "yyyy/mm/dd",
-		    weekStart: 0,
-		    language: "zh-CN",
-		    daysOfWeekHighlighted: "0,6",
-		    autoclose: true,
-		    todayHighlight: true
-		});
-
-
-		$('#sandbox-container .input-daterange').datepicker({
-		    format: "yyyy/mm/dd",
-		    weekStart: 0,
-		    language: "zh-CN",
-		    calendarWeeks: true,
-		    autoclose: true,
-		    todayHighlight: true
-		});
+//		$('#sandbox-container input').datepicker({
+//		    language: "zh-CN",
+//		     format: "yyyy/mm/dd",
+//		})
+//
+//
+//		$('#sandbox-container .input-group.date').datepicker({
+//		    format: "yyyy/mm/dd",
+//		    weekStart: 0,
+//		    language: "zh-CN",
+//		    daysOfWeekHighlighted: "0,6",
+//		    autoclose: true,
+//		    todayHighlight: true
+//		});
+//
+//
+//		$('#sandbox-container .input-daterange').datepicker({
+//		    format: "yyyy/mm/dd",
+//		    weekStart: 0,
+//		    language: "zh-CN",
+//		    calendarWeeks: true,
+//		    autoclose: true,
+//		    todayHighlight: true
+//		});
 
 		new Vue({
 			el:'#there',
 			data:{
 				date:'',
+				datetime:''
 			},
 			methods:{
 				input_value:function () {
@@ -50,6 +52,8 @@
 				}
 			}
 		})
+
+//		$(".form_datetime").datetimepicker({format: 'yyyy-mm-dd hh:ii'});
 	})
 	Vue.component('com-datepicker',{
 		template:'#com-datepicker',
@@ -57,14 +61,14 @@
 		mounted:function () {
 			var self=this
 			self.input=$(this.$el)
-			$(this.$el).datepicker({
-				    language: "zh-CN",
-				     format: "yyyy/mm/dd",
-				     autoclose: true,
-				     todayHighlight: true,
-				}).on('changeDate', function(e) {
-					self.$emit('input',self.input.val())
-    		})
+//			$(this.$el).datepicker({
+//				    language: "zh-CN",
+//				     format: "yyyy/mm/dd",
+//				     autoclose: true,
+//				     todayHighlight: true,
+//				}).on('changeDate', function(e) {
+//					self.$emit('input',self.input.val())
+//    		})
 		},
 		watch:{
 			value:function (n) {
@@ -91,14 +95,22 @@
 	    </div>
 
 	    <div id="there" class="test">
-		    <com-datepicker v-model='date'></com-datepicker>
+		    <!--<com-datepicker v-model='date'></com-datepicker>-->
+			<date v-model="date"></date>
 	    	<button name="test" type="button" value="val" @click='input_value()'>Button Text</button>
+			<date v-model="date" :config="{language:'en'}"></date>
+
+			<datetime v-model="datetime"></datetime>
+			<datetime v-model="datetime"></datetime>
 	    </div>
 
 		<template id='com-datepicker'>
 			<input type="text" class="form-control">
 		</template>
-		
+
+
+
+		<!--<input size="16" type="text" value="2012-06-15 14:45" readonly class="form_datetime">-->
     </body>
     <style type="text/css" media="screen" id="test">
     	.datepicker table tr td.highlighted{

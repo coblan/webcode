@@ -9,6 +9,7 @@
         <script src="//cdn.bootcss.com/lodash.js/4.16.6/lodash.min.js"></script>
 		<script src="http://cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 		<link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
+		<script src="../js/exfun.js"></script>
 		<script src="../build/fields.pack.js"></script>
 		<!--<script src="../build/file.pack.js"></script>-->
 
@@ -32,7 +33,9 @@
 					{name:'hh',label:'ss',type:'color',},
 					{name:'hjk',label:'ff',type:'logo',up_url:"jj"},
 					{name:'hjkK',label:'fSSf',type:'logo',up_url:"jj"},
-					{name:'jjyy',label:'fufu',type:'tow_col',options:[{value:'1',label:'xxx'},{value:'2',label:'bbb'}]}
+					{name:'jjyy',label:'fufu',type:'tow_col',options:[{value:'1',label:'xxx'},{value:'2',label:'bbb'}]},
+					{name:'sub_date',label:'日期',type:'date',required:true},
+					{name:'sub_datetime',label:'日期',type:'datetime',required:true},
 					
 				]
 			}
@@ -71,6 +74,8 @@
 			<field name="hjk" :kw="meta"></field>
 			<field name="hjkK" :kw="meta"></field>
 			<field name='jjyy' :kw='meta'></field>
+			<field name='sub_date' :kw='meta'>this is date</field>
+			<field name='sub_datetime' :kw='meta'>this is date time</field>
 			<!--<logo-input up_url="jj"></logo-input>-->
 			<button class="btn" @click="show_upload()">show upload</button>
         </div>

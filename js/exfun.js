@@ -259,6 +259,7 @@ ex={
 				self.show_msg(resp.msg)
 			}
 			if (resp.status && typeof resp.status == 'string' && resp.status != 'success') {
+				hide_upload(300)
 				return
 			} else {
 				callback(resp)
@@ -273,6 +274,7 @@ ex={
 				self.show_msg(resp.msg)
 			}
 			if (resp.status && typeof resp.status == 'string' && resp.status != 'success') {
+				hide_upload(300) // sometime
 				return
 			} else {
 				callback(resp)

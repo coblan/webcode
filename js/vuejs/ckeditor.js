@@ -8,38 +8,99 @@
 //	}
 //module.exports=ckEditor
 
-export function use_ckeditor() {
-	document.write('<script src="http://cdn.bootcss.com/ckeditor/4.5.10/ckeditor.js"></script>')
-}
+//export function use_ckeditor() {
+//	document.write('<script src="//cdn.bootcss.com/ckeditor/4.5.10/ckeditor.js"></script>')
+//}
+
+
+window.ck_complex = {
+	// Define changes to default configuration here.
+	// For complete reference see:
+	// http://docs.ckeditor.com/#!/api/CKEDITOR.config
+
+	// The toolbar groups arrangement, optimized for two toolbar rows.
+	toolbarGroups : [
+		{ name: 'clipboard',   groups: [ 'clipboard', 'undo' ] },
+		{ name: 'editing',     groups: [ 'find', 'selection', 'spellchecker' ] },
+		{ name: 'links' },
+		{ name: 'insert' },
+		{ name: 'forms' },
+		{ name: 'tools' },
+		{ name: 'document',	   groups: [ 'mode', 'document', 'doctools' ] },
+		{ name: 'others' },
+		'/',
+		{ name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
+		{ name: 'paragraph',   groups: [ 'list', 'indent', 'blocks', 'align', 'bidi' ] },
+		{ name: 'styles' },
+		{ name: 'colors' },
+		{ name: 'about' }
+	],
+
+	// Remove some buttons provided by the standard plugins, which are
+	// not needed in the Standard(s) toolbar.
+	removeButtons : 'Underline,Subscript,Superscript',
+
+	// Set the most common block elements.
+	format_tags : 'p;h1;h2;h3;pre',
+
+	// Simplify the dialog windows.
+	removeDialogTabs : 'image:advanced;link:advanced',
+	image_previewText:'image preview',
+	filebrowserImageUploadUrl: '/blog/upload/image/',
+	extraPlugins : 'justify,codesnippet,lineutils,mathjax',
+	mathJaxLib : '//cdn.mathjax.org/mathjax/2.6-latest/MathJax.js?config=TeX-AMS_HTML',
+	extraAllowedContent :'img[class]',
+};
 
 Vue.component('ckeditor',{
 	template:`<div class='ckeditor'>
-		    	<textarea class="form-control" class="form-control" name="ri" ></textarea>
+		    	<textarea class="form-control" name="ri" ></textarea>
 	    	</div>`,
 	props:{
-		model:{
-			twoWay:true
-		},
+		value:{},
 		config:{
-			default:'',
-			coerce:function (val) {
-				if(val=='complex'){
-					return 'http://ocm6l2tt6.bkt.clouddn.com/config_complex.js'
-				}else{
-					return val
-				}
-			}
+			default:'complex',
+		}
+	},
+	created:function(){
+		var self=this
+		bus.$on('sync_data',function(){
+			self.$emit('input',self.editor.getData())
+		})
+	},
+	mounted:function () {
+		var self=this
+		self.input=$(this.$el).find('textarea')[0]
+		var config_obj={
+			'complex':'//res.enjoyst.com/js/ck/config_complex.js',
+		}
+		var config=config_obj[self.config]
 
-		}
+		ex.load_js('//cdn.bootcss.com/ckeditor/4.6.2/ckeditor.js',function(){
+			var editor = CKEDITOR.replace(self.input,ck_complex)
+			editor.setData(self.value)
+			self.editor = editor
+
+			//var is_changed=false
+			//editor.on( 'change', function( evt ) {
+			//	// getData() returns CKEditor's HTML content.
+			//	is_changed=true
+			//	//self.$emit('input',editor.getData())
+			//});
+            //
+			//setInterval(function(){
+			//	if(is_changed){
+			//		self.$emit('input',editor.getData())
+			//		is_changed=false
+			//	}
+			//},3000)
+		})
+
 	},
-	compiled:function () {
-		var editor = CKEDITOR.replace($(this.$el).find('textarea')[0],{customConfig:this.config})
-		editor.setData(this.model)
-		this.editor = editor
-	},
-	events:{
-		'sync_data':function () {
-			this.model=this.editor.getData()
-		}
-	}
+	//events:{
+	//	'sync_data':function () {
+	//		this.model=this.editor.getData()
+	//	}
+	//}
 })
+
