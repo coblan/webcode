@@ -32,6 +32,7 @@ window.ck_complex = {
 		{ name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
 		{ name: 'paragraph',   groups: [ 'list', 'indent', 'blocks', 'align', 'bidi' ] },
 		{ name: 'styles' },
+		{name:'font'},
 		{ name: 'colors' },
 		{ name: 'about' },
 	],
@@ -48,8 +49,9 @@ window.ck_complex = {
 	// Simplify the dialog windows.
 	removeDialogTabs : 'image:advanced;link:advanced',
 	image_previewText:'image preview',
-	filebrowserImageUploadUrl: '/ckeditor/upload_image',
-	extraPlugins : 'justify,codesnippet,lineutils,mathjax,colorbutton', //autogrow,
+	imageUploadUrl:'/ckeditor/upload_image',
+	filebrowserImageUploadUrl: '/ckeditor/upload_image', // Will be replace by imageUploadUrl when upload_image
+	extraPlugins : 'justify,codesnippet,lineutils,mathjax,colorbutton,uploadimage,font', //autogrow,
 	mathJaxLib : '//cdn.mathjax.org/mathjax/2.6-latest/MathJax.js?config=TeX-AMS_HTML',
 	extraAllowedContent :'img[class]',
 	//autoGrow_maxHeight : 800,
@@ -86,7 +88,7 @@ Vue.component('ckeditor',{
 		var config={}
 		ex.assign(config,config_obj[self.set]) 
 		ex.assign(config,self.config)
-
+		// 4.5.10   4.6.2
 		ex.load_js('//cdn.bootcss.com/ckeditor/4.6.2/ckeditor.js',function(){
 			CKEDITOR.timestamp='ABCDFDGff'
 			var editor = CKEDITOR.replace(self.input,config)
