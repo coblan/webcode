@@ -65,7 +65,7 @@
 
     <body>
 	<div id="there">
-		<ckeditor v-model='mm'></ckeditor>
+		<ckeditor v-model='mm' :config="{filebrowserImageUploadUrl: 'localhost:8000/ckeditor/upload_image',}"></ckeditor>
 		<button name="test" type="button" value="val" @click='submit()'>Button Text</button>
 	</div>
 

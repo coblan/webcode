@@ -9,7 +9,7 @@ Vue.component('date',{
         var self=this
         var def_conf={
             language: "zh-CN",
-            format: "yyyy/mm/dd",
+            format: "yyyy-mm-dd",
             autoclose: true,
             todayHighlight: true,
         }
@@ -48,7 +48,7 @@ Vue.component('datetime',{
         var self=this
         var def_conf={
             language: "zh-CN",
-            format: "yyyy/mm/dd hh:ii",
+            format: "yyyy-mm-dd hh:ii",
             autoclose: true,
             todayHighlight: true,
         }

@@ -48,7 +48,7 @@ window.ck_complex = {
 	// Simplify the dialog windows.
 	removeDialogTabs : 'image:advanced;link:advanced',
 	image_previewText:'image preview',
-	filebrowserImageUploadUrl: '/blog/upload/image/',
+	filebrowserImageUploadUrl: '/ckeditor/upload_image',
 	extraPlugins : 'justify,codesnippet,lineutils,mathjax,colorbutton', //autogrow,
 	mathJaxLib : '//cdn.mathjax.org/mathjax/2.6-latest/MathJax.js?config=TeX-AMS_HTML',
 	extraAllowedContent :'img[class]',
@@ -65,7 +65,8 @@ Vue.component('ckeditor',{
 	    	</div>`,
 	props:{
 		value:{},
-		config:{
+		config:{},
+		set:{
 			default:'complex',
 		}
 	},
@@ -79,13 +80,16 @@ Vue.component('ckeditor',{
 		var self=this
 		self.input=$(this.$el).find('textarea')[0]
 		var config_obj={
-			'complex':'//res.enjoyst.com/js/ck/config_complex.js',
+			//'complex':'//res.enjoyst.com/js/ck/config_complex.js',
+			'complex':ck_complex,
 		}
-		var config=config_obj[self.config]
+		var config={}
+		ex.assign(config,config_obj[self.set]) 
+		ex.assign(config,self.config)
 
 		ex.load_js('//cdn.bootcss.com/ckeditor/4.6.2/ckeditor.js',function(){
 			CKEDITOR.timestamp='ABCDFDGff'
-			var editor = CKEDITOR.replace(self.input,ck_complex)
+			var editor = CKEDITOR.replace(self.input,config)
 			editor.setData(self.value)
 			self.editor = editor
 
