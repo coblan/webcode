@@ -327,6 +327,12 @@ var field_base={
                         	:placeholder="kw.placeholder"></datetime>
                        </div>`,
 		},
+		richtext:{
+			props:['name','row','kw'],
+			template:`<div><span v-if='kw.readonly' v-text='row[name]'></span>
+            			<ckeditor  v-model="row[name]" :id="'id_'+name"></ckeditor>
+                       </div>`,
+		},
     }
 
 }
