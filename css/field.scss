@@ -1,0 +1,28 @@
+
+$blue : #1875e7;
+
+div {
+  color : red;
+}
+p {
+  color : red;
+}
+
+div {
+  color : $blue;
+}
+body {
+	margin: (14px/2);
+	top: 50px + 100px;
+ right: 1000 * 10%;
+}
+
+@mixin left($val:100px) {
+	float: left;
+	margin-left: 10px;
+  padding: $val;
+}
+
+div {
+	@include left(50px);
+}
