@@ -149,7 +149,7 @@ export function hide_upload(second){
 	}
 }
 
-ex.load_css('https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css')
+ex.load_css('//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css')
 //if(!window.__font_awesome){
 //	window.__font_awesome=true
 //	document.write(`<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">`)
