@@ -53,6 +53,7 @@ import * as ck from './ckeditor.js'
 import * as multi from './multi_sel.js'
 import * as inputs from './inputs.js'
 
+require('./fields.scss')
 
 hook_ajax_msg()
 hook_ajax_csrf()
