@@ -226,7 +226,7 @@ function hide_upload(second){
 	}
 }
 
-ex.load_css('https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css')
+ex.load_css('//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css')
 //if(!window.__font_awesome){
 //	window.__font_awesome=true
 //	document.write(`<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">`)
@@ -299,7 +299,7 @@ if(!window.__uploading_mark){
 //}
 
 
-window.ck_complex = {
+var ck_complex = {
 	// Define changes to default configuration here.
 	// For complete reference see:
 	// http://docs.ckeditor.com/#!/api/CKEDITOR.config
@@ -337,13 +337,14 @@ window.ck_complex = {
 	image_previewText:'image preview',
 	imageUploadUrl:'/ckeditor/upload_image',
 	filebrowserImageUploadUrl: '/ckeditor/upload_image', // Will be replace by imageUploadUrl when upload_image
-	extraPlugins : 'justify,codesnippet,lineutils,mathjax,colorbutton,uploadimage,font', //autogrow,
+	extraPlugins : 'justify,codesnippet,lineutils,mathjax,colorbutton,uploadimage,font,autogrow', //autogrow,
 	mathJaxLib : '//cdn.mathjax.org/mathjax/2.6-latest/MathJax.js?config=TeX-AMS_HTML',
 	extraAllowedContent :'img[class]',
-	//autoGrow_maxHeight : 800,
+	autoGrow_maxHeight : 600,
+	autoGrow_minHeight:200,
 	//autoGrow_onStartup:true,
-	//autoGrow_bottomSpace:100,
-	height:800,
+	autoGrow_bottomSpace:50,
+	//height:800,
 };
 
 
@@ -355,7 +356,7 @@ Vue.component('ckeditor',{
 		value:{},
 		config:{},
 		set:{
-			default:'complex',
+			default:'edit',
 		}
 	},
 	created:function(){
@@ -370,6 +371,7 @@ Vue.component('ckeditor',{
 		var config_obj={
 			//'complex':'//res.enjoyst.com/js/ck/config_complex.js',
 			'complex':ck_complex,
+			'edit':edit_level,
 		}
 		var config={}
 		ex.assign(config,config_obj[self.set]) 
@@ -405,6 +407,56 @@ Vue.component('ckeditor',{
 })
 
 
+var edit_level = {
+	// Define changes to default configuration here.
+	// For complete reference see:
+	// http://docs.ckeditor.com/#!/api/CKEDITOR.config
+
+	// The toolbar groups arrangement, optimized for two toolbar rows.
+	toolbarGroups : [
+		//{ name: 'clipboard',   groups: [ 'clipboard', 'undo' ] },
+		//{ name: 'editing',     groups: [ 'find', 'selection', 'spellchecker' ] },
+		{ name: 'tools' },
+
+		//'/',
+		{ name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
+		{ name: 'paragraph',   groups: [ 'list', 'indent', 'blocks', 'align', 'bidi' ] },
+		{ name: 'styles' },
+		{name:'font'},
+		{ name: 'colors' },
+
+		{ name: 'links' },
+		{ name: 'insert' },
+		{ name: 'forms' },
+
+		{ name: 'others' },
+		{ name: 'document',	   groups: [ 'mode', 'document', 'doctools' ] },
+		//{ name: 'about' },
+	],
+
+
+
+	// Remove some buttons provided by the standard plugins, which are
+	// not needed in the Standard(s) toolbar.
+	removeButtons : 'Underline,Subscript,Superscript',
+
+	// Set the most common block elements.
+	format_tags : 'p;h1;h2;h3;pre',
+
+	// Simplify the dialog windows.
+	removeDialogTabs : 'image:advanced;link:advanced',
+	image_previewText:'image preview',
+	imageUploadUrl:'/ckeditor/upload_image',
+	filebrowserImageUploadUrl: '/ckeditor/upload_image', // Will be replace by imageUploadUrl when upload_image
+	extraPlugins : 'justify,lineutils,colorbutton,uploadimage,font,autogrow', //,mathjax,codesnippet
+	//mathJaxLib : '//cdn.mathjax.org/mathjax/2.6-latest/MathJax.js?config=TeX-AMS_HTML',
+	extraAllowedContent :'img[class]',
+	autoGrow_maxHeight : 600,
+	autoGrow_minHeight:200,
+	//autoGrow_onStartup:true,
+	autoGrow_bottomSpace:50,
+	//height:800,
+};
 
 /***/ }),
 /* 2 */
@@ -800,13 +852,35 @@ if(!window.__multi_sel){
 	document.write(`
 	
 <style type="text/css" media="screen" id="test">
+
+._tow-col-sel{
+	display: flex;
+	align-items: stretch;
+
+}
+
 ._tow-col-sel .sel{
-	width:250px;
-	display: inline-block;
-	vertical-align: middle;
+	min-width:250px;
+	max-width: 400px;
+
+	display: flex;
+	flex-direction: column;
+	/*display: inline-block;*/
+	/*vertical-align: middle;*/
+}
+._tow-col-sel .sel select{
+	width: 100%;
+
+	flex: 1;
 }
 ._tow-col-sel .sel.right{
 	border-width:2px;
+}
+._tow-col-sel .arrow{
+	display: flex;
+	flex-direction: column;
+	justify-content:center;
+	padding: 5px;
 }
 ._tow-col-sel ._small_icon{
 	width:15px;
@@ -823,20 +897,27 @@ if(!window.__multi_sel){
 
 var temp_tow_col_sel=`
 <div class='_tow-col-sel'>
-		<select name="" id="" multiple="multiple" :size="size" class='sel left' v-model='left_sel' >
-			<option v-for='opt in orderBy(can_select,"label")' :value="opt.value" v-text='opt.label' @dblclick='add(opt)' ></option>
-		</select>
-		<div style='display: inline-block;vertical-align: middle;'>
-			<img src="http://oe8wu3kqs.bkt.clouddn.com/image/right_02.png" alt="" 
+		<div class="sel">
+			<b>可选项</b>
+			<select name="" id="" multiple="multiple" :size="size" class='left' v-model='left_sel' >
+				<option v-for='opt in orderBy(can_select,"label")' :value="opt.value" v-text='opt.label' @dblclick='add(opt)' ></option>
+			</select>
+		</div>
+
+		<div class="arrow">
+			<img src="//res.enjoyst.com/image/right_02.png" alt=""
 				:class='["_small_icon",{"deactive":left_sel.length==0}]' @click='batch_add()'>
 			<br>
-			<img src="http://oe8wu3kqs.bkt.clouddn.com/image/left_02.png" alt="" 
+			<img src="//res.enjoyst.com/image/left_02.png" alt=""
 				:class='["_small_icon",{"deactive":right_sel.length==0}]' @click='batch_rm()'>
 		</div>
-		
-		<select name="" id="" multiple="multiple" :size="size" class='sel right' v-model='right_sel' >
-			<option v-for='opt in orderBy(selected__,"label")' :value="opt.value" v-text='opt.label' @dblclick='rm(opt)'></option>
-		</select>
+		<div class="sel">
+			<b>选中项</b>
+			<select name="" id="" multiple="multiple" :size="size" class='right' v-model='right_sel' >
+				<option v-for='opt in orderBy(selected,"label")' :value="opt.value" v-text='opt.label' @dblclick='rm(opt)'></option>
+			</select>
+		</div>
+
 </div>
 `
 
@@ -855,9 +936,10 @@ Vue.component('tow-col-sel',{
 		},
 	},
 	data:function () {
+
 		return {
+			//selected:this.value,
 			selected:this.value,
-			selected__:[],
 			can_select:JSON.parse(JSON.stringify(this.choices)),
 			left_sel:[],
 			right_sel:[]
@@ -865,9 +947,12 @@ Vue.component('tow-col-sel',{
 	},
 	mounted:function () {
 		var self=this
-		this.selected__ = ex.remove(this.can_select,function (item) {
-				return ex.isin(item.value,self.value)
-			})
+		this.can_select=ex.filter(this.can_select,function(choice){
+			return !ex.isin(choice,self.selected)
+		})
+		//this.selected__ = ex.remove(this.can_select,function (item) {
+		//		return ex.isin(item.value,self.value)
+		//	})
 	},
 	watch:{
 		selected:function (v) {
@@ -888,47 +973,64 @@ Vue.component('tow-col-sel',{
 			})
 		},
 		add:function (opt) {
-			this.selected__.push(opt)
-			this.selected.push(opt.value)
-			var index = this.can_select.indexOf(opt)
-			if(index!=-1){
-				this.can_select.splice(index,1)
+			if(!ex.isin(opt,this.selected)){
+				this.selected.push(opt)
 			}
+
+			ex.remove(this.can_select,opt)
+			//this.selected__.push(opt)
+			//this.selected.push(opt.value)
+			//var index = this.can_select.indexOf(opt)
+			//if(index!=-1){
+			//	this.can_select.splice(index,1)
+			//}
 			this.left_sel=[]
 		},
 		rm:function (opt) {
-			var index = this.selected__.indexOf(opt)
-			if(index!=-1){
-				this.selected__.splice(index,1)
-			}
-			var index_2 = this.selected.indexOf(opt.value)
-			if(index_2!=-1){
-				this.selected.splice(index_2,1)
-			}
+			ex.remove(this.selected,opt)
 			this.can_select.push(opt)
+			//var index = this.selected__.indexOf(opt)
+			//if(index!=-1){
+			//	this.selected__.splice(index,1)
+			//}
+			//var index_2 = this.selected.indexOf(opt.value)
+			//if(index_2!=-1){
+			//	this.selected.splice(index_2,1)
+			//}
+			//this.can_select.push(opt)
 			this.right_sel=[]
 		},
 		batch_add:function () {
-			var tmp_ls = this.left_sel
-			for(var x=0;x<tmp_ls.length;x++){
-				for(var y=0;y<this.choices.length;y++){
-					if(this.choices[y].value==tmp_ls[x]){
-						this.add(this.choices[y])
-						break;
-					}
-				}
-			}
+			//var tmp_ls = this.left_sel
+			var self=this
+			var added_choice= ex.remove(this.can_select,function(choice){
+				return ex.isin(choice.value,self.left_sel)
+			})
+			ex.extend(this.selected,added_choice)
+			//for(var x=0;x<tmp_ls.length;x++){
+			//	for(var y=0;y<this.choices.length;y++){
+			//		if(this.choices[y].value==tmp_ls[x]){
+			//			this.add(this.choices[y])
+			//			break;
+			//		}
+			//	}
+			//}
 		},
 		batch_rm:function () {
-			var tmp_ls = this.right_sel
-			for(var x=0;x<tmp_ls.length;x++){
-				for(var y=0;y<this.selected__.length;y++){
-					if(this.selected__[y].value==tmp_ls[x]){
-						this.rm(this.selected__[y])
-						break;
-					}
-				}
-			}
+			var self=this
+			var del_choice=ex.remove(this.selected,function(choice){
+				return ex.isin(choice.value,self.right_sel)
+			})
+			ex.extend(this.can_select,del_choice)
+			//var tmp_ls = this.right_sel
+			//for(var x=0;x<tmp_ls.length;x++){
+			//	for(var y=0;y<this.selected__.length;y++){
+			//		if(this.selected__[y].value==tmp_ls[x]){
+			//			this.rm(this.selected__[y])
+			//			break;
+			//		}
+			//	}
+			//}
 		}
 	}
 })
@@ -970,7 +1072,7 @@ exports = module.exports = __webpack_require__(7)();
 
 
 // module
-exports.push([module.i, ".error {\n  color: red; }\n\n.field-panel {\n  background-color: #F5F5F5;\n  max-width: 80%;\n  margin: 20px;\n  padding: 20px 30px;\n  border-radius: 6px;\n  position: relative;\n  border: 1px solid #D9D9D9; }\n  .field-panel:after {\n    content: '';\n    display: block;\n    position: absolute;\n    top: 0px;\n    left: 0px;\n    bottom: 0px;\n    width: 180px;\n    border-radius: 6px;\n    background-color: #fff;\n    z-index: 0; }\n  .field-panel .form-group.field {\n    display: flex; }\n    .field-panel .form-group.field .field_input {\n      flex-grow: 1;\n      padding: 5px 20px; }\n      .field-panel .form-group.field .field_input .ckeditor {\n        padding: 20px; }\n    .field-panel .form-group.field:first-child .control-label {\n      border-top: 5px solid #FFF; }\n    .field-panel .form-group.field .control-label {\n      width: 150px;\n      text-align: right;\n      padding: 5px 30px;\n      z-index: 100;\n      flex-shrink: 0;\n      border-top: 1px solid #EEE; }\n  .field-panel .form-group.field .field_input ._tow-col-sel {\n    /*width:750px;*/ }\n  .field-panel ._tow-col-sel .sel {\n    width: 350px; }\n  .field-panel .field.error .error {\n    display: inline-block; }\n", ""]);
+exports.push([module.i, ".error {\n  color: red; }\n\n.field-panel {\n  background-color: #F5F5F5;\n  max-width: 80%;\n  margin: 20px;\n  padding: 20px 30px;\n  border-radius: 6px;\n  position: relative;\n  border: 1px solid #D9D9D9;\n  overflow: auto; }\n  .field-panel:after {\n    content: '';\n    display: block;\n    position: absolute;\n    top: 0px;\n    left: 0px;\n    bottom: 0px;\n    width: 180px;\n    border-radius: 6px;\n    background-color: #fff;\n    z-index: 0; }\n  .field-panel .form-group.field {\n    display: flex; }\n    .field-panel .form-group.field .field_input {\n      flex-grow: 1;\n      padding: 5px 20px; }\n      .field-panel .form-group.field .field_input .ckeditor {\n        padding: 20px; }\n    .field-panel .form-group.field:first-child .control-label {\n      border-top: 5px solid #FFF; }\n    .field-panel .form-group.field .control-label {\n      width: 150px;\n      text-align: right;\n      padding: 5px 30px;\n      z-index: 100;\n      flex-shrink: 0;\n      border-top: 1px solid #EEE; }\n  .field-panel .form-group.field .field_input ._tow-col-sel {\n    /*width:750px;*/ }\n  .field-panel .field.error .error {\n    display: inline-block; }\n", ""]);
 
 // exports
 

@@ -11,6 +11,7 @@
   border-radius:6px;
   position: relative;
   border: 1px solid #D9D9D9;
+  overflow: auto;
 
   &:after{
     content:'';
@@ -52,9 +53,9 @@
   .form-group.field .field_input ._tow-col-sel{
     /*width:750px;*/
   }
-  ._tow-col-sel .sel {
-    width: 350px;
-  }
+  //._tow-col-sel .sel {
+  //  width: 350px;
+  //}
   .field.error .error{
     display: inline-block;
   }

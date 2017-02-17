@@ -13,7 +13,7 @@
 //}
 
 
-window.ck_complex = {
+var ck_complex = {
 	// Define changes to default configuration here.
 	// For complete reference see:
 	// http://docs.ckeditor.com/#!/api/CKEDITOR.config
@@ -51,13 +51,14 @@ window.ck_complex = {
 	image_previewText:'image preview',
 	imageUploadUrl:'/ckeditor/upload_image',
 	filebrowserImageUploadUrl: '/ckeditor/upload_image', // Will be replace by imageUploadUrl when upload_image
-	extraPlugins : 'justify,codesnippet,lineutils,mathjax,colorbutton,uploadimage,font', //autogrow,
+	extraPlugins : 'justify,codesnippet,lineutils,mathjax,colorbutton,uploadimage,font,autogrow', //autogrow,
 	mathJaxLib : '//cdn.mathjax.org/mathjax/2.6-latest/MathJax.js?config=TeX-AMS_HTML',
 	extraAllowedContent :'img[class]',
-	//autoGrow_maxHeight : 800,
+	autoGrow_maxHeight : 600,
+	autoGrow_minHeight:200,
 	//autoGrow_onStartup:true,
-	//autoGrow_bottomSpace:100,
-	height:800,
+	autoGrow_bottomSpace:50,
+	//height:800,
 };
 
 
@@ -69,7 +70,7 @@ Vue.component('ckeditor',{
 		value:{},
 		config:{},
 		set:{
-			default:'complex',
+			default:'edit',
 		}
 	},
 	created:function(){
@@ -84,6 +85,7 @@ Vue.component('ckeditor',{
 		var config_obj={
 			//'complex':'//res.enjoyst.com/js/ck/config_complex.js',
 			'complex':ck_complex,
+			'edit':edit_level,
 		}
 		var config={}
 		ex.assign(config,config_obj[self.set]) 
@@ -118,3 +120,54 @@ Vue.component('ckeditor',{
 	//}
 })
 
+
+var edit_level = {
+	// Define changes to default configuration here.
+	// For complete reference see:
+	// http://docs.ckeditor.com/#!/api/CKEDITOR.config
+
+	// The toolbar groups arrangement, optimized for two toolbar rows.
+	toolbarGroups : [
+		//{ name: 'clipboard',   groups: [ 'clipboard', 'undo' ] },
+		//{ name: 'editing',     groups: [ 'find', 'selection', 'spellchecker' ] },
+		{ name: 'tools' },
+
+		//'/',
+		{ name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
+		{ name: 'paragraph',   groups: [ 'list', 'indent', 'blocks', 'align', 'bidi' ] },
+		{ name: 'styles' },
+		{name:'font'},
+		{ name: 'colors' },
+
+		{ name: 'links' },
+		{ name: 'insert' },
+		{ name: 'forms' },
+
+		{ name: 'others' },
+		{ name: 'document',	   groups: [ 'mode', 'document', 'doctools' ] },
+		//{ name: 'about' },
+	],
+
+
+
+	// Remove some buttons provided by the standard plugins, which are
+	// not needed in the Standard(s) toolbar.
+	removeButtons : 'Underline,Subscript,Superscript',
+
+	// Set the most common block elements.
+	format_tags : 'p;h1;h2;h3;pre',
+
+	// Simplify the dialog windows.
+	removeDialogTabs : 'image:advanced;link:advanced',
+	image_previewText:'image preview',
+	imageUploadUrl:'/ckeditor/upload_image',
+	filebrowserImageUploadUrl: '/ckeditor/upload_image', // Will be replace by imageUploadUrl when upload_image
+	extraPlugins : 'justify,lineutils,colorbutton,uploadimage,font,autogrow', //,mathjax,codesnippet
+	//mathJaxLib : '//cdn.mathjax.org/mathjax/2.6-latest/MathJax.js?config=TeX-AMS_HTML',
+	extraAllowedContent :'img[class]',
+	autoGrow_maxHeight : 600,
+	autoGrow_minHeight:200,
+	//autoGrow_onStartup:true,
+	autoGrow_bottomSpace:50,
+	//height:800,
+};

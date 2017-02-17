@@ -174,6 +174,10 @@ ex={
 		}
 		return false
 	},
+	extend:function(array1,array2){
+		array1.push.apply(array1,array2)
+		return array1
+	},
 	remove:function (array,func_or_obj) {
 		var index_ls=[]
 		if (typeof func_or_obj == 'function'){

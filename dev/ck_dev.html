@@ -8,7 +8,7 @@
 
 		<script src="http://cdn.bootcss.com/vue/2.1.6/vue.js"></script>
 		<script src="../js/exfun.js"></script>
-		<script src="../build/fields.pack.js?t=123"></script>
+		<script src="../build/fields.pack.js?t=122233"></script>
 		
 
     <script type="text/javascript">
@@ -65,7 +65,7 @@
 
     <body>
 	<div id="there">
-		<ckeditor v-model='mm' :config="{filebrowserImageUploadUrl: 'localhost:8000/ckeditor/upload_image',}"></ckeditor>
+		<ckeditor v-model='mm' set="edit"></ckeditor>
 		<button name="test" type="button" value="val" @click='submit()'>Button Text</button>
 	</div>
 
