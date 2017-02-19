@@ -766,16 +766,32 @@ window.fl=fl
  * Created by heyulin on 2017/1/24.
  */
 
+var date_config_set={
+    date:{
+        language: "zh-CN",
+        format: "yyyy-mm-dd",
+        autoclose: true,
+        todayHighlight: true,
+    },
+    month:{
+        language: "zh-CN",
+        format: "yyyy-mm",
+        startView: "months",
+        minViewMode: "months",
+        autoclose: true,
+
+    },
+}
+
 Vue.component('date',{
     template:'<input type="text" class="form-control">',
-    props:['value','config'],
+    props:['value','set','config'],
     mounted:function () {
         var self=this
-        var def_conf={
-            language: "zh-CN",
-            format: "yyyy-mm-dd",
-            autoclose: true,
-            todayHighlight: true,
+        if(!this.set){
+            var def_conf=date_config_set.date
+        }else{
+            var def_conf=date_config_set[this.set]
         }
         if(this.config){
             ex.assign(def_conf,this.config)
@@ -795,7 +811,37 @@ Vue.component('date',{
     },
     watch:{
         value:function (n) {
+            this.input.datepicker('update',n)
             this.input.val(n)
+
+        }
+    }
+})
+
+Vue.component('month',{
+    template:`<date v-model="month" :config="cus_config"></date>`,
+    props:['value','config'],
+    data:function(){
+        var self_config={
+            language: "zh-CN",
+            format: "yyyy/mm",
+            viewMode: "months",
+            minViewMode: "months"
+        }
+        if(this.config){
+            ex.assign(self_config,this.config)
+        }
+        return {
+            month:this.value,
+            cus_config:self_config
+        }
+    },
+    watch:{
+        month:function(v){
+            this.$emit('input',v)
+        },
+        value:function(v){
+            this.month=v
         }
     }
 })

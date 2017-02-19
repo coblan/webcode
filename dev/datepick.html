@@ -11,14 +11,18 @@
 		<script src="../js/exfun.js"></script>
 		<script src="../build/fields.pack.js"></script>
 		<!--<link href="http://cdn.bootcss.com/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker.min.css" rel="stylesheet">-->
-			<!--<script src="//cdn.bootcss.com/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.min.js"></script>-->
+			<script src="//cdn.bootcss.com/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.min.js"></script>
 			<!--<script src="//cdn.bootcss.com/bootstrap-datepicker/1.6.4/locales/bootstrap-datepicker.zh-CN.min.js"></script>-->
 	<script type="text/javascript">
 	$(function () {
-//		$('#sandbox-container input').datepicker({
-//		    language: "zh-CN",
-//		     format: "yyyy/mm/dd",
-//		})
+		$('#sandbox-container input').datepicker({
+		    language: "zh-CN",
+		     format: "yyyy/mm",
+			startView: "months",
+			minViewMode: "months",
+			autoclose: true,
+
+		})
 //
 //
 //		$('#sandbox-container .input-group.date').datepicker({
@@ -44,7 +48,8 @@
 			el:'#there',
 			data:{
 				date:'',
-				datetime:''
+				datetime:'',
+				month:''
 			},
 			methods:{
 				input_value:function () {
@@ -96,7 +101,10 @@
 
 	    <div id="there" class="test">
 		    <!--<com-datepicker v-model='date'></com-datepicker>-->
+			<date v-model="month" set="month"></date>
+			<input type="text" v-model="month">
 			<date v-model="date"></date>
+			<input type="text" v-model="date">
 	    	<button name="test" type="button" value="val" @click='input_value()'>Button Text</button>
 			<date v-model="date" :config="{language:'en'}"></date>
 
