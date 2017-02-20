@@ -99,7 +99,12 @@ var field_base={
     },
     computed:{
         row:function(){return this.kw.row},
-        errors:function() {return this.kw.errors},
+        errors:function() {
+			if(!this.kw.errors){
+				Vue.set(this.kw,'errors',{})
+			}
+			return this.kw.errors
+		},
         head:function(){
             var heads = this.kw.heads
             for (var x=0;x<heads.length;x++) {
