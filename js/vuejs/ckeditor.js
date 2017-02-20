@@ -56,7 +56,7 @@ var ck_complex = {
 	extraAllowedContent :'img[class]',
 	autoGrow_maxHeight : 600,
 	autoGrow_minHeight:200,
-	//autoGrow_onStartup:true,
+	autoGrow_onStartup:true,
 	autoGrow_bottomSpace:50,
 	//height:800,
 };
@@ -92,10 +92,14 @@ Vue.component('ckeditor',{
 		ex.assign(config,self.config)
 		// 4.5.10   4.6.2
 		ex.load_js('//cdn.bootcss.com/ckeditor/4.6.2/ckeditor.js',function(){
-			CKEDITOR.timestamp='ABCDFDGff'
+			//CKEDITOR.timestamp='GABCDFDGff'
+			//self.input.value=self.value
+
 			var editor = CKEDITOR.replace(self.input,config)
 			editor.setData(self.value)
+			editor.checkDirty()
 			self.editor = editor
+
 
 			//var is_changed=false
 			//editor.on( 'change', function( evt ) {
@@ -167,7 +171,7 @@ var edit_level = {
 	extraAllowedContent :'img[class]',
 	autoGrow_maxHeight : 600,
 	autoGrow_minHeight:200,
-	//autoGrow_onStartup:true,
+	autoGrow_onStartup:true,
 	autoGrow_bottomSpace:50,
 	//height:800,
 };

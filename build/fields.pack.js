@@ -342,7 +342,7 @@ var ck_complex = {
 	extraAllowedContent :'img[class]',
 	autoGrow_maxHeight : 600,
 	autoGrow_minHeight:200,
-	//autoGrow_onStartup:true,
+	autoGrow_onStartup:true,
 	autoGrow_bottomSpace:50,
 	//height:800,
 };
@@ -378,10 +378,14 @@ Vue.component('ckeditor',{
 		ex.assign(config,self.config)
 		// 4.5.10   4.6.2
 		ex.load_js('//cdn.bootcss.com/ckeditor/4.6.2/ckeditor.js',function(){
-			CKEDITOR.timestamp='ABCDFDGff'
+			//CKEDITOR.timestamp='GABCDFDGff'
+			//self.input.value=self.value
+
 			var editor = CKEDITOR.replace(self.input,config)
 			editor.setData(self.value)
+			editor.checkDirty()
 			self.editor = editor
+
 
 			//var is_changed=false
 			//editor.on( 'change', function( evt ) {
@@ -453,7 +457,7 @@ var edit_level = {
 	extraAllowedContent :'img[class]',
 	autoGrow_maxHeight : 600,
 	autoGrow_minHeight:200,
-	//autoGrow_onStartup:true,
+	autoGrow_onStartup:true,
 	autoGrow_bottomSpace:50,
 	//height:800,
 };
@@ -1118,7 +1122,7 @@ exports = module.exports = __webpack_require__(7)();
 
 
 // module
-exports.push([module.i, ".error {\n  color: red; }\n\n.field-panel {\n  background-color: #F5F5F5;\n  max-width: 80%;\n  margin: 20px;\n  padding: 20px 30px;\n  border-radius: 6px;\n  position: relative;\n  border: 1px solid #D9D9D9;\n  overflow: auto; }\n  .field-panel:after {\n    content: '';\n    display: block;\n    position: absolute;\n    top: 0px;\n    left: 0px;\n    bottom: 0px;\n    width: 180px;\n    border-radius: 6px;\n    background-color: #fff;\n    z-index: 0; }\n  .field-panel .form-group.field {\n    display: flex; }\n    .field-panel .form-group.field .field_input {\n      flex-grow: 1;\n      padding: 5px 20px; }\n      .field-panel .form-group.field .field_input .ckeditor {\n        padding: 20px; }\n    .field-panel .form-group.field:first-child .control-label {\n      border-top: 5px solid #FFF; }\n    .field-panel .form-group.field .control-label {\n      width: 150px;\n      text-align: right;\n      padding: 5px 30px;\n      z-index: 100;\n      flex-shrink: 0;\n      border-top: 1px solid #EEE; }\n  .field-panel .form-group.field .field_input ._tow-col-sel {\n    /*width:750px;*/ }\n  .field-panel .field.error .error {\n    display: inline-block; }\n", ""]);
+exports.push([module.i, ".error {\n  color: red; }\n\n.field-panel {\n  background-color: #F5F5F5;\n  max-width: 80%;\n  margin: 20px;\n  padding: 20px 30px;\n  border-radius: 6px;\n  position: relative;\n  border: 1px solid #D9D9D9;\n  overflow: auto; }\n  .field-panel:after {\n    content: '';\n    display: block;\n    position: absolute;\n    top: 0px;\n    left: 0px;\n    bottom: 0px;\n    width: 180px;\n    border-radius: 6px;\n    background-color: #fff;\n    z-index: 0; }\n  .field-panel .form-group.field {\n    display: flex;\n    align-items: center; }\n    .field-panel .form-group.field .field_input {\n      flex-grow: 0;\n      padding: 5px 20px; }\n      .field-panel .form-group.field .field_input .ckeditor {\n        padding: 20px; }\n    .field-panel .form-group.field:first-child .control-label {\n      border-top: 5px solid #FFF; }\n    .field-panel .form-group.field .control-label {\n      width: 150px;\n      text-align: right;\n      padding: 5px 30px;\n      z-index: 100;\n      flex-shrink: 0;\n      border-top: 1px solid #EEE; }\n  .field-panel .form-group.field .field_input ._tow-col-sel {\n    /*width:750px;*/ }\n  .field-panel .field.error .error {\n    display: inline-block; }\n", ""]);
 
 // exports
 

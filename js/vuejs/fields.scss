@@ -28,9 +28,9 @@
 
   .form-group.field{
     display: flex;
-
+    align-items:center;
     .field_input{
-        flex-grow:1;
+        flex-grow:0;
         padding:5px 20px;
 
       .ckeditor{

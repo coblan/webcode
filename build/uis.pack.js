@@ -169,11 +169,11 @@ Vue.component('modal', {
 
 
 Vue.component('page-tab', {
-	template: '<ul class=\'menu\'>\n    <li v-for=\'tab in tabs\' :class=\'{"active":value==tab}\' @click=\'$emit("input",tab)\' v-text=\'tab\'></li>\n    </ul>',
+	template: '<ul class=\'inst-menu\'>\n    <li v-for=\'tab in tabs\' :class=\'{"active":value==tab}\' @click=\'$emit("input",tab)\' v-text=\'tab\'></li>\n    </ul>',
 	props: ['value', 'tabs']
 });
 
-document.write('\n <style type="text/css" media="screen" id="test">\n.menu{\n\t\tmargin: 30px auto;\n\t\tborder-bottom: 1px solid #DADCDE;\n\t}\n\t.menu li{\n\t\tdisplay: inline-block;\n\t\tpadding: 10px 20px;\n\t\tfont-size: 16px;\n\t}\n\t.menu li:hover{\n\t\tcursor: pointer;\n\t}\n\t.menu .active{\n\t\tborder-bottom: 5px solid #0092F2;\n\t\tcolor: #0092F2;\n\t}\n</style>\n');
+document.write('\n <style type="text/css" media="screen" id="test">\n.inst-menu{\n\t\tmargin: 30px auto;\n\t\tborder-bottom: 1px solid #DADCDE;\n\t}\n.inst-menu li{\n\tdisplay: inline-block;\n\tpadding: 10px 20px;\n\tfont-size: 16px;\n}\n.inst-menu li:hover{\n\tcursor: pointer;\n}\n.inst-menu .active{\n\tborder-bottom: 5px solid #0092F2;\n\tcolor: #0092F2;\n}\n</style>\n');
 
 /***/ }),
 /* 3 */
