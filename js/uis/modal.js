@@ -29,11 +29,8 @@ if(!window.__modal_mark){
 			-moz-transform:translate(-50%, -50%); 	/* Firefox */
 			-webkit-transform:translate(-50%, -50%); /* Safari 和 Chrome */
 			-o-transform:translate(-50%, -50%); 
-	        text-align: center;
+	        /*text-align: center;*/
 	        //z-index: 1000;
-    	}
-    	#_upload_mark{
-    		float: left;
     	}
 		</style>`)
 }

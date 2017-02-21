@@ -1,6 +1,19 @@
 /*
-file-input
-===========
+
+文件上传步骤
+
+1. Vue.data设置
+ data:{
+    files:[],
+ },
+
+2. 在html中插入Vue组件 <file-input id='jjyy' v-model='file_name' multiple></file-input>
+
+3. 在Methods中上传
+fl.uploads(files,url,function(file_url){
+    file_urls ....
+})
+
 预览图片
 	从file-input读出数据，然后赋予图片的src ::
 	
@@ -8,11 +21,10 @@ file-input
 				$('#haha')[0].src = data
 				}
 
-
-
 */
 var fl={
 	read:function (file,callback) {
+        // 读完文件后，调用callback
 		var reader = new FileReader();
     	reader.onloadend = function () {
 	        // 图片的 base64 格式, 可以直接当成 img 的 src 属性值
@@ -25,7 +37,7 @@ var fl={
 	    };
 	    reader.readAsDataURL(file); // 读出 base64
 	},
-	upload:function (file,url,success) {
+	upload:function (file,url,success,progress) {
             var fd = new FormData();
             fd.append('file',file);
             $.ajax({
@@ -41,9 +53,10 @@ var fl={
 		       xhr:function() {
 			        var xhr = new window.XMLHttpRequest();
 			        xhr.upload.addEventListener("progress", function(evt) {
-			            if (evt.lengthComputable) {
+			            if (progress && evt.lengthComputable) {
 			                var percentComplete = evt.loaded / evt.total;
-			                console.log('进度', percentComplete);
+                            progress(percentComplete)
+			                //console.log('进度', percentComplete);
 			            }
 			        }, false);
 
@@ -51,7 +64,7 @@ var fl={
 			}
 		})
 	},
-	uploads:function (files,url,success) {
+	uploads:function (files,url,success,progress) {
         	var fd = new FormData();
         	for(var x=0;x<files.length;x++){
 	        	var file=files[x]
@@ -67,9 +80,10 @@ var fl={
 		       xhr:function() {
 			        var xhr = new window.XMLHttpRequest();
 			        xhr.upload.addEventListener("progress", function(evt) {
-			            if (evt.lengthComputable) {
+			            if (progress &&evt.lengthComputable) {
 			                var percentComplete = evt.loaded / evt.total;
-			                console.log('进度', percentComplete);
+                            progress(percentComplete)
+			                //console.log('进度', percentComplete);
 			            }
 			        }, false);
 
@@ -147,7 +161,10 @@ Vue.component('file-input',{
 
 
 
-
+/*
+* 下面这个应该没用了
+*
+*/
 
 Vue.component('file-obj',{
     template:"<input model='filebody' type='file' @change='changed'>",

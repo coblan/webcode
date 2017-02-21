@@ -1,5 +1,19 @@
 /**
  * Created by heyulin on 2017/1/24.
+ *
+ *
+ * date
+ * ========
+ * <date v-model='variable'></date>  // 选择默认set=date ,即选择日期
+ *
+ * <date v-model='variable' set='month'></date> // 选择 set=month ,即选择月份
+ *
+ * <date v-model='variable' set='month' :config='{}'></date>  //  config 是自定义的配置对象，具体需要参加帮助文件
+ *
+ * datetime
+ * ===========
+ * <datetime v-model='variable' :config='{}'></datetime> // 选择日期和时间
+ *
  */
 
 var date_config_set={
@@ -54,33 +68,6 @@ Vue.component('date',{
     }
 })
 
-Vue.component('month',{
-    template:`<date v-model="month" :config="cus_config"></date>`,
-    props:['value','config'],
-    data:function(){
-        var self_config={
-            language: "zh-CN",
-            format: "yyyy/mm",
-            viewMode: "months",
-            minViewMode: "months"
-        }
-        if(this.config){
-            ex.assign(self_config,this.config)
-        }
-        return {
-            month:this.value,
-            cus_config:self_config
-        }
-    },
-    watch:{
-        month:function(v){
-            this.$emit('input',v)
-        },
-        value:function(v){
-            this.month=v
-        }
-    }
-})
 
 Vue.component('datetime',{
     data:function(){
