@@ -467,20 +467,90 @@ var edit_level = {
 /***/ (function(module, exports) {
 
 /*
+
+主要内容
+========
+fl
+    包含可以操作file对象的函数，例如上传upload,批量上传uploads.
+
 file-input
-===========
+    该组件用户收集用户输入。只能返回file list 。所以，如果使用upload上传文件，必须取 [0] 第一个file对象。
+
+img-uploador
+    图片选择，自动上传。
+
+多个文件上传步骤
+==============
+
+1. Vue.data设置
+ data:{
+    files:[],
+ },
+
+2. 在html中插入Vue组件 <file-input id='jjyy' v-model='files' multiple></file-input>
+
+3. 在Methods中上传
+fl.uploads(files,url,function(resp){  // url 可以忽略，默认url为 /face/upload
+    resp ....
+})
+
+单个文件
+=======
+1.Vue.data设置
+ data:{
+    files:[],
+ },
+
+2. 在html中插入Vue组件 <file-input id='jjyy' v-model='files'></file-input>
+
+3. 在Methods中上传
+ fl.uploads(this.files[0],url,function(resp){
+    resp ....
+ })
+
+.. Note:: 默认上传url是/face/upload ，该接口返回的是 file_url_list。
+
+上传进度
+=========
+进度只是上传进度，判断文件是否被后端接收成功，需要判断是否success回调被调用。
+ fl.upload(this.file2[0],'/face/upload',function(url_list){
+
+ },function(progress){
+    console.log(progress)
+ })
+
 预览图片
-	从file-input读出数据，然后赋予图片的src ::
-	
-		f1.read(file,function (data) {
-				$('#haha')[0].src = data
-				}
+=========
+从file-input读出数据，然后赋予图片的src ::
+
+    f1.read(this.files[0],function (data) {
+            $('#haha')[0].src = data
+    }
 
 
+上传图片
+==========
+
+<img-uploador v-model='xxx_url_variable'></img-uploador>   //默认上传，使用的是 fl.upload默认地址 /face/upload
+<img-uploador v-model='xxx_url_variable' up_url='xxx'></img-uploador>
+
+
+样式技巧
+========
+1. 自定义样式
+
+    <file-inpu>不支持直接自定义样式。但是可以通过其他方式自定义。最简单的方式是：
+
+    * 隐藏<file-input> ，
+    * 然后触发其click事件('.file-input').click()
 
 */
+
+
+
 var fl={
 	read:function (file,callback) {
+        // 读完文件后，调用callback
 		var reader = new FileReader();
     	reader.onloadend = function () {
 	        // 图片的 base64 格式, 可以直接当成 img 的 src 属性值
@@ -493,7 +563,15 @@ var fl={
 	    };
 	    reader.readAsDataURL(file); // 读出 base64
 	},
-	upload:function (file,url,success) {
+	upload:function (file,url,success,progress) {
+            if(ex.is_fun(url)){
+                var progress = success
+                var success = url
+                var url='/face/upload'
+            }else{
+                var url=url||'/face/upload'
+            }
+
             var fd = new FormData();
             fd.append('file',file);
             $.ajax({
@@ -509,9 +587,10 @@ var fl={
 		       xhr:function() {
 			        var xhr = new window.XMLHttpRequest();
 			        xhr.upload.addEventListener("progress", function(evt) {
-			            if (evt.lengthComputable) {
+			            if (progress && evt.lengthComputable) {
 			                var percentComplete = evt.loaded / evt.total;
-			                console.log('进度', percentComplete);
+                            progress(percentComplete)
+			                //console.log('进度', percentComplete);
 			            }
 			        }, false);
 
@@ -519,7 +598,15 @@ var fl={
 			}
 		})
 	},
-	uploads:function (files,url,success) {
+	uploads:function (files,url,success,progress) {
+            if(ex.is_fun(url)){
+                var progress = success
+                var success = url
+                var url='/face/upload'
+            }else{
+                var url=url||'/face/upload'
+            }
+
         	var fd = new FormData();
         	for(var x=0;x<files.length;x++){
 	        	var file=files[x]
@@ -535,9 +622,10 @@ var fl={
 		       xhr:function() {
 			        var xhr = new window.XMLHttpRequest();
 			        xhr.upload.addEventListener("progress", function(evt) {
-			            if (evt.lengthComputable) {
+			            if (progress &&evt.lengthComputable) {
 			                var percentComplete = evt.loaded / evt.total;
-			                console.log('进度', percentComplete);
+                            progress(percentComplete)
+			                //console.log('进度', percentComplete);
 			            }
 			        }, false);
 
@@ -557,6 +645,8 @@ Vue.component('file-input',{
     },
     watch:{
 	    value:function (v) {
+            // when input clear selected file, Component file-input need clear too.
+            // Brower prohebit to set to Un-none string
 		    if(v==''){
 			    this.$el.value=v
 		    }
@@ -567,55 +657,58 @@ Vue.component('file-input',{
 	    	this.files=event.target.files
 	    	this.$emit('input',this.files)
 	    },
-        _changed:function (changeEvent) {
-            var file=changeEvent.target.files[0];
-            if(!file)
-                return
-            this.file=file
-            this.fd = new FormData();
-            this.fd.append('file', file);
-            this.$dispatch('ready')
-            //this.ready=true;
-        },
-        read:function (callback) {
-        	var reader = new FileReader();
-        	reader.onloadend = function () {
-		        // 图片的 base64 格式, 可以直接当成 img 的 src 属性值
-		        var dataURL = reader.result;
-		        //var img = new Image();
-		        //img.src = dataURL;
-		        // 插入到 DOM 中预览
-		        //$('#haha')[0].src=dataURL
-		        callback(dataURL) 
-		    };
+    }
+})
 
-		    reader.readAsDataURL(this.file); // 读出 base64
-        },
-        upload:function (up_url,success,error) {
-            var self =this;
-            $.ajax({
-                url:up_url,
-                type:'post',
-                data:this.fd,
-                contentType: false,
-                cache: false,
-                success:function (data,textStatus,jqXHR ) {
-	                success(data,textStatus,jqXHR)
-                    //self.$dispatch('response',data)
-                    
-                },
-                error:function (jqXHR, textStatus,errorThrown) {
-                	error(jqXHR, textStatus,errorThrown)
-                },
-                processData:false
-            })
-        },
+
+Vue.component('img-uploador',{
+    props:['value','up_url'],
+    data:function(){
+       return {
+           img_files:'',
+           url:this.value,
+       }
+    },
+    template:`
+          <div class='up_wrap logo-input'>
+            <file-input
+                accept='image/gif,image/jpeg,image/png'
+                v-model= 'img_files'>
+            </file-input>
+            <div style="padding: 40px">
+                <a class='choose'>Choose</a>
+            </div>
+            <div v-if='url' class="closeDiv">
+            <div class="close" @click='clear()'>X</div>
+            <img :src="url" alt="" class="logoImg">
+            </div>
+            </div>
+        `,
+    watch:{
+      img_files:function(v){
+          var self=this
+        fl.upload(v[0],this.up_url,function(url_list){
+            self.url=url_list[0]
+            self.$emit('input',self.url)
+        })
+      }
+    },
+    methods:{
+        clear:function () {
+            this.img_files=''
+
+        }
     }
 })
 
 
 
 
+
+/*
+* 下面是为了老代码的兼容性，以后不会用了。
+*
+*/
 
 Vue.component('file-obj',{
     template:"<input model='filebody' type='file' @change='changed'>",
@@ -768,6 +861,20 @@ window.fl=fl
 
 /**
  * Created by heyulin on 2017/1/24.
+ *
+ *
+ * date
+ * ========
+ * <date v-model='variable'></date>  // ѡ��Ĭ��set=date ,��ѡ������
+ *
+ * <date v-model='variable' set='month'></date> // ѡ�� set=month ,��ѡ���·�
+ *
+ * <date v-model='variable' set='month' :config='{}'></date>  //  config ���Զ��������ö��󣬾�����Ҫ�μӰ����ļ�
+ *
+ * datetime
+ * ===========
+ * <datetime v-model='variable' :config='{}'></datetime> // ѡ�����ں�ʱ��
+ *
  */
 
 var date_config_set={
@@ -822,33 +929,6 @@ Vue.component('date',{
     }
 })
 
-Vue.component('month',{
-    template:`<date v-model="month" :config="cus_config"></date>`,
-    props:['value','config'],
-    data:function(){
-        var self_config={
-            language: "zh-CN",
-            format: "yyyy/mm",
-            viewMode: "months",
-            minViewMode: "months"
-        }
-        if(this.config){
-            ex.assign(self_config,this.config)
-        }
-        return {
-            month:this.value,
-            cus_config:self_config
-        }
-    },
-    watch:{
-        month:function(v){
-            this.$emit('input',v)
-        },
-        value:function(v){
-            this.month=v
-        }
-    }
-})
 
 Vue.component('datetime',{
     data:function(){
@@ -1094,17 +1174,17 @@ Vue.component('tow-col-sel',{
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(7);
+var content = __webpack_require__(6);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(6)(content, {});
+var update = __webpack_require__(8)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
 	// When the styles change, update the <style> tags
 	if(!content.locals) {
-		module.hot.accept("!!./../../node_modules/.0.26.1@css-loader/index.js!./../../node_modules/.6.0.0@sass-loader/lib/loader.js!./fields.scss", function() {
-			var newContent = require("!!./../../node_modules/.0.26.1@css-loader/index.js!./../../node_modules/.6.0.0@sass-loader/lib/loader.js!./fields.scss");
+		module.hot.accept("!!./../../node_modules/css-loader/index.js!./../../node_modules/sass-loader/lib/loader.js!./fields.scss", function() {
+			var newContent = require("!!./../../node_modules/css-loader/index.js!./../../node_modules/sass-loader/lib/loader.js!./fields.scss");
 			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 			update(newContent);
 		});
@@ -1115,6 +1195,76 @@ if(false) {
 
 /***/ }),
 /* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(7)();
+// imports
+
+
+// module
+exports.push([module.i, ".error {\n  color: red; }\n\n.field-panel {\n  background-color: #F5F5F5;\n  max-width: 80%;\n  margin: 20px;\n  padding: 20px 30px;\n  border-radius: 6px;\n  position: relative;\n  border: 1px solid #D9D9D9;\n  overflow: auto; }\n  .field-panel:after {\n    content: '';\n    display: block;\n    position: absolute;\n    top: 0px;\n    left: 0px;\n    bottom: 0px;\n    width: 180px;\n    border-radius: 6px;\n    background-color: #fff;\n    z-index: 0; }\n  .field-panel .form-group.field {\n    display: flex;\n    align-items: flex-start; }\n    .field-panel .form-group.field .field_input {\n      flex-grow: 0;\n      padding: 5px 20px; }\n      .field-panel .form-group.field .field_input .ckeditor {\n        padding: 20px; }\n    .field-panel .form-group.field:first-child .control-label {\n      border-top: 5px solid #FFF; }\n    .field-panel .form-group.field .control-label {\n      width: 150px;\n      text-align: right;\n      padding: 5px 30px;\n      z-index: 100;\n      flex-shrink: 0;\n      border-top: 1px solid #EEE; }\n  .field-panel .form-group.field .field_input ._tow-col-sel {\n    /*width:750px;*/ }\n  .field-panel .field.error .error {\n    display: inline-block; }\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports) {
+
+/*
+	MIT License http://www.opensource.org/licenses/mit-license.php
+	Author Tobias Koppers @sokra
+*/
+// css base code, injected by the css-loader
+module.exports = function() {
+	var list = [];
+
+	// return the list of modules as css string
+	list.toString = function toString() {
+		var result = [];
+		for(var i = 0; i < this.length; i++) {
+			var item = this[i];
+			if(item[2]) {
+				result.push("@media " + item[2] + "{" + item[1] + "}");
+			} else {
+				result.push(item[1]);
+			}
+		}
+		return result.join("");
+	};
+
+	// import a list of modules into the list
+	list.i = function(modules, mediaQuery) {
+		if(typeof modules === "string")
+			modules = [[null, modules, ""]];
+		var alreadyImportedModules = {};
+		for(var i = 0; i < this.length; i++) {
+			var id = this[i][0];
+			if(typeof id === "number")
+				alreadyImportedModules[id] = true;
+		}
+		for(i = 0; i < modules.length; i++) {
+			var item = modules[i];
+			// skip already imported module
+			// this implementation is not 100% perfect for weird media query combinations
+			//  when a module is imported multiple times with different media queries.
+			//  I hope this will never occur (Hey this way we have smaller bundles)
+			if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
+				if(mediaQuery && !item[2]) {
+					item[2] = mediaQuery;
+				} else if(mediaQuery) {
+					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
+				}
+				list.push(item);
+			}
+		}
+	};
+	return list;
+};
+
+
+/***/ }),
+/* 8 */
 /***/ (function(module, exports) {
 
 /*
@@ -1366,76 +1516,6 @@ function updateLink(linkElement, obj) {
 
 
 /***/ }),
-/* 7 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(8)();
-// imports
-
-
-// module
-exports.push([module.i, ".error {\n  color: red; }\n\n.field-panel {\n  background-color: #F5F5F5;\n  max-width: 80%;\n  margin: 20px;\n  padding: 20px 30px;\n  border-radius: 6px;\n  position: relative;\n  border: 1px solid #D9D9D9;\n  overflow: auto; }\n  .field-panel:after {\n    content: '';\n    display: block;\n    position: absolute;\n    top: 0px;\n    left: 0px;\n    bottom: 0px;\n    width: 180px;\n    border-radius: 6px;\n    background-color: #fff;\n    z-index: 0; }\n  .field-panel .form-group.field {\n    display: flex;\n    align-items: center; }\n    .field-panel .form-group.field .field_input {\n      flex-grow: 0;\n      padding: 5px 20px; }\n      .field-panel .form-group.field .field_input .ckeditor {\n        padding: 20px; }\n    .field-panel .form-group.field:first-child .control-label {\n      border-top: 5px solid #FFF; }\n    .field-panel .form-group.field .control-label {\n      width: 150px;\n      text-align: right;\n      padding: 5px 30px;\n      z-index: 100;\n      flex-shrink: 0;\n      border-top: 1px solid #EEE; }\n  .field-panel .form-group.field .field_input ._tow-col-sel {\n    /*width:750px;*/ }\n  .field-panel .field.error .error {\n    display: inline-block; }\n", ""]);
-
-// exports
-
-
-/***/ }),
-/* 8 */
-/***/ (function(module, exports) {
-
-/*
-	MIT License http://www.opensource.org/licenses/mit-license.php
-	Author Tobias Koppers @sokra
-*/
-// css base code, injected by the css-loader
-module.exports = function() {
-	var list = [];
-
-	// return the list of modules as css string
-	list.toString = function toString() {
-		var result = [];
-		for(var i = 0; i < this.length; i++) {
-			var item = this[i];
-			if(item[2]) {
-				result.push("@media " + item[2] + "{" + item[1] + "}");
-			} else {
-				result.push(item[1]);
-			}
-		}
-		return result.join("");
-	};
-
-	// import a list of modules into the list
-	list.i = function(modules, mediaQuery) {
-		if(typeof modules === "string")
-			modules = [[null, modules, ""]];
-		var alreadyImportedModules = {};
-		for(var i = 0; i < this.length; i++) {
-			var id = this[i][0];
-			if(typeof id === "number")
-				alreadyImportedModules[id] = true;
-		}
-		for(i = 0; i < modules.length; i++) {
-			var item = modules[i];
-			// skip already imported module
-			// this implementation is not 100% perfect for weird media query combinations
-			//  when a module is imported multiple times with different media queries.
-			//  I hope this will never occur (Hey this way we have smaller bundles)
-			if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
-				if(mediaQuery && !item[2]) {
-					item[2] = mediaQuery;
-				} else if(mediaQuery) {
-					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
-				}
-				list.push(item);
-			}
-		}
-	};
-	return list;
-};
-
-
-/***/ }),
 /* 9 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -1459,7 +1539,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     基类，几乎有所逻辑都在里面。如果需要特殊的field，可以继承field_base，然后修改template
 
 2. field
-    本页面，实现了基本的field功能。
+    Vue组件，在field_base外面套上了一层外观，例如label，error等。
 
 参数结构
 ==============
@@ -1473,20 +1553,16 @@ field_base的参数都是采用的关键字参数，结构如下：
          pas2:'',
     },
      heads:[
-     {name:'username',label:'用户名',type:'text',required:true,autofocus:true},
+     	{name:'username',label:'用户名',type:'text',required:true,autofocus:true},
      ]
   }
  <field name='username' :kw='kw' ></field>
 
- 如果需要水平排列的field，
- <field name='username' :kw='kw' :set="{label_cls:'col-md-2',input_cls:'col-md-10'}"></field>
-
- */
 
 
 
 
-/*
+
 *配合jsonpost使用，效果最好
 */
 
@@ -1526,20 +1602,6 @@ function is_valid(form_fun_rt,errors_obj,callback) {
 	}
 }
 
-//var watch_model={
-//	props: ['name','value','kw'],
-//	data:function () {
-//		return {
-//			model:this.value
-//		}
-//	},
-//	watch:{
-//        model:function (v) {
-//        	this.$emit('input',v)
-//        	console.log('from mixin')
-//        }
-//       }
-//}
 
 var field_base={
     props: {
@@ -1649,6 +1711,10 @@ var field_base={
 	        props:['name','row','kw'],
             template:`<logo-input :up_url="kw.up_url" :web_url.sync="row[name]" :id="'id_'+name"></logo-input>`
         },
+		picture:{
+			props:['name','row','kw'],
+			template:`<img-uploador :up_url="kw.up_url" v-model="row[name]" :id="'id_'+name"></img-uploador>`
+		},
         sim_select:{
 	        props:['name','row','kw'],
 	        data:function(){
@@ -1799,7 +1865,7 @@ var field_base={
 Vue.component('field',{
     mixins:[field_base],
 	template:`
-	<div for='field' class="form-group field" :class='{"error":error_data(name)}'>
+	<div for='field' class="form-group field" :class='{"error":error_data(name)}' v-if="head">
 	<label :for="'id_'+name" v-text="head.label" class="control-label" v-if='!head.no_auto_label'>
 		<span class="req_star" v-if='head.required'> *</span>
 	</label>

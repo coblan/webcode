@@ -6,7 +6,7 @@
     基类，几乎有所逻辑都在里面。如果需要特殊的field，可以继承field_base，然后修改template
 
 2. field
-    本页面，实现了基本的field功能。
+    Vue组件，在field_base外面套上了一层外观，例如label，error等。
 
 参数结构
 ==============
@@ -20,20 +20,16 @@ field_base的参数都是采用的关键字参数，结构如下：
          pas2:'',
     },
      heads:[
-     {name:'username',label:'用户名',type:'text',required:true,autofocus:true},
+     	{name:'username',label:'用户名',type:'text',required:true,autofocus:true},
      ]
   }
  <field name='username' :kw='kw' ></field>
 
- 如果需要水平排列的field，
- <field name='username' :kw='kw' :set="{label_cls:'col-md-2',input_cls:'col-md-10'}"></field>
-
- */
 
 
 
 
-/*
+
 *配合jsonpost使用，效果最好
 */
 
@@ -73,20 +69,6 @@ function is_valid(form_fun_rt,errors_obj,callback) {
 	}
 }
 
-//var watch_model={
-//	props: ['name','value','kw'],
-//	data:function () {
-//		return {
-//			model:this.value
-//		}
-//	},
-//	watch:{
-//        model:function (v) {
-//        	this.$emit('input',v)
-//        	console.log('from mixin')
-//        }
-//       }
-//}
 
 var field_base={
     props: {
@@ -196,6 +178,10 @@ var field_base={
 	        props:['name','row','kw'],
             template:`<logo-input :up_url="kw.up_url" :web_url.sync="row[name]" :id="'id_'+name"></logo-input>`
         },
+		picture:{
+			props:['name','row','kw'],
+			template:`<img-uploador :up_url="kw.up_url" v-model="row[name]" :id="'id_'+name"></img-uploador>`
+		},
         sim_select:{
 	        props:['name','row','kw'],
 	        data:function(){
@@ -346,7 +332,7 @@ var field_base={
 Vue.component('field',{
     mixins:[field_base],
 	template:`
-	<div for='field' class="form-group field" :class='{"error":error_data(name)}'>
+	<div for='field' class="form-group field" :class='{"error":error_data(name)}' v-if="head">
 	<label :for="'id_'+name" v-text="head.label" class="control-label" v-if='!head.no_auto_label'>
 		<span class="req_star" v-if='head.required'> *</span>
 	</label>
