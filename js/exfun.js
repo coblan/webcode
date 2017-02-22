@@ -32,13 +32,51 @@ ex={
 			return outstr
 		}
 	},
-		/*两种调用方式
-		 var template1="我是{0}，今年{1}了";
-		 var template2="我是{name}，今年{age}了";
-		 var result1=template1.format("loogn",22);
-		 var result2=template2.format({name:"loogn",age:22});
-		 两个结果都是"我是loogn，今年22了"
-		 */
+	appendSearch:function(obj,url){
+		if(url){
+			var url_obj = ex.parseURL(url)
+			var search = url_obj.params
+		}else{
+			url=location.href
+			var search=ex.parseSearch()
+		}
+		ex.assign(search,obj)
+		return url.replace(/(\?.*)|()$/,ex.searchfy(search,'?'))
+	},
+	parseURL: function(url) {
+		var a = document.createElement('a');
+		a.href = url;
+		return {
+			source: url,
+			protocol: a.protocol.replace(':',''),
+			host: a.hostname,
+			port: a.port,
+			search: a.search,
+			params: (function(){
+				var ret = {},
+					seg = a.search.replace(/^\?/,'').split('&'),
+					len = seg.length, i = 0, s;
+				for (;i<len;i++) {
+					if (!seg[i]) { continue; }
+					s = seg[i].split('=');
+					ret[s[0]] = s[1];
+				}
+				return ret;
+			})(),
+			file: (a.pathname.match(/\/([^\/?#]+)$/i) || [,''])[1],
+			hash: a.hash.replace('#',''),
+			pathname: a.pathname.replace(/^([^\/])/,'/$1'),
+			relative: (a.href.match(/tps?:\/\/[^\/]+(.+)/) || [,''])[1],
+			segments: a.pathname.replace(/^\//,'').split('/')
+		};
+	},
+/*两种调用方式
+ var template1="我是{0}，今年{1}了";
+ var template2="我是{name}，今年{age}了";
+ var result1=template1.format("loogn",22);
+ var result2=template2.format({name:"loogn",age:22});
+ 两个结果都是"我是loogn，今年22了"
+ */
 	template:function (string,args) {
 		var result = string;
 		if(args.length){
