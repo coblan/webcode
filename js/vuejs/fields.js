@@ -48,6 +48,8 @@ import * as f from './file.js'
 import * as ck from './ckeditor.js'
 import * as multi from './multi_sel.js'
 import * as inputs from './inputs.js'
+import * as ln from './link.js'
+
 
 require('./fields.scss')
 

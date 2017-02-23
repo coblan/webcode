@@ -326,7 +326,38 @@ ex={
 	},
 	show_msg:function(msg){
 		alert(msg)
+	},
+	access : function(o, s) {
+		s = s.replace(/\[(\w+)\]/g, '.$1'); // convert indexes to properties
+		s = s.replace(/^\./, '');           // strip a leading dot
+		var a = s.split('.');
+		for (var i = 0, n = a.length; i < n; ++i) {
+			var k = a[i];
+			if (k in o) {
+				o = o[k];
+			} else {
+				return;
+			}
+		}
+		return o;
+	},
+	set:function(par,name,obj){
+		name = name.replace(/\[(\w+)\]/g, '.$1'); // convert indexes to properties
+		name = name.replace(/^\./, '');           // strip a leading dot
+		var a = name.split('.');
+		var o=par
+		for (var i = 0; i < a.length-1; ++i) {
+			var k = a[i];
+			if (k in o) {
+				o = o[k];
+			} else {
+				return null;
+			}
+		}
+		o[a[a.length-1]]=obj
+		return o;
 	}
+
 
 
 }
