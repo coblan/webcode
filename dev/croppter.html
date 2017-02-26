@@ -1,0 +1,67 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Deposits and Withdrawals</title>
+    <script type="text/javascript" src='http://apps.bdimg.com/libs/jquery/1.9.1/jquery.min.js'></script>
+    <script src="https://cdn.bootcss.com/vue/2.1.10/vue.js"></script>
+    <script src="http://cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <link href="http://cdn.bootcss.com/cropper/2.3.4/cropper.min.css" rel="stylesheet">
+    <script src="http://cdn.bootcss.com/cropper/2.3.4/cropper.min.js"></script>
+    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+    <script type="application/javascript">
+        $(function(){
+            setTimeout(function(){
+                $('#image').cropper({
+                    aspectRatio: 8 / 10,
+                    crop: function(e) {
+                        // Output the result data for cropping image.
+                        console.log(e.x);
+                        console.log(e.y);
+                        console.log(e.width);
+                        console.log(e.height);
+                        console.log(e.rotate);
+                        console.log(e.scaleX);
+                        console.log(e.scaleY);
+                    }
+                });
+            },2000)
+
+        })
+    $(function(){
+       new Vue({
+            el:'#there',
+            methods:{
+                get_pic:function(){
+                    var jj =$('#image').cropper('getCroppedCanvas', {
+                        width: 160,
+                    });
+                    $('#container').html(jj)
+                },
+            }
+        })
+    })
+    </script>
+</head>
+<body>
+<div id="there">
+    <div id="test">
+        <img id="image" src="21097fc6a51905c775c2ebc682689975.jpg">
+    </div>
+
+    <button @click="get_pic()">ss</button>
+    <div id="container"></div>
+</div>
+
+<style type="text/css">
+    #test{
+        width:500px;
+        height: 500px;
+    }
+    img {
+        max-width: 100%; /* This rule is very important, please do not ignore this! */
+    }
+</style>
+</body>
+</html>

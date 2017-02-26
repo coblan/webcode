@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 9);
+/******/ 	return __webpack_require__(__webpack_require__.s = 10);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -635,39 +635,41 @@ var fl={
         }
 }
 
-Vue.component('file-input',{
-    template:"<input class='file-input' type='file' @change='on_change($event)'>",
-   	props:['value'],
-    data:function () {
-    	return {
-	    	files:[]
-    	}
+file_input= {
+    template: "<input class='file-input' type='file' @change='on_change($event)'>",
+    props: ['value'],
+    data: function () {
+        return {
+            files: []
+        }
     },
-    watch:{
-	    value:function (v) {
+    watch: {
+        value: function (v) {
             // when input clear selected file, Component file-input need clear too.
             // Brower prohebit to set to Un-none string
-		    if(v==''){
-			    this.$el.value=v
-		    }
-	    },
+            if (v == '') {
+                this.$el.value = v
+            }
+        }
+        ,
     },
-    methods:{
-	    on_change:function (event) {
-	    	this.files=event.target.files
-	    	this.$emit('input',this.files)
-	    },
+    methods: {
+        on_change: function (event) {
+            this.files = event.target.files
+            this.$emit('input', this.files)
+        },
     }
-})
+}
 
+Vue.component('file-input',file_input)
 
-Vue.component('img-uploador',{
+img_uploader={
     props:['value','up_url'],
     data:function(){
-       return {
-           img_files:'',
-           url:this.value,
-       }
+        return {
+            img_files:'',
+            url:this.value,
+        }
     },
     template:`
           <div class='up_wrap logo-input'>
@@ -685,21 +687,150 @@ Vue.component('img-uploador',{
             </div>
         `,
     watch:{
-      img_files:function(v){
-          var self=this
-        fl.upload(v[0],this.up_url,function(url_list){
-            self.url=url_list[0]
-            self.$emit('input',self.url)
-        })
-      }
+        img_files:function(v){
+            var self=this
+            fl.upload(v[0],this.up_url,function(url_list){
+                self.url=url_list[0]
+                self.$emit('input',self.url)
+            })
+        }
     },
     methods:{
         clear:function () {
             this.img_files=''
-
+            this.url=''
+            this.$emit('input','')
+            //$(this.$el).find('input[type=file]').val('')
+            //$('#'+this.id).val('')
         }
     }
-})
+}
+
+Vue.component('img-uploador',img_uploader)
+
+img_crop={
+    template: `<div>sss
+    <input class='file-input' type='file' @change='on_change($event)'>
+    <modal v-show='cropping' >
+        <div style="width:80vw;height: 80vh;background-color: white;">
+            <div class="crop-wrap">
+                <img class="crop-img" :src="org_img" >
+
+            </div>
+            <button @click="make_sure()">确定</button>
+            <button>取消</button>
+            <button @click="rotato_90()">rotato 90</button>
+            <button @click="zoom_in()">zoom in</button>
+            <button @click="zoom_out()">zoom out</button>
+            <!--<button @click="move_img()">move Picture</button>-->
+            <!--<button @click="move_crop()">move Crop</button>-->
+        </div>
+    </modal>
+    </div>`,
+    props: ['value'],
+    data: function () {
+        return {
+            files: [],
+            org_img:'',
+            cropping:false
+        }
+    },
+    mounted:function(){
+        ex.load_css('http://cdn.bootcss.com/cropper/2.3.4/cropper.min.css')
+        ex.load_js('http://cdn.bootcss.com/cropper/2.3.4/cropper.min.js')
+    },
+    watch: {
+        value: function (v) {
+            // when input clear selected file, Component file-input need clear too.
+            // Brower prohebit to set to Un-none string
+            if (v == '') {
+                this.$el.value = v
+            }
+
+        }
+        ,
+    },
+
+    methods: {
+        zoom_in:function(){
+            $(this.$el).find('.crop-img').cropper('zoom', 0.1);
+        },
+        zoom_out:function(){
+            $(this.$el).find('.crop-img').cropper('zoom', -0.1);
+        },
+        rotato_90:function(){
+            $(this.$el).find('.crop-img').cropper('rotate', 90);
+        },
+        move_img:function(){
+            $(this.$el).find('.crop-img').cropper('setDragMode','move')
+        },
+        move_crop:function(){
+            $(this.$el).find('.crop-img').cropper('setDragMode','crop')
+        },
+        on_change: function (event) {
+            var self=this
+            this.cropping=true
+            var img_file = event.target.files[0]
+            //fl.read(img_file)
+            //this.$emit('input', this.files)
+            fl.read(img_file,function (data) {
+                self.org_img = data
+                Vue.nextTick(function(){
+                    self.init_crop()
+                    //ex.load_css('http://cdn.bootcss.com/cropper/2.3.4/cropper.min.css')
+                    //ex.load_js('http://cdn.bootcss.com/cropper/2.3.4/cropper.min.js',function(){
+                    //    self.init_crop()
+                    //})
+
+                })
+            })
+        },
+        init_crop:function(){
+            $(this.$el).find('.crop-img').cropper({
+                aspectRatio: 8 / 10,
+                //crop: function(e) {
+                //    // Output the result data for cropping image.
+                //    console.log(e.x);
+                //    console.log(e.y);
+                //    console.log(e.width);
+                //    console.log(e.height);
+                //    console.log(e.rotate);
+                //    console.log(e.scaleX);
+                //    console.log(e.scaleY);
+                //}
+            });
+
+            $(this.$el).find('.crop-img').cropper('replace',this.org_img)
+            $(this.$el).find('.crop-img').cropper('setDragMode','move')
+        },
+        make_sure:function(){
+            var self=this
+            // Upload cropped image to server if the browser supports `HTMLCanvasElement.toBlob`
+            $(this.$el).find('.crop-img').cropper('getCroppedCanvas').toBlob(function (blob) {
+                //var formData = new FormData();
+                self.$emit('input',blob)
+                self.cropping=false
+                //formData.append('croppedImage', blob);
+                //
+                //$.ajax('/path/to/upload', {
+                //    method: "POST",
+                //    data: formData,
+                //    processData: false,
+                //    contentType: false,
+                //    success: function () {
+                //        console.log('Upload success');
+                //    },
+                //    error: function () {
+                //        console.log('Upload error');
+                //    }
+                //});
+            });
+        }
+    }
+
+}
+
+Vue.component('img-crop',img_crop)
 
 
 
@@ -847,6 +978,16 @@ Vue.component('file-obj',{
     color: red;
     font-size: 200%;
 }
+
+.crop-wrap{
+    max-width: 100%;
+    max-height: 90%;
+    overflow: hidden;
+}
+.crop-img{
+    max-width:100%;
+    max-height: 100%;
+}
 </style>
 
       `)
@@ -976,6 +1117,72 @@ Vue.component('datetime',{
 
 /***/ }),
 /* 4 */
+/***/ (function(module, exports) {
+
+ln={
+    /*
+     var director = '{% url 'director' %}'
+
+     var cache_meta={
+     cache:['person.emp_info.row',
+     'person.bas_info.row',
+     'crt_view'],
+     rt_key:{'auth.user':'person.emp_info.row.user'}
+     }
+
+     ln.cache(cache_meta)
+     var back_url=btoa(ex.appendSearch({cache:1}))
+     if(pk){
+     location=ex.template('{director}model/{name}/edit/{pk}?next={encode_url}',{director:director,name:name,pk:pk,encode_url:back_url})
+     }else{
+     location=ex.template('{director}model/{name}/edit?next={encode_url}',{director:director,name:name,encode_url:back_url})
+     }
+
+    */
+    readCache:function(){
+        if(ex.parseSearch().catch){
+            var cache_obj_str=sessionStorage.getItem(btoa(location.pathname))
+            sessionStorage.removeItem(btoa(location.pathname))
+            if(cache_obj_str){
+                cache_obj=JSON.parse(cache_obj_str)
+                for(var key in cache_obj.window){
+                    ex.set(window,key,cache_obj.window[key])
+                }
+
+                var cache_meta=cache_obj.cache_meta
+                if(cache_meta && cache_meta.rt_key){
+                    for(var key in cache_meta.rt_key){
+                        var value = sessionStorage.getItem(key)
+                        var targ_key=cache_meta.rt_key[key]
+                        sessionStorage.removeItem(key)
+                        ex.set(window,targ_key,value)
+                    }
+                }
+            }
+        }
+    },
+
+    cache:function(cache_meta){
+
+        var cache_obj={
+            cache_meta:cache_meta,
+            window:{}
+        }
+
+        if(cache_meta.cache){
+            ex.each(cache_meta.cache,function(key){
+                cache_obj.window[key]=ex.access(window,key)
+            })
+        }
+        sessionStorage.setItem(btoa(location.pathname),JSON.stringify(cache_obj))
+    }
+}
+
+
+window.ln=ln
+
+/***/ }),
+/* 5 */
 /***/ (function(module, exports) {
 
 if(!window.__multi_sel){
@@ -1168,16 +1375,16 @@ Vue.component('tow-col-sel',{
 
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(6);
+var content = __webpack_require__(7);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(8)(content, {});
+var update = __webpack_require__(9)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -1194,10 +1401,10 @@ if(false) {
 }
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(7)();
+exports = module.exports = __webpack_require__(8)();
 // imports
 
 
@@ -1208,7 +1415,7 @@ exports.push([module.i, ".error {\n  color: red; }\n\n.field-panel {\n  backgrou
 
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports) {
 
 /*
@@ -1264,7 +1471,7 @@ module.exports = function() {
 
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports) {
 
 /*
@@ -1516,7 +1723,7 @@ function updateLink(linkElement, obj) {
 
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1526,11 +1733,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__file_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__file_js__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ckeditor_js__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ckeditor_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__ckeditor_js__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__multi_sel_js__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__multi_sel_js__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__multi_sel_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__multi_sel_js__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__inputs_js__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__inputs_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__inputs_js__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__link_js__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__link_js__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__link_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5__link_js__);
 /* harmony export (immutable) */ __webpack_exports__["merge"] = merge;
 
@@ -1586,7 +1793,7 @@ $.post('',JSON.stringify(post_data),function (data) {
 
 
 
-__webpack_require__(5)
+__webpack_require__(6)
 
 __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__ajax_fun_js__["a" /* hook_ajax_msg */])()
 __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__ajax_fun_js__["b" /* hook_ajax_csrf */])()
@@ -1928,72 +2135,6 @@ window.hide_upload =__WEBPACK_IMPORTED_MODULE_0__ajax_fun_js__["d" /* hide_uploa
 window.merge=merge;
 
 
-
-/***/ }),
-/* 10 */
-/***/ (function(module, exports) {
-
-ln={
-    /*
-     var director = '{% url 'director' %}'
-
-     var cache_meta={
-     cache:['person.emp_info.row',
-     'person.bas_info.row',
-     'crt_view'],
-     rt_key:{'auth.user':'person.emp_info.row.user'}
-     }
-
-     ln.cache(cache_meta)
-     var back_url=btoa(ex.appendSearch({cache:1}))
-     if(pk){
-     location=ex.template('{director}model/{name}/edit/{pk}?next={encode_url}',{director:director,name:name,pk:pk,encode_url:back_url})
-     }else{
-     location=ex.template('{director}model/{name}/edit?next={encode_url}',{director:director,name:name,encode_url:back_url})
-     }
-
-    */
-    readCache:function(){
-        if(ex.parseSearch().catch){
-            var cache_obj_str=sessionStorage.getItem(btoa(location.pathname))
-            sessionStorage.removeItem(btoa(location.pathname))
-            if(cache_obj_str){
-                cache_obj=JSON.parse(cache_obj_str)
-                for(var key in cache_obj.window){
-                    ex.set(window,key,cache_obj.window[key])
-                }
-
-                var cache_meta=cache_obj.cache_meta
-                if(cache_meta && cache_meta.rt_key){
-                    for(var key in cache_meta.rt_key){
-                        var value = sessionStorage.getItem(key)
-                        var targ_key=cache_meta.rt_key[key]
-                        sessionStorage.removeItem(key)
-                        ex.set(window,targ_key,value)
-                    }
-                }
-            }
-        }
-    },
-
-    cache:function(cache_meta){
-
-        var cache_obj={
-            cache_meta:cache_meta,
-            window:{}
-        }
-
-        if(cache_meta.cache){
-            ex.each(cache_meta.cache,function(key){
-                cache_obj.window[key]=ex.access(window,key)
-            })
-        }
-        sessionStorage.setItem(btoa(location.pathname),JSON.stringify(cache_obj))
-    }
-}
-
-
-window.ln=ln
 
 /***/ })
 /******/ ]);
