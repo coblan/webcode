@@ -635,39 +635,41 @@ var fl={
         }
 }
 
-Vue.component('file-input',{
-    template:"<input class='file-input' type='file' @change='on_change($event)'>",
-   	props:['value'],
-    data:function () {
-    	return {
-	    	files:[]
-    	}
+file_input= {
+    template: "<input class='file-input' type='file' @change='on_change($event)'>",
+    props: ['value'],
+    data: function () {
+        return {
+            files: []
+        }
     },
-    watch:{
-	    value:function (v) {
+    watch: {
+        value: function (v) {
             // when input clear selected file, Component file-input need clear too.
             // Brower prohebit to set to Un-none string
-		    if(v==''){
-			    this.$el.value=v
-		    }
-	    },
+            if (v == '') {
+                this.$el.value = v
+            }
+        }
+        ,
     },
-    methods:{
-	    on_change:function (event) {
-	    	this.files=event.target.files
-	    	this.$emit('input',this.files)
-	    },
+    methods: {
+        on_change: function (event) {
+            this.files = event.target.files
+            this.$emit('input', this.files)
+        },
     }
-})
+}
 
+Vue.component('file-input',file_input)
 
-Vue.component('img-uploador',{
+img_uploader={
     props:['value','up_url'],
     data:function(){
-       return {
-           img_files:'',
-           url:this.value,
-       }
+        return {
+            img_files:'',
+            url:this.value,
+        }
     },
     template:`
           <div class='up_wrap logo-input'>
@@ -685,21 +687,150 @@ Vue.component('img-uploador',{
             </div>
         `,
     watch:{
-      img_files:function(v){
-          var self=this
-        fl.upload(v[0],this.up_url,function(url_list){
-            self.url=url_list[0]
-            self.$emit('input',self.url)
-        })
-      }
+        img_files:function(v){
+            var self=this
+            fl.upload(v[0],this.up_url,function(url_list){
+                self.url=url_list[0]
+                self.$emit('input',self.url)
+            })
+        }
     },
     methods:{
         clear:function () {
             this.img_files=''
-
+            this.url=''
+            this.$emit('input','')
+            //$(this.$el).find('input[type=file]').val('')
+            //$('#'+this.id).val('')
         }
     }
-})
+}
+
+Vue.component('img-uploador',img_uploader)
+
+img_crop={
+    template: `<div>sss
+    <input class='file-input' type='file' @change='on_change($event)'>
+    <modal v-show='cropping' >
+        <div style="width:80vw;height: 80vh;background-color: white;">
+            <div class="crop-wrap">
+                <img class="crop-img" :src="org_img" >
+
+            </div>
+            <button @click="make_sure()">确定</button>
+            <button>取消</button>
+            <button @click="rotato_90()">rotato 90</button>
+            <button @click="zoom_in()">zoom in</button>
+            <button @click="zoom_out()">zoom out</button>
+            <!--<button @click="move_img()">move Picture</button>-->
+            <!--<button @click="move_crop()">move Crop</button>-->
+        </div>
+    </modal>
+    </div>`,
+    props: ['value'],
+    data: function () {
+        return {
+            files: [],
+            org_img:'',
+            cropping:false
+        }
+    },
+    mounted:function(){
+        ex.load_css('http://cdn.bootcss.com/cropper/2.3.4/cropper.min.css')
+        ex.load_js('http://cdn.bootcss.com/cropper/2.3.4/cropper.min.js')
+    },
+    watch: {
+        value: function (v) {
+            // when input clear selected file, Component file-input need clear too.
+            // Brower prohebit to set to Un-none string
+            if (v == '') {
+                this.$el.value = v
+            }
+
+        }
+        ,
+    },
+
+    methods: {
+        zoom_in:function(){
+            $(this.$el).find('.crop-img').cropper('zoom', 0.1);
+        },
+        zoom_out:function(){
+            $(this.$el).find('.crop-img').cropper('zoom', -0.1);
+        },
+        rotato_90:function(){
+            $(this.$el).find('.crop-img').cropper('rotate', 90);
+        },
+        move_img:function(){
+            $(this.$el).find('.crop-img').cropper('setDragMode','move')
+        },
+        move_crop:function(){
+            $(this.$el).find('.crop-img').cropper('setDragMode','crop')
+        },
+        on_change: function (event) {
+            var self=this
+            this.cropping=true
+            var img_file = event.target.files[0]
+            //fl.read(img_file)
+            //this.$emit('input', this.files)
+            fl.read(img_file,function (data) {
+                self.org_img = data
+                Vue.nextTick(function(){
+                    self.init_crop()
+                    //ex.load_css('http://cdn.bootcss.com/cropper/2.3.4/cropper.min.css')
+                    //ex.load_js('http://cdn.bootcss.com/cropper/2.3.4/cropper.min.js',function(){
+                    //    self.init_crop()
+                    //})
+
+                })
+            })
+        },
+        init_crop:function(){
+            $(this.$el).find('.crop-img').cropper({
+                aspectRatio: 8 / 10,
+                //crop: function(e) {
+                //    // Output the result data for cropping image.
+                //    console.log(e.x);
+                //    console.log(e.y);
+                //    console.log(e.width);
+                //    console.log(e.height);
+                //    console.log(e.rotate);
+                //    console.log(e.scaleX);
+                //    console.log(e.scaleY);
+                //}
+            });
+
+            $(this.$el).find('.crop-img').cropper('replace',this.org_img)
+            $(this.$el).find('.crop-img').cropper('setDragMode','move')
+        },
+        make_sure:function(){
+            var self=this
+            // Upload cropped image to server if the browser supports `HTMLCanvasElement.toBlob`
+            $(this.$el).find('.crop-img').cropper('getCroppedCanvas').toBlob(function (blob) {
+                //var formData = new FormData();
+                self.$emit('input',blob)
+                self.cropping=false
+                //formData.append('croppedImage', blob);
+                //
+                //$.ajax('/path/to/upload', {
+                //    method: "POST",
+                //    data: formData,
+                //    processData: false,
+                //    contentType: false,
+                //    success: function () {
+                //        console.log('Upload success');
+                //    },
+                //    error: function () {
+                //        console.log('Upload error');
+                //    }
+                //});
+            });
+        }
+    }
+
+}
+
+Vue.component('img-crop',img_crop)
 
 
 
@@ -846,6 +977,16 @@ Vue.component('file-obj',{
 .req_star{
     color: red;
     font-size: 200%;
+}
+
+.crop-wrap{
+    max-width: 100%;
+    max-height: 90%;
+    overflow: hidden;
+}
+.crop-img{
+    max-width:100%;
+    max-height: 100%;
 }
 </style>
 
@@ -999,7 +1140,7 @@ ln={
 
     */
     readCache:function(){
-        if(ex.parseSearch().cache){
+        if(ex.parseSearch().catch){
             var cache_obj_str=sessionStorage.getItem(btoa(location.pathname))
             sessionStorage.removeItem(btoa(location.pathname))
             if(cache_obj_str){
@@ -1240,17 +1381,17 @@ Vue.component('tow-col-sel',{
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(8);
+var content = __webpack_require__(7);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(7)(content, {});
+var update = __webpack_require__(9)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
 	// When the styles change, update the <style> tags
 	if(!content.locals) {
-		module.hot.accept("!!./../../node_modules/.0.26.1@css-loader/index.js!./../../node_modules/.6.0.0@sass-loader/lib/loader.js!./fields.scss", function() {
-			var newContent = require("!!./../../node_modules/.0.26.1@css-loader/index.js!./../../node_modules/.6.0.0@sass-loader/lib/loader.js!./fields.scss");
+		module.hot.accept("!!./../../node_modules/css-loader/index.js!./../../node_modules/sass-loader/lib/loader.js!./fields.scss", function() {
+			var newContent = require("!!./../../node_modules/css-loader/index.js!./../../node_modules/sass-loader/lib/loader.js!./fields.scss");
 			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 			update(newContent);
 		});
@@ -1261,6 +1402,76 @@ if(false) {
 
 /***/ }),
 /* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(8)();
+// imports
+
+
+// module
+exports.push([module.i, ".error {\n  color: red; }\n\n.field-panel {\n  background-color: #F5F5F5;\n  max-width: 80%;\n  margin: 20px;\n  padding: 20px 30px;\n  border-radius: 6px;\n  position: relative;\n  border: 1px solid #D9D9D9;\n  overflow: auto; }\n  .field-panel:after {\n    content: '';\n    display: block;\n    position: absolute;\n    top: 0px;\n    left: 0px;\n    bottom: 0px;\n    width: 180px;\n    border-radius: 6px;\n    background-color: #fff;\n    z-index: 0; }\n  .field-panel .form-group.field {\n    display: flex;\n    align-items: flex-start; }\n    .field-panel .form-group.field .field_input {\n      flex-grow: 0;\n      padding: 5px 20px; }\n      .field-panel .form-group.field .field_input .ckeditor {\n        padding: 20px; }\n    .field-panel .form-group.field:first-child .control-label {\n      border-top: 5px solid #FFF; }\n    .field-panel .form-group.field .control-label {\n      width: 150px;\n      text-align: right;\n      padding: 5px 30px;\n      z-index: 100;\n      flex-shrink: 0;\n      border-top: 1px solid #EEE; }\n  .field-panel .form-group.field .field_input ._tow-col-sel {\n    /*width:750px;*/ }\n  .field-panel .field.error .error {\n    display: inline-block; }\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports) {
+
+/*
+	MIT License http://www.opensource.org/licenses/mit-license.php
+	Author Tobias Koppers @sokra
+*/
+// css base code, injected by the css-loader
+module.exports = function() {
+	var list = [];
+
+	// return the list of modules as css string
+	list.toString = function toString() {
+		var result = [];
+		for(var i = 0; i < this.length; i++) {
+			var item = this[i];
+			if(item[2]) {
+				result.push("@media " + item[2] + "{" + item[1] + "}");
+			} else {
+				result.push(item[1]);
+			}
+		}
+		return result.join("");
+	};
+
+	// import a list of modules into the list
+	list.i = function(modules, mediaQuery) {
+		if(typeof modules === "string")
+			modules = [[null, modules, ""]];
+		var alreadyImportedModules = {};
+		for(var i = 0; i < this.length; i++) {
+			var id = this[i][0];
+			if(typeof id === "number")
+				alreadyImportedModules[id] = true;
+		}
+		for(i = 0; i < modules.length; i++) {
+			var item = modules[i];
+			// skip already imported module
+			// this implementation is not 100% perfect for weird media query combinations
+			//  when a module is imported multiple times with different media queries.
+			//  I hope this will never occur (Hey this way we have smaller bundles)
+			if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
+				if(mediaQuery && !item[2]) {
+					item[2] = mediaQuery;
+				} else if(mediaQuery) {
+					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
+				}
+				list.push(item);
+			}
+		}
+	};
+	return list;
+};
+
+
+/***/ }),
+/* 9 */
 /***/ (function(module, exports) {
 
 /*
@@ -1509,76 +1720,6 @@ function updateLink(linkElement, obj) {
 	if(oldSrc)
 		URL.revokeObjectURL(oldSrc);
 }
-
-
-/***/ }),
-/* 8 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(9)();
-// imports
-
-
-// module
-exports.push([module.i, ".error {\n  color: red; }\n\n.field-panel {\n  background-color: #F5F5F5;\n  max-width: 80%;\n  margin: 20px;\n  padding: 20px 30px;\n  border-radius: 6px;\n  position: relative;\n  border: 1px solid #D9D9D9;\n  overflow: auto; }\n  .field-panel:after {\n    content: '';\n    display: block;\n    position: absolute;\n    top: 0px;\n    left: 0px;\n    bottom: 0px;\n    width: 180px;\n    border-radius: 6px;\n    background-color: #fff;\n    z-index: 0; }\n  .field-panel .form-group.field {\n    display: flex;\n    align-items: flex-start; }\n    .field-panel .form-group.field .field_input {\n      flex-grow: 0;\n      padding: 5px 20px; }\n      .field-panel .form-group.field .field_input .ckeditor {\n        padding: 20px; }\n    .field-panel .form-group.field:first-child .control-label {\n      border-top: 5px solid #FFF; }\n    .field-panel .form-group.field .control-label {\n      width: 150px;\n      text-align: right;\n      padding: 5px 30px;\n      z-index: 100;\n      flex-shrink: 0;\n      border-top: 1px solid #EEE; }\n  .field-panel .form-group.field .field_input ._tow-col-sel {\n    /*width:750px;*/ }\n  .field-panel .field.error .error {\n    display: inline-block; }\n", ""]);
-
-// exports
-
-
-/***/ }),
-/* 9 */
-/***/ (function(module, exports) {
-
-/*
-	MIT License http://www.opensource.org/licenses/mit-license.php
-	Author Tobias Koppers @sokra
-*/
-// css base code, injected by the css-loader
-module.exports = function() {
-	var list = [];
-
-	// return the list of modules as css string
-	list.toString = function toString() {
-		var result = [];
-		for(var i = 0; i < this.length; i++) {
-			var item = this[i];
-			if(item[2]) {
-				result.push("@media " + item[2] + "{" + item[1] + "}");
-			} else {
-				result.push(item[1]);
-			}
-		}
-		return result.join("");
-	};
-
-	// import a list of modules into the list
-	list.i = function(modules, mediaQuery) {
-		if(typeof modules === "string")
-			modules = [[null, modules, ""]];
-		var alreadyImportedModules = {};
-		for(var i = 0; i < this.length; i++) {
-			var id = this[i][0];
-			if(typeof id === "number")
-				alreadyImportedModules[id] = true;
-		}
-		for(i = 0; i < modules.length; i++) {
-			var item = modules[i];
-			// skip already imported module
-			// this implementation is not 100% perfect for weird media query combinations
-			//  when a module is imported multiple times with different media queries.
-			//  I hope this will never occur (Hey this way we have smaller bundles)
-			if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
-				if(mediaQuery && !item[2]) {
-					item[2] = mediaQuery;
-				} else if(mediaQuery) {
-					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
-				}
-				list.push(item);
-			}
-		}
-	};
-	return list;
-};
 
 
 /***/ }),

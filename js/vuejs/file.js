@@ -167,39 +167,41 @@ var fl={
         }
 }
 
-Vue.component('file-input',{
-    template:"<input class='file-input' type='file' @change='on_change($event)'>",
-   	props:['value'],
-    data:function () {
-    	return {
-	    	files:[]
-    	}
+file_input= {
+    template: "<input class='file-input' type='file' @change='on_change($event)'>",
+    props: ['value'],
+    data: function () {
+        return {
+            files: []
+        }
     },
-    watch:{
-	    value:function (v) {
+    watch: {
+        value: function (v) {
             // when input clear selected file, Component file-input need clear too.
             // Brower prohebit to set to Un-none string
-		    if(v==''){
-			    this.$el.value=v
-		    }
-	    },
+            if (v == '') {
+                this.$el.value = v
+            }
+        }
+        ,
     },
-    methods:{
-	    on_change:function (event) {
-	    	this.files=event.target.files
-	    	this.$emit('input',this.files)
-	    },
+    methods: {
+        on_change: function (event) {
+            this.files = event.target.files
+            this.$emit('input', this.files)
+        },
     }
-})
+}
 
+Vue.component('file-input',file_input)
 
-Vue.component('img-uploador',{
+img_uploader={
     props:['value','up_url'],
     data:function(){
-       return {
-           img_files:'',
-           url:this.value,
-       }
+        return {
+            img_files:'',
+            url:this.value,
+        }
     },
     template:`
           <div class='up_wrap logo-input'>
@@ -217,21 +219,150 @@ Vue.component('img-uploador',{
             </div>
         `,
     watch:{
-      img_files:function(v){
-          var self=this
-        fl.upload(v[0],this.up_url,function(url_list){
-            self.url=url_list[0]
-            self.$emit('input',self.url)
-        })
-      }
+        img_files:function(v){
+            var self=this
+            fl.upload(v[0],this.up_url,function(url_list){
+                self.url=url_list[0]
+                self.$emit('input',self.url)
+            })
+        }
     },
     methods:{
         clear:function () {
             this.img_files=''
-
+            this.url=''
+            this.$emit('input','')
+            //$(this.$el).find('input[type=file]').val('')
+            //$('#'+this.id).val('')
         }
     }
-})
+}
+
+Vue.component('img-uploador',img_uploader)
+
+img_crop={
+    template: `<div>sss
+    <input class='file-input' type='file' @change='on_change($event)'>
+    <modal v-show='cropping' >
+        <div style="width:80vw;height: 80vh;background-color: white;">
+            <div class="crop-wrap">
+                <img class="crop-img" :src="org_img" >
+
+            </div>
+            <button @click="make_sure()">确定</button>
+            <button>取消</button>
+            <button @click="rotato_90()">rotato 90</button>
+            <button @click="zoom_in()">zoom in</button>
+            <button @click="zoom_out()">zoom out</button>
+            <!--<button @click="move_img()">move Picture</button>-->
+            <!--<button @click="move_crop()">move Crop</button>-->
+        </div>
+    </modal>
+    </div>`,
+    props: ['value'],
+    data: function () {
+        return {
+            files: [],
+            org_img:'',
+            cropping:false
+        }
+    },
+    mounted:function(){
+        ex.load_css('http://cdn.bootcss.com/cropper/2.3.4/cropper.min.css')
+        ex.load_js('http://cdn.bootcss.com/cropper/2.3.4/cropper.min.js')
+    },
+    watch: {
+        value: function (v) {
+            // when input clear selected file, Component file-input need clear too.
+            // Brower prohebit to set to Un-none string
+            if (v == '') {
+                this.$el.value = v
+            }
+
+        }
+        ,
+    },
+
+    methods: {
+        zoom_in:function(){
+            $(this.$el).find('.crop-img').cropper('zoom', 0.1);
+        },
+        zoom_out:function(){
+            $(this.$el).find('.crop-img').cropper('zoom', -0.1);
+        },
+        rotato_90:function(){
+            $(this.$el).find('.crop-img').cropper('rotate', 90);
+        },
+        move_img:function(){
+            $(this.$el).find('.crop-img').cropper('setDragMode','move')
+        },
+        move_crop:function(){
+            $(this.$el).find('.crop-img').cropper('setDragMode','crop')
+        },
+        on_change: function (event) {
+            var self=this
+            this.cropping=true
+            var img_file = event.target.files[0]
+            //fl.read(img_file)
+            //this.$emit('input', this.files)
+            fl.read(img_file,function (data) {
+                self.org_img = data
+                Vue.nextTick(function(){
+                    self.init_crop()
+                    //ex.load_css('http://cdn.bootcss.com/cropper/2.3.4/cropper.min.css')
+                    //ex.load_js('http://cdn.bootcss.com/cropper/2.3.4/cropper.min.js',function(){
+                    //    self.init_crop()
+                    //})
+
+                })
+            })
+        },
+        init_crop:function(){
+            $(this.$el).find('.crop-img').cropper({
+                aspectRatio: 8 / 10,
+                //crop: function(e) {
+                //    // Output the result data for cropping image.
+                //    console.log(e.x);
+                //    console.log(e.y);
+                //    console.log(e.width);
+                //    console.log(e.height);
+                //    console.log(e.rotate);
+                //    console.log(e.scaleX);
+                //    console.log(e.scaleY);
+                //}
+            });
+
+            $(this.$el).find('.crop-img').cropper('replace',this.org_img)
+            $(this.$el).find('.crop-img').cropper('setDragMode','move')
+        },
+        make_sure:function(){
+            var self=this
+            // Upload cropped image to server if the browser supports `HTMLCanvasElement.toBlob`
+            $(this.$el).find('.crop-img').cropper('getCroppedCanvas').toBlob(function (blob) {
+                //var formData = new FormData();
+                self.$emit('input',blob)
+                self.cropping=false
+                //formData.append('croppedImage', blob);
+                //
+                //$.ajax('/path/to/upload', {
+                //    method: "POST",
+                //    data: formData,
+                //    processData: false,
+                //    contentType: false,
+                //    success: function () {
+                //        console.log('Upload success');
+                //    },
+                //    error: function () {
+                //        console.log('Upload error');
+                //    }
+                //});
+            });
+        }
+    }
+
+}
+
+Vue.component('img-crop',img_crop)
 
 
 
@@ -378,6 +509,16 @@ Vue.component('file-obj',{
 .req_star{
     color: red;
     font-size: 200%;
+}
+
+.crop-wrap{
+    max-width: 100%;
+    max-height: 90%;
+    overflow: hidden;
+}
+.crop-img{
+    max-width:100%;
+    max-height: 100%;
 }
 </style>
 
