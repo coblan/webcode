@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 9);
+/******/ 	return __webpack_require__(__webpack_require__.s = 10);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -978,6 +978,72 @@ Vue.component('datetime',{
 /* 4 */
 /***/ (function(module, exports) {
 
+ln={
+    /*
+     var director = '{% url 'director' %}'
+
+     var cache_meta={
+     cache:['person.emp_info.row',
+     'person.bas_info.row',
+     'crt_view'],
+     rt_key:{'auth.user':'person.emp_info.row.user'}
+     }
+
+     ln.cache(cache_meta)
+     var back_url=btoa(ex.appendSearch({cache:1}))
+     if(pk){
+     location=ex.template('{director}model/{name}/edit/{pk}?next={encode_url}',{director:director,name:name,pk:pk,encode_url:back_url})
+     }else{
+     location=ex.template('{director}model/{name}/edit?next={encode_url}',{director:director,name:name,encode_url:back_url})
+     }
+
+    */
+    readCache:function(){
+        if(ex.parseSearch().cache){
+            var cache_obj_str=sessionStorage.getItem(btoa(location.pathname))
+            sessionStorage.removeItem(btoa(location.pathname))
+            if(cache_obj_str){
+                cache_obj=JSON.parse(cache_obj_str)
+                for(var key in cache_obj.window){
+                    ex.set(window,key,cache_obj.window[key])
+                }
+
+                var cache_meta=cache_obj.cache_meta
+                if(cache_meta && cache_meta.rt_key){
+                    for(var key in cache_meta.rt_key){
+                        var value = sessionStorage.getItem(key)
+                        var targ_key=cache_meta.rt_key[key]
+                        sessionStorage.removeItem(key)
+                        ex.set(window,targ_key,value)
+                    }
+                }
+            }
+        }
+    },
+
+    cache:function(cache_meta){
+
+        var cache_obj={
+            cache_meta:cache_meta,
+            window:{}
+        }
+
+        if(cache_meta.cache){
+            ex.each(cache_meta.cache,function(key){
+                cache_obj.window[key]=ex.access(window,key)
+            })
+        }
+        sessionStorage.setItem(btoa(location.pathname),JSON.stringify(cache_obj))
+    }
+}
+
+
+window.ln=ln
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports) {
+
 if(!window.__multi_sel){
 	document.write(`
 	
@@ -1168,23 +1234,23 @@ Vue.component('tow-col-sel',{
 
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(6);
+var content = __webpack_require__(8);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(8)(content, {});
+var update = __webpack_require__(7)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
 	// When the styles change, update the <style> tags
 	if(!content.locals) {
-		module.hot.accept("!!./../../node_modules/css-loader/index.js!./../../node_modules/sass-loader/lib/loader.js!./fields.scss", function() {
-			var newContent = require("!!./../../node_modules/css-loader/index.js!./../../node_modules/sass-loader/lib/loader.js!./fields.scss");
+		module.hot.accept("!!./../../node_modules/.0.26.1@css-loader/index.js!./../../node_modules/.6.0.0@sass-loader/lib/loader.js!./fields.scss", function() {
+			var newContent = require("!!./../../node_modules/.0.26.1@css-loader/index.js!./../../node_modules/.6.0.0@sass-loader/lib/loader.js!./fields.scss");
 			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 			update(newContent);
 		});
@@ -1194,77 +1260,7 @@ if(false) {
 }
 
 /***/ }),
-/* 6 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(7)();
-// imports
-
-
-// module
-exports.push([module.i, ".error {\n  color: red; }\n\n.field-panel {\n  background-color: #F5F5F5;\n  max-width: 80%;\n  margin: 20px;\n  padding: 20px 30px;\n  border-radius: 6px;\n  position: relative;\n  border: 1px solid #D9D9D9;\n  overflow: auto; }\n  .field-panel:after {\n    content: '';\n    display: block;\n    position: absolute;\n    top: 0px;\n    left: 0px;\n    bottom: 0px;\n    width: 180px;\n    border-radius: 6px;\n    background-color: #fff;\n    z-index: 0; }\n  .field-panel .form-group.field {\n    display: flex;\n    align-items: flex-start; }\n    .field-panel .form-group.field .field_input {\n      flex-grow: 0;\n      padding: 5px 20px; }\n      .field-panel .form-group.field .field_input .ckeditor {\n        padding: 20px; }\n    .field-panel .form-group.field:first-child .control-label {\n      border-top: 5px solid #FFF; }\n    .field-panel .form-group.field .control-label {\n      width: 150px;\n      text-align: right;\n      padding: 5px 30px;\n      z-index: 100;\n      flex-shrink: 0;\n      border-top: 1px solid #EEE; }\n  .field-panel .form-group.field .field_input ._tow-col-sel {\n    /*width:750px;*/ }\n  .field-panel .field.error .error {\n    display: inline-block; }\n", ""]);
-
-// exports
-
-
-/***/ }),
 /* 7 */
-/***/ (function(module, exports) {
-
-/*
-	MIT License http://www.opensource.org/licenses/mit-license.php
-	Author Tobias Koppers @sokra
-*/
-// css base code, injected by the css-loader
-module.exports = function() {
-	var list = [];
-
-	// return the list of modules as css string
-	list.toString = function toString() {
-		var result = [];
-		for(var i = 0; i < this.length; i++) {
-			var item = this[i];
-			if(item[2]) {
-				result.push("@media " + item[2] + "{" + item[1] + "}");
-			} else {
-				result.push(item[1]);
-			}
-		}
-		return result.join("");
-	};
-
-	// import a list of modules into the list
-	list.i = function(modules, mediaQuery) {
-		if(typeof modules === "string")
-			modules = [[null, modules, ""]];
-		var alreadyImportedModules = {};
-		for(var i = 0; i < this.length; i++) {
-			var id = this[i][0];
-			if(typeof id === "number")
-				alreadyImportedModules[id] = true;
-		}
-		for(i = 0; i < modules.length; i++) {
-			var item = modules[i];
-			// skip already imported module
-			// this implementation is not 100% perfect for weird media query combinations
-			//  when a module is imported multiple times with different media queries.
-			//  I hope this will never occur (Hey this way we have smaller bundles)
-			if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
-				if(mediaQuery && !item[2]) {
-					item[2] = mediaQuery;
-				} else if(mediaQuery) {
-					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
-				}
-				list.push(item);
-			}
-		}
-	};
-	return list;
-};
-
-
-/***/ }),
-/* 8 */
 /***/ (function(module, exports) {
 
 /*
@@ -1516,7 +1512,77 @@ function updateLink(linkElement, obj) {
 
 
 /***/ }),
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(9)();
+// imports
+
+
+// module
+exports.push([module.i, ".error {\n  color: red; }\n\n.field-panel {\n  background-color: #F5F5F5;\n  max-width: 80%;\n  margin: 20px;\n  padding: 20px 30px;\n  border-radius: 6px;\n  position: relative;\n  border: 1px solid #D9D9D9;\n  overflow: auto; }\n  .field-panel:after {\n    content: '';\n    display: block;\n    position: absolute;\n    top: 0px;\n    left: 0px;\n    bottom: 0px;\n    width: 180px;\n    border-radius: 6px;\n    background-color: #fff;\n    z-index: 0; }\n  .field-panel .form-group.field {\n    display: flex;\n    align-items: flex-start; }\n    .field-panel .form-group.field .field_input {\n      flex-grow: 0;\n      padding: 5px 20px; }\n      .field-panel .form-group.field .field_input .ckeditor {\n        padding: 20px; }\n    .field-panel .form-group.field:first-child .control-label {\n      border-top: 5px solid #FFF; }\n    .field-panel .form-group.field .control-label {\n      width: 150px;\n      text-align: right;\n      padding: 5px 30px;\n      z-index: 100;\n      flex-shrink: 0;\n      border-top: 1px solid #EEE; }\n  .field-panel .form-group.field .field_input ._tow-col-sel {\n    /*width:750px;*/ }\n  .field-panel .field.error .error {\n    display: inline-block; }\n", ""]);
+
+// exports
+
+
+/***/ }),
 /* 9 */
+/***/ (function(module, exports) {
+
+/*
+	MIT License http://www.opensource.org/licenses/mit-license.php
+	Author Tobias Koppers @sokra
+*/
+// css base code, injected by the css-loader
+module.exports = function() {
+	var list = [];
+
+	// return the list of modules as css string
+	list.toString = function toString() {
+		var result = [];
+		for(var i = 0; i < this.length; i++) {
+			var item = this[i];
+			if(item[2]) {
+				result.push("@media " + item[2] + "{" + item[1] + "}");
+			} else {
+				result.push(item[1]);
+			}
+		}
+		return result.join("");
+	};
+
+	// import a list of modules into the list
+	list.i = function(modules, mediaQuery) {
+		if(typeof modules === "string")
+			modules = [[null, modules, ""]];
+		var alreadyImportedModules = {};
+		for(var i = 0; i < this.length; i++) {
+			var id = this[i][0];
+			if(typeof id === "number")
+				alreadyImportedModules[id] = true;
+		}
+		for(i = 0; i < modules.length; i++) {
+			var item = modules[i];
+			// skip already imported module
+			// this implementation is not 100% perfect for weird media query combinations
+			//  when a module is imported multiple times with different media queries.
+			//  I hope this will never occur (Hey this way we have smaller bundles)
+			if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
+				if(mediaQuery && !item[2]) {
+					item[2] = mediaQuery;
+				} else if(mediaQuery) {
+					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
+				}
+				list.push(item);
+			}
+		}
+	};
+	return list;
+};
+
+
+/***/ }),
+/* 10 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1526,11 +1592,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__file_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__file_js__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ckeditor_js__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ckeditor_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__ckeditor_js__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__multi_sel_js__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__multi_sel_js__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__multi_sel_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__multi_sel_js__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__inputs_js__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__inputs_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__inputs_js__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__link_js__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__link_js__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__link_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5__link_js__);
 /* harmony export (immutable) */ __webpack_exports__["merge"] = merge;
 
@@ -1586,7 +1652,7 @@ $.post('',JSON.stringify(post_data),function (data) {
 
 
 
-__webpack_require__(5)
+__webpack_require__(6)
 
 __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__ajax_fun_js__["a" /* hook_ajax_msg */])()
 __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__ajax_fun_js__["b" /* hook_ajax_csrf */])()
@@ -1928,72 +1994,6 @@ window.hide_upload =__WEBPACK_IMPORTED_MODULE_0__ajax_fun_js__["d" /* hide_uploa
 window.merge=merge;
 
 
-
-/***/ }),
-/* 10 */
-/***/ (function(module, exports) {
-
-ln={
-    /*
-     var director = '{% url 'director' %}'
-
-     var cache_meta={
-     cache:['person.emp_info.row',
-     'person.bas_info.row',
-     'crt_view'],
-     rt_key:{'auth.user':'person.emp_info.row.user'}
-     }
-
-     ln.cache(cache_meta)
-     var back_url=btoa(ex.appendSearch({cache:1}))
-     if(pk){
-     location=ex.template('{director}model/{name}/edit/{pk}?next={encode_url}',{director:director,name:name,pk:pk,encode_url:back_url})
-     }else{
-     location=ex.template('{director}model/{name}/edit?next={encode_url}',{director:director,name:name,encode_url:back_url})
-     }
-
-    */
-    readCache:function(){
-        if(ex.parseSearch().catch){
-            var cache_obj_str=sessionStorage.getItem(btoa(location.pathname))
-            sessionStorage.removeItem(btoa(location.pathname))
-            if(cache_obj_str){
-                cache_obj=JSON.parse(cache_obj_str)
-                for(var key in cache_obj.window){
-                    ex.set(window,key,cache_obj.window[key])
-                }
-
-                var cache_meta=cache_obj.cache_meta
-                if(cache_meta && cache_meta.rt_key){
-                    for(var key in cache_meta.rt_key){
-                        var value = sessionStorage.getItem(key)
-                        var targ_key=cache_meta.rt_key[key]
-                        sessionStorage.removeItem(key)
-                        ex.set(window,targ_key,value)
-                    }
-                }
-            }
-        }
-    },
-
-    cache:function(cache_meta){
-
-        var cache_obj={
-            cache_meta:cache_meta,
-            window:{}
-        }
-
-        if(cache_meta.cache){
-            ex.each(cache_meta.cache,function(key){
-                cache_obj.window[key]=ex.access(window,key)
-            })
-        }
-        sessionStorage.setItem(btoa(location.pathname),JSON.stringify(cache_obj))
-    }
-}
-
-
-window.ln=ln
 
 /***/ })
 /******/ ]);

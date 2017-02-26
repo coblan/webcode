@@ -19,7 +19,7 @@ ln={
 
     */
     readCache:function(){
-        if(ex.parseSearch().catch){
+        if(ex.parseSearch().cache){
             var cache_obj_str=sessionStorage.getItem(btoa(location.pathname))
             sessionStorage.removeItem(btoa(location.pathname))
             if(cache_obj_str){
