@@ -664,20 +664,30 @@ file_input= {
 Vue.component('file-input',file_input)
 
 img_uploader={
-    props:['value','up_url'],
+    props:['value','up_url','config'],
     data:function(){
         return {
             img_files:'',
             url:this.value,
         }
     },
+    computed:{
+        prd_config:function(){
+            var temp={
+                crop:false
+            }
+            ex.assign(temp,this.config)
+            return temp
+        }
+    },
     template:`
           <div class='up_wrap logo-input'>
-            <file-input
+            <file-input v-show='false'
                 accept='image/gif,image/jpeg,image/png'
                 v-model= 'img_files'>
             </file-input>
-            <div style="padding: 40px">
+            <!--<img-crop class='input' v-if='prd_config.crop' v-model='img_files' v-show='false'></img-crop>-->
+            <div style="padding: 40px" @click="select()">
                 <a class='choose'>Choose</a>
             </div>
             <div v-if='url' class="closeDiv">
@@ -702,6 +712,9 @@ img_uploader={
             this.$emit('input','')
             //$(this.$el).find('input[type=file]').val('')
             //$('#'+this.id).val('')
+        },
+        select:function(){
+            $(this.$el).find('input[type=file]').click()
         }
     }
 }
@@ -710,15 +723,16 @@ Vue.component('img-uploador',img_uploader)
 
 img_crop={
     template: `<div>sss
-    <input class='file-input' type='file' @change='on_change($event)'>
+    <input class='file-input' type='file' @change='on_change($event)'
+            accept='image/gif,image/jpeg,image/png'>
     <modal v-show='cropping' >
-        <div style="width:80vw;height: 80vh;background-color: white;">
+        <div class="total-wrap" style="width:80vw;height: 80vh;background-color: white;">
             <div class="crop-wrap">
                 <img class="crop-img" :src="org_img" >
 
             </div>
             <button @click="make_sure()">确定</button>
-            <button>取消</button>
+            <button @click="cancel()">取消</button>
             <button @click="rotato_90()">rotato 90</button>
             <button @click="zoom_in()">zoom in</button>
             <button @click="zoom_out()">zoom out</button>
@@ -727,7 +741,7 @@ img_crop={
         </div>
     </modal>
     </div>`,
-    props: ['value'],
+    props: ['value','config'],
     data: function () {
         return {
             files: [],
@@ -752,6 +766,10 @@ img_crop={
     },
 
     methods: {
+        cancel:function(){
+            this.cropping=false
+            $(this.$el).find('input[type=file]').val('')
+        },
         zoom_in:function(){
             $(this.$el).find('.crop-img').cropper('zoom', 0.1);
         },
@@ -786,19 +804,12 @@ img_crop={
             })
         },
         init_crop:function(){
-            $(this.$el).find('.crop-img').cropper({
-                aspectRatio: 8 / 10,
-                //crop: function(e) {
-                //    // Output the result data for cropping image.
-                //    console.log(e.x);
-                //    console.log(e.y);
-                //    console.log(e.width);
-                //    console.log(e.height);
-                //    console.log(e.rotate);
-                //    console.log(e.scaleX);
-                //    console.log(e.scaleY);
-                //}
-            });
+            //$(this.$el).find('.crop-img').cropper({
+            //    aspectRatio: 8 / 10,
+            //});
+            if(this.config){
+                $(this.$el).find('.crop-img').cropper(this.config);
+            }
 
             $(this.$el).find('.crop-img').cropper('replace',this.org_img)
             $(this.$el).find('.crop-img').cropper('setDragMode','move')
@@ -808,22 +819,9 @@ img_crop={
             // Upload cropped image to server if the browser supports `HTMLCanvasElement.toBlob`
             $(this.$el).find('.crop-img').cropper('getCroppedCanvas').toBlob(function (blob) {
                 //var formData = new FormData();
-                self.$emit('input',blob)
+                self.$emit('input',[blob])
                 self.cropping=false
-                //formData.append('croppedImage', blob);
-                //
-                //$.ajax('/path/to/upload', {
-                //    method: "POST",
-                //    data: formData,
-                //    processData: false,
-                //    contentType: false,
-                //    success: function () {
-                //        console.log('Upload success');
-                //    },
-                //    error: function () {
-                //        console.log('Upload error');
-                //    }
-                //});
+
             });
         }
     }
@@ -920,6 +918,16 @@ Vue.component('file-obj',{
         }
     })
 
+
+//        .logo-input input[type="file"]{
+//    opacity: 0;
+//    position: absolute;
+//    top: 40px;
+//    left: 40px;
+//    display: block;
+//    cursor: pointer;
+//}
+
   if(!window._logo_input_css){
       document.write(`
 
@@ -931,14 +939,7 @@ Vue.component('file-obj',{
     background: #FDFDFD;
     width:300px;
 }
-.logo-input input[type="file"]{
-    opacity: 0;
-    position: absolute;
-    top: 40px;
-    left: 40px;
-    display: block;
-    cursor: pointer;
-}
+
 .closeDiv{
     width: 100%;
     height: 100%;
@@ -977,6 +978,10 @@ Vue.component('file-obj',{
 .req_star{
     color: red;
     font-size: 200%;
+}
+
+.total-wrap{
+    padding: 30px;
 }
 
 .crop-wrap{
@@ -1140,7 +1145,7 @@ ln={
 
     */
     readCache:function(){
-        if(ex.parseSearch().catch){
+        if(ex.parseSearch().cache){
             var cache_obj_str=sessionStorage.getItem(btoa(location.pathname))
             sessionStorage.removeItem(btoa(location.pathname))
             if(cache_obj_str){
