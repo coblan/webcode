@@ -66,6 +66,10 @@ fl.uploads(files,url,function(resp){  // url 可以忽略，默认url为 /face/u
 <img-uploador v-model='xxx_url_variable'></img-uploador>   //默认上传，使用的是 fl.upload默认地址 /face/upload
 <img-uploador v-model='xxx_url_variable' up_url='xxx'></img-uploador>
 
+具备裁剪性质:
+
+ <img-uploader v-model='xxx' :config='{crop:true,aspectRatio: 8 / 10}'></img-uploader>
+
 
 样式技巧
 ========
@@ -78,6 +82,9 @@ fl.uploads(files,url,function(resp){  // url 可以忽略，默认url为 /face/u
 
 */
 
+
+
+require('./css/file.scss')
 
 
 var fl={
@@ -195,6 +202,12 @@ file_input= {
 
 Vue.component('file-input',file_input)
 
+
+/*
+<img-uploader v-model='xxx'></img-uploader>
+ <img-uploader v-model='xxx' :config='{crop:true,aspectRatio: 8 / 10}'></img-uploader>
+*/
+
 img_uploader={
     props:['value','up_url','config'],
     data:function(){
@@ -204,21 +217,27 @@ img_uploader={
         }
     },
     computed:{
-        prd_config:function(){
-            var temp={
-                crop:false
+        is_crop:function(){
+            return this.config && this.config.crop
+        },
+        crop_config:function(){
+            if(this.config && this.config.crop){
+                var temp_config=ex.copy(this.config)
+                delete temp_config.crop
+                return temp_config
+            }else{
+                return {}
             }
-            ex.assign(temp,this.config)
-            return temp
         }
     },
     template:`
-          <div class='up_wrap logo-input'>
-            <file-input v-show='false'
+          <div class='up_wrap logo-input img-uploader'>
+            <file-input v-if="!is_crop"
                 accept='image/gif,image/jpeg,image/png'
                 v-model= 'img_files'>
             </file-input>
-            <!--<img-crop class='input' v-if='prd_config.crop' v-model='img_files' v-show='false'></img-crop>-->
+            <img-crop class='input' v-if='is_crop' v-model='img_files' :config="crop_config">
+            </img-crop>
             <div style="padding: 40px" @click="select()">
                 <a class='choose'>Choose</a>
             </div>
@@ -253,9 +272,23 @@ img_uploader={
 
 Vue.component('img-uploador',img_uploader)
 
+
+/*
+具备裁剪功能
+==============
+
+*  <img-crop v-model='xxx' :config='{aspectRatio: 8 / 10}'></img-crop>
+*
+*  上传:
+*  ======
+*  fl.upload(xxx[0],function(urls){
+*         ...
+*  ))
+* */
+
 img_crop={
-    template: `<div>sss
-    <input class='file-input' type='file' @change='on_change($event)'
+    template: `<div class="img-crop">
+    <input class='img-crop' type='file' @change='on_change($event)'
             accept='image/gif,image/jpeg,image/png'>
     <modal v-show='cropping' >
         <div class="total-wrap" style="width:80vw;height: 80vh;background-color: white;">
@@ -263,22 +296,28 @@ img_crop={
                 <img class="crop-img" :src="org_img" >
 
             </div>
-            <button @click="make_sure()">确定</button>
-            <button @click="cancel()">取消</button>
+
             <button @click="rotato_90()">rotato 90</button>
             <button @click="zoom_in()">zoom in</button>
             <button @click="zoom_out()">zoom out</button>
-            <!--<button @click="move_img()">move Picture</button>-->
-            <!--<button @click="move_crop()">move Crop</button>-->
+            <button @click="make_sure()">确定</button>
+            <button @click="cancel()">取消</button>
+
         </div>
     </modal>
     </div>`,
     props: ['value','config'],
     data: function () {
+        var inn_config={
+            size:{}
+        }
+        ex.assign(inn_config,this.config)
+
         return {
             files: [],
             org_img:'',
-            cropping:false
+            cropping:false,
+            inn_config:inn_config
         }
     },
     mounted:function(){
@@ -327,11 +366,6 @@ img_crop={
                 self.org_img = data
                 Vue.nextTick(function(){
                     self.init_crop()
-                    //ex.load_css('http://cdn.bootcss.com/cropper/2.3.4/cropper.min.css')
-                    //ex.load_js('http://cdn.bootcss.com/cropper/2.3.4/cropper.min.js',function(){
-                    //    self.init_crop()
-                    //})
-
                 })
             })
         },
@@ -339,8 +373,8 @@ img_crop={
             //$(this.$el).find('.crop-img').cropper({
             //    aspectRatio: 8 / 10,
             //});
-            if(this.config){
-                $(this.$el).find('.crop-img').cropper(this.config);
+            if(this.inn_config.aspectRatio){
+                $(this.$el).find('.crop-img').cropper({aspectRatio:this.inn_config.aspectRatio});
             }
 
             $(this.$el).find('.crop-img').cropper('replace',this.org_img)
@@ -349,7 +383,8 @@ img_crop={
         make_sure:function(){
             var self=this
             // Upload cropped image to server if the browser supports `HTMLCanvasElement.toBlob`
-            $(this.$el).find('.crop-img').cropper('getCroppedCanvas').toBlob(function (blob) {
+
+            $(this.$el).find('.crop-img').cropper('getCroppedCanvas',this.inn_config.size).toBlob(function (blob) {
                 //var formData = new FormData();
                 self.$emit('input',[blob])
                 self.cropping=false
@@ -451,84 +486,81 @@ Vue.component('file-obj',{
     })
 
 
-//        .logo-input input[type="file"]{
-//    opacity: 0;
-//    position: absolute;
-//    top: 40px;
-//    left: 40px;
-//    display: block;
-//    cursor: pointer;
-//}
 
-  if(!window._logo_input_css){
-      document.write(`
+//  if(!window._logo_input_css){
+//      document.write(`
+//
+//<style type="text/css" media="screen" >
 
-<style type="text/css" media="screen" >
-.up_wrap{
-    position: relative;
-    text-align: center;
-    border: 2px dashed #ccc;
-    background: #FDFDFD;
-    width:300px;
-}
+/*.img-uploader input{*/
+    /*display: none;*/
+/*}*/
 
-.closeDiv{
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    background-color: #ffffff;
-}
-.choose{
-    display: inline-block;
-    text-decoration: none;
-    padding: 5px;
-    border: 1px solid #0092F2;
-    border-radius: 4px;
-    font-size: 14px;
-    color: #0092F2;
-    cursor: pointer;
-}
-.choose:hover,.choose:active{
-    text-decoration: none;
-    color: #0092F2;
-}
-.close{
-    position: absolute;
-    top: 5px;
-    right: 10px;
-    cursor: pointer;
-    font-size: 14px;
-    color: #242424;
-}
-.logoImg{
-    max-height: 100px !important;
-    vertical-align: middle;
-    margin-top: 5px;
-}
-.req_star{
-    color: red;
-    font-size: 200%;
-}
+/*.up_wrap{*/
+    /*position: relative;*/
+    /*text-align: center;*/
+    /*border: 2px dashed #ccc;*/
+    /*background: #FDFDFD;*/
+    /*width:300px;*/
+/*}*/
 
-.total-wrap{
-    padding: 30px;
-}
+/*.closeDiv{*/
+    /*width: 100%;*/
+    /*height: 100%;*/
+    /*position: absolute;*/
+    /*top: 0;*/
+    /*left: 0;*/
+    /*background-color: #ffffff;*/
+/*}*/
+/*.choose{*/
+    /*display: inline-block;*/
+    /*text-decoration: none;*/
+    /*padding: 5px;*/
+    /*border: 1px solid #0092F2;*/
+    /*border-radius: 4px;*/
+    /*font-size: 14px;*/
+    /*color: #0092F2;*/
+    /*cursor: pointer;*/
+/*}*/
+/*.choose:hover,.choose:active{*/
+    /*text-decoration: none;*/
+    /*color: #0092F2;*/
+/*}*/
+/*.close{*/
+    /*position: absolute;*/
+    /*top: 5px;*/
+    /*right: 10px;*/
+    /*cursor: pointer;*/
+    /*font-size: 14px;*/
+    /*color: #242424;*/
+/*}*/
+/*.logoImg{*/
+    /*max-height: 100px !important;*/
+    /*vertical-align: middle;*/
+    /*margin-top: 5px;*/
+/*}*/
+/*.req_star{*/
+    /*color: red;*/
+    /*font-size: 200%;*/
+/*}*/
 
-.crop-wrap{
-    max-width: 100%;
-    max-height: 90%;
-    overflow: hidden;
-}
-.crop-img{
-    max-width:100%;
-    max-height: 100%;
-}
-</style>
+/*.total-wrap{*/
+    /*padding: 30px;*/
+/*}*/
 
-      `)
-  }
+/*.crop-wrap{*/
+    /*max-width: 100%;*/
+    /*max-height: 90%;*/
+    /*overflow: hidden;*/
+/*}*/
+/*.crop-img{*/
+    /*max-width:100%;*/
+    /*max-height: 100%;*/
+/*}*/
+//</style>
+//
+//      `)
+//  }
 
 
 window.fl=fl

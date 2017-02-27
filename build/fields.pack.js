@@ -464,7 +464,7 @@ var edit_level = {
 
 /***/ }),
 /* 2 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
 /*
 
@@ -534,6 +534,10 @@ fl.uploads(files,url,function(resp){  // url 可以忽略，默认url为 /face/u
 <img-uploador v-model='xxx_url_variable'></img-uploador>   //默认上传，使用的是 fl.upload默认地址 /face/upload
 <img-uploador v-model='xxx_url_variable' up_url='xxx'></img-uploador>
 
+具备裁剪性质:
+
+ <img-uploader v-model='xxx' :config='{crop:true,aspectRatio: 8 / 10}'></img-uploader>
+
 
 样式技巧
 ========
@@ -546,6 +550,9 @@ fl.uploads(files,url,function(resp){  // url 可以忽略，默认url为 /face/u
 
 */
 
+
+
+__webpack_require__(11)
 
 
 var fl={
@@ -663,6 +670,12 @@ file_input= {
 
 Vue.component('file-input',file_input)
 
+
+/*
+<img-uploader v-model='xxx'></img-uploader>
+ <img-uploader v-model='xxx' :config='{crop:true,aspectRatio: 8 / 10}'></img-uploader>
+*/
+
 img_uploader={
     props:['value','up_url','config'],
     data:function(){
@@ -672,21 +685,27 @@ img_uploader={
         }
     },
     computed:{
-        prd_config:function(){
-            var temp={
-                crop:false
+        is_crop:function(){
+            return this.config && this.config.crop
+        },
+        crop_config:function(){
+            if(this.config && this.config.crop){
+                var temp_config=ex.copy(this.config)
+                delete temp_config.crop
+                return temp_config
+            }else{
+                return {}
             }
-            ex.assign(temp,this.config)
-            return temp
         }
     },
     template:`
-          <div class='up_wrap logo-input'>
-            <file-input v-show='false'
+          <div class='up_wrap logo-input img-uploader'>
+            <file-input v-if="!is_crop"
                 accept='image/gif,image/jpeg,image/png'
                 v-model= 'img_files'>
             </file-input>
-            <!--<img-crop class='input' v-if='prd_config.crop' v-model='img_files' v-show='false'></img-crop>-->
+            <img-crop class='input' v-if='is_crop' v-model='img_files' :config="crop_config">
+            </img-crop>
             <div style="padding: 40px" @click="select()">
                 <a class='choose'>Choose</a>
             </div>
@@ -721,9 +740,23 @@ img_uploader={
 
 Vue.component('img-uploador',img_uploader)
 
+
+/*
+具备裁剪功能
+==============
+
+*  <img-crop v-model='xxx' :config='{aspectRatio: 8 / 10}'></img-crop>
+*
+*  上传:
+*  ======
+*  fl.upload(xxx[0],function(urls){
+*         ...
+*  ))
+* */
+
 img_crop={
-    template: `<div>sss
-    <input class='file-input' type='file' @change='on_change($event)'
+    template: `<div class="img-crop">
+    <input class='img-crop' type='file' @change='on_change($event)'
             accept='image/gif,image/jpeg,image/png'>
     <modal v-show='cropping' >
         <div class="total-wrap" style="width:80vw;height: 80vh;background-color: white;">
@@ -731,22 +764,28 @@ img_crop={
                 <img class="crop-img" :src="org_img" >
 
             </div>
-            <button @click="make_sure()">确定</button>
-            <button @click="cancel()">取消</button>
+
             <button @click="rotato_90()">rotato 90</button>
             <button @click="zoom_in()">zoom in</button>
             <button @click="zoom_out()">zoom out</button>
-            <!--<button @click="move_img()">move Picture</button>-->
-            <!--<button @click="move_crop()">move Crop</button>-->
+            <button @click="make_sure()">确定</button>
+            <button @click="cancel()">取消</button>
+
         </div>
     </modal>
     </div>`,
     props: ['value','config'],
     data: function () {
+        var inn_config={
+            size:{}
+        }
+        ex.assign(inn_config,this.config)
+
         return {
             files: [],
             org_img:'',
-            cropping:false
+            cropping:false,
+            inn_config:inn_config
         }
     },
     mounted:function(){
@@ -795,11 +834,6 @@ img_crop={
                 self.org_img = data
                 Vue.nextTick(function(){
                     self.init_crop()
-                    //ex.load_css('http://cdn.bootcss.com/cropper/2.3.4/cropper.min.css')
-                    //ex.load_js('http://cdn.bootcss.com/cropper/2.3.4/cropper.min.js',function(){
-                    //    self.init_crop()
-                    //})
-
                 })
             })
         },
@@ -807,8 +841,8 @@ img_crop={
             //$(this.$el).find('.crop-img').cropper({
             //    aspectRatio: 8 / 10,
             //});
-            if(this.config){
-                $(this.$el).find('.crop-img').cropper(this.config);
+            if(this.inn_config.aspectRatio){
+                $(this.$el).find('.crop-img').cropper({aspectRatio:this.inn_config.aspectRatio});
             }
 
             $(this.$el).find('.crop-img').cropper('replace',this.org_img)
@@ -817,7 +851,8 @@ img_crop={
         make_sure:function(){
             var self=this
             // Upload cropped image to server if the browser supports `HTMLCanvasElement.toBlob`
-            $(this.$el).find('.crop-img').cropper('getCroppedCanvas').toBlob(function (blob) {
+
+            $(this.$el).find('.crop-img').cropper('getCroppedCanvas',this.inn_config.size).toBlob(function (blob) {
                 //var formData = new FormData();
                 self.$emit('input',[blob])
                 self.cropping=false
@@ -919,84 +954,81 @@ Vue.component('file-obj',{
     })
 
 
-//        .logo-input input[type="file"]{
-//    opacity: 0;
-//    position: absolute;
-//    top: 40px;
-//    left: 40px;
-//    display: block;
-//    cursor: pointer;
-//}
 
-  if(!window._logo_input_css){
-      document.write(`
+//  if(!window._logo_input_css){
+//      document.write(`
+//
+//<style type="text/css" media="screen" >
 
-<style type="text/css" media="screen" >
-.up_wrap{
-    position: relative;
-    text-align: center;
-    border: 2px dashed #ccc;
-    background: #FDFDFD;
-    width:300px;
-}
+/*.img-uploader input{*/
+    /*display: none;*/
+/*}*/
 
-.closeDiv{
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    background-color: #ffffff;
-}
-.choose{
-    display: inline-block;
-    text-decoration: none;
-    padding: 5px;
-    border: 1px solid #0092F2;
-    border-radius: 4px;
-    font-size: 14px;
-    color: #0092F2;
-    cursor: pointer;
-}
-.choose:hover,.choose:active{
-    text-decoration: none;
-    color: #0092F2;
-}
-.close{
-    position: absolute;
-    top: 5px;
-    right: 10px;
-    cursor: pointer;
-    font-size: 14px;
-    color: #242424;
-}
-.logoImg{
-    max-height: 100px !important;
-    vertical-align: middle;
-    margin-top: 5px;
-}
-.req_star{
-    color: red;
-    font-size: 200%;
-}
+/*.up_wrap{*/
+    /*position: relative;*/
+    /*text-align: center;*/
+    /*border: 2px dashed #ccc;*/
+    /*background: #FDFDFD;*/
+    /*width:300px;*/
+/*}*/
 
-.total-wrap{
-    padding: 30px;
-}
+/*.closeDiv{*/
+    /*width: 100%;*/
+    /*height: 100%;*/
+    /*position: absolute;*/
+    /*top: 0;*/
+    /*left: 0;*/
+    /*background-color: #ffffff;*/
+/*}*/
+/*.choose{*/
+    /*display: inline-block;*/
+    /*text-decoration: none;*/
+    /*padding: 5px;*/
+    /*border: 1px solid #0092F2;*/
+    /*border-radius: 4px;*/
+    /*font-size: 14px;*/
+    /*color: #0092F2;*/
+    /*cursor: pointer;*/
+/*}*/
+/*.choose:hover,.choose:active{*/
+    /*text-decoration: none;*/
+    /*color: #0092F2;*/
+/*}*/
+/*.close{*/
+    /*position: absolute;*/
+    /*top: 5px;*/
+    /*right: 10px;*/
+    /*cursor: pointer;*/
+    /*font-size: 14px;*/
+    /*color: #242424;*/
+/*}*/
+/*.logoImg{*/
+    /*max-height: 100px !important;*/
+    /*vertical-align: middle;*/
+    /*margin-top: 5px;*/
+/*}*/
+/*.req_star{*/
+    /*color: red;*/
+    /*font-size: 200%;*/
+/*}*/
 
-.crop-wrap{
-    max-width: 100%;
-    max-height: 90%;
-    overflow: hidden;
-}
-.crop-img{
-    max-width:100%;
-    max-height: 100%;
-}
-</style>
+/*.total-wrap{*/
+    /*padding: 30px;*/
+/*}*/
 
-      `)
-  }
+/*.crop-wrap{*/
+    /*max-width: 100%;*/
+    /*max-height: 90%;*/
+    /*overflow: hidden;*/
+/*}*/
+/*.crop-img{*/
+    /*max-width:100%;*/
+    /*max-height: 100%;*/
+/*}*/
+//</style>
+//
+//      `)
+//  }
 
 
 window.fl=fl
@@ -1386,17 +1418,17 @@ Vue.component('tow-col-sel',{
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(7);
+var content = __webpack_require__(8);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(9)(content, {});
+var update = __webpack_require__(7)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
 	// When the styles change, update the <style> tags
 	if(!content.locals) {
-		module.hot.accept("!!./../../node_modules/css-loader/index.js!./../../node_modules/sass-loader/lib/loader.js!./fields.scss", function() {
-			var newContent = require("!!./../../node_modules/css-loader/index.js!./../../node_modules/sass-loader/lib/loader.js!./fields.scss");
+		module.hot.accept("!!./../../node_modules/.0.26.1@css-loader/index.js!./../../node_modules/.6.0.0@sass-loader/lib/loader.js!./fields.scss", function() {
+			var newContent = require("!!./../../node_modules/.0.26.1@css-loader/index.js!./../../node_modules/.6.0.0@sass-loader/lib/loader.js!./fields.scss");
 			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 			update(newContent);
 		});
@@ -1407,76 +1439,6 @@ if(false) {
 
 /***/ }),
 /* 7 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(8)();
-// imports
-
-
-// module
-exports.push([module.i, ".error {\n  color: red; }\n\n.field-panel {\n  background-color: #F5F5F5;\n  max-width: 80%;\n  margin: 20px;\n  padding: 20px 30px;\n  border-radius: 6px;\n  position: relative;\n  border: 1px solid #D9D9D9;\n  overflow: auto; }\n  .field-panel:after {\n    content: '';\n    display: block;\n    position: absolute;\n    top: 0px;\n    left: 0px;\n    bottom: 0px;\n    width: 180px;\n    border-radius: 6px;\n    background-color: #fff;\n    z-index: 0; }\n  .field-panel .form-group.field {\n    display: flex;\n    align-items: flex-start; }\n    .field-panel .form-group.field .field_input {\n      flex-grow: 0;\n      padding: 5px 20px; }\n      .field-panel .form-group.field .field_input .ckeditor {\n        padding: 20px; }\n    .field-panel .form-group.field:first-child .control-label {\n      border-top: 5px solid #FFF; }\n    .field-panel .form-group.field .control-label {\n      width: 150px;\n      text-align: right;\n      padding: 5px 30px;\n      z-index: 100;\n      flex-shrink: 0;\n      border-top: 1px solid #EEE; }\n  .field-panel .form-group.field .field_input ._tow-col-sel {\n    /*width:750px;*/ }\n  .field-panel .field.error .error {\n    display: inline-block; }\n", ""]);
-
-// exports
-
-
-/***/ }),
-/* 8 */
-/***/ (function(module, exports) {
-
-/*
-	MIT License http://www.opensource.org/licenses/mit-license.php
-	Author Tobias Koppers @sokra
-*/
-// css base code, injected by the css-loader
-module.exports = function() {
-	var list = [];
-
-	// return the list of modules as css string
-	list.toString = function toString() {
-		var result = [];
-		for(var i = 0; i < this.length; i++) {
-			var item = this[i];
-			if(item[2]) {
-				result.push("@media " + item[2] + "{" + item[1] + "}");
-			} else {
-				result.push(item[1]);
-			}
-		}
-		return result.join("");
-	};
-
-	// import a list of modules into the list
-	list.i = function(modules, mediaQuery) {
-		if(typeof modules === "string")
-			modules = [[null, modules, ""]];
-		var alreadyImportedModules = {};
-		for(var i = 0; i < this.length; i++) {
-			var id = this[i][0];
-			if(typeof id === "number")
-				alreadyImportedModules[id] = true;
-		}
-		for(i = 0; i < modules.length; i++) {
-			var item = modules[i];
-			// skip already imported module
-			// this implementation is not 100% perfect for weird media query combinations
-			//  when a module is imported multiple times with different media queries.
-			//  I hope this will never occur (Hey this way we have smaller bundles)
-			if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
-				if(mediaQuery && !item[2]) {
-					item[2] = mediaQuery;
-				} else if(mediaQuery) {
-					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
-				}
-				list.push(item);
-			}
-		}
-	};
-	return list;
-};
-
-
-/***/ }),
-/* 9 */
 /***/ (function(module, exports) {
 
 /*
@@ -1728,6 +1690,76 @@ function updateLink(linkElement, obj) {
 
 
 /***/ }),
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(9)();
+// imports
+
+
+// module
+exports.push([module.i, ".error {\n  color: red; }\n\n.field-panel {\n  background-color: #F5F5F5;\n  max-width: 80%;\n  margin: 20px;\n  padding: 20px 30px;\n  border-radius: 6px;\n  position: relative;\n  border: 1px solid #D9D9D9;\n  overflow: auto; }\n  .field-panel:after {\n    content: '';\n    display: block;\n    position: absolute;\n    top: 0px;\n    left: 0px;\n    bottom: 0px;\n    width: 180px;\n    border-radius: 6px;\n    background-color: #fff;\n    z-index: 0; }\n  .field-panel .form-group.field {\n    display: flex;\n    align-items: flex-start; }\n    .field-panel .form-group.field .field_input {\n      flex-grow: 0;\n      padding: 5px 20px; }\n      .field-panel .form-group.field .field_input .ckeditor {\n        padding: 20px; }\n    .field-panel .form-group.field:first-child .control-label {\n      border-top: 5px solid #FFF; }\n    .field-panel .form-group.field .control-label {\n      width: 150px;\n      text-align: right;\n      padding: 5px 30px;\n      z-index: 100;\n      flex-shrink: 0;\n      border-top: 1px solid #EEE; }\n  .field-panel .form-group.field .field_input ._tow-col-sel {\n    /*width:750px;*/ }\n  .field-panel .field.error .error {\n    display: inline-block; }\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports) {
+
+/*
+	MIT License http://www.opensource.org/licenses/mit-license.php
+	Author Tobias Koppers @sokra
+*/
+// css base code, injected by the css-loader
+module.exports = function() {
+	var list = [];
+
+	// return the list of modules as css string
+	list.toString = function toString() {
+		var result = [];
+		for(var i = 0; i < this.length; i++) {
+			var item = this[i];
+			if(item[2]) {
+				result.push("@media " + item[2] + "{" + item[1] + "}");
+			} else {
+				result.push(item[1]);
+			}
+		}
+		return result.join("");
+	};
+
+	// import a list of modules into the list
+	list.i = function(modules, mediaQuery) {
+		if(typeof modules === "string")
+			modules = [[null, modules, ""]];
+		var alreadyImportedModules = {};
+		for(var i = 0; i < this.length; i++) {
+			var id = this[i][0];
+			if(typeof id === "number")
+				alreadyImportedModules[id] = true;
+		}
+		for(i = 0; i < modules.length; i++) {
+			var item = modules[i];
+			// skip already imported module
+			// this implementation is not 100% perfect for weird media query combinations
+			//  when a module is imported multiple times with different media queries.
+			//  I hope this will never occur (Hey this way we have smaller bundles)
+			if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
+				if(mediaQuery && !item[2]) {
+					item[2] = mediaQuery;
+				} else if(mediaQuery) {
+					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
+				}
+				list.push(item);
+			}
+		}
+	};
+	return list;
+};
+
+
+/***/ }),
 /* 10 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -1929,7 +1961,7 @@ var field_base={
         },
 		picture:{
 			props:['name','row','kw'],
-			template:`<img-uploador :up_url="kw.up_url" v-model="row[name]" :id="'id_'+name"></img-uploador>`
+			template:`<img-uploador :up_url="kw.up_url" v-model="row[name]" :id="'id_'+name" :config="kw.config"></img-uploador>`
 		},
         sim_select:{
 	        props:['name','row','kw'],
@@ -2078,26 +2110,29 @@ var field_base={
 
 }
 //'set.label_cls'   set.input_cls
-Vue.component('field',{
-    mixins:[field_base],
-	template:`
-	<div for='field' class="form-group field" :class='{"error":error_data(name)}' v-if="head">
-	<label :for="'id_'+name" v-text="head.label" class="control-label" v-if='!head.no_auto_label'>
-		<span class="req_star" v-if='head.required'> *</span>
-	</label>
-	<div class="field_input">
-        <component :is='head.type'
-            :row='row'
-            :name='name'
-            :kw='head'>
-        </component>
-	</div>
-	<slot> </slot>
-	<div v-for='error in error_data(name)' v-text='error' class='error'></div>
-    </div>
-`,
 
-})
+var field={
+		mixins:[field_base],
+		template:`
+		<div for='field' class="form-group field" :class='{"error":error_data(name)}' v-if="head">
+		<label :for="'id_'+name" v-text="head.label" class="control-label" v-if='!head.no_auto_label'>
+			<span class="req_star" v-if='head.required'> *</span>
+		</label>
+		<div class="field_input">
+			<component :is='head.type'
+				:row='row'
+				:name='name'
+				:kw='head'>
+			</component>
+		</div>
+		<slot> </slot>
+		<div v-for='error in error_data(name)' v-text='error' class='error'></div>
+		</div>
+	`,
+
+}
+
+Vue.component('field',field)
 
 
 function update_vue_obj(vue_obj,obj) {
@@ -2139,6 +2174,46 @@ window.show_upload =__WEBPACK_IMPORTED_MODULE_0__ajax_fun_js__["c" /* show_uploa
 window.hide_upload =__WEBPACK_IMPORTED_MODULE_0__ajax_fun_js__["d" /* hide_upload */]
 window.merge=merge;
 
+
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(12);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// add the styles to the DOM
+var update = __webpack_require__(7)(content, {});
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!./../../../node_modules/.0.26.1@css-loader/index.js!./../../../node_modules/.6.0.0@sass-loader/lib/loader.js!./file.scss", function() {
+			var newContent = require("!!./../../../node_modules/.0.26.1@css-loader/index.js!./../../../node_modules/.6.0.0@sass-loader/lib/loader.js!./file.scss");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 12 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(9)();
+// imports
+
+
+// module
+exports.push([module.i, ".img-uploader input {\n  display: none; }\n\n.up_wrap {\n  position: relative;\n  text-align: center;\n  border: 2px dashed #ccc;\n  background: #FDFDFD;\n  width: 300px; }\n\n.closeDiv {\n  width: 100%;\n  height: 100%;\n  position: absolute;\n  top: 0;\n  left: 0;\n  background-color: #ffffff; }\n\n.choose {\n  display: inline-block;\n  text-decoration: none;\n  padding: 5px;\n  border: 1px solid #0092F2;\n  border-radius: 4px;\n  font-size: 14px;\n  color: #0092F2;\n  cursor: pointer; }\n\n.choose:hover, .choose:active {\n  text-decoration: none;\n  color: #0092F2; }\n\n.close {\n  position: absolute;\n  top: 5px;\n  right: 10px;\n  cursor: pointer;\n  font-size: 14px;\n  color: #242424; }\n\n.logoImg {\n  max-height: 100px !important;\n  vertical-align: middle;\n  margin-top: 5px; }\n\n.req_star {\n  color: red;\n  font-size: 200%; }\n\n.img-crop .total-wrap {\n  padding: 30px; }\n\n.img-crop .crop-wrap {\n  max-width: 100%;\n  max-height: 90%;\n  overflow: hidden; }\n\n.img-crop .crop-img {\n  max-width: 100%;\n  max-height: 100%; }\n", ""]);
+
+// exports
 
 
 /***/ })

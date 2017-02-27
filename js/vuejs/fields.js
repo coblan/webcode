@@ -182,7 +182,7 @@ var field_base={
         },
 		picture:{
 			props:['name','row','kw'],
-			template:`<img-uploador :up_url="kw.up_url" v-model="row[name]" :id="'id_'+name"></img-uploador>`
+			template:`<img-uploador :up_url="kw.up_url" v-model="row[name]" :id="'id_'+name" :config="kw.config"></img-uploador>`
 		},
         sim_select:{
 	        props:['name','row','kw'],
@@ -331,26 +331,29 @@ var field_base={
 
 }
 //'set.label_cls'   set.input_cls
-Vue.component('field',{
-    mixins:[field_base],
-	template:`
-	<div for='field' class="form-group field" :class='{"error":error_data(name)}' v-if="head">
-	<label :for="'id_'+name" v-text="head.label" class="control-label" v-if='!head.no_auto_label'>
-		<span class="req_star" v-if='head.required'> *</span>
-	</label>
-	<div class="field_input">
-        <component :is='head.type'
-            :row='row'
-            :name='name'
-            :kw='head'>
-        </component>
-	</div>
-	<slot> </slot>
-	<div v-for='error in error_data(name)' v-text='error' class='error'></div>
-    </div>
-`,
 
-})
+var field={
+		mixins:[field_base],
+		template:`
+		<div for='field' class="form-group field" :class='{"error":error_data(name)}' v-if="head">
+		<label :for="'id_'+name" v-text="head.label" class="control-label" v-if='!head.no_auto_label'>
+			<span class="req_star" v-if='head.required'> *</span>
+		</label>
+		<div class="field_input">
+			<component :is='head.type'
+				:row='row'
+				:name='name'
+				:kw='head'>
+			</component>
+		</div>
+		<slot> </slot>
+		<div v-for='error in error_data(name)' v-text='error' class='error'></div>
+		</div>
+	`,
+
+}
+
+Vue.component('field',field)
 
 
 function update_vue_obj(vue_obj,obj) {
