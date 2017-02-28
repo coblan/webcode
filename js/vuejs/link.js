@@ -1,4 +1,4 @@
-ln={
+var ln={
     /*
      var director = '{% url 'director' %}'
 

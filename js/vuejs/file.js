@@ -174,7 +174,7 @@ var fl={
         }
 }
 
-file_input= {
+var file_input= {
     template: "<input class='file-input' type='file' @change='on_change($event)'>",
     props: ['value'],
     data: function () {
@@ -208,7 +208,7 @@ Vue.component('file-input',file_input)
  <img-uploader v-model='xxx' :config='{crop:true,aspectRatio: 8 / 10}'></img-uploader>
 */
 
-img_uploader={
+var img_uploader={
     props:['value','up_url','config'],
     data:function(){
         return {
@@ -286,8 +286,8 @@ Vue.component('img-uploador',img_uploader)
 *  ))
 * */
 
-img_crop={
-    template: `<div class="img-crop">
+var img_crop={
+    template: ex.template(`<div class="img-crop">
     <input class='img-crop' type='file' @change='on_change($event)'
             accept='image/gif,image/jpeg,image/png'>
     <modal v-show='cropping' >
@@ -300,12 +300,12 @@ img_crop={
             <button @click="rotato_90()">rotato 90</button>
             <button @click="zoom_in()">zoom in</button>
             <button @click="zoom_out()">zoom out</button>
-            <button @click="make_sure()">确定</button>
+            <button @click="make_sure()">{yes}</button>
             <button @click="cancel()">取消</button>
 
         </div>
     </modal>
-    </div>`,
+    </div>`,{yes:'确定'}),
     props: ['value','config'],
     data: function () {
         var inn_config={
@@ -484,7 +484,6 @@ Vue.component('file-obj',{
             }
         }
     })
-
 
 
 //  if(!window._logo_input_css){

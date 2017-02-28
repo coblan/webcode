@@ -47,15 +47,10 @@ module.exports =
 	      loader:'babel-loader',
 	      //loader: 'babel', // 'babel-loader' is also a legal name to reference
 	      query: {
-	        presets: ['es2015']
+			  presets: ['es2015'],
 	      }
 	    },
-	 //   {
-		//   test: /.scss$/,
-		//   loader: ExtractTextPlugin.extract('style', 'css!sass')
-		//}
-	  ],
-		rules: [{
+		  {
 			test: /\.scss$/,
 			use: [{
 				loader: "style-loader" // creates style nodes from JS strings
@@ -64,7 +59,18 @@ module.exports =
 			}, {
 				loader: "sass-loader" // compiles Sass to CSS
 			}]
-		}]
+		  }
+	  ],
+		//rules: [{
+		//	test: /\.scss$/,
+		//	use: [{
+		//		loader: "style-loader" // creates style nodes from JS strings
+		//	}, {
+		//		loader: "css-loader" // translates CSS into CommonJS
+		//	}, {
+		//		loader: "sass-loader" // compiles Sass to CSS
+		//	}]
+		//}]
 	
 	}
 }
