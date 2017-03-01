@@ -18,14 +18,15 @@ var ln={
      }
 
     */
-    readCache:function(){
+    readCache:function(root_obj){
+        var root_obj=root_obj||window
         if(ex.parseSearch().cache){
             var cache_obj_str=sessionStorage.getItem(btoa(location.pathname))
             sessionStorage.removeItem(btoa(location.pathname))
             if(cache_obj_str){
-                cache_obj=JSON.parse(cache_obj_str)
+                var cache_obj=JSON.parse(cache_obj_str)
                 for(var key in cache_obj.window){
-                    ex.set(window,key,cache_obj.window[key])
+                    ex.set(root_obj,key,cache_obj.window[key])
                 }
 
                 var cache_meta=cache_obj.cache_meta
@@ -34,15 +35,16 @@ var ln={
                         var value = sessionStorage.getItem(key)
                         var targ_key=cache_meta.rt_key[key]
                         sessionStorage.removeItem(key)
-                        ex.set(window,targ_key,value)
+                        ex.set(root_obj,targ_key,value)
                     }
                 }
             }
         }
     },
 
-    cache:function(cache_meta){
+    cache:function(cache_meta,root_obj){
 
+        var root_obj=root_obj||window
         var cache_obj={
             cache_meta:cache_meta,
             window:{}
@@ -50,7 +52,7 @@ var ln={
 
         if(cache_meta.cache){
             ex.each(cache_meta.cache,function(key){
-                cache_obj.window[key]=ex.access(window,key)
+                cache_obj.window[key]=ex.access(root_obj,key)
             })
         }
         sessionStorage.setItem(btoa(location.pathname),JSON.stringify(cache_obj))

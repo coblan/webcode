@@ -1,3 +1,5 @@
 import * as f from './expand_menu.js'
 import * as a from './modal.js'
 import * as page from  './page_tab.js'
+
+require('./scss/flex.scss')

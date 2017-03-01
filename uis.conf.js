@@ -40,7 +40,7 @@ module.exports =
     //    new ExtractTextPlugin("styles.css")
     //],
     module: {
-	  loaders: [
+		rules: [
 	    {
 	      test: /\.js$/,
 	      exclude: /(node_modules|bower_components)/,
@@ -50,6 +50,26 @@ module.exports =
 	        presets: ['es2015']
 	      }
 	    },
+			{
+				test: /\.scss$/,
+				use: [{
+					loader: "style-loader" // creates style nodes from JS strings
+				}, {
+					loader: "css-loader" // translates CSS into CommonJS
+				}, {
+					loader: "postcss-loader", // translates CSS into CommonJS
+					options: {
+						plugins: function () {
+							return [
+								//require('precss'),
+								require('autoprefixer')
+							];
+						}
+					}
+				},{
+					loader: "sass-loader" // compiles Sass to CSS
+				}]
+			}
 	 //   {
 		//   test: /.scss$/,
 		//   loader: ExtractTextPlugin.extract('style', 'css!sass')
