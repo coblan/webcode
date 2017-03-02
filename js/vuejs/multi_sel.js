@@ -49,8 +49,8 @@ var temp_tow_col_sel=`
 <div class='_tow-col-sel'>
 		<div class="sel">
 			<b>可选项</b>
-			<select name="" id="" multiple="multiple" :size="size" class='left' v-model='left_sel' >
-				<option v-for='opt in orderBy(can_select,"label")' :value="opt.value" v-text='opt.label' @dblclick='add(opt)' ></option>
+			<select name="" id="" multiple="multiple" :size="size" class='left' v-model='left_sel' @dblclick='batch_add()'>
+				<option v-for='opt in orderBy(can_select,"label")' :value="opt.value" v-text='opt.label'  ></option>
 			</select>
 		</div>
 
@@ -63,8 +63,8 @@ var temp_tow_col_sel=`
 		</div>
 		<div class="sel">
 			<b>选中项</b>
-			<select name="" id="" multiple="multiple" :size="size" class='right' v-model='right_sel' >
-				<option v-for='opt in orderBy(selected,"label")' :value="opt.value" v-text='opt.label' @dblclick='rm(opt)'></option>
+			<select name="" id="" multiple="multiple" :size="size" class='right' v-model='right_sel' @dblclick='batch_rm()'>
+				<option v-for='opt in orderBy(selected,"label")' :value="opt.value" v-text='opt.label' ></option>
 			</select>
 		</div>
 
@@ -122,49 +122,42 @@ Vue.component('tow-col-sel',{
 				}
 			})
 		},
-		add:function (opt) {
-			if(!ex.isin(opt,this.selected)){
-				this.selected.push(opt)
-			}
-
-			ex.remove(this.can_select,opt)
-			//this.selected__.push(opt)
-			//this.selected.push(opt.value)
-			//var index = this.can_select.indexOf(opt)
-			//if(index!=-1){
-			//	this.can_select.splice(index,1)
-			//}
-			this.left_sel=[]
-		},
-		rm:function (opt) {
-			ex.remove(this.selected,opt)
-			this.can_select.push(opt)
-			//var index = this.selected__.indexOf(opt)
-			//if(index!=-1){
-			//	this.selected__.splice(index,1)
-			//}
-			//var index_2 = this.selected.indexOf(opt.value)
-			//if(index_2!=-1){
-			//	this.selected.splice(index_2,1)
-			//}
-			//this.can_select.push(opt)
-			this.right_sel=[]
-		},
+		//db_add:function(){
+		//	if(this.left_sel.length>0){
+		//		var opt = ex.findone(this.can_select,{value:this.left_sel[0]})
+		//		if(opt){
+		//			this.add(opt)
+		//		}
+		//	}
+        //
+		//},
+		//add:function (opt) {
+		//	if(!ex.isin(opt,this.selected)){
+		//		this.selected.push(opt)
+		//	}
+        //
+		//	ex.remove(this.can_select,opt)
+		//	this.left_sel=[]
+		//},
+		//db_rem:function(){
+		//	if(this.right_sel.length>0){
+		//		var opt = ex.findone(this.selected,{value:this.right_sel[0]})
+		//		if(opt){
+		//			this.rm(opt)
+		//		}
+		//	}
+		//},
+		//rm:function (opt) {
+		//	ex.remove(this.selected,opt)
+		//	this.can_select.push(opt)
+		//	this.right_sel=[]
+		//},
 		batch_add:function () {
-			//var tmp_ls = this.left_sel
 			var self=this
 			var added_choice= ex.remove(this.can_select,function(choice){
 				return ex.isin(choice.value,self.left_sel)
 			})
 			ex.extend(this.selected,added_choice)
-			//for(var x=0;x<tmp_ls.length;x++){
-			//	for(var y=0;y<this.choices.length;y++){
-			//		if(this.choices[y].value==tmp_ls[x]){
-			//			this.add(this.choices[y])
-			//			break;
-			//		}
-			//	}
-			//}
 		},
 		batch_rm:function () {
 			var self=this
@@ -172,15 +165,6 @@ Vue.component('tow-col-sel',{
 				return ex.isin(choice.value,self.right_sel)
 			})
 			ex.extend(this.can_select,del_choice)
-			//var tmp_ls = this.right_sel
-			//for(var x=0;x<tmp_ls.length;x++){
-			//	for(var y=0;y<this.selected__.length;y++){
-			//		if(this.selected__[y].value==tmp_ls[x]){
-			//			this.rm(this.selected__[y])
-			//			break;
-			//		}
-			//	}
-			//}
 		}
 	}
 })

@@ -56,6 +56,20 @@ var ln={
             })
         }
         sessionStorage.setItem(btoa(location.pathname),JSON.stringify(cache_obj))
+    },
+
+    openWin:function(url,callback){
+        var norm_url = ex.appendSearch(url,{_pop:1})
+        window.open(norm_url,url,'height=500,width=800,resizable=yes,scrollbars=yes,top=200,left=300')
+        window.__on_subwin_close=callback
+
+    },
+    rtWin:function(resp){
+        if(window.opener && window.opener.__on_subwin_close){
+            window.opener.__on_subwin_close(resp)
+        }
+        window.opener.__on_subwin_close=null
+        window.close()
     }
 }
 

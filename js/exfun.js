@@ -32,7 +32,11 @@ ex={
 			return outstr
 		}
 	},
-	appendSearch:function(obj,url){
+	appendSearch:function(url,obj){
+		if(!obj){
+			var obj=url
+			var url=location.href
+		}
 		if(url){
 			var url_obj = ex.parseURL(url)
 			var search = url_obj.params

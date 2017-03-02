@@ -74,6 +74,62 @@
 	MIT License http://www.opensource.org/licenses/mit-license.php
 	Author Tobias Koppers @sokra
 */
+// css base code, injected by the css-loader
+module.exports = function() {
+	var list = [];
+
+	// return the list of modules as css string
+	list.toString = function toString() {
+		var result = [];
+		for(var i = 0; i < this.length; i++) {
+			var item = this[i];
+			if(item[2]) {
+				result.push("@media " + item[2] + "{" + item[1] + "}");
+			} else {
+				result.push(item[1]);
+			}
+		}
+		return result.join("");
+	};
+
+	// import a list of modules into the list
+	list.i = function(modules, mediaQuery) {
+		if(typeof modules === "string")
+			modules = [[null, modules, ""]];
+		var alreadyImportedModules = {};
+		for(var i = 0; i < this.length; i++) {
+			var id = this[i][0];
+			if(typeof id === "number")
+				alreadyImportedModules[id] = true;
+		}
+		for(i = 0; i < modules.length; i++) {
+			var item = modules[i];
+			// skip already imported module
+			// this implementation is not 100% perfect for weird media query combinations
+			//  when a module is imported multiple times with different media queries.
+			//  I hope this will never occur (Hey this way we have smaller bundles)
+			if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
+				if(mediaQuery && !item[2]) {
+					item[2] = mediaQuery;
+				} else if(mediaQuery) {
+					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
+				}
+				list.push(item);
+			}
+		}
+	};
+	return list;
+};
+
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports) {
+
+/*
+	MIT License http://www.opensource.org/licenses/mit-license.php
+	Author Tobias Koppers @sokra
+*/
 var stylesInDom = {},
 	memoize = function(fn) {
 		var memo;
@@ -319,89 +375,7 @@ function updateLink(linkElement, obj) {
 
 
 /***/ }),
-/* 1 */
-/***/ (function(module, exports) {
-
-/*
-	MIT License http://www.opensource.org/licenses/mit-license.php
-	Author Tobias Koppers @sokra
-*/
-// css base code, injected by the css-loader
-module.exports = function() {
-	var list = [];
-
-	// return the list of modules as css string
-	list.toString = function toString() {
-		var result = [];
-		for(var i = 0; i < this.length; i++) {
-			var item = this[i];
-			if(item[2]) {
-				result.push("@media " + item[2] + "{" + item[1] + "}");
-			} else {
-				result.push(item[1]);
-			}
-		}
-		return result.join("");
-	};
-
-	// import a list of modules into the list
-	list.i = function(modules, mediaQuery) {
-		if(typeof modules === "string")
-			modules = [[null, modules, ""]];
-		var alreadyImportedModules = {};
-		for(var i = 0; i < this.length; i++) {
-			var id = this[i][0];
-			if(typeof id === "number")
-				alreadyImportedModules[id] = true;
-		}
-		for(i = 0; i < modules.length; i++) {
-			var item = modules[i];
-			// skip already imported module
-			// this implementation is not 100% perfect for weird media query combinations
-			//  when a module is imported multiple times with different media queries.
-			//  I hope this will never occur (Hey this way we have smaller bundles)
-			if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
-				if(mediaQuery && !item[2]) {
-					item[2] = mediaQuery;
-				} else if(mediaQuery) {
-					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
-				}
-				list.push(item);
-			}
-		}
-	};
-	return list;
-};
-
-
-/***/ }),
 /* 2 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(11);
-if(typeof content === 'string') content = [[module.i, content, '']];
-// add the styles to the DOM
-var update = __webpack_require__(0)(content, {});
-if(content.locals) module.exports = content.locals;
-// Hot Module Replacement
-if(false) {
-	// When the styles change, update the <style> tags
-	if(!content.locals) {
-		module.hot.accept("!!./../../node_modules/.0.26.1@css-loader/index.js!./../../node_modules/.6.0.0@sass-loader/lib/loader.js!./fields.scss", function() {
-			var newContent = require("!!./../../node_modules/.0.26.1@css-loader/index.js!./../../node_modules/.6.0.0@sass-loader/lib/loader.js!./fields.scss");
-			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-			update(newContent);
-		});
-	}
-	// When the module is disposed, remove the <style> tags
-	module.hot.dispose(function() { update(); });
-}
-
-/***/ }),
-/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -581,7 +555,7 @@ if (!window.__uploading_mark) {
 }
 
 /***/ }),
-/* 4 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -719,7 +693,7 @@ var edit_level = {
 };
 
 /***/ }),
-/* 5 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -809,7 +783,7 @@ fl.uploads(files,url,function(resp){  // url 可以忽略，默认url为 /face/u
 
 */
 
-__webpack_require__(9);
+__webpack_require__(11);
 
 var fl = {
     read: function read(file, callback) {
@@ -1229,7 +1203,7 @@ Vue.component('logo-input', {
 window.fl = fl;
 
 /***/ }),
-/* 6 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1345,7 +1319,7 @@ Vue.component('datetime', {
 });
 
 /***/ }),
-/* 7 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1406,13 +1380,26 @@ var ln = {
             });
         }
         sessionStorage.setItem(btoa(location.pathname), JSON.stringify(cache_obj));
+    },
+
+    openWin: function openWin(url, callback) {
+        var norm_url = ex.appendSearch(url, { _pop: 1 });
+        window.open(norm_url, url, 'height=500,width=800,resizable=yes,scrollbars=yes,top=200,left=300');
+        window.__on_subwin_close = callback;
+    },
+    rtWin: function rtWin(resp) {
+        if (window.opener && window.opener.__on_subwin_close) {
+            window.opener.__on_subwin_close(resp);
+        }
+        window.opener.__on_subwin_close = null;
+        window.close();
     }
 };
 
 window.ln = ln;
 
 /***/ }),
-/* 8 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1422,7 +1409,7 @@ if (!window.__multi_sel) {
 	document.write('\n\t\n<style type="text/css" media="screen" id="test">\n\n._tow-col-sel{\n\tdisplay: flex;\n\talign-items: stretch;\n\n}\n\n._tow-col-sel .sel{\n\tmin-width:250px;\n\tmax-width: 400px;\n\n\tdisplay: flex;\n\tflex-direction: column;\n\t/*display: inline-block;*/\n\t/*vertical-align: middle;*/\n}\n._tow-col-sel .sel select{\n\twidth: 100%;\n\n\tflex: 1;\n}\n._tow-col-sel .sel.right{\n\tborder-width:2px;\n}\n._tow-col-sel .arrow{\n\tdisplay: flex;\n\tflex-direction: column;\n\tjustify-content:center;\n\tpadding: 5px;\n}\n._tow-col-sel ._small_icon{\n\twidth:15px;\n}\n._tow-col-sel ._small_icon.deactive{\n\topacity: 0.5;\n\t-moz-opacity: 0.5;\n\tfilter:alpha(opacity=50);\n}\n</style>\n\n\t');
 }
 
-var temp_tow_col_sel = '\n<div class=\'_tow-col-sel\'>\n\t\t<div class="sel">\n\t\t\t<b>\u53EF\u9009\u9879</b>\n\t\t\t<select name="" id="" multiple="multiple" :size="size" class=\'left\' v-model=\'left_sel\' >\n\t\t\t\t<option v-for=\'opt in orderBy(can_select,"label")\' :value="opt.value" v-text=\'opt.label\' @dblclick=\'add(opt)\' ></option>\n\t\t\t</select>\n\t\t</div>\n\n\t\t<div class="arrow">\n\t\t\t<img src="//res.enjoyst.com/image/right_02.png" alt=""\n\t\t\t\t:class=\'["_small_icon",{"deactive":left_sel.length==0}]\' @click=\'batch_add()\'>\n\t\t\t<br>\n\t\t\t<img src="//res.enjoyst.com/image/left_02.png" alt=""\n\t\t\t\t:class=\'["_small_icon",{"deactive":right_sel.length==0}]\' @click=\'batch_rm()\'>\n\t\t</div>\n\t\t<div class="sel">\n\t\t\t<b>\u9009\u4E2D\u9879</b>\n\t\t\t<select name="" id="" multiple="multiple" :size="size" class=\'right\' v-model=\'right_sel\' >\n\t\t\t\t<option v-for=\'opt in orderBy(selected,"label")\' :value="opt.value" v-text=\'opt.label\' @dblclick=\'rm(opt)\'></option>\n\t\t\t</select>\n\t\t</div>\n\n</div>\n';
+var temp_tow_col_sel = '\n<div class=\'_tow-col-sel\'>\n\t\t<div class="sel">\n\t\t\t<b>\u53EF\u9009\u9879</b>\n\t\t\t<select name="" id="" multiple="multiple" :size="size" class=\'left\' v-model=\'left_sel\' @dblclick=\'batch_add()\'>\n\t\t\t\t<option v-for=\'opt in orderBy(can_select,"label")\' :value="opt.value" v-text=\'opt.label\'  ></option>\n\t\t\t</select>\n\t\t</div>\n\n\t\t<div class="arrow">\n\t\t\t<img src="//res.enjoyst.com/image/right_02.png" alt=""\n\t\t\t\t:class=\'["_small_icon",{"deactive":left_sel.length==0}]\' @click=\'batch_add()\'>\n\t\t\t<br>\n\t\t\t<img src="//res.enjoyst.com/image/left_02.png" alt=""\n\t\t\t\t:class=\'["_small_icon",{"deactive":right_sel.length==0}]\' @click=\'batch_rm()\'>\n\t\t</div>\n\t\t<div class="sel">\n\t\t\t<b>\u9009\u4E2D\u9879</b>\n\t\t\t<select name="" id="" multiple="multiple" :size="size" class=\'right\' v-model=\'right_sel\' @dblclick=\'batch_rm()\'>\n\t\t\t\t<option v-for=\'opt in orderBy(selected,"label")\' :value="opt.value" v-text=\'opt.label\' ></option>\n\t\t\t</select>\n\t\t</div>\n\n</div>\n';
 
 Vue.component('tow-col-sel', {
 	template: temp_tow_col_sel,
@@ -1474,49 +1461,42 @@ Vue.component('tow-col-sel', {
 				}
 			});
 		},
-		add: function add(opt) {
-			if (!ex.isin(opt, this.selected)) {
-				this.selected.push(opt);
-			}
-
-			ex.remove(this.can_select, opt);
-			//this.selected__.push(opt)
-			//this.selected.push(opt.value)
-			//var index = this.can_select.indexOf(opt)
-			//if(index!=-1){
-			//	this.can_select.splice(index,1)
-			//}
-			this.left_sel = [];
-		},
-		rm: function rm(opt) {
-			ex.remove(this.selected, opt);
-			this.can_select.push(opt);
-			//var index = this.selected__.indexOf(opt)
-			//if(index!=-1){
-			//	this.selected__.splice(index,1)
-			//}
-			//var index_2 = this.selected.indexOf(opt.value)
-			//if(index_2!=-1){
-			//	this.selected.splice(index_2,1)
-			//}
-			//this.can_select.push(opt)
-			this.right_sel = [];
-		},
+		//db_add:function(){
+		//	if(this.left_sel.length>0){
+		//		var opt = ex.findone(this.can_select,{value:this.left_sel[0]})
+		//		if(opt){
+		//			this.add(opt)
+		//		}
+		//	}
+		//
+		//},
+		//add:function (opt) {
+		//	if(!ex.isin(opt,this.selected)){
+		//		this.selected.push(opt)
+		//	}
+		//
+		//	ex.remove(this.can_select,opt)
+		//	this.left_sel=[]
+		//},
+		//db_rem:function(){
+		//	if(this.right_sel.length>0){
+		//		var opt = ex.findone(this.selected,{value:this.right_sel[0]})
+		//		if(opt){
+		//			this.rm(opt)
+		//		}
+		//	}
+		//},
+		//rm:function (opt) {
+		//	ex.remove(this.selected,opt)
+		//	this.can_select.push(opt)
+		//	this.right_sel=[]
+		//},
 		batch_add: function batch_add() {
-			//var tmp_ls = this.left_sel
 			var self = this;
 			var added_choice = ex.remove(this.can_select, function (choice) {
 				return ex.isin(choice.value, self.left_sel);
 			});
 			ex.extend(this.selected, added_choice);
-			//for(var x=0;x<tmp_ls.length;x++){
-			//	for(var y=0;y<this.choices.length;y++){
-			//		if(this.choices[y].value==tmp_ls[x]){
-			//			this.add(this.choices[y])
-			//			break;
-			//		}
-			//	}
-			//}
 		},
 		batch_rm: function batch_rm() {
 			var self = this;
@@ -1524,21 +1504,12 @@ Vue.component('tow-col-sel', {
 				return ex.isin(choice.value, self.right_sel);
 			});
 			ex.extend(this.can_select, del_choice);
-			//var tmp_ls = this.right_sel
-			//for(var x=0;x<tmp_ls.length;x++){
-			//	for(var y=0;y<this.selected__.length;y++){
-			//		if(this.selected__[y].value==tmp_ls[x]){
-			//			this.rm(this.selected__[y])
-			//			break;
-			//		}
-			//	}
-			//}
 		}
 	}
 });
 
 /***/ }),
-/* 9 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
@@ -1547,14 +1518,14 @@ Vue.component('tow-col-sel', {
 var content = __webpack_require__(10);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(0)(content, {});
+var update = __webpack_require__(1)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
 	// When the styles change, update the <style> tags
 	if(!content.locals) {
-		module.hot.accept("!!./../../../node_modules/.0.26.1@css-loader/index.js!./../../../node_modules/.6.0.0@sass-loader/lib/loader.js!./file.scss", function() {
-			var newContent = require("!!./../../../node_modules/.0.26.1@css-loader/index.js!./../../../node_modules/.6.0.0@sass-loader/lib/loader.js!./file.scss");
+		module.hot.accept("!!./../../node_modules/css-loader/index.js!./../../node_modules/sass-loader/lib/loader.js!./fields.scss", function() {
+			var newContent = require("!!./../../node_modules/css-loader/index.js!./../../node_modules/sass-loader/lib/loader.js!./fields.scss");
 			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 			update(newContent);
 		});
@@ -1564,10 +1535,10 @@ if(false) {
 }
 
 /***/ }),
-/* 10 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(1)();
+exports = module.exports = __webpack_require__(0)();
 // imports
 
 
@@ -1578,18 +1549,44 @@ exports.push([module.i, ".img-uploader input {\n  display: none; }\n\n.up_wrap {
 
 
 /***/ }),
-/* 11 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(1)();
+exports = module.exports = __webpack_require__(0)();
 // imports
 
 
 // module
-exports.push([module.i, ".error {\n  color: red; }\n\n.field-panel {\n  background-color: #F5F5F5;\n  max-width: 80%;\n  margin: 20px;\n  padding: 20px 30px;\n  border-radius: 6px;\n  position: relative;\n  border: 1px solid #D9D9D9;\n  overflow: auto; }\n  .field-panel:after {\n    content: '';\n    display: block;\n    position: absolute;\n    top: 0px;\n    left: 0px;\n    bottom: 0px;\n    width: 180px;\n    border-radius: 6px;\n    background-color: #fff;\n    z-index: 0; }\n  .field-panel .form-group.field {\n    display: flex;\n    align-items: flex-start; }\n    .field-panel .form-group.field .field_input {\n      flex-grow: 0;\n      padding: 5px 20px; }\n      .field-panel .form-group.field .field_input .ckeditor {\n        padding: 20px; }\n    .field-panel .form-group.field:first-child .control-label {\n      border-top: 5px solid #FFF; }\n    .field-panel .form-group.field .control-label {\n      width: 150px;\n      text-align: right;\n      padding: 5px 30px;\n      z-index: 100;\n      flex-shrink: 0;\n      border-top: 1px solid #EEE; }\n  .field-panel .form-group.field .field_input ._tow-col-sel {\n    /*width:750px;*/ }\n  .field-panel .field.error .error {\n    display: inline-block; }\n", ""]);
+exports.push([module.i, ".error {\n  color: red; }\n\n.field-panel {\n  background-color: #F5F5F5;\n  max-width: 80%;\n  margin: 20px;\n  padding: 20px 30px;\n  border-radius: 6px;\n  position: relative;\n  border: 1px solid #D9D9D9;\n  overflow: auto; }\n  .field-panel:after {\n    content: '';\n    display: block;\n    position: absolute;\n    top: 0px;\n    left: 0px;\n    bottom: 0px;\n    width: 180px;\n    border-radius: 6px;\n    background-color: #fff;\n    z-index: 0; }\n  .field-panel .form-group.field {\n    display: flex;\n    align-items: flex-start; }\n    .field-panel .form-group.field .field_input {\n      flex-grow: 0;\n      padding: 5px 20px; }\n      .field-panel .form-group.field .field_input .ckeditor {\n        padding: 20px; }\n    .field-panel .form-group.field:first-child .control-label {\n      border-top: 5px solid #FFF; }\n    .field-panel .form-group.field .control-label {\n      width: 150px;\n      text-align: right;\n      padding: 5px 30px;\n      z-index: 100;\n      flex-shrink: 0;\n      border-top: 1px solid #EEE; }\n  .field-panel .form-group.field .field_input ._tow-col-sel {\n    /*width:750px;*/ }\n  .field-panel .field.error .error {\n    display: inline-block; }\n\n._tow-col-sel select {\n  min-height: 7em; }\n", ""]);
 
 // exports
 
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(9);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// add the styles to the DOM
+var update = __webpack_require__(1)(content, {});
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/sass-loader/lib/loader.js!./file.scss", function() {
+			var newContent = require("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/sass-loader/lib/loader.js!./file.scss");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
 
 /***/ }),
 /* 12 */
@@ -1603,25 +1600,25 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.merge = merge;
 
-var _ajax_fun = __webpack_require__(3);
+var _ajax_fun = __webpack_require__(2);
 
-var _file = __webpack_require__(5);
+var _file = __webpack_require__(4);
 
 var f = _interopRequireWildcard(_file);
 
-var _ckeditor = __webpack_require__(4);
+var _ckeditor = __webpack_require__(3);
 
 var ck = _interopRequireWildcard(_ckeditor);
 
-var _multi_sel = __webpack_require__(8);
+var _multi_sel = __webpack_require__(7);
 
 var multi = _interopRequireWildcard(_multi_sel);
 
-var _inputs = __webpack_require__(6);
+var _inputs = __webpack_require__(5);
 
 var inputs = _interopRequireWildcard(_inputs);
 
-var _link = __webpack_require__(7);
+var _link = __webpack_require__(6);
 
 var ln = _interopRequireWildcard(_link);
 
@@ -1674,7 +1671,7 @@ $.post('',JSON.stringify(post_data),function (data) {
 
 //import {use_color} from '../dosome/color.js'
 //import {load_js,load_css} from '../dosome/pkg.js'
-__webpack_require__(2);
+__webpack_require__(8);
 
 (0, _ajax_fun.hook_ajax_msg)();
 (0, _ajax_fun.hook_ajax_csrf)();
