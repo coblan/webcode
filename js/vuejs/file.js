@@ -1,4 +1,8 @@
 /*
+>>>front/file.rst>
+===========
+文件上传
+===========
 
 主要内容
 ========
@@ -14,42 +18,51 @@ img-uploador
 多个文件上传步骤
 ==============
 
-1. Vue.data设置
- data:{
+1. Vue.data设置::
+
+    data:{
     files:[],
- },
+    },
 
-2. 在html中插入Vue组件 <file-input id='jjyy' v-model='files' multiple></file-input>
+2. 在html中插入Vue组件::
 
-3. 在Methods中上传
-fl.uploads(files,url,function(resp){  // url 可以忽略，默认url为 /face/upload
-    resp ....
-})
+    <file-input id='jjyy' v-model='files' multiple></file-input>
+
+3. 在Methods中上传::
+
+    fl.uploads(files,url,function(resp){  // url 可以忽略，默认url为 /face/upload
+        resp ....
+    })
 
 单个文件
 =======
-1.Vue.data设置
- data:{
-    files:[],
- },
+1.Vue.data设置::
 
-2. 在html中插入Vue组件 <file-input id='jjyy' v-model='files'></file-input>
+    data:{
+        files:[],
+    },
 
-3. 在Methods中上传
- fl.uploads(this.files[0],url,function(resp){
-    resp ....
- })
+2. 在html中插入Vue组件::
+
+    <file-input id='jjyy' v-model='files'></file-input>
+
+3. 在Methods中上传::
+
+     fl.uploads(this.files[0],url,function(resp){
+        resp ....
+     })
 
 .. Note:: 默认上传url是/face/upload ，该接口返回的是 file_url_list。
 
 上传进度
 =========
-进度只是上传进度，判断文件是否被后端接收成功，需要判断是否success回调被调用。
- fl.upload(this.file2[0],'/face/upload',function(url_list){
+进度只是上传进度，判断文件是否被后端接收成功，需要判断是否success回调被调用::
 
- },function(progress){
-    console.log(progress)
- })
+     fl.upload(this.file2[0],'/face/upload',function(url_list){
+
+     },function(progress){
+        console.log(progress)
+     })
 
 预览图片
 =========
@@ -62,13 +75,14 @@ fl.uploads(files,url,function(resp){  // url 可以忽略，默认url为 /face/u
 
 上传图片
 ==========
+::
 
-<img-uploador v-model='xxx_url_variable'></img-uploador>   //默认上传，使用的是 fl.upload默认地址 /face/upload
-<img-uploador v-model='xxx_url_variable' up_url='xxx'></img-uploador>
+    <img-uploador v-model='xxx_url_variable'></img-uploador>   //默认上传，使用的是 fl.upload默认地址 /face/upload
+    <img-uploador v-model='xxx_url_variable' up_url='xxx'></img-uploador>
 
-具备裁剪性质:
+具备裁剪性质::
 
- <img-uploader v-model='xxx' :config='{crop:true,aspectRatio: 8 / 10}'></img-uploader>
+    <img-uploader v-model='xxx' :config='{crop:true,aspectRatio: 8 / 10}'></img-uploader>
 
 
 样式技巧
@@ -79,7 +93,7 @@ fl.uploads(files,url,function(resp){  // url 可以忽略，默认url为 /face/u
 
     * 隐藏<file-input> ，
     * 然后触发其click事件('.file-input').click()
-
+<<<<
 */
 
 

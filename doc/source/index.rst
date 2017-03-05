@@ -20,6 +20,7 @@ Contents:
    backend/index
    frontend/index
    uis/index
+   front
 
 
 
