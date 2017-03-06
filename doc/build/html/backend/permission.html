@@ -1,0 +1,294 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>2.2. 权限 &mdash; webcode 1.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="webcode 1.0 documentation" href="../index.html"/>
+        <link rel="up" title="2. 后端" href="index.html"/>
+        <link rel="next" title="3. 前端" href="../frontend/index.html"/>
+        <link rel="prev" title="2.1. model页面engine" href="model_render.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> webcode
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../admin/index.html">1. 模拟admin</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">2. 后端</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="model_render.html">2.1. model页面engine</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">2.2. 权限</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id2">2.2.1. 控制实现的方式</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id3">2.2.2. 代码演示</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../frontend/index.html">3. 前端</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../uis/index.html">4. 前端uis</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">webcode</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="index.html">2. 后端</a> &raquo;</li>
+      
+    <li>2.2. 权限</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/backend/permission.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="id1">
+<h1>2.2. 权限<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<p>主要有全局表权限，表单条记录权限，表字段权限三层。</p>
+<div class="section" id="id2">
+<h2>2.2.1. 控制实现的方式<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt>全局表权限</dt>
+<dd>依附于Django自带权限系统，实现了对某表的全局权限控制。</dd>
+<dt>单条记录权限</dt>
+<dd>实现对单条记录的权限控制。在函数 <strong>can_access_instance</strong> 来进行控制。该函数会被基类调用，如果返回值为False，在save或者get_row函数中会抛出 <em>PermissionDenied</em> 异常。</dd>
+<dt>表字段权限</dt>
+<dd>控制用户对于字段的权限。可以在 <strong>init_fields</strong> 函数中，根据self.crt_user来定义self.fields属性。不在self.fields中出现的字段，将不会被输出，也不会出现在self.cleaned_data中</dd>
+<dt>readonly</dt>
+<dd><p class="first">控制前端显示样式，控制后端某些字段的修改权限。在 <strong>get_readonly_fields</strong> 函数中，可以根据self.crt_user进行设定哪些field字段是只读的。这些将会影响：</p>
+<ol class="arabic simple">
+<li>输出信息时,通过在 <strong>get_heads</strong> 中添加readonly=True字段，传递给前端。</li>
+<li>保存信息时，在save函数中，通过比较 self.changed_data 是否有包含get_readonly_fields返回name列表中的name,决定是否抛出PermissionDenied异常。</li>
+</ol>
+<p class="last">此外，还可以通过 <strong>get_input_type</strong> 函数来定义readonly的显示类型，例如 <em>label</em> 类型。</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="id3">
+<h2>2.2.2. 代码演示<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">UserFields</span><span class="p">(</span><span class="n">ModelFields</span><span class="p">):</span>
+    <span class="n">age</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;年龄&#39;</span><span class="p">)</span>
+
+        <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">model</span><span class="o">=</span><span class="n">User</span>
+        <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;username&#39;</span><span class="p">,</span><span class="s1">&#39;first_name&#39;</span><span class="p">,</span><span class="s1">&#39;is_active&#39;</span><span class="p">,</span><span class="s1">&#39;is_staff&#39;</span><span class="p">,</span><span class="s1">&#39;is_superuser&#39;</span><span class="p">,</span><span class="s1">&#39;email&#39;</span><span class="p">,</span><span class="s1">&#39;groups&#39;</span><span class="p">,</span><span class="s1">&#39;user_permissions&#39;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">init_fields</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="c1"># 通过fields值来：1）输出字段，2）clean字段。</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="p">,</span><span class="s1">&#39;basicinfo&#39;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;age&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;username&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">init_value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="c1"># 构造初始值，用于构造form.changed_data,</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">UserFields</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">init_value</span><span class="p">()</span>
+        <span class="n">ls</span> <span class="o">=</span><span class="p">[</span><span class="s1">&#39;age&#39;</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">ls</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">initial</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="o">.</span><span class="n">basicinfo</span><span class="o">.</span><span class="n">age</span>
+
+    <span class="k">def</span> <span class="nf">get_row</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">row</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">UserFields</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">get_row</span><span class="p">()</span>
+        <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;pk&#39;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">user</span><span class="p">,</span><span class="s1">&#39;basicinfo&#39;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="s1">&#39;age&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">:</span>  <span class="c1"># 必须判断一下，用户是否有该field权限，才能输出</span>
+                <span class="n">row</span><span class="p">[</span><span class="s1">&#39;age&#39;</span><span class="p">]</span><span class="o">=</span><span class="n">user</span><span class="o">.</span><span class="n">basicinfo</span><span class="o">.</span><span class="n">age</span>
+        <span class="k">return</span> <span class="n">row</span>
+
+    <span class="k">def</span> <span class="nf">get_input_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;age&#39;</span><span class="p">:</span><span class="s1">&#39;text&#39;</span><span class="p">}</span>
+
+    <span class="k">def</span> <span class="nf">can_access_instance</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        用于判断当前的self.instance是否能够被self.crt_user访问</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="k">def</span> <span class="nf">get_readonly_fields</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="c1"># 控制只读字段</span>
+        <span class="k">return</span> <span class="p">[]</span> <span class="c1">#[&#39;first_name&#39;]</span>
+
+    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instane</span><span class="p">,</span> <span class="n">row</span><span class="p">):</span> <span class="c1"># 重载该函数，实现除model外字段的保存工作</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">UserFields</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">instane</span><span class="p">,</span><span class="n">row</span><span class="p">)</span>
+        <span class="n">user</span> <span class="o">=</span> <span class="n">instane</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+
+        <span class="n">age</span><span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cleaned_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;age&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">age</span><span class="p">:</span>
+            <span class="n">user</span><span class="o">.</span><span class="n">basicinfo</span><span class="o">.</span><span class="n">age</span><span class="o">=</span><span class="n">age</span>  <span class="c1"># 取model外字段时，必须从cleaned_data取，这样会遵守 fields权限控制</span>
+
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">user</span><span class="p">,</span><span class="s1">&#39;basicinfo&#39;</span><span class="p">):</span>
+            <span class="n">user</span><span class="o">.</span><span class="n">basicinfo</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;status&#39;</span><span class="p">:</span><span class="s1">&#39;success&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../frontend/index.html" class="btn btn-neutral float-right" title="3. 前端" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="model_render.html" class="btn btn-neutral" title="2.1. model页面engine" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, coblan.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

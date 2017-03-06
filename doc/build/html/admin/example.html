@@ -1,0 +1,372 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>1.1. 基本样例 &mdash; webcode 1.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="webcode 1.0 documentation" href="../index.html"/>
+        <link rel="up" title="1. 模拟admin" href="index.html"/>
+        <link rel="next" title="1.2. 表单简化版" href="simple_fields.html"/>
+        <link rel="prev" title="1. 模拟admin" href="index.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> webcode
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">1. 模拟admin</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">1.1. 基本样例</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id2">1.1.1. 完整样例</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#renderurl">配置render的url</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#table">table页面数据</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#fields">fields页面数据</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tablefields">设置table和fields页面</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id3">配置菜单</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id4">table前端</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id5">fields前端</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id6">fields前端保存</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="simple_fields.html">1.2. 表单简化版</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fields.html">1.3. fields后端</a></li>
+<li class="toctree-l2"><a class="reference internal" href="table.html">1.4. table</a></li>
+<li class="toctree-l2"><a class="reference internal" href="permit.html">1.5. 权限控制</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../backend/index.html">2. 后端</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../frontend/index.html">3. 前端</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../uis/index.html">4. 前端uis</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">webcode</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="index.html">1. 模拟admin</a> &raquo;</li>
+      
+    <li>1.1. 基本样例</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/admin/example.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="id1">
+<h1>1.1. 基本样例<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id2">
+<h2>1.1.1. 完整样例<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="renderurl">
+<h3>配置render的url<a class="headerlink" href="#renderurl" title="Permalink to this headline">¶</a></h3>
+<p>使用时，需要为模块分配一个prefix url。</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">director</span> <span class="k">import</span> <span class="n">urls</span> <span class="k">as</span> <span class="n">director_urls</span>
+<span class="n">urlpatterns</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">url</span><span class="p">(</span><span class="s1">r&#39;^d/&#39;</span><span class="p">,</span><span class="n">include</span><span class="p">(</span><span class="n">director_urls</span><span class="p">)),</span>  <span class="c1"># 可以是任意不冲突路径。所有engine渲染页面都是以该路径开始</span>
+    <span class="n">url</span><span class="p">(</span><span class="s1">r&#39;^accounts/&#39;</span><span class="p">,</span><span class="n">include</span><span class="p">(</span><span class="n">director_urls</span><span class="p">)),</span> <span class="c1"># 是为了兼容django的login登录默认地址。</span>
+    <span class="o">...</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="table">
+<h3>table页面数据<a class="headerlink" href="#table" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">director.model_admin.tabel</span> <span class="k">import</span> <span class="n">ModelTable</span><span class="p">,</span><span class="n">RowSearch</span><span class="p">,</span><span class="n">RowFilter</span><span class="p">,</span><span class="n">RowSort</span>
+
+<span class="k">class</span> <span class="nc">BaseSearch</span><span class="p">(</span><span class="n">RowSearch</span><span class="p">):</span>
+    <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
+    <span class="n">model</span><span class="o">=</span><span class="n">BasicInfo</span>
+
+<span class="k">class</span> <span class="nc">BaseFilter</span><span class="p">(</span><span class="n">RowFilter</span><span class="p">):</span>
+    <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">,</span><span class="s1">&#39;age&#39;</span><span class="p">]</span>
+    <span class="n">model</span><span class="o">=</span><span class="n">BasicInfo</span>
+
+<span class="k">class</span> <span class="nc">BaseSort</span><span class="p">(</span><span class="n">RowSort</span><span class="p">):</span>
+    <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">,</span><span class="s1">&#39;age&#39;</span><span class="p">]</span>
+
+<span class="k">class</span> <span class="nc">BasicInfoTable</span><span class="p">(</span><span class="n">ModelTable</span><span class="p">):</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">BasicInfo</span>
+    <span class="n">search</span><span class="o">=</span><span class="n">BaseSearch</span>
+    <span class="n">filters</span> <span class="o">=</span> <span class="n">BaseFilter</span>
+    <span class="n">sort</span><span class="o">=</span><span class="n">BaseSort</span>
+    <span class="n">include</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">,</span><span class="s1">&#39;age&#39;</span><span class="p">,</span><span class="s1">&#39;user&#39;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">get_rows</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">query</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">get_query</span><span class="p">()</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">to_dict</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">filt_attr</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:{</span><span class="s1">&#39;user&#39;</span><span class="p">:</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">user</span><span class="p">)</span> <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">user</span> <span class="k">else</span> <span class="s1">&#39;---&#39;</span><span class="p">},</span> <span class="n">include</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">permited_fields</span><span class="p">())</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">query</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="fields">
+<h3>fields页面数据<a class="headerlink" href="#fields" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">director.model_admin.fields</span> <span class="k">import</span> <span class="n">ModelFields</span>
+
+<span class="k">class</span> <span class="nc">BasicInfoFields</span><span class="p">(</span><span class="n">ModelFields</span><span class="p">):</span>
+
+    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">model</span><span class="o">=</span><span class="n">BasicInfo</span>
+        <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">,</span><span class="s1">&#39;age&#39;</span><span class="p">,</span><span class="s1">&#39;user&#39;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">clean_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="tablefields">
+<h3>设置table和fields页面<a class="headerlink" href="#tablefields" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default"><div class="highlight"><pre><span></span>    <span class="kn">from</span> <span class="nn">director.model_admin.render</span> <span class="k">import</span> <span class="n">model_page_dc</span><span class="p">,</span><span class="n">model_dc</span>
+    <span class="c1"># 显示table的页面</span>
+    <span class="k">class</span> <span class="nc">BaseinfoTablePage</span><span class="p">(</span><span class="n">TablePage</span><span class="p">):</span>
+            <span class="n">tableCls</span><span class="o">=</span><span class="n">BasicInfoTable</span>
+
+    <span class="c1"># 用于修改单条记录的form页面</span>
+    <span class="k">class</span> <span class="nc">BaseinfoFormPage</span><span class="p">(</span><span class="n">FormPage</span><span class="p">):</span>
+            <span class="n">fieldsCls</span><span class="o">=</span><span class="n">BasicInfoFields</span>
+
+<span class="c1"># 将该fields注册为model的管理类</span>
+    <span class="n">model_dc</span><span class="p">[</span><span class="n">BasicInfo</span><span class="p">]</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;fields&#39;</span><span class="p">:</span><span class="n">BasicInfoFields</span><span class="p">}</span>
+
+    <span class="c1"># 该字典制定了配套的table页面和form页面，利用该字典，一般在table的第一个字段会生成指向form页面的链接。</span>
+    <span class="n">model_page_dc</span><span class="p">[</span><span class="s1">&#39;basicinfo&#39;</span><span class="p">]</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;table&#39;</span><span class="p">:</span><span class="n">BaseinfoTablePage</span><span class="p">,</span><span class="s1">&#39;form&#39;</span><span class="p">:</span><span class="n">BaseinfoFormPage</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id3">
+<h3>配置菜单<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<p>反查地址:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># menu可以用于构造左侧的导航栏菜单</span>
+<span class="n">menu</span> <span class="o">=</span><span class="p">[</span>
+        <span class="p">{</span><span class="o">...</span> <span class="p">,</span><span class="s1">&#39;url&#39;</span><span class="p">:</span><span class="k">lambda</span><span class="p">:</span> <span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;model_table&#39;</span><span class="p">,</span><span class="n">kwargs</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span><span class="s1">&#39;basicinfo&#39;</span><span class="p">})}</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id4">
+<h3>table前端<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<p>比较复杂</p>
+</div>
+<div class="section" id="id5">
+<h3>fields前端<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<p>fields前端只需要接受后端传来的 <em>heads</em>，<em>row</em> 两个参数。:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># put variable in Django Template</span>
+<span class="n">heads</span><span class="o">=</span><span class="p">{{</span><span class="n">heads</span> <span class="o">|</span> <span class="n">safe</span><span class="p">}}</span>
+<span class="n">row</span> <span class="o">=</span><span class="p">{{</span><span class="n">row</span> <span class="o">|</span> <span class="n">safe</span><span class="p">}}</span>
+
+<span class="c1"># in script section</span>
+<span class="n">kw</span><span class="o">=</span><span class="p">{</span>
+        <span class="n">errors</span><span class="p">:{},</span>
+        <span class="n">row</span><span class="p">:</span><span class="n">row</span><span class="p">,</span>
+        <span class="n">heads</span><span class="p">:</span><span class="n">heads</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="n">new</span> <span class="n">Vue</span><span class="p">({</span>
+        <span class="n">data</span><span class="p">:{</span>
+                <span class="n">kw</span><span class="p">:</span><span class="n">kw</span><span class="p">,</span>
+                <span class="p">},</span>
+<span class="p">})</span>
+
+<span class="c1"># in Body area，we organize and dispose these fileds</span>
+<span class="o">&lt;</span><span class="n">field</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;comment&#39;</span> <span class="p">:</span><span class="n">kw</span><span class="o">=</span><span class="s1">&#39;kw&#39;</span><span class="o">&gt;&lt;/</span><span class="n">field</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id6">
+<h3>fields前端保存<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<p>前端提交保存,如果验证错误，前端需要接受错误</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>// 提交保存
+var post_data=[{fun:&#39;save&#39;,row:row}]
+        $.post(&#39;&#39;,JSON.stringify(post_data),function (data) {
+                // judge if there is errors back from server
+                if(data.save.errors){
+                        update_vue_obj(self.kw.errors,data.save.errors)
+                }
+        })
+</pre></div>
+</div>
+<p>model_admin 利用port.py路由ajax请求，自动保存数据。</p>
+<ol class="arabic">
+<li><p class="first">webcode框架自动调用model_admin/ajax.py中的save函数进行保存。</p>
+</li>
+<li><p class="first">save函数会调用注册的fields.save_form()进行保存,该函数遵守webcode框架的permit权限。</p>
+</li>
+<li><p class="first">如果有问题，save_form以以下的数据格式返回错误:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">{</span>
+        <span class="n">name</span><span class="p">:</span><span class="s1">&#39;name must be input&#39;</span><span class="p">,</span>
+        <span class="n">age</span><span class="p">:</span><span class="s1">&#39;age must larger than 18&#39;</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="simple_fields.html" class="btn btn-neutral float-right" title="1.2. 表单简化版" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral" title="1. 模拟admin" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, coblan.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

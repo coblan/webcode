@@ -1,0 +1,326 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>3.3. js辅助函数 &mdash; webcode 1.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="webcode 1.0 documentation" href="../index.html"/>
+        <link rel="up" title="3. 前端" href="index.html"/>
+        <link rel="next" title="4. 前端uis" href="../uis/index.html"/>
+        <link rel="prev" title="3.2. ajax process" href="ajax_hook.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> webcode
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../admin/index.html">1. 模拟admin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../backend/index.html">2. 后端</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">3. 前端</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="fields.html">3.1. 表单</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ajax_hook.html">3.2. ajax process</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">3.3. js辅助函数</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#ex">3.3.1. ex</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#url-search">url search字符串</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id1">字符串处理</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#collection">集合collection操作</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id2">数组补充</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id3">资源加载</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#path">3.3.2. 其他path类函数</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../uis/index.html">4. 前端uis</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">webcode</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="index.html">3. 前端</a> &raquo;</li>
+      
+    <li>3.3. js辅助函数</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/frontend/exfun.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="js">
+<h1>3.3. js辅助函数<a class="headerlink" href="#js" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="ex">
+<h2>3.3.1. ex<a class="headerlink" href="#ex" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="url-search">
+<h3>url search字符串<a class="headerlink" href="#url-search" title="Permalink to this headline">¶</a></h3>
+<dl class="docutils">
+<dt>parseSearch(queryString)</dt>
+<dd><p class="first">&#64;queryString: &#8221;?name=dog&#8221; 或者 &#8220;name=dog&#8221;</p>
+<p class="last">rt ：js object</p>
+</dd>
+<dt>searchfy(obj,pre)</dt>
+<dd><p class="first">&#64;obj:js object
+&#64;pre:前面需要带上的字符，例如 ?</p>
+<p class="last">rt : &#8221;?name=dog&#8221; 或者&#8221;name=dog&#8221;</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="id1">
+<h3>字符串处理<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<dl class="docutils">
+<dt>template(string,args)</dt>
+<dd><p class="first">&#64;string: 字符串。
+&#64;args: js object或者js array</p>
+<p>rt: 经过render后的字符串</p>
+<p>example:</p>
+<div class="last highlight-default"><div class="highlight"><pre><span></span><span class="n">var</span> <span class="n">template1</span><span class="o">=</span><span class="s2">&quot;我是</span><span class="si">{0}</span><span class="s2">，今年</span><span class="si">{1}</span><span class="s2">了&quot;</span><span class="p">;</span>
+<span class="n">var</span> <span class="n">template2</span><span class="o">=</span><span class="s2">&quot;我是</span><span class="si">{name}</span><span class="s2">，今年</span><span class="si">{age}</span><span class="s2">了&quot;</span><span class="p">;</span>
+<span class="n">var</span> <span class="n">result1</span><span class="o">=</span><span class="n">ex</span><span class="o">.</span><span class="n">template</span><span class="p">(</span><span class="s2">&quot;我是</span><span class="si">{0}</span><span class="s2">，今年</span><span class="si">{1}</span><span class="s2">了&quot;</span><span class="p">,[</span><span class="s2">&quot;loogn&quot;</span><span class="p">,</span><span class="mi">22</span><span class="p">]);</span>
+<span class="n">var</span> <span class="n">result2</span><span class="o">=</span><span class="n">ex</span><span class="o">.</span><span class="n">template</span><span class="p">(</span><span class="s2">&quot;我是</span><span class="si">{name}</span><span class="s2">，今年</span><span class="si">{age}</span><span class="s2">了&quot;</span><span class="p">,{</span><span class="n">name</span><span class="p">:</span><span class="s1">&#39;loogn&#39;</span><span class="p">,</span><span class="n">age</span><span class="p">:</span><span class="mi">22</span><span class="p">})</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</div>
+<div class="section" id="collection">
+<h3>集合collection操作<a class="headerlink" href="#collection" title="Permalink to this headline">¶</a></h3>
+<p>collection 主要是指 object array</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">[{</span><span class="n">name</span><span class="p">:</span><span class="s1">&#39;hhh&#39;</span><span class="p">,</span><span class="n">label</span><span class="p">:</span><span class="s1">&#39;jj&#39;</span><span class="p">},</span>
+<span class="p">{</span><span class="n">name</span><span class="p">:</span><span class="s1">&#39;sff&#39;</span><span class="p">,</span><span class="n">label</span><span class="p">:</span><span class="s1">&#39;jjyy&#39;</span><span class="p">}]</span>
+</pre></div>
+</div>
+<dl class="docutils">
+<dt>merge(src1,src2)</dt>
+<dd><p class="first">&#64;src1,src2 都是 collection</p>
+<p>rt: 不会改变src1,src2,生成一个新的collection,利用 name属性作为基准，用到同名属性，利用src2的属性覆盖src1的相同属性。如果不同名的属性，都按src1，src2的值返回。</p>
+<p>example:</p>
+<div class="last highlight-default"><div class="highlight"><pre><span></span><span class="n">ex</span><span class="o">.</span><span class="n">merge</span><span class="p">([{</span><span class="n">name</span><span class="p">:</span><span class="s1">&#39;dog&#39;</span><span class="p">,</span><span class="n">age</span><span class="p">:</span><span class="s1">&#39;18&#39;</span><span class="p">}],[{</span><span class="n">name</span><span class="p">:</span><span class="s1">&#39;dog&#39;</span><span class="p">,</span><span class="n">label</span><span class="p">:</span><span class="s1">&#39;dog_label&#39;</span><span class="p">}])</span>
+<span class="o">&gt;&gt;</span> <span class="p">[{</span><span class="n">name</span><span class="p">:</span><span class="s1">&#39;dog&#39;</span><span class="p">,</span><span class="n">age</span><span class="p">:</span><span class="s1">&#39;18&#39;</span><span class="p">,</span><span class="n">label</span><span class="p">:</span><span class="s1">&#39;dog_label&#39;</span><span class="p">}]</span>
+</pre></div>
+</div>
+</dd>
+<dt>findone (collection,obj)</dt>
+<dd><p class="first">&#64;collection : collection (obj array)
+&#64;obj : 查询条件对象</p>
+<p class="last">rt : null 或者 js object
+利用obj，在collection中查询“一个”满足要求的 对象</p>
+</dd>
+<dt>find(collection,obj)</dt>
+<dd><p class="first">&#64;collection: object array
+&#64;obj : 查询条件对象</p>
+<p>rt: array</p>
+<p class="last">利用查询条件obj，查出所有满足要求的object</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="id2">
+<h3>数组补充<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<dl class="docutils">
+<dt>product (src1,src2)</dt>
+<dd><p class="first">&#64;src1,src2 都是array，</p>
+<p class="last">该函数作用是返回两个数组的笛卡尔积组成的pair数组</p>
+</dd>
+<dt>assign(dst,src)</dt>
+<dd><p class="first">&#64;dst,src 都是js object</p>
+<p class="last">将src的所有属性赋予dst</p>
+</dd>
+<dt>each (array,func)</dt>
+<dd><p class="first">&#64;array: 数组
+&#64;func: 回调,传入参数为array的元素</p>
+<p>example:</p>
+<div class="last highlight-default"><div class="highlight"><pre><span></span><span class="n">ex</span><span class="o">.</span><span class="n">each</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span><span class="n">function</span><span class="p">(</span><span class="n">v</span><span class="p">){</span><span class="n">v</span><span class="o">*</span><span class="mi">2</span><span class="p">})</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</div>
+<div class="section" id="id3">
+<h3>资源加载<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<dl class="docutils">
+<dt>loadjs(src,success)</dt>
+<dd><p class="first">&#64;src: 地址
+&#64;success: 回调函数,没有传入参数</p>
+<p class="last">优势是，只会加载一次，不会重复加载</p>
+</dd>
+<dt>loadcss (src)</dt>
+<dd>&#64;src: 地址</dd>
+</dl>
+</div>
+</div>
+<div class="section" id="path">
+<h2>3.3.2. 其他path类函数<a class="headerlink" href="#path" title="Permalink to this headline">¶</a></h2>
+<p>String.prototype.startsWith</p>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../uis/index.html" class="btn btn-neutral float-right" title="4. 前端uis" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="ajax_hook.html" class="btn btn-neutral" title="3.2. ajax process" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, coblan.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

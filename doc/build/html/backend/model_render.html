@@ -1,0 +1,277 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>2.1. model页面engine &mdash; webcode 1.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="webcode 1.0 documentation" href="../index.html"/>
+        <link rel="up" title="2. 后端" href="index.html"/>
+        <link rel="next" title="2.2. 权限" href="permission.html"/>
+        <link rel="prev" title="2. 后端" href="index.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> webcode
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../admin/index.html">1. 模拟admin</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">2. 后端</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">2.1. model页面engine</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">2.1.1. 启用</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#page">2.1.2. page页面</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="permission.html">2.2. 权限</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../frontend/index.html">3. 前端</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../uis/index.html">4. 前端uis</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">webcode</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="index.html">2. 后端</a> &raquo;</li>
+      
+    <li>2.1. model页面engine</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/backend/model_render.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="modelengine">
+<span id="model-render"></span><h1>2.1. model页面engine<a class="headerlink" href="#modelengine" title="Permalink to this headline">¶</a></h1>
+<p>为了模仿django admin的功能，根据在admin.py中注册的page，自动生成model列表页面，管理form页面。</p>
+<div class="section" id="id1">
+<h2>2.1.1. 启用<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p class="first">配置url:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">director</span> <span class="k">import</span> <span class="n">urls</span> <span class="k">as</span> <span class="n">director_urls</span>
+<span class="n">urlpatterns</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">url</span><span class="p">(</span><span class="s1">r&#39;^d/&#39;</span><span class="p">,</span><span class="n">include</span><span class="p">(</span><span class="n">director_urls</span><span class="p">)),</span>  <span class="c1"># 可以是任意不冲突路径。所有engine渲染页面都是以该路径开始</span>
+    <span class="n">url</span><span class="p">(</span><span class="s1">r&#39;^accounts/&#39;</span><span class="p">,</span><span class="n">include</span><span class="p">(</span><span class="n">director_urls</span><span class="p">)),</span> <span class="c1"># 是为了兼容django的login登录默认地址。</span>
+    <span class="o">...</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">配置页面:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>    <span class="c1"># 显示table的页面</span>
+<span class="k">class</span> <span class="nc">BaseinfoTablePage</span><span class="p">(</span><span class="n">TablePage</span><span class="p">):</span>
+    <span class="n">tableCls</span><span class="o">=</span><span class="n">BasicInfoTable</span>
+
+    <span class="c1"># 用于修改单条记录的form页面</span>
+<span class="k">class</span> <span class="nc">BaseinfoFormPage</span><span class="p">(</span><span class="n">FormPage</span><span class="p">):</span>
+    <span class="n">fieldsCls</span><span class="o">=</span><span class="n">BasicInfoFields</span>
+
+    <span class="n">model_page_dc</span><span class="p">[</span><span class="s1">&#39;basicinfo&#39;</span><span class="p">]</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;table&#39;</span><span class="p">:</span><span class="n">BaseinfoTablePage</span><span class="p">,</span><span class="s1">&#39;form&#39;</span><span class="p">:</span><span class="n">BaseinfoFormPage</span><span class="p">}</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<p>该字典制定了配套的table页面和form页面，利用该字典，一般在table的第一个字段会生成指向form页面的链接。</p>
+<ul>
+<li><p class="first">配置菜单，反查地址:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="s1">&#39;url&#39;</span><span class="p">:</span><span class="k">lambda</span><span class="p">:</span> <span class="n">reverse</span><span class="p">(</span><span class="s1">&#39;model_table&#39;</span><span class="p">,</span><span class="n">kwargs</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span><span class="s1">&#39;basicinfo&#39;</span><span class="p">})</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<p>该url可以用于构造左侧的导航栏菜单。</p>
+</div>
+<div class="section" id="page">
+<h2>2.1.2. page页面<a class="headerlink" href="#page" title="Permalink to this headline">¶</a></h2>
+<p>页面的作用就是把各个context组织起来，结合设置的template一起，渲染成web页面</p>
+<ul>
+<li><p class="first">table页面:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">TablePage</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="n">template</span><span class="o">=</span><span class="s1">&#39;table.html&#39;</span>
+    <span class="n">tableCls</span><span class="o">=</span><span class="s1">&#39;&#39;</span>
+    <span class="n">ajax_scope</span><span class="o">=</span><span class="p">{}</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">fields页面:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">FormPage</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="n">template</span><span class="o">=</span><span class="s1">&#39;fields.html&#39;</span>
+    <span class="n">fieldsCls</span><span class="o">=</span><span class="s1">&#39;&#39;</span>
+    <span class="n">ajax_scope</span><span class="o">=</span><span class="p">{}</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<p>更加深度的定制，只需要重写get_context()即可，具体见源代码。</p>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="permission.html" class="btn btn-neutral float-right" title="2.2. 权限" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral" title="2. 后端" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, coblan.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

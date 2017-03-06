@@ -252,8 +252,25 @@ var table_fun={
 					return v!='-'+name && v!=name
 				})
 			return ls.join(',')
-		}
-	}
+		},
+        map:function(name,row){
+            var content=row[name]
+
+            if(name==heads[0].name){
+                return ex.template('<a href="edit/{pk}?next={next}">{value}</a>',
+                    {	pk:row.pk,
+                        next:btoa(location.href),
+                        value:row[name]
+                    })
+            }else if(content===true){
+                return '<img src="http://res.enjoyst.com/true.png" width="15px" />'
+            }else if(content===false){
+                return '<img src="http://res.enjoyst.com/false.png" width="15px" />'
+            }else{
+                return content
+            }
+        }
+	},
 
 }
 
@@ -326,6 +343,7 @@ document.write(`
 	}
 </style>
 `)
+
 
 
 window.table_fun=table_fun

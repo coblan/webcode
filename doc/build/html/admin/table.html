@@ -1,0 +1,373 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>1.4. table &mdash; webcode 1.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="webcode 1.0 documentation" href="../index.html"/>
+        <link rel="up" title="1. 模拟admin" href="index.html"/>
+        <link rel="next" title="1.5. 权限控制" href="permit.html"/>
+        <link rel="prev" title="1.3. fields后端" href="fields.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> webcode
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">1. 模拟admin</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="example.html">1.1. 基本样例</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simple_fields.html">1.2. 表单简化版</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fields.html">1.3. fields后端</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">1.4. table</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#example">1.4.1. Example</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id1">1.4.2. 后端输出</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id2">1.4.3. 前端接收</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#page-num">1.4.4. page-num</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="permit.html">1.5. 权限控制</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../backend/index.html">2. 后端</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../frontend/index.html">3. 前端</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../uis/index.html">4. 前端uis</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">webcode</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="index.html">1. 模拟admin</a> &raquo;</li>
+      
+    <li>1.4. table</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/admin/table.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="table">
+<h1>1.4. table<a class="headerlink" href="#table" title="Permalink to this headline">¶</a></h1>
+<p>table.py的功能是组织数据表，也就是多条记录的显示。主要功能有:</p>
+<ul class="simple">
+<li>sort</li>
+<li>filter (根据字段过滤)</li>
+<li>search (根据字段搜索)</li>
+<li>pagenations 分页</li>
+</ul>
+<div class="section" id="example">
+<h2>1.4.1. Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
+<p>建议在admin.py文件中设置与model相关的Table:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">director.model_admin.tabel</span> <span class="k">import</span> <span class="n">ModelTable</span><span class="p">,</span><span class="n">RowSearch</span><span class="p">,</span><span class="n">RowFilter</span><span class="p">,</span><span class="n">RowSort</span>
+
+<span class="k">class</span> <span class="nc">BaseSearch</span><span class="p">(</span><span class="n">RowSearch</span><span class="p">):</span>
+    <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
+    <span class="n">model</span><span class="o">=</span><span class="n">BasicInfo</span>
+
+<span class="k">class</span> <span class="nc">BaseFilter</span><span class="p">(</span><span class="n">RowFilter</span><span class="p">):</span>
+    <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">,</span><span class="s1">&#39;age&#39;</span><span class="p">]</span>
+    <span class="n">model</span><span class="o">=</span><span class="n">BasicInfo</span>
+
+<span class="k">class</span> <span class="nc">BaseSort</span><span class="p">(</span><span class="n">RowSort</span><span class="p">):</span>
+    <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">,</span><span class="s1">&#39;age&#39;</span><span class="p">]</span>
+
+<span class="k">class</span> <span class="nc">BasicInfoTable</span><span class="p">(</span><span class="n">ModelTable</span><span class="p">):</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">BasicInfo</span>
+    <span class="n">search</span><span class="o">=</span><span class="n">BaseSearch</span>
+    <span class="n">filters</span> <span class="o">=</span> <span class="n">BaseFilter</span>
+    <span class="n">sort</span><span class="o">=</span><span class="n">BaseSort</span>
+    <span class="n">include</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">,</span><span class="s1">&#39;age&#39;</span><span class="p">,</span><span class="s1">&#39;user&#39;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">get_rows</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">query</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">get_query</span><span class="p">()</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">to_dict</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">filt_attr</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:{</span><span class="s1">&#39;user&#39;</span><span class="p">:</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">user</span><span class="p">)</span> <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">user</span> <span class="k">else</span> <span class="s1">&#39;---&#39;</span><span class="p">},</span> <span class="n">include</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">permited_fields</span><span class="p">())</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">query</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id1">
+<h2>1.4.2. 后端输出<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_context</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s1">&#39;heads&#39;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">get_heads</span><span class="p">(),</span>
+        <span class="s1">&#39;rows&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_rows</span><span class="p">(),</span>
+        <span class="s1">&#39;row_pages&#39;</span> <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">pagenum</span><span class="o">.</span><span class="n">get_context</span><span class="p">(),</span>
+        <span class="s1">&#39;row_sort&#39;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">row_sort</span><span class="o">.</span><span class="n">get_context</span><span class="p">(),</span>
+        <span class="s1">&#39;row_filters&#39;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">row_filter</span><span class="o">.</span><span class="n">get_context</span><span class="p">(),</span>
+        <span class="s1">&#39;placeholder&#39;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">row_search</span><span class="o">.</span><span class="n">get_context</span><span class="p">(),</span>
+        <span class="s1">&#39;model&#39;</span><span class="p">:</span><span class="n">model_to_name</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">),</span>
+    <span class="p">}</span>
+</pre></div>
+</div>
+<p>数据结构:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>    <span class="n">heads</span><span class="o">=</span><span class="p">[</span>
+            <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;</span><span class="se">\u59d3\u540d</span><span class="s2">&quot;</span><span class="p">},</span>
+            <span class="p">{</span><span class="s2">&quot;sortable&quot;</span><span class="p">:</span> <span class="n">true</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;age&quot;</span><span class="p">,</span> <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;</span><span class="se">\u5e74\u9f84</span><span class="s2">&quot;</span><span class="p">}</span>
+            <span class="p">]</span>
+    <span class="n">rows</span><span class="o">=</span><span class="p">[</span>
+            <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;heyul0&quot;</span><span class="p">,</span> <span class="s2">&quot;age&quot;</span><span class="p">:</span> <span class="s2">&quot;32&quot;</span><span class="p">,</span> <span class="s2">&quot;user&quot;</span><span class="p">:</span> <span class="n">null</span><span class="p">,</span> <span class="s2">&quot;pk&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;_class&quot;</span><span class="p">:</span> <span class="s2">&quot;user_admin.BasicInfo&quot;</span><span class="p">,</span> <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
+            <span class="p">]</span>
+    <span class="n">row_pages</span><span class="o">=</span><span class="p">{</span>
+            <span class="s1">&#39;options&#39;</span><span class="p">:[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="o">...</span><span class="p">,</span><span class="mi">100</span><span class="p">],</span>
+    <span class="s1">&#39;crt_page&#39;</span><span class="p">:</span><span class="mi">2</span>
+    <span class="p">}</span>
+<span class="n">row_sort</span><span class="o">=</span><span class="p">{</span>
+    <span class="s1">&#39;sortable&#39;</span><span class="p">:[</span><span class="n">name</span><span class="p">,</span><span class="n">age</span><span class="p">],</span> <span class="c1"># self.valid_name,</span>
+    <span class="s1">&#39;sorted&#39;</span><span class="p">:</span><span class="s1">&#39;-age,name&#39;</span> <span class="c1"># self.sort_args}</span>
+    <span class="p">}</span>
+<span class="n">row_filters</span><span class="o">=</span><span class="p">[</span>
+    <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span><span class="s1">&#39;name&#39;</span><span class="p">,</span><span class="s1">&#39;label&#39;</span><span class="p">:</span><span class="s1">&#39;姓名&#39;</span><span class="p">,</span><span class="s1">&#39;option&#39;</span><span class="p">:[{</span><span class="n">value</span><span class="p">:</span><span class="n">xxx</span><span class="p">,</span><span class="n">label</span><span class="p">:</span><span class="n">xxx</span><span class="p">},]},</span>
+    <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span><span class="s1">&#39;age&#39;</span><span class="p">,</span><span class="s1">&#39;label&#39;</span><span class="p">:</span><span class="s1">&#39;年龄&#39;</span><span class="p">,</span><span class="s1">&#39;option&#39;</span><span class="p">:[{</span><span class="n">value</span><span class="p">:</span><span class="n">xxx</span><span class="p">,</span><span class="n">label</span><span class="p">:</span><span class="n">xxx</span><span class="p">},]}</span>
+    <span class="p">]</span>
+<span class="n">placeholder</span><span class="o">=</span><span class="s1">&#39;input your name or age&#39;</span>
+<span class="n">model</span><span class="o">=</span><span class="s1">&#39;user_admin.basicInfo&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id2">
+<h2>1.4.3. 前端接收<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">heads</span><span class="o">=</span><span class="p">{{</span> <span class="n">heads</span> <span class="o">|</span> <span class="n">jsonify</span> <span class="o">|</span> <span class="n">default</span><span class="p">:</span><span class="s1">&#39;[]&#39;</span><span class="p">}}</span>
+<span class="n">rows</span><span class="o">=</span><span class="p">{{</span> <span class="n">rows</span> <span class="o">|</span> <span class="n">jsonify</span> <span class="o">|</span> <span class="n">default</span><span class="p">:</span><span class="s1">&#39;[]&#39;</span><span class="p">}}</span>
+<span class="n">row_pages</span> <span class="o">=</span> <span class="p">{{</span> <span class="n">row_pages</span> <span class="o">|</span> <span class="n">jsonify</span><span class="p">}}</span>
+<span class="n">row_filters</span><span class="o">=</span><span class="p">{{</span><span class="n">row_filters</span> <span class="o">|</span> <span class="n">jsonify</span> <span class="p">}}</span>
+<span class="n">row_sort</span><span class="o">=</span><span class="p">{{</span><span class="n">row_sort</span> <span class="o">|</span> <span class="n">jsonify</span> <span class="o">|</span> <span class="n">default</span><span class="p">:</span><span class="s1">&#39;[]&#39;</span> <span class="p">}}</span>
+<span class="n">placeholder</span> <span class="o">=</span> <span class="s1">&#39;{{placeholder |default:&quot;&quot;}}&#39;</span>
+<span class="n">model</span> <span class="o">=</span><span class="s2">&quot;{{ model }}&quot;</span>
+<span class="n">url_args</span><span class="o">=</span><span class="n">ex</span><span class="o">.</span><span class="n">parseSearch</span><span class="p">()</span>
+<span class="o">//</span>      <span class="n">search字段从</span> <span class="n">url_args</span><span class="o">.</span><span class="n">_q</span> <span class="n">来取值</span>
+
+<span class="o">//</span> <span class="n">Vuejs</span>
+<span class="n">data</span><span class="p">:{</span>
+<span class="n">heads</span><span class="p">:</span><span class="n">heads</span><span class="p">,</span>
+<span class="n">rows</span><span class="p">:</span><span class="n">rows</span><span class="p">,</span>
+<span class="n">crt_page</span><span class="p">:{},</span>
+<span class="n">row_filters</span><span class="p">:</span><span class="n">row_filters</span><span class="p">,</span>
+<span class="n">row_sort</span><span class="p">:</span><span class="n">row_sort</span><span class="p">,</span>
+<span class="n">row_pages</span><span class="p">:</span><span class="n">row_pages</span><span class="p">,</span>
+<span class="n">placeholder</span><span class="p">:</span><span class="n">placeholder</span><span class="p">,</span>
+<span class="n">selected</span><span class="p">:[],</span>
+<span class="n">del_info</span><span class="p">:[],</span>
+<span class="n">menu</span><span class="p">:</span><span class="n">menu</span><span class="p">,</span>
+<span class="n">can_add</span><span class="p">:</span><span class="n">false</span><span class="p">,</span>
+<span class="n">can_del</span><span class="p">:</span><span class="n">false</span><span class="p">,</span>
+<span class="n">model</span><span class="p">:</span><span class="n">model</span><span class="p">,</span>
+<span class="n">url_args</span><span class="p">:</span><span class="n">url_args</span><span class="p">,</span>
+<span class="p">},</span>
+<span class="n">mixins</span><span class="p">:[</span><span class="n">table_fun</span><span class="p">],</span>
+</pre></div>
+</div>
+<p><strong>mix</strong> :table_fun 引入了：</p>
+<ul>
+<li><dl class="first docutils">
+<dt>is_sorted(row_sort.sort_str ,head.name )</dt>
+<dd><p class="first last">判断字段是否已排序</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>toggle( row_sort.sort_str,head.name)</dt>
+<dd><p class="first last">切换字段排序方向，返回重拍的sort_str</p>
+</dd>
+</dl>
+</li>
+</ul>
+<p>其他的例如remove函数，sort-mark内部使用，外部可以不用。:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">thead</span><span class="o">&gt;</span>
+        <span class="o">&lt;</span><span class="n">tr</span> <span class="o">&gt;</span>
+                <span class="o">&lt;</span><span class="n">td</span> <span class="n">style</span><span class="o">=</span><span class="s1">&#39;width:50px&#39;</span> <span class="n">v</span><span class="o">-</span><span class="k">if</span><span class="o">=</span><span class="s1">&#39;selected&#39;</span><span class="o">&gt;</span>
+                        <span class="o">&lt;</span><span class="nb">input</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;checkbox&quot;</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;test&quot;</span> <span class="n">value</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="o">/&gt;</span>
+                <span class="o">&lt;/</span><span class="n">td</span><span class="o">&gt;</span>
+                <span class="o">&lt;</span><span class="n">td</span> <span class="n">v</span><span class="o">-</span><span class="k">for</span><span class="o">=</span><span class="s1">&#39;head in heads&#39;</span> <span class="p">:</span><span class="n">class</span><span class="o">=</span><span class="s1">&#39;[&quot;td_&quot;+head.name,{&quot;selected&quot;:is_sorted(row_sort.sort_str ,head.name )}]&#39;</span><span class="o">&gt;</span>
+                        <span class="o">&lt;</span><span class="n">span</span> <span class="n">v</span><span class="o">-</span><span class="k">if</span><span class="o">=</span><span class="s1">&#39;ex.isin(head.name,row_sort.sortable)&#39;</span> <span class="n">v</span><span class="o">-</span><span class="n">text</span><span class="o">=</span><span class="s1">&#39;head.label&#39;</span> <span class="n">class</span><span class="o">=</span><span class="s1">&#39;clickable&#39;</span>
+                                <span class="nd">@click</span><span class="o">=</span><span class="s1">&#39;row_sort.sort_str = toggle( row_sort.sort_str,head.name)&#39;</span><span class="o">&gt;&lt;/</span><span class="n">span</span><span class="o">&gt;</span>
+                        <span class="o">&lt;</span><span class="n">span</span> <span class="n">v</span><span class="o">-</span><span class="k">else</span> <span class="n">v</span><span class="o">-</span><span class="n">text</span><span class="o">=</span><span class="s1">&#39;head.label&#39;</span><span class="o">&gt;&lt;/</span><span class="n">span</span><span class="o">&gt;</span>
+                        <span class="o">&lt;</span><span class="n">sort</span><span class="o">-</span><span class="n">mark</span> <span class="n">class</span><span class="o">=</span><span class="s1">&#39;sort-mark&#39;</span> <span class="n">v</span><span class="o">-</span><span class="n">model</span><span class="o">=</span><span class="s1">&#39;row_sort.sort_str&#39;</span> <span class="p">:</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;head.name&#39;</span><span class="o">&gt;&lt;/</span><span class="n">sort</span><span class="o">-</span><span class="n">mark</span><span class="o">&gt;</span>
+                <span class="o">&lt;/</span><span class="n">td</span><span class="o">&gt;</span>
+        <span class="o">&lt;/</span><span class="n">tr</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="n">thead</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="page-num">
+<h2>1.4.4. page-num<a class="headerlink" href="#page-num" title="Permalink to this headline">¶</a></h2>
+<p>useage:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">paginator</span> <span class="p">:</span><span class="n">nums</span><span class="o">=</span><span class="s1">&#39;row_pages.options&#39;</span> <span class="p">:</span><span class="n">crt</span><span class="o">=</span><span class="s1">&#39;row_pages.crt_page&#39;</span> <span class="nd">@goto_page</span><span class="o">=</span><span class="s1">&#39;goto_page($event)&#39;</span><span class="o">&gt;&lt;/</span><span class="n">paginator</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<dl class="docutils">
+<dt>nums:</dt>
+<dd><p class="first">formate:[&#8216;1&#8217;,&#8217;...&#8217;,&#8216;6&#8217;,&#8216;7&#8217;,&#8216;8&#8217;,&#8217;...&#8217;,&#8216;999&#8217;]</p>
+<p class="last">由django pagenations 生成，再转换为number list.</p>
+</dd>
+</dl>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="permit.html" class="btn btn-neutral float-right" title="1.5. 权限控制" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="fields.html" class="btn btn-neutral" title="1.3. fields后端" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, coblan.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

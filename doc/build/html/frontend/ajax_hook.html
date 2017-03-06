@@ -1,0 +1,255 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>3.2. ajax process &mdash; webcode 1.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="webcode 1.0 documentation" href="../index.html"/>
+        <link rel="up" title="3. 前端" href="index.html"/>
+        <link rel="next" title="3.3. js辅助函数" href="exfun.html"/>
+        <link rel="prev" title="3.1. 表单" href="fields.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> webcode
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../admin/index.html">1. 模拟admin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../backend/index.html">2. 后端</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">3. 前端</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="fields.html">3.1. 表单</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">3.2. ajax process</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#functions">3.2.1. functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#using">3.2.2. Using</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="exfun.html">3.3. js辅助函数</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../uis/index.html">4. 前端uis</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">webcode</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="index.html">3. 前端</a> &raquo;</li>
+      
+    <li>3.2. ajax process</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/frontend/ajax_hook.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="ajax-process">
+<h1>3.2. ajax process<a class="headerlink" href="#ajax-process" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="functions">
+<h2>3.2.1. functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
+<p>There has a lot of place need to pay attention to in Ajax communication.For example:Error handle,CSRS process and so on.
+I wrap these function in one module.</p>
+<ul>
+<li><dl class="first docutils">
+<dt>hook_ajax_msg</dt>
+<dd><div class="first last line-block">
+<div class="line">message handler,include <em>beforeunload</em>,*ajaxSuccess*,*ajaxError*</div>
+<div class="line">already call <strong>hook_ajax_csrf</strong> at finally</div>
+</div>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>hook_ajax_csrf</dt>
+<dd><p class="first last">specifically used for django backend. Adding csrf information to http header for pass the csrf checking of django.</p>
+</dd>
+</dl>
+</li>
+<li><p class="first">show_upload</p>
+</li>
+<li><dl class="first docutils">
+<dt>hide_upload</dt>
+<dd><p class="first last">show and hide submit model window.Can be used when submit to server.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div>
+<div class="section" id="using">
+<h2>3.2.2. Using<a class="headerlink" href="#using" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li>create js file,and import function from these module.</li>
+<li>compile with webpack to generate a XXX.pack.js</li>
+</ol>
+<p>All function has been include in <span class="xref std std-ref">fields-js</span>.</p>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="exfun.html" class="btn btn-neutral float-right" title="3.3. js辅助函数" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="fields.html" class="btn btn-neutral" title="3.1. 表单" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, coblan.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

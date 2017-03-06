@@ -1,0 +1,258 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>1. 模拟admin &mdash; webcode 1.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="webcode 1.0 documentation" href="../index.html"/>
+        <link rel="next" title="1.1. 基本样例" href="example.html"/>
+        <link rel="prev" title="Welcome to webcode’s documentation!" href="../index.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> webcode
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">1. 模拟admin</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="example.html">1.1. 基本样例</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simple_fields.html">1.2. 表单简化版</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fields.html">1.3. fields后端</a></li>
+<li class="toctree-l2"><a class="reference internal" href="table.html">1.4. table</a></li>
+<li class="toctree-l2"><a class="reference internal" href="permit.html">1.5. 权限控制</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../backend/index.html">2. 后端</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../frontend/index.html">3. 前端</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../uis/index.html">4. 前端uis</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">webcode</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+    <li>1. 模拟admin</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/admin/index.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="admin">
+<h1>1. 模拟admin<a class="headerlink" href="#admin" title="Permalink to this headline">¶</a></h1>
+<p>包地址:helpers.director</p>
+<p>webcode的model_admin模块，模拟django的admin，但是更加灵活。</p>
+<p>主要元素有:</p>
+<dl class="docutils">
+<dt>render:</dt>
+<dd>路由请求到table_page,form_page,del_page</dd>
+<dt>page:</dt>
+<dd>代表一个web页面，最主要属性有:template，get_context()</dd>
+<dt>fields:</dt>
+<dd>代表一个form表单，管理数据表的row的显示与修改等。</dd>
+<dt>table:</dt>
+<dd>显示一个数据表row的列表，具备搜索，过滤，排序，分页功能。</dd>
+</dl>
+<p>三个重要的字典</p>
+<dl class="docutils">
+<dt>permit_list.append(SalaryRecords)</dt>
+<dd>接受Model对象，自动生成权限选项。</dd>
+<dt>model_dc[BasicInfo]={&#8216;fields&#8217;:BasicInfoFields}</dt>
+<dd>定义Model的编辑管理类，如果遇到save函数，将根据该字典查询，获取编辑类，进行验证。</dd>
+<dt>model_page_dc[&#8216;basicinfo&#8217;]={&#8216;table&#8217;:BaseinfoTablePage,&#8217;form&#8217;:BaseinfoFormPage}</dt>
+<dd>给director路由使用，一般的model都具备列表页面和编辑表单页面。</dd>
+</dl>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="example.html">1.1. 基本样例</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="example.html#id2">1.1.1. 完整样例</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="simple_fields.html">1.2. 表单简化版</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fields.html">1.3. fields后端</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="fields.html#id2">1.3.1. 自定义保存</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="table.html">1.4. table</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="table.html#example">1.4.1. Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="table.html#id1">1.4.2. 后端输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="table.html#id2">1.4.3. 前端接收</a></li>
+<li class="toctree-l2"><a class="reference internal" href="table.html#page-num">1.4.4. page-num</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="permit.html">1.5. 权限控制</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="permit.html#model">1.5.1. model表的数据结构</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="example.html" class="btn btn-neutral float-right" title="1.1. 基本样例" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../index.html" class="btn btn-neutral" title="Welcome to webcode’s documentation!" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, coblan.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

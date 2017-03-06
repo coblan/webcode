@@ -36,4 +36,3 @@ nosetests.xml
 .pydevproject
 .idea
 node_modules
-doc/build

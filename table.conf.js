@@ -40,12 +40,12 @@ module.exports =
     //    new ExtractTextPlugin("styles.css")
     //],
     module: {
-	  loaders: [
+	  rules: [
 	    {
 	      test: /\.js$/,
 	      exclude: /(node_modules|bower_components)/,
-	      //loader:'babel-loader'
-	      loader: 'babel', // 'babel-loader' is also a legal name to reference
+	      loader:'babel-loader',
+	      //loader: 'babel', // 'babel-loader' is also a legal name to reference
 	      query: {
 	        presets: ['es2015']
 	      }
