@@ -1,0 +1,377 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>2.2. table后端 &mdash; webcode 1.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="webcode 1.0 documentation" href="../index.html"/>
+        <link rel="up" title="2. 后端" href="index.html"/>
+        <link rel="next" title="2.3. model页面engine" href="model_render.html"/>
+        <link rel="prev" title="2.1. fields后端" href="fields.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> webcode
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../example/index.html">1. 样例</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">2. 后端</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="fields.html">2.1. fields后端</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">2.2. table后端</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#example">2.2.1. Example</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#backend">BackEnd</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#frontend">FrontEnd</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#id1">2.2.2. table</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#page-num">2.2.3. page-num</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#custom">2.2.4. custom</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="model_render.html">2.3. model页面engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="permission.html">2.4. 权限</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../frontend/index.html">3. 前端</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../uis/index.html">4. uis</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">webcode</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="index.html">2. 后端</a> &raquo;</li>
+      
+    <li>2.2. table后端</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/backend/table.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="table">
+<span id="table-backend"></span><h1>2.2. table后端<a class="headerlink" href="#table" title="Permalink to this headline">¶</a></h1>
+<p>table.py的功能是组织数据表，也就是多条记录的显示。主要功能有:</p>
+<ul class="simple">
+<li>sort</li>
+<li>filter (根据字段过滤)</li>
+<li>search (根据字段搜索)</li>
+<li>pagenations 分页</li>
+</ul>
+<p>In my design,there has three Components.table,filter and pagenations.All Components <strong>tied by data</strong>,so they can be used alone.</p>
+<div class="section" id="example">
+<h2>2.2.1. Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="backend">
+<h3>BackEnd<a class="headerlink" href="#backend" title="Permalink to this headline">¶</a></h3>
+<p>建议在admin.py文件中设置与model相关的Table:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">PageTable</span><span class="p">(</span><span class="n">ModelTable</span><span class="p">):</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">MobilePage</span>
+    <span class="n">sortable</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">,</span><span class="s1">&#39;label&#39;</span><span class="p">]</span>
+    <span class="n">filters</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">,</span><span class="s1">&#39;label&#39;</span><span class="p">]</span>
+    <span class="n">include</span><span class="o">=</span> <span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">,</span><span class="s1">&#39;label&#39;</span><span class="p">]</span>
+    <span class="n">search_fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
+    <span class="n">per_page</span><span class="o">=</span><span class="mi">2</span>
+</pre></div>
+</div>
+<dl class="docutils">
+<dt>Must field:</dt>
+<dd>model,include</dd>
+<dt>optional:</dt>
+<dd>sortable: 用于排序，排序按钮显示在table head处
+filter: used to filter ,
+per_page: defaut is 30</dd>
+</dl>
+</div>
+<div class="section" id="frontend">
+<span id="table-front"></span><h3>FrontEnd<a class="headerlink" href="#frontend" title="Permalink to this headline">¶</a></h3>
+<ul>
+<li><p class="first">recieve data from django:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">filters</span><span class="o">=</span><span class="p">{{</span><span class="n">filters</span> <span class="o">|</span> <span class="n">safe</span> <span class="p">}}</span>
+<span class="n">q</span><span class="o">=</span><span class="s1">&#39;{{q | safe |default:&quot;&quot;}}&#39;</span>
+<span class="n">sort</span><span class="o">=</span><span class="p">{{</span><span class="n">sort</span> <span class="o">|</span> <span class="n">safe</span> <span class="p">}}</span>
+<span class="n">heads</span><span class="o">=</span><span class="p">{{</span> <span class="n">heads</span> <span class="o">|</span> <span class="n">safe</span> <span class="p">}}</span>
+<span class="n">rows</span><span class="o">=</span><span class="p">{{</span> <span class="n">rows</span> <span class="o">|</span> <span class="n">safe</span> <span class="p">}}</span>
+<span class="n">page_nums</span> <span class="o">=</span> <span class="p">{{</span> <span class="n">page_nums</span> <span class="o">|</span> <span class="n">safe</span><span class="p">}}</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">put those variable into Vue data section,and add <strong>build_table_args</strong> MIXIN to manage url argments:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">data</span><span class="p">:{</span>
+        <span class="n">heads</span><span class="p">:</span><span class="n">heads</span><span class="p">,</span>
+        <span class="n">rows</span><span class="p">:</span><span class="n">rows</span><span class="p">,</span>
+        <span class="n">crt_page</span><span class="p">:{},</span>
+        <span class="n">filters</span><span class="p">:</span><span class="n">filters</span><span class="p">,</span>
+        <span class="n">sort</span><span class="p">:</span><span class="n">sort</span><span class="p">,</span>
+        <span class="n">page_nums</span><span class="p">:</span><span class="n">page_nums</span><span class="p">,</span>
+        <span class="n">q</span><span class="p">:</span><span class="n">q</span>
+<span class="p">},</span>
+<span class="n">mixins</span><span class="p">:[</span><span class="n">build_table_args</span><span class="p">],</span>
+<span class="o">//</span> <span class="n">now</span> <span class="p">,</span><span class="n">you</span> <span class="n">only</span> <span class="n">need</span> <span class="n">bind</span> <span class="n">search</span> <span class="n">button</span> <span class="s1">&#39;s click event to search function of build_table_args mixin</span>
+<span class="o">//</span> <span class="n">other</span> <span class="n">argments</span> <span class="n">will</span> <span class="n">fetch</span> <span class="ow">and</span> <span class="n">convert</span> <span class="n">to</span> <span class="n">url</span> <span class="n">argments</span> <span class="n">string</span> <span class="n">by</span> <span class="n">build_table_args</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">filter,q,sort, must not change,for build_table_args will reference it by name.</p>
+</div>
+<ul>
+<li><p class="first">html:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="nb">input</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;text&quot;</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;test&quot;</span> <span class="n">v</span><span class="o">-</span><span class="n">model</span><span class="o">=</span><span class="s1">&#39;q&#39;</span><span class="o">/&gt;</span>
+
+<span class="o">&lt;</span><span class="n">select</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;&quot;</span> <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;&quot;</span> <span class="n">v</span><span class="o">-</span><span class="k">for</span><span class="o">=</span><span class="s1">&#39;filter in filters&#39;</span> <span class="n">v</span><span class="o">-</span><span class="n">model</span><span class="o">=</span><span class="s1">&#39;filter.value&#39;</span><span class="o">&gt;</span>
+        <span class="o">&lt;</span><span class="n">option</span> <span class="n">value</span><span class="o">=</span><span class="s2">&quot;&quot;</span> <span class="n">v</span><span class="o">-</span><span class="n">text</span><span class="o">=</span><span class="s1">&#39;filter.label&#39;</span><span class="o">&gt;&lt;/</span><span class="n">option</span><span class="o">&gt;</span>
+        <span class="o">&lt;</span><span class="n">option</span> <span class="n">value</span><span class="o">=</span><span class="s2">&quot;&quot;</span> <span class="o">&gt;----&lt;/</span><span class="n">option</span><span class="o">&gt;</span>
+        <span class="o">&lt;</span><span class="n">option</span>  <span class="n">v</span><span class="o">-</span><span class="k">for</span><span class="o">=</span><span class="s1">&#39;option in filter.options&#39;</span> <span class="p">:</span><span class="n">value</span><span class="o">=</span><span class="s2">&quot;option.name&quot;</span> <span class="n">v</span><span class="o">-</span><span class="n">text</span><span class="o">=</span><span class="s1">&#39;option.label&#39;</span><span class="o">&gt;&lt;/</span><span class="n">option</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="n">select</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">button</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;test&quot;</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;button&quot;</span> <span class="n">value</span><span class="o">=</span><span class="s2">&quot;val&quot;</span> <span class="nd">@click</span><span class="o">=</span><span class="s1">&#39;search()&#39;</span><span class="o">&gt;</span><span class="n">search</span><span class="o">&lt;/</span><span class="n">button</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">sort</span><span class="o">-</span><span class="n">table</span> <span class="p">:</span><span class="n">heads</span><span class="o">=</span><span class="s1">&#39;heads&#39;</span> <span class="p">:</span><span class="n">rows</span><span class="o">=</span><span class="s1">&#39;rows&#39;</span> <span class="p">:</span><span class="nb">map</span><span class="o">=</span><span class="s1">&#39;map&#39;</span> <span class="p">:</span><span class="n">sort</span><span class="o">=</span><span class="s1">&#39;sort&#39;</span><span class="o">&gt;&lt;/</span><span class="n">sort</span><span class="o">-</span><span class="n">table</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="id1">
+<h2>2.2.2. table<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p>there is a Component ,name after &#8220;sort-table&#8221; ,used to render table information.</p>
+<p>useage:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">sort</span><span class="o">-</span><span class="n">table</span> <span class="p">:</span><span class="n">heads</span><span class="o">=</span><span class="s1">&#39;heads&#39;</span> <span class="p">:</span><span class="n">rows</span><span class="o">=</span><span class="s1">&#39;pages&#39;</span> <span class="p">:</span><span class="nb">map</span><span class="o">=</span><span class="s1">&#39;map&#39;</span> <span class="p">:</span><span class="n">sort</span><span class="o">=</span><span class="s1">&#39;sort&#39;</span><span class="o">&gt;&lt;/</span><span class="n">sort</span><span class="o">-</span><span class="n">table</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<dl class="docutils">
+<dt>heads:</dt>
+<dd><p class="first">formate: [{name:&#8217;xxx&#8217;,label:&#8217;label1&#8217;,sortable:true},]</p>
+<p class="last">may be generate by <strong>model_to_head</strong> and <strong>form_to_head</strong>. In table.py ,I generate head with model_to_head.</p>
+</dd>
+<dt>rows:</dt>
+<dd>this is a normal dict(js object) list,represent some model instance.Each dict may be generate by <strong>to_dict</strong></dd>
+<dt>map:</dt>
+<dd><p class="first">Function used for adapt tabel cell content.return value may be html and Component dict.</p>
+<div class="last highlight-default"><div class="highlight"><pre><span></span><span class="nb">map</span><span class="p">:</span><span class="n">function</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="n">row</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">name</span><span class="o">==</span><span class="s1">&#39;name&#39;</span><span class="p">){</span>
+                <span class="k">return</span> <span class="s1">&#39;&lt;a href=&quot;editpage/?page_id=&#39;</span><span class="o">+</span><span class="n">row</span><span class="o">.</span><span class="n">pk</span><span class="o">+</span><span class="s1">&#39;&quot;&gt;&#39;</span><span class="o">+</span><span class="n">row</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;&lt;/a&gt;&#39;</span>
+        <span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="n">name</span><span class="o">==</span><span class="s1">&#39;com&#39;</span><span class="p">){</span>
+                <span class="k">return</span> <span class="p">{</span><span class="n">com</span><span class="p">:</span><span class="n">xxx</span><span class="p">,</span><span class="n">kw</span><span class="p">:</span><span class="n">kw</span><span class="p">}</span>
+        <span class="p">}</span><span class="k">else</span><span class="p">{</span>
+                <span class="k">return</span> <span class="n">row</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+        <span class="p">}</span>
+<span class="p">},</span>
+</pre></div>
+</div>
+</dd>
+<dt>sort:</dt>
+<dd><p class="first">fromate: [&#8216;name&#8217;,&#8217;-age&#8217;]</p>
+<p class="last">A list,represent table sort by column.This can be generate by python file</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="page-num">
+<h2>2.2.3. page-num<a class="headerlink" href="#page-num" title="Permalink to this headline">¶</a></h2>
+<p>useage:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">paginator</span> <span class="p">:</span><span class="n">nums</span><span class="o">=</span><span class="s1">&#39;page_nums&#39;</span><span class="o">&gt;&lt;/</span><span class="n">paginator</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<dl class="docutils">
+<dt>nums:</dt>
+<dd><p class="first">formate:[&#8216;1&#8217;,&#8217;...&#8217;,&#8216;6_a&#8217;,&#8216;7&#8217;,&#8216;8&#8217;,&#8217;...&#8217;,&#8216;999&#8217;]</p>
+<p class="last">由django pagenations 生成，再转换为number list.</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="custom">
+<h2>2.2.4. custom<a class="headerlink" href="#custom" title="Permalink to this headline">¶</a></h2>
+<p>only need custom some function:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">UserTable</span><span class="p">(</span><span class="n">ModelTable</span><span class="p">):</span>
+    <span class="n">model</span><span class="o">=</span><span class="n">User</span>
+    <span class="n">include</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;username&#39;</span><span class="p">,</span><span class="s1">&#39;first_name&#39;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">get_heads</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">heads</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">UserTable</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">get_heads</span><span class="p">()</span>
+        <span class="n">heads</span><span class="o">.</span><span class="n">extend</span><span class="p">([{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span><span class="s1">&#39;age&#39;</span><span class="p">,</span><span class="s1">&#39;label&#39;</span><span class="p">:</span><span class="s1">&#39;Age&#39;</span><span class="p">}])</span>
+        <span class="k">return</span> <span class="n">heads</span>
+
+    <span class="k">def</span> <span class="nf">get_rows</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">rows</span><span class="o">=</span><span class="nb">super</span><span class="p">(</span><span class="n">UserTable</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">get_rows</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">user_dc</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">:</span>
+            <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">user_dc</span><span class="p">[</span><span class="s1">&#39;pk&#39;</span><span class="p">])</span>
+            <span class="n">user_dc</span><span class="p">[</span><span class="s1">&#39;age&#39;</span><span class="p">]</span><span class="o">=</span><span class="n">user</span><span class="o">.</span><span class="n">basicinfo</span><span class="o">.</span><span class="n">age</span>
+        <span class="k">return</span> <span class="n">rows</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="model_render.html" class="btn btn-neutral float-right" title="2.3. model页面engine" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="fields.html" class="btn btn-neutral" title="2.1. fields后端" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, coblan.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

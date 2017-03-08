@@ -42,7 +42,11 @@ var date_config_set={
 }
 
 Vue.component('date',{
-    template:'<input type="text" class="form-control">',
+    //template:'<input type="text" class="form-control">',
+    template:`<span class="fake-input">
+                <span v-text="value"></span><span @click="$emit('input','')">X</span>
+                <input type="text" v-show="false"/>
+                </span>`,
     props:['value','set','config'],
     mounted:function () {
         var self=this
@@ -54,7 +58,7 @@ Vue.component('date',{
         if(this.config){
             ex.assign(def_conf,this.config)
         }
-        self.input=$(this.$el)
+        self.input=$($(this.$el).find('input'))
 
         ex.load_css('//cdn.bootcss.com/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker.min.css')
 
@@ -63,8 +67,12 @@ Vue.component('date',{
                 self.input.datepicker(def_conf).on('changeDate', function(e) {
                     self.$emit('input',self.input.val())
                 })
+                // if has init value,then init it
+                if(self.value){
+                    self.input.datepicker('update',self.value)
+                    self.input.val(self.value)
+                }
             })
-
         })
     },
     watch:{
@@ -78,12 +86,12 @@ Vue.component('date',{
 
 
 Vue.component('datetime',{
-    data:function(){
-        return {
-            input_value:'',
-        }
-    },
-    template:'<input type="text" class="form-control" v-model="input_value">',
+    //data:function(){
+    //    return {
+    //        input_value:'',
+    //    }
+    //},
+    template:'<input type="text" class="form-control">',
     props:['value','config'],
     mounted:function () {
         var self=this
@@ -106,16 +114,23 @@ Vue.component('datetime',{
                     self.$emit('input',self.input.val())
                 })
 
+            // if has init value,then init it
+            if(self.value){
+                self.input.datepicker('update',self.value)
+                self.input.val(self.value)
+            }
+
         })
     },
 
     watch:{
         value:function (n) {
             this.input.val(n)
+            this.input.val(n)
         },
-        input_value:function(n){
-            this.$emit('input',n)
-        }
+        //input_value:function(n){
+        //    this.$emit('input',n)
+        //}
     }
 })
 

@@ -44,12 +44,13 @@
 //		    todayHighlight: true
 //		});
 
+		month=ex.parseSearch().month
 		new Vue({
 			el:'#there',
 			data:{
 				date:'',
 				datetime:'',
-				month:''
+				month:month
 			},
 			methods:{
 				input_value:function () {
@@ -101,6 +102,7 @@
 
 	    <div id="there" class="test">
 		    <!--<com-datepicker v-model='date'></com-datepicker>-->
+			<span>next is month</span>
 			<date v-model="month" set="month"></date>
 			<input type="text" v-model="month">
 			<date v-model="date"></date>

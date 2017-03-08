@@ -1,0 +1,55 @@
+=========
+my admin
+=========
+
+为了模仿django admin的功能，实现了table,fields模块。table用于显示信息，fields用于管理form表单。
+
+例子
+=============
+
+design the shceme of admin , should in admin.py ::
+
+	from core.model_render import model_dc
+	from core.tabel import ModelTable
+	from core.fields import ModelFields
+
+	class BasicInfoTable(ModelTable):
+	    model = BasicInfo
+	    filters=['name','age']
+	    include = ['name','age']
+	    sortable=['age']
+	    per_page=2
+	    search_fields=['age','name']
+
+
+	class BasicInfoFields(ModelFields):
+	    model=BasicInfo
+	    fields=['name','age','user']
+
+	model_dc['basicinfo'] ={'model':BasicInfo,'table':BasicInfoTable,'fields':BasicInfoFields}
+	
+rout in main views function::
+
+	from core.model_render import Render
+	def render(request,url):
+	    md_render=Render(request, url, table_temp='model.html', fields_temp='fields.html')
+	    return md_render.rout()
+
+
+
+原理：
+-------
+1. rigist model in admin.py.
+	Include name,table and fields.Of course Table and fields is optional.
+
+::
+
+	model_dc['basicinfo'] ={'model':BasicInfo,'table':BasicInfoTable,'fields':BasicInfoFields}
+	
+2. set rout patter in views.
+	include set table template,fields template.these template is default.
+	model_render.Render will rout automaticly to table render,fields Render and fields save.
+
+前端
+------
+same as :ref:`table<table-front>` and :ref:`fields<fields-front>` module。 

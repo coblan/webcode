@@ -74,62 +74,6 @@
 	MIT License http://www.opensource.org/licenses/mit-license.php
 	Author Tobias Koppers @sokra
 */
-// css base code, injected by the css-loader
-module.exports = function() {
-	var list = [];
-
-	// return the list of modules as css string
-	list.toString = function toString() {
-		var result = [];
-		for(var i = 0; i < this.length; i++) {
-			var item = this[i];
-			if(item[2]) {
-				result.push("@media " + item[2] + "{" + item[1] + "}");
-			} else {
-				result.push(item[1]);
-			}
-		}
-		return result.join("");
-	};
-
-	// import a list of modules into the list
-	list.i = function(modules, mediaQuery) {
-		if(typeof modules === "string")
-			modules = [[null, modules, ""]];
-		var alreadyImportedModules = {};
-		for(var i = 0; i < this.length; i++) {
-			var id = this[i][0];
-			if(typeof id === "number")
-				alreadyImportedModules[id] = true;
-		}
-		for(i = 0; i < modules.length; i++) {
-			var item = modules[i];
-			// skip already imported module
-			// this implementation is not 100% perfect for weird media query combinations
-			//  when a module is imported multiple times with different media queries.
-			//  I hope this will never occur (Hey this way we have smaller bundles)
-			if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
-				if(mediaQuery && !item[2]) {
-					item[2] = mediaQuery;
-				} else if(mediaQuery) {
-					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
-				}
-				list.push(item);
-			}
-		}
-	};
-	return list;
-};
-
-
-/***/ }),
-/* 1 */
-/***/ (function(module, exports) {
-
-/*
-	MIT License http://www.opensource.org/licenses/mit-license.php
-	Author Tobias Koppers @sokra
-*/
 var stylesInDom = {},
 	memoize = function(fn) {
 		var memo;
@@ -375,7 +319,89 @@ function updateLink(linkElement, obj) {
 
 
 /***/ }),
+/* 1 */
+/***/ (function(module, exports) {
+
+/*
+	MIT License http://www.opensource.org/licenses/mit-license.php
+	Author Tobias Koppers @sokra
+*/
+// css base code, injected by the css-loader
+module.exports = function() {
+	var list = [];
+
+	// return the list of modules as css string
+	list.toString = function toString() {
+		var result = [];
+		for(var i = 0; i < this.length; i++) {
+			var item = this[i];
+			if(item[2]) {
+				result.push("@media " + item[2] + "{" + item[1] + "}");
+			} else {
+				result.push(item[1]);
+			}
+		}
+		return result.join("");
+	};
+
+	// import a list of modules into the list
+	list.i = function(modules, mediaQuery) {
+		if(typeof modules === "string")
+			modules = [[null, modules, ""]];
+		var alreadyImportedModules = {};
+		for(var i = 0; i < this.length; i++) {
+			var id = this[i][0];
+			if(typeof id === "number")
+				alreadyImportedModules[id] = true;
+		}
+		for(i = 0; i < modules.length; i++) {
+			var item = modules[i];
+			// skip already imported module
+			// this implementation is not 100% perfect for weird media query combinations
+			//  when a module is imported multiple times with different media queries.
+			//  I hope this will never occur (Hey this way we have smaller bundles)
+			if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
+				if(mediaQuery && !item[2]) {
+					item[2] = mediaQuery;
+				} else if(mediaQuery) {
+					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
+				}
+				list.push(item);
+			}
+		}
+	};
+	return list;
+};
+
+
+/***/ }),
 /* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(11);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// add the styles to the DOM
+var update = __webpack_require__(0)(content, {});
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!./../../node_modules/.0.26.1@css-loader/index.js!./../../node_modules/.6.0.0@sass-loader/lib/loader.js!./fields.scss", function() {
+			var newContent = require("!!./../../node_modules/.0.26.1@css-loader/index.js!./../../node_modules/.6.0.0@sass-loader/lib/loader.js!./fields.scss");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -555,25 +581,45 @@ if (!window.__uploading_mark) {
 }
 
 /***/ }),
-/* 3 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-//function import_ckeditor() {
-//	document.write("<script src='/static/ckeditor/ckeditor.js'></script>")
-//}
+/*
+>>>front/ckedit.rst>
+==========
+ckeditor
+==========
+源文件:vuejs/ckeditor.js
 
-//ckEditor={
-//		import:import_ckeditor,
-//	}
-//module.exports=ckEditor
+使用时，引入fields.pack.js即可。
 
-//export function use_ckeditor() {
-//	document.write('<script src="//cdn.bootcss.com/ckeditor/4.5.10/ckeditor.js"></script>')
-//}
+使用示例
+=========
+::
 
+	bus=new Vue()  //因为ckeditor的数据不是时时同步的，所以提交时，需要触发数据同步
+	// 提交时:
+	bus.$emit('sync_data')
+
+	<ckeditor set='complex' config='{}'></ckeditor>
+
+set
+======
+
+set是指预先定义好的一套设置。可以在Vue component中定义映射。
+
+当前有的set有:
+
+=========   ========
+complex     完善
+edit        普通编辑
+=========   =========
+
+<<<<
+ */
 
 var ck_complex = {
 	// Define changes to default configuration here.
@@ -693,13 +739,17 @@ var edit_level = {
 };
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 /*
+>>>front/file.rst>
+===========
+文件上传
+===========
 
 主要内容
 ========
@@ -715,42 +765,51 @@ img-uploador
 多个文件上传步骤
 ==============
 
-1. Vue.data设置
- data:{
+1. Vue.data设置::
+
+    data:{
     files:[],
- },
+    },
 
-2. 在html中插入Vue组件 <file-input id='jjyy' v-model='files' multiple></file-input>
+2. 在html中插入Vue组件::
 
-3. 在Methods中上传
-fl.uploads(files,url,function(resp){  // url 可以忽略，默认url为 /face/upload
-    resp ....
-})
+    <file-input id='jjyy' v-model='files' multiple></file-input>
+
+3. 在Methods中上传::
+
+    fl.uploads(files,url,function(resp){  // url 可以忽略，默认url为 /face/upload
+        resp ....
+    })
 
 单个文件
 =======
-1.Vue.data设置
- data:{
-    files:[],
- },
+1.Vue.data设置::
 
-2. 在html中插入Vue组件 <file-input id='jjyy' v-model='files'></file-input>
+    data:{
+        files:[],
+    },
 
-3. 在Methods中上传
- fl.uploads(this.files[0],url,function(resp){
-    resp ....
- })
+2. 在html中插入Vue组件::
+
+    <file-input id='jjyy' v-model='files'></file-input>
+
+3. 在Methods中上传::
+
+     fl.uploads(this.files[0],url,function(resp){
+        resp ....
+     })
 
 .. Note:: 默认上传url是/face/upload ，该接口返回的是 file_url_list。
 
 上传进度
 =========
-进度只是上传进度，判断文件是否被后端接收成功，需要判断是否success回调被调用。
- fl.upload(this.file2[0],'/face/upload',function(url_list){
+进度只是上传进度，判断文件是否被后端接收成功，需要判断是否success回调被调用::
 
- },function(progress){
-    console.log(progress)
- })
+     fl.upload(this.file2[0],'/face/upload',function(url_list){
+
+     },function(progress){
+        console.log(progress)
+     })
 
 预览图片
 =========
@@ -763,13 +822,14 @@ fl.uploads(files,url,function(resp){  // url 可以忽略，默认url为 /face/u
 
 上传图片
 ==========
+::
 
-<img-uploador v-model='xxx_url_variable'></img-uploador>   //默认上传，使用的是 fl.upload默认地址 /face/upload
-<img-uploador v-model='xxx_url_variable' up_url='xxx'></img-uploador>
+    <img-uploador v-model='xxx_url_variable'></img-uploador>   //默认上传，使用的是 fl.upload默认地址 /face/upload
+    <img-uploador v-model='xxx_url_variable' up_url='xxx'></img-uploador>
 
-具备裁剪性质:
+具备裁剪性质::
 
- <img-uploader v-model='xxx' :config='{crop:true,aspectRatio: 8 / 10}'></img-uploader>
+    <img-uploader v-model='xxx' :config='{crop:true,aspectRatio: 8 / 10}'></img-uploader>
 
 
 样式技巧
@@ -780,10 +840,10 @@ fl.uploads(files,url,function(resp){  // url 可以忽略，默认url为 /face/u
 
     * 隐藏<file-input> ，
     * 然后触发其click事件('.file-input').click()
-
+<<<<
 */
 
-__webpack_require__(11);
+__webpack_require__(9);
 
 var fl = {
     read: function read(file, callback) {
@@ -1203,7 +1263,7 @@ Vue.component('logo-input', {
 window.fl = fl;
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1212,19 +1272,27 @@ window.fl = fl;
 /**
  * Created by heyulin on 2017/1/24.
  *
- *
- * date
- * ========
- * <date v-model='variable'></date>  // ѡ��Ĭ��set=date ,��ѡ������
- *
- * <date v-model='variable' set='month'></date> // ѡ�� set=month ,��ѡ���·�
- *
- * <date v-model='variable' set='month' :config='{}'></date>  //  config ���Զ��������ö��󣬾�����Ҫ�μӰ����ļ�
- *
- * datetime
- * ===========
- * <datetime v-model='variable' :config='{}'></datetime> // ѡ�����ں�ʱ��
- *
+ >>>front/input.rst>
+ =======
+ inputs
+ =======
+
+ date
+  ========
+ ::
+
+    <date v-model='variable'></date>  // 选择默认set=date ,即选择日期
+
+    <date v-model='variable' set='month'></date> // 选择 set=month ,即选择月份
+
+    <date v-model='variable' set='month' :config='{}'></date>  //  config 是自定义的配置对象，具体需要参加帮助文件
+
+ datetime
+ ===========
+ ::
+
+    <datetime v-model='variable' :config='{}'></datetime> // 选择日期和时间
+ <<<<
  */
 
 var date_config_set = {
@@ -1245,7 +1313,8 @@ var date_config_set = {
 };
 
 Vue.component('date', {
-    template: '<input type="text" class="form-control">',
+    //template:'<input type="text" class="form-control">',
+    template: "<span class=\"fake-input\">\n                <span v-text=\"value\"></span><span @click=\"$emit('input','')\">X</span>\n                <input type=\"text\" v-show=\"false\"/>\n                </span>",
     props: ['value', 'set', 'config'],
     mounted: function mounted() {
         var self = this;
@@ -1257,7 +1326,7 @@ Vue.component('date', {
         if (this.config) {
             ex.assign(def_conf, this.config);
         }
-        self.input = $(this.$el);
+        self.input = $($(this.$el).find('input'));
 
         ex.load_css('//cdn.bootcss.com/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker.min.css');
 
@@ -1266,6 +1335,11 @@ Vue.component('date', {
                 self.input.datepicker(def_conf).on('changeDate', function (e) {
                     self.$emit('input', self.input.val());
                 });
+                // if has init value,then init it
+                if (self.value) {
+                    self.input.datepicker('update', self.value);
+                    self.input.val(self.value);
+                }
             });
         });
     },
@@ -1278,12 +1352,12 @@ Vue.component('date', {
 });
 
 Vue.component('datetime', {
-    data: function data() {
-        return {
-            input_value: ''
-        };
-    },
-    template: '<input type="text" class="form-control" v-model="input_value">',
+    //data:function(){
+    //    return {
+    //        input_value:'',
+    //    }
+    //},
+    template: '<input type="text" class="form-control">',
     props: ['value', 'config'],
     mounted: function mounted() {
         var self = this;
@@ -1305,25 +1379,57 @@ Vue.component('datetime', {
             self.input.datetimepicker(def_conf).on('changeDate', function (e) {
                 self.$emit('input', self.input.val());
             });
+
+            // if has init value,then init it
+            if (self.value) {
+                self.input.datepicker('update', self.value);
+                self.input.val(self.value);
+            }
         });
     },
 
     watch: {
         value: function value(n) {
             this.input.val(n);
-        },
-        input_value: function input_value(n) {
-            this.$emit('input', n);
+            this.input.val(n);
         }
     }
 });
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
+
+/*
+>>>front/link.rst>
+=========
+link
+=========
+
+::
+
+ var director = '{% url 'director' %}'
+
+ var cache_meta={
+ cache:['person.emp_info.row',
+ 'person.bas_info.row',
+ 'crt_view'],
+ rt_key:{'auth.user':'person.emp_info.row.user'}
+ }
+
+ ln.cache(cache_meta)
+ var back_url=btoa(ex.appendSearch({cache:1}))
+ if(pk){
+ location=ex.template('{director}model/{name}/edit/{pk}?next={encode_url}',{director:director,name:name,pk:pk,encode_url:back_url})
+ }else{
+ location=ex.template('{director}model/{name}/edit?next={encode_url}',{director:director,name:name,encode_url:back_url})
+ }
+
+<<<<
+ */
 
 var ln = {
     /*
@@ -1399,7 +1505,7 @@ var ln = {
 window.ln = ln;
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1509,7 +1615,7 @@ Vue.component('tow-col-sel', {
 });
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
@@ -1518,14 +1624,14 @@ Vue.component('tow-col-sel', {
 var content = __webpack_require__(10);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(1)(content, {});
+var update = __webpack_require__(0)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
 	// When the styles change, update the <style> tags
 	if(!content.locals) {
-		module.hot.accept("!!./../../node_modules/css-loader/index.js!./../../node_modules/sass-loader/lib/loader.js!./fields.scss", function() {
-			var newContent = require("!!./../../node_modules/css-loader/index.js!./../../node_modules/sass-loader/lib/loader.js!./fields.scss");
+		module.hot.accept("!!./../../../node_modules/.0.26.1@css-loader/index.js!./../../../node_modules/.6.0.0@sass-loader/lib/loader.js!./file.scss", function() {
+			var newContent = require("!!./../../../node_modules/.0.26.1@css-loader/index.js!./../../../node_modules/.6.0.0@sass-loader/lib/loader.js!./file.scss");
 			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 			update(newContent);
 		});
@@ -1535,10 +1641,10 @@ if(false) {
 }
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(0)();
+exports = module.exports = __webpack_require__(1)();
 // imports
 
 
@@ -1549,10 +1655,10 @@ exports.push([module.i, ".img-uploader input {\n  display: none; }\n\n.up_wrap {
 
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(0)();
+exports = module.exports = __webpack_require__(1)();
 // imports
 
 
@@ -1561,32 +1667,6 @@ exports.push([module.i, ".error {\n  color: red; }\n\n.field-panel {\n  backgrou
 
 // exports
 
-
-/***/ }),
-/* 11 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(9);
-if(typeof content === 'string') content = [[module.i, content, '']];
-// add the styles to the DOM
-var update = __webpack_require__(1)(content, {});
-if(content.locals) module.exports = content.locals;
-// Hot Module Replacement
-if(false) {
-	// When the styles change, update the <style> tags
-	if(!content.locals) {
-		module.hot.accept("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/sass-loader/lib/loader.js!./file.scss", function() {
-			var newContent = require("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/sass-loader/lib/loader.js!./file.scss");
-			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-			update(newContent);
-		});
-	}
-	// When the module is disposed, remove the <style> tags
-	module.hot.dispose(function() { update(); });
-}
 
 /***/ }),
 /* 12 */
@@ -1600,25 +1680,25 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.merge = merge;
 
-var _ajax_fun = __webpack_require__(2);
+var _ajax_fun = __webpack_require__(3);
 
-var _file = __webpack_require__(4);
+var _file = __webpack_require__(5);
 
 var f = _interopRequireWildcard(_file);
 
-var _ckeditor = __webpack_require__(3);
+var _ckeditor = __webpack_require__(4);
 
 var ck = _interopRequireWildcard(_ckeditor);
 
-var _multi_sel = __webpack_require__(7);
+var _multi_sel = __webpack_require__(8);
 
 var multi = _interopRequireWildcard(_multi_sel);
 
-var _inputs = __webpack_require__(5);
+var _inputs = __webpack_require__(6);
 
 var inputs = _interopRequireWildcard(_inputs);
 
-var _link = __webpack_require__(6);
+var _link = __webpack_require__(7);
 
 var ln = _interopRequireWildcard(_link);
 
@@ -1628,6 +1708,7 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 
 /*
+>>>front/fields.rst>
 基本内容
 ==============
 1. field_base
@@ -1657,7 +1738,7 @@ field_base的参数都是采用的关键字参数，结构如下：
 
 
 
-
+<<<<
 *配合jsonpost使用，效果最好
 */
 
@@ -1671,7 +1752,7 @@ $.post('',JSON.stringify(post_data),function (data) {
 
 //import {use_color} from '../dosome/color.js'
 //import {load_js,load_css} from '../dosome/pkg.js'
-__webpack_require__(8);
+__webpack_require__(2);
 
 (0, _ajax_fun.hook_ajax_msg)();
 (0, _ajax_fun.hook_ajax_csrf)();
