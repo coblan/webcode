@@ -143,8 +143,8 @@ Vue.component('datetime',{
     }
 })
 
-document.write(`
-<style type="text/css" media="screen">
+ex.append_css(
+    `<style type="text/css" media="screen">
     .datetime-picker{
         position: relative;
         display: inline-block;
@@ -163,6 +163,10 @@ document.write(`
 	    cursor: pointer;
 	    /*z-index: 10;*/
 	}
-
 </style>
+ `
+)
+
+document.write(`
+
 `)

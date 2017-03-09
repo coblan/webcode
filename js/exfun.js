@@ -296,28 +296,56 @@ ex={
 		$('head').append('<link rel="stylesheet" href="'+src+'" type="text/css" />')
 	},
 
-	append_str:function(){
-		function includeStyleElement(styles,styleId) {
-
-			if (document.getElementById(styleId)) {
+	append_css:function(styles_str){
+	/*
+	* @styles_str : css string or <style>css string</style>
+	* */
+			window._appended_css=window._appended_css || []
+			if(ex.isin(styles_str,window._appended_css)){
 				return
+			}else{
+				window._appended_css.push(styles_str)
 			}
-			var style = document.createElement(“style”);
-			style.id = styleId;
-//这里最好给ie设置下面的属性
+			var mt = /<style.*>([\s\S]*)<\/style>/im.exec(styles_str)
+			if(mt){
+				styles_str=mt[1]
+			}
+			var style = document.createElement('style');
+
+			//这里最好给ie设置下面的属性
 			/*if (isIE()) {
 			 style.type = “text/css”;
 			 style.media = “screen”
 			 }*/
-			(document.getElementsByTagName(“head”)[0] || document.body).appendChild(style);
+			(document.getElementsByTagName('head')[0] || document.body).appendChild(style);
 			if (style.styleSheet) { //for ie
-				style.styleSheet.cssText = styles;
+				style.styleSheet.cssText = styles_str;
 			} else {//for w3c
-				style.appendChild(document.createTextNode(styles));
+				style.appendChild(document.createTextNode(styles_str));
 			}
-		}
-		var styles = “#div{background-color: #FF3300; color:#FFFFFF }”;
-		includeStyleElement(styles,”newstyle”);
+
+
+		//function includeStyleElement(styles,styleId) {
+        //
+		//	if (document.getElementById(styleId)) {
+		//		return
+		//	}
+		//	var style = document.createElement(“style”);
+		//	style.id = styleId;
+		//	//这里最好给ie设置下面的属性
+		//	/*if (isIE()) {
+		//	 style.type = “text/css”;
+		//	 style.media = “screen”
+		//	 }*/
+		//	(document.getElementsByTagName(“head”)[0] || document.body).appendChild(style);
+		//	if (style.styleSheet) { //for ie
+		//		style.styleSheet.cssText = styles;
+		//	} else {//for w3c
+		//		style.appendChild(document.createTextNode(styles));
+		//	}
+		//}
+		//var styles = “#div{background-color: #FF3300; color:#FFFFFF }”;
+		//includeStyleElement(styles,”newstyle”);
 	},
 
 	is_fun:function (v) {

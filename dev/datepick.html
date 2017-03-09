@@ -82,7 +82,13 @@
 			}
 		}
 	})
-	
+
+	function doo(){
+		ex.append_css(
+			".next{color:red;}.up{color:blue;}"
+	)}
+		doo()
+
 	</script>
 	</head>
     <body >
@@ -102,7 +108,8 @@
 
 	    <div id="there" class="test">
 		    <!--<com-datepicker v-model='date'></com-datepicker>-->
-			<span>next is month</span>
+			<span class="next">next is month</span>
+			<span class="up">up</span>
 			<date v-model="month" set="month"></date>
 			<input type="text" v-model="month">
 			<date v-model="date"></date>
