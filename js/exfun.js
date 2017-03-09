@@ -286,8 +286,6 @@ ex={
 			  }
 			  document.getElementsByTagName('head')[0].appendChild(domScript);
 		}
-		
-		
 	},
 	load_css:function (src) {
 		var name = btoa(src)
@@ -297,6 +295,31 @@ ex={
 		window['__src_'+name]=true
 		$('head').append('<link rel="stylesheet" href="'+src+'" type="text/css" />')
 	},
+
+	append_str:function(){
+		function includeStyleElement(styles,styleId) {
+
+			if (document.getElementById(styleId)) {
+				return
+			}
+			var style = document.createElement(“style”);
+			style.id = styleId;
+//这里最好给ie设置下面的属性
+			/*if (isIE()) {
+			 style.type = “text/css”;
+			 style.media = “screen”
+			 }*/
+			(document.getElementsByTagName(“head”)[0] || document.body).appendChild(style);
+			if (style.styleSheet) { //for ie
+				style.styleSheet.cssText = styles;
+			} else {//for w3c
+				style.appendChild(document.createTextNode(styles));
+			}
+		}
+		var styles = “#div{background-color: #FF3300; color:#FFFFFF }”;
+		includeStyleElement(styles,”newstyle”);
+	},
+
 	is_fun:function (v) {
 		return typeof v === "function"
 	},

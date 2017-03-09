@@ -43,9 +43,9 @@ var date_config_set={
 
 Vue.component('date',{
     //template:'<input type="text" class="form-control">',
-    template:`<span class="fake-input">
-                <span v-text="value"></span><span @click="$emit('input','')">X</span>
-                <input type="text" v-show="false"/>
+    template:`<span class="datetime-picker">
+                <span class="cross" @click="$emit('input','')">X</span>
+                <input type="text" readonly class="form-control"/>
                 </span>`,
     props:['value','set','config'],
     mounted:function () {
@@ -58,7 +58,7 @@ Vue.component('date',{
         if(this.config){
             ex.assign(def_conf,this.config)
         }
-        self.input=$($(this.$el).find('input'))
+        self.input=$(this.$el).find('input')
 
         ex.load_css('//cdn.bootcss.com/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker.min.css')
 
@@ -74,6 +74,11 @@ Vue.component('date',{
                 }
             })
         })
+    },
+    methods:{
+        click_input:function(){
+            this.input.focus()
+        }
     },
     watch:{
         value:function (n) {
@@ -91,7 +96,11 @@ Vue.component('datetime',{
     //        input_value:'',
     //    }
     //},
-    template:'<input type="text" class="form-control">',
+    //template:'<input type="text" class="form-control">',
+    template:`<span class="datetime-picker">
+                <span class="cross" @click="$emit('input','')">X</span>
+                <input type="text" readonly/>
+                </span>`,
     props:['value','config'],
     mounted:function () {
         var self=this
@@ -104,7 +113,7 @@ Vue.component('datetime',{
         if(self.config){
             ex.assign(def_conf,this.config)
         }
-        self.input=$(this.$el)
+        self.input=$(this.$el).find('input')
 
         ex.load_css('//cdn.bootcss.com/smalot-bootstrap-datetimepicker/2.4.3/css/bootstrap-datetimepicker.min.css')
         ex.load_js('//cdn.bootcss.com/moment.js/2.17.1/moment.min.js')
@@ -134,3 +143,26 @@ Vue.component('datetime',{
     }
 })
 
+document.write(`
+<style type="text/css" media="screen">
+    .datetime-picker{
+        position: relative;
+        display: inline-block;
+    }
+    .datetime-picker input[readonly]{
+        background-color: white;
+    }
+	.datetime-picker .cross{
+	    display: none;
+	}
+	.datetime-picker:hover .cross{
+	    display: inline-block;
+	    position: absolute;
+	    right: 8px;
+	    top:3px;
+	    cursor: pointer;
+	    /*z-index: 10;*/
+	}
+
+</style>
+`)
