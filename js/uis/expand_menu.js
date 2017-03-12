@@ -31,34 +31,60 @@ Vue.component('expand_menu',{
 			computed:{
 				normed_menu:function () {
 					var path = location.pathname
-					
-					var matched={url:''}
-					var matched_menu={url:''}
-					var matched_submenu={url:''}
-					
-					for (var x=0;x<this.menu.length;x++){
-						var url = this.menu[x].url
-						if(path.startsWith(url)&&url.length>matched.url.length){
-							matched=this.menu[x]
-							matched_menu=this.menu[x]
-							matched_submenu={url:''}
-						}
-						var submenu=this.menu[x].submenu || []
-						for(var y=0;y<submenu.length;y++){
-							var url = submenu[y].url
-							if(path.startsWith(url)&&url.length>=matched.url.length){
-								matched=submenu[y]
-								matched_menu=this.menu[x]
-								matched_submenu=submenu[y]
+
+					var matched_menu=null
+					var matched_submenu=null
+
+					ex.each(this.menu,function(menu){
+						if(menu.submenu){
+							ex.each(menu.submenu,function(submenu){
+								if(path.startsWith(submenu.url) ){
+									if(!matched_submenu || matched_submenu.url.length< submenu.url.length){
+										matched_menu=menu
+										matched_submenu=submenu
+									}
+									//menu.selected=true
+									//submenu.active=true
+									//return 'break'
+								}
+							})
+						}else if(menu.url && path.startsWith(menu.url)){
+							if(matched_submenu ){}
+							else if(!matched_menu || matched_menu.url.length < menu.url.length){
+								matched_menu=menu
 							}
+							//menu.selected=true
+							//return 'break'
 						}
-					}
-					if(matched_menu.url){
-						matched_menu.selected=true
-					}
-					if(matched_submenu){
-						matched_submenu.active=true
-					}
+					})
+
+					if(matched_menu){matched_menu.selected=true}
+					if(matched_submenu){matched_submenu.active=true}
+
+					//for (var x=0;x<this.menu.length;x++){
+					//	var url = this.menu[x].url
+					//	if(path.startsWith(url)&&url.length>matched.url.length){
+					//		matched=this.menu[x]
+					//		matched_menu=this.menu[x]
+					//		matched_submenu={url:''}
+					//	}
+					//	var submenu=this.menu[x].submenu || []
+					//	for(var y=0;y<submenu.length;y++){
+					//		var url = submenu[y].url
+					//		if(path.startsWith(url)&&url.length>=matched.url.length){
+					//			matched=submenu[y]
+					//			matched_menu=this.menu[x]
+					//			matched_submenu=submenu[y]
+					//		}
+					//	}
+					//}
+					//if(matched_menu.label){
+					//	matched_menu.selected=true
+					//	matched_submenu.active=true
+					//}
+					//if(matched_submenu){
+					//	matched_submenu.active=true
+					//}
 					return this.menu
 				}
 			},

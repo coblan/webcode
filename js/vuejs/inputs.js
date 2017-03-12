@@ -1,7 +1,7 @@
 /**
  * Created by heyulin on 2017/1/24.
  *
- >>>front/input.rst>
+ >->front/input.rst>
  =======
  inputs
  =======
@@ -21,7 +21,7 @@
  ::
 
     <datetime v-model='variable' :config='{}'></datetime> // 选择日期和时间
- <<<<
+ <-<
  */
 
 var date_config_set={

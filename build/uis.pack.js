@@ -442,33 +442,62 @@ Vue.component('expand_menu', {
 		normed_menu: function normed_menu() {
 			var path = location.pathname;
 
-			var matched = { url: '' };
-			var matched_menu = { url: '' };
-			var matched_submenu = { url: '' };
+			var matched_menu = null;
+			var matched_submenu = null;
 
-			for (var x = 0; x < this.menu.length; x++) {
-				var url = this.menu[x].url;
-				if (path.startsWith(url) && url.length > matched.url.length) {
-					matched = this.menu[x];
-					matched_menu = this.menu[x];
-					matched_submenu = { url: '' };
-				}
-				var submenu = this.menu[x].submenu || [];
-				for (var y = 0; y < submenu.length; y++) {
-					var url = submenu[y].url;
-					if (path.startsWith(url) && url.length >= matched.url.length) {
-						matched = submenu[y];
-						matched_menu = this.menu[x];
-						matched_submenu = submenu[y];
+			ex.each(this.menu, function (menu) {
+				if (menu.submenu) {
+					ex.each(menu.submenu, function (submenu) {
+						if (path.startsWith(submenu.url)) {
+							if (!matched_submenu || matched_submenu.url.length < submenu.url.length) {
+								matched_menu = menu;
+								matched_submenu = submenu;
+							}
+							//menu.selected=true
+							//submenu.active=true
+							//return 'break'
+						}
+					});
+				} else if (menu.url && path.startsWith(menu.url)) {
+					if (matched_submenu) {} else if (!matched_menu || matched_menu.url.length < menu.url.length) {
+						matched_menu = menu;
 					}
+					//menu.selected=true
+					//return 'break'
 				}
-			}
-			if (matched_menu.url) {
+			});
+
+			if (matched_menu) {
 				matched_menu.selected = true;
 			}
 			if (matched_submenu) {
 				matched_submenu.active = true;
 			}
+
+			//for (var x=0;x<this.menu.length;x++){
+			//	var url = this.menu[x].url
+			//	if(path.startsWith(url)&&url.length>matched.url.length){
+			//		matched=this.menu[x]
+			//		matched_menu=this.menu[x]
+			//		matched_submenu={url:''}
+			//	}
+			//	var submenu=this.menu[x].submenu || []
+			//	for(var y=0;y<submenu.length;y++){
+			//		var url = submenu[y].url
+			//		if(path.startsWith(url)&&url.length>=matched.url.length){
+			//			matched=submenu[y]
+			//			matched_menu=this.menu[x]
+			//			matched_submenu=submenu[y]
+			//		}
+			//	}
+			//}
+			//if(matched_menu.label){
+			//	matched_menu.selected=true
+			//	matched_submenu.active=true
+			//}
+			//if(matched_submenu){
+			//	matched_submenu.active=true
+			//}
 			return this.menu;
 		}
 	},
@@ -514,10 +543,11 @@ if (!window.__expand_menu) {
 
 if (!window.__modal_mark) {
 	window.__modal_mark = true;
-	document.write('\n\t\t<style>\n\t\t._modal_popup{\n\t\t\tposition: fixed;\n\t\t\ttop: 0;\n\t\t\tleft: 0;\n\t\t\tright: 0;\n\t\t\tbottom: 0;\n\t\t\tbackground: rgba(0, 0, 0, 0.5);\n\t\t\tz-index:1000;\n\t\t}\n\t\t._modal_popup>._modal_inn{\n\t\t\t//background: rgba(88, 88, 88, 0.2);\n\t\t\tborder-radius: 5px;\n\t\t\tbackground:white;\n\t\t\toverflow:auto;\n\t\n\t\t\t/*padding:30px 80px ;*/\n\t\t}\n\t\t._modal_popup>._modal_middle{\n\t\t    position: absolute;\n\t        top: 50%;\n\t        left: 50%;\n\t        transform: translate(-50%, -50%);\n\t        -ms-transform:translate(-50%, -50%); \t/* IE 9 */\n\t\t\t-moz-transform:translate(-50%, -50%); \t/* Firefox */\n\t\t\t-webkit-transform:translate(-50%, -50%); /* Safari \u548C Chrome */\n\t\t\t-o-transform:translate(-50%, -50%); \n\t        /*text-align: center;*/\n\t        //z-index: 1000;\n    \t}\n\t\t</style>');
+	document.write('\n\t\t<style>\n\t\t._modal_popup{\n\t\t\tposition: fixed;\n\t\t\ttop: 0;\n\t\t\tleft: 0;\n\t\t\tright: 0;\n\t\t\tbottom: 0;\n\t\t\tbackground: rgba(0, 0, 0, 0.5);\n\t\t\tz-index:1000;\n\t\t}\n\t\t._modal_inn{\n\t\t\t/*background: rgba(88, 88, 88, 0.2);*/\n\t\t\tborder-radius: 5px;\n\t\t\tbackground:white;\n\t\t\toverflow:auto;\n\t\n\t\t\t/*padding:30px 80px ;*/\n\t\t}\n\t\t._modal_popup>._modal_middle{\n\t\t    position: absolute;\n\t        top: 50%;\n\t        left: 50%;\n\t        transform: translate(-50%, -50%);\n\t        -ms-transform:translate(-50%, -50%); \t/* IE 9 */\n\t\t\t-moz-transform:translate(-50%, -50%); \t/* Firefox */\n\t\t\t-webkit-transform:translate(-50%, -50%); /* Safari \u548C Chrome */\n\t\t\t-o-transform:translate(-50%, -50%); \n\t        /*text-align: center;*/\n\t        /*z-index: 1000;*/\n    \t}\n\t\t</style>');
 }
 Vue.component('modal', {
-	template: '<div class="_modal_popup" >\n\t\t\t<div class="_modal_middle _modal_inn" :style=\'inn_style\'>\n\t\t\t<slot></slot></div>\n\t\t\t</div>',
+	template: '<div class="_modal_popup " >\n\t<div class="flex flex-vh-center" style="width: 100%;height: 100%;">\n\t<div class="_modal_inn" :style=\'inn_style\'>\n\t\t\t<slot></slot>\n\t\t</div>\n\t</div>\n\n\t</div>',
+
 	props: ['inn_style']
 });
 
@@ -558,7 +588,7 @@ exports = module.exports = __webpack_require__(1)();
 
 
 // module
-exports.push([module.i, ".flex {\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex; }\n\n.flex-v {\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n      -ms-flex-direction: column;\n          flex-direction: column; }\n\n.flex-grow {\n  -webkit-box-flex: 10;\n      -ms-flex-positive: 10;\n          flex-grow: 10; }\n", ""]);
+exports.push([module.i, ".flex {\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex; }\n\n.flex-v {\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n      -ms-flex-direction: column;\n          flex-direction: column; }\n\n.flex-grow {\n  -webkit-box-flex: 10;\n      -ms-flex-positive: 10;\n          flex-grow: 10; }\n\n.flex-vh-center {\n  -webkit-box-pack: center;\n      -ms-flex-pack: center;\n          justify-content: center;\n  -webkit-box-align: center;\n      -ms-flex-align: center;\n          align-items: center; }\n", ""]);
 
 // exports
 

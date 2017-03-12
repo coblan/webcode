@@ -1027,7 +1027,7 @@ Vue.component('img-uploador', img_uploader);
 * */
 
 var img_crop = {
-    template: ex.template('<div class="img-crop">\n    <input class=\'img-crop\' type=\'file\' @change=\'on_change($event)\'\n            accept=\'image/gif,image/jpeg,image/png\'>\n    <modal v-show=\'cropping\' >\n        <div class="total-wrap" style="width:80vw;height: 80vh;background-color: white;">\n            <div class="crop-wrap">\n                <img class="crop-img" :src="org_img" >\n\n            </div>\n\n            <button @click="rotato_90()">rotato 90</button>\n            <button @click="zoom_in()">zoom in</button>\n            <button @click="zoom_out()">zoom out</button>\n            <button @click="make_sure()">{yes}</button>\n            <button @click="cancel()">\u53D6\u6D88</button>\n\n        </div>\n    </modal>\n    </div>', { yes: '确定' }),
+    template: '<div class="img-crop">\n    <input type=\'file\' @change=\'on_change($event)\'\n            accept=\'image/gif,image/jpeg,image/png\'>\n    <modal v-show=\'cropping\' >\n        <div class="total-wrap flex-v" style="width:80vw;height: 80vh;background-color: white;">\n            <div class="crop-wrap flex-grow">\n                <img class="crop-img" :src="org_img" >\n            </div>\n            <div style="padding: 5px;">\n            <div class="btn-group" role="group">\n                <button class="btn btn-primary" @click="rotato_90()"><i class="fa fa-repeat" aria-hidden="true"></i></button>\n                <button class="btn btn-primary" @click="zoom_in()"><span class="glyphicon glyphicon-zoom-in" aria-hidden="true"></span></button>\n                <button class="btn btn-primary" @click="zoom_out()"><span class="glyphicon glyphicon-zoom-out" aria-hidden="true"></span></button>\n            </div>\n            <div class="btn-group" role="group">\n                <button class="btn btn-primary" @click="make_sure()"><i class="fa fa-check" aria-hidden="true"></i></button>\n                <button class="btn btn-primary" @click="cancel()"><i class="fa fa-times" aria-hidden="true"></i></button>\n            </div>\n\n\n            </div>\n\n\n        </div>\n    </modal>\n    </div>',
     props: ['value', 'config'],
     data: function data() {
         var inn_config = {
@@ -1043,8 +1043,8 @@ var img_crop = {
         };
     },
     mounted: function mounted() {
-        ex.load_css('http://cdn.bootcss.com/cropper/2.3.4/cropper.min.css');
-        ex.load_js('http://cdn.bootcss.com/cropper/2.3.4/cropper.min.js');
+        ex.load_css('https://cdn.bootcss.com/cropper/2.3.4/cropper.min.css');
+        ex.load_js('https://cdn.bootcss.com/cropper/2.3.4/cropper.min.js');
     },
     watch: {
         value: function value(v) {
@@ -1059,8 +1059,8 @@ var img_crop = {
 
     methods: {
         cancel: function cancel() {
-            this.cropping = false;
             $(this.$el).find('input[type=file]').val('');
+            this.cropping = false;
         },
         zoom_in: function zoom_in() {
             $(this.$el).find('.crop-img').cropper('zoom', 0.1);
@@ -1078,6 +1078,9 @@ var img_crop = {
             $(this.$el).find('.crop-img').cropper('setDragMode', 'crop');
         },
         on_change: function on_change(event) {
+            if ($(this.$el).find('input[type=file]').val() == '') {
+                return;
+            }
             var self = this;
             this.cropping = true;
             var img_file = event.target.files[0];
@@ -1105,15 +1108,32 @@ var img_crop = {
             var self = this;
             // Upload cropped image to server if the browser supports `HTMLCanvasElement.toBlob`
 
-            $(this.$el).find('.crop-img').cropper('getCroppedCanvas', this.inn_config.size).toBlob(function (blob) {
-                //var formData = new FormData();
-                self.$emit('input', [blob]);
-                self.cropping = false;
-            });
+            //$(this.$el).find('.crop-img').cropper('getCroppedCanvas',this.inn_config.size).toBlob(function (blob) {
+            //    //var formData = new FormData();
+            //    self.$emit('input',[blob])
+            //    self.cropping=false
+            //
+            //});
+            var data_url = $(this.$el).find('.crop-img').cropper('getCroppedCanvas', this.inn_config.size).toDataURL('image/jpeg');
+            var blob = dataURLtoBlob(data_url);
+            self.$emit('input', [blob]);
+            self.cropping = false;
         }
     }
 
 };
+
+function dataURLtoBlob(dataurl) {
+    var arr = dataurl.split(','),
+        mime = arr[0].match(/:(.*?);/)[1],
+        bstr = atob(arr[1]),
+        n = bstr.length,
+        u8arr = new Uint8Array(n);
+    while (n--) {
+        u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new Blob([u8arr], { type: mime });
+}
 
 Vue.component('img-crop', img_crop);
 
@@ -1272,7 +1292,7 @@ window.fl = fl;
 /**
  * Created by heyulin on 2017/1/24.
  *
- >>>front/input.rst>
+ >->front/input.rst>
  =======
  inputs
  =======
@@ -1292,7 +1312,7 @@ window.fl = fl;
  ::
 
     <datetime v-model='variable' :config='{}'></datetime> // 选择日期和时间
- <<<<
+ <-<
  */
 
 var date_config_set = {
@@ -1414,50 +1434,44 @@ document.write("\n\n");
 
 
 /*
->>>front/link.rst>
+>->front/link.rst>
 =========
 link
 =========
+示例::
 
-::
-
- var director = '{% url 'director' %}'
-
- var cache_meta={
- cache:['person.emp_info.row',
- 'person.bas_info.row',
- 'crt_view'],
- rt_key:{'auth.user':'person.emp_info.row.user'}
- }
-
- ln.cache(cache_meta)
- var back_url=btoa(ex.appendSearch({cache:1}))
- if(pk){
- location=ex.template('{director}model/{name}/edit/{pk}?next={encode_url}',{director:director,name:name,pk:pk,encode_url:back_url})
- }else{
- location=ex.template('{director}model/{name}/edit?next={encode_url}',{director:director,name:name,encode_url:back_url})
- }
-
-<<<<
- */
-
-var ln = {
-    /*
      var director = '{% url 'director' %}'
-       var cache_meta={
+
+     var cache_meta={
      cache:['person.emp_info.row',
      'person.bas_info.row',
      'crt_view'],
      rt_key:{'auth.user':'person.emp_info.row.user'}
      }
-       ln.cache(cache_meta)
+
+    //auth.user 是返回的值在storage中的key，person.emp_info.row.user是还原的对象路径
+
+     ln.cache(cache_meta)
+
+     // 下面是构造跳转的url,其中最重要的是需要appendSearch({cache:1})),表明返回时，需要读取cache
      var back_url=btoa(ex.appendSearch({cache:1}))
      if(pk){
      location=ex.template('{director}model/{name}/edit/{pk}?next={encode_url}',{director:director,name:name,pk:pk,encode_url:back_url})
      }else{
      location=ex.template('{director}model/{name}/edit?next={encode_url}',{director:director,name:name,encode_url:back_url})
      }
-      */
+
+readCache
+	@root_obj
+
+cache
+	@cache_meta
+	@root_obj : 如果没写，默认是window 
+<-<
+ */
+
+var ln = {
+
     readCache: function readCache(root_obj) {
         var root_obj = root_obj || window;
         if (ex.parseSearch().cache) {
@@ -1473,9 +1487,11 @@ var ln = {
                 if (cache_meta && cache_meta.rt_key) {
                     for (var key in cache_meta.rt_key) {
                         var value = sessionStorage.getItem(key);
-                        var targ_key = cache_meta.rt_key[key];
-                        sessionStorage.removeItem(key);
-                        ex.set(root_obj, targ_key, value);
+                        if (value) {
+                            var targ_key = cache_meta.rt_key[key];
+                            sessionStorage.removeItem(key);
+                            ex.set(root_obj, targ_key, value);
+                        }
                     }
                 }
             }
@@ -1673,7 +1689,7 @@ exports = module.exports = __webpack_require__(1)();
 
 
 // module
-exports.push([module.i, ".error {\n  color: red; }\n\n.field-panel {\n  background-color: #F5F5F5;\n  max-width: 80%;\n  margin: 20px;\n  padding: 20px 30px;\n  border-radius: 6px;\n  position: relative;\n  border: 1px solid #D9D9D9;\n  overflow: auto; }\n  .field-panel:after {\n    content: '';\n    display: block;\n    position: absolute;\n    top: 0px;\n    left: 0px;\n    bottom: 0px;\n    width: 180px;\n    border-radius: 6px;\n    background-color: #fff;\n    z-index: 0; }\n  .field-panel .form-group.field {\n    display: flex;\n    align-items: flex-start; }\n    .field-panel .form-group.field .field_input {\n      flex-grow: 0;\n      padding: 5px 20px; }\n      .field-panel .form-group.field .field_input .ckeditor {\n        padding: 20px; }\n    .field-panel .form-group.field:first-child .control-label {\n      border-top: 5px solid #FFF; }\n    .field-panel .form-group.field .control-label {\n      width: 150px;\n      text-align: right;\n      padding: 5px 30px;\n      z-index: 100;\n      flex-shrink: 0;\n      border-top: 1px solid #EEE; }\n  .field-panel .form-group.field .field_input ._tow-col-sel {\n    /*width:750px;*/ }\n  .field-panel .field.error .error {\n    display: inline-block; }\n\n._tow-col-sel select {\n  min-height: 7em; }\n", ""]);
+exports.push([module.i, ".error {\n  color: red; }\n\n.field-panel {\n  background-color: #F5F5F5;\n  max-width: 80%;\n  margin: 20px;\n  padding: 20px 30px;\n  position: relative;\n  border: 1px solid #D9D9D9;\n  overflow: auto; }\n  .field-panel:after {\n    content: '';\n    display: block;\n    position: absolute;\n    top: 0px;\n    left: 0px;\n    bottom: 0px;\n    width: 180px;\n    border-radius: 6px;\n    background-color: #fff;\n    z-index: 0; }\n  .field-panel .form-group.field {\n    display: flex;\n    align-items: flex-start; }\n    .field-panel .form-group.field .field_input {\n      flex-grow: 0;\n      padding: 5px 20px; }\n      .field-panel .form-group.field .field_input .ckeditor {\n        padding: 20px; }\n    .field-panel .form-group.field:first-child .control-label {\n      border-top: 5px solid #FFF; }\n    .field-panel .form-group.field .control-label {\n      width: 150px;\n      text-align: right;\n      padding: 5px 30px;\n      z-index: 100;\n      flex-shrink: 0;\n      border-top: 1px solid #EEE; }\n  .field-panel .form-group.field .field_input ._tow-col-sel {\n    /*width:750px;*/ }\n  .field-panel .field.error .error {\n    display: inline-block; }\n\n._tow-col-sel select {\n  min-height: 7em; }\n", ""]);
 
 // exports
 
@@ -1718,7 +1734,7 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 
 /*
->>>front/fields.rst>
+>->front/fields.rst>
 基本内容
 ==============
 1. field_base
@@ -1748,7 +1764,7 @@ field_base的参数都是采用的关键字参数，结构如下：
 
 
 
-<<<<
+<-<
 *配合jsonpost使用，效果最好
 */
 
@@ -1995,7 +2011,7 @@ var field_base = {
 		},
 		bool: {
 			props: ['name', 'row', 'kw'],
-			template: '<div class="checkbox">\n\t\t\t\t\t    <label><input type="checkbox" :id="\'id_\'+name" v-model=\'row[name]\' :disabled="kw.readonly">\n\t\t\t\t\t    \t<span v-text=\'kw.label\'></span>\n\t\t\t\t\t    </label>\n\t\t\t\t\t  </div>'
+			template: '<div class="checkbox">\n\t        <input type="checkbox" :id="\'id_\'+name" v-model=\'row[name]\' :disabled="kw.readonly">\n\t\t\t <label :for="\'id_\'+name"><span v-text=\'kw.label\'></span></label>\n\t\t\t\t\t  </div>'
 		},
 		date: {
 			props: ['name', 'row', 'kw'],

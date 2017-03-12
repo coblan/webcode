@@ -1,6 +1,6 @@
 
 /*
->>>front/fields.rst>
+>->front/fields.rst>
 基本内容
 ==============
 1. field_base
@@ -30,7 +30,7 @@ field_base的参数都是采用的关键字参数，结构如下：
 
 
 
-<<<<
+<-<
 *配合jsonpost使用，效果最好
 */
 
@@ -304,9 +304,8 @@ var field_base={
         bool:{
 	        props:['name','row','kw'],
 	        template:`<div class="checkbox">
-					    <label><input type="checkbox" :id="'id_'+name" v-model='row[name]' :disabled="kw.readonly">
-					    	<span v-text='kw.label'></span>
-					    </label>
+	        <input type="checkbox" :id="'id_'+name" v-model='row[name]' :disabled="kw.readonly">
+			 <label :for="'id_'+name"><span v-text='kw.label'></span></label>
 					  </div>`
         },
 		date: {

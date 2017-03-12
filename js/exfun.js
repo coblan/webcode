@@ -173,7 +173,10 @@ ex={
 	},
 	each:function (array,func) {
 		for(var i=0;i<array.length;i++){
-			func(array[i])
+			rt = func(array[i])
+			if(rt=='break'){break;}
+			else if(rt=='continue'){continue;}
+
 		}
 	},
 	split:function (base_str,sep) {
@@ -414,7 +417,16 @@ ex={
 		}
 		o[a[a.length-1]]=obj
 		return o;
-	}
+	},
+	trList:function(strlist){
+		// translate string list to a map object
+		var gettext=window.gettext||function(x){return x}
+		var map_obj={}
+		ex.each(strlist,function(key){
+			map_obj[key]=gettext(key)
+		})
+		return map_obj
+	},
 
 
 

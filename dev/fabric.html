@@ -1,0 +1,144 @@
+
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+        <title>Deposits and Withdrawals</title>
+        <script type="text/javascript" src='http://apps.bdimg.com/libs/jquery/1.9.1/jquery.min.js'></script>
+        <script src="http://cdn.bootcss.com/vue/2.1.6/vue.js"></script>
+		<script src="http://cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+		<link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
+		<!--<script src="../js/exfun.js"></script>
+		<script src="../build/fields.pack.js"></script>-->
+
+		<script src="https://cdn.bootcss.com/fabric.js/1.7.7/fabric.min.js"></script>
+
+	<script type="text/javascript">
+		Vue.config.devtools = true
+		$(function () {
+				// create a wrapper around native canvas element (with id="c")
+			var canvas = new fabric.Canvas('c');
+
+			// create a rectangle object
+			var rect = new fabric.Rect({
+			  left: 100,
+			  top: 100,
+			  fill: 'red',
+			  width: 200,
+			  height: 200,
+			  originX: 'center',
+  			originY: 'center'
+			});
+
+			var rect2=new fabric.Rect({
+			  left: 100,
+			  top: 100,
+			  fill: 'red',
+			  width: 20,
+			  height: 20,
+			  originX: 'center',
+  			originY: 'center'
+			})
+			// "add" rectangle onto canvas
+			
+			var tip=new fabric.Rect({
+			  left: 100,
+			  top: 100,
+			  fill: 'yellow',
+			  width: 200,
+			  height: 200,
+			  visible:false,
+			  selectable:false,
+			})
+			var text = new fabric.Text('hello world', { 
+				left: 100, top: 100 ,
+				originX: 'center',
+  				originY: 'center'
+				});
+			
+			var group = new fabric.Group([ rect, text ], {
+			  left: 150,
+			  top: 100,
+			  angle: -10
+			});
+			rect2.set('selectable',false)
+			canvas.add(group)
+			canvas.add(rect2)
+			canvas.add(tip)
+			group.on('mouseup',function (e) {
+				bus.$emit('pos',[e.e.clientX,e.e.clientY])
+				//alert(e)
+			})
+			  canvas.on('mouse:move', function(e) {
+			    //console.log(e.target)
+			    //if(e.target){
+				   // //e.target.setFill('red');
+				    
+				   // tip.set('left',e.e.clientX+10)
+				   // tip.set('top',e.e.clientY)
+				   // tip.set('visible',true)
+				    
+			    //}else{
+				   //  tip.set('visible',false)
+			    //}
+			    canvas.renderAll();
+			  });
+
+			    canvas.on('mouse:out', function(e) {
+					    ////e.target.setFill('green');
+					    //tip.set('visible',false)
+					    //canvas.renderAll();
+					  });
+  
+		})
+var bus=new Vue()
+		$(function () {
+			
+			new Vue({
+				el:'.wawa',
+				data:{
+					x:100,
+					y:100,
+				},
+				created:function () {
+					bus.$on('pos',this.set_pos)
+				},
+				methods:{
+					set_pos:function (pos) {
+						this.x=pos[0]
+						this.y=pos[1]
+					}
+				}
+			})
+		}
+		)
+	</script>
+	</head>
+    <body >
+	    <canvas  width='1000' height='1000'>
+		    <div>
+		    	fuck
+		    </div>
+	    </canvas>
+
+	<!--:style='{left:x,top:y}'-->
+
+	<!--<div id="test" class="wawa" :style='{left:x+"px",top:y+"px"}'>
+		hh
+	</div>-->
+	
+    <style type="text/css" media="screen" id="test">
+    	.wawa{
+	    	position: fixed;
+	    	width:100px;
+	    	height:100px;
+	    	background-color: blue;
+	    	/*top:0px;
+	    	left:0px;*/
+    	}
+    </style>
+    </body>
+
+
+</html>
+	

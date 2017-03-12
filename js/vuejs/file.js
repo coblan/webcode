@@ -301,25 +301,32 @@ Vue.component('img-uploador',img_uploader)
 * */
 
 var img_crop={
-    template: ex.template(`<div class="img-crop">
-    <input class='img-crop' type='file' @change='on_change($event)'
+    template: `<div class="img-crop">
+    <input type='file' @change='on_change($event)'
             accept='image/gif,image/jpeg,image/png'>
     <modal v-show='cropping' >
-        <div class="total-wrap" style="width:80vw;height: 80vh;background-color: white;">
-            <div class="crop-wrap">
+        <div class="total-wrap flex-v" style="width:80vw;height: 80vh;background-color: white;">
+            <div class="crop-wrap flex-grow">
                 <img class="crop-img" :src="org_img" >
+            </div>
+            <div style="padding: 5px;">
+            <div class="btn-group" role="group">
+                <button class="btn btn-primary" @click="rotato_90()"><i class="fa fa-repeat" aria-hidden="true"></i></button>
+                <button class="btn btn-primary" @click="zoom_in()"><span class="glyphicon glyphicon-zoom-in" aria-hidden="true"></span></button>
+                <button class="btn btn-primary" @click="zoom_out()"><span class="glyphicon glyphicon-zoom-out" aria-hidden="true"></span></button>
+            </div>
+            <div class="btn-group" role="group">
+                <button class="btn btn-primary" @click="make_sure()"><i class="fa fa-check" aria-hidden="true"></i></button>
+                <button class="btn btn-primary" @click="cancel()"><i class="fa fa-times" aria-hidden="true"></i></button>
+            </div>
+
 
             </div>
 
-            <button @click="rotato_90()">rotato 90</button>
-            <button @click="zoom_in()">zoom in</button>
-            <button @click="zoom_out()">zoom out</button>
-            <button @click="make_sure()">{yes}</button>
-            <button @click="cancel()">取消</button>
 
         </div>
     </modal>
-    </div>`,{yes:'确定'}),
+    </div>`,
     props: ['value','config'],
     data: function () {
         var inn_config={
@@ -335,8 +342,8 @@ var img_crop={
         }
     },
     mounted:function(){
-        ex.load_css('http://cdn.bootcss.com/cropper/2.3.4/cropper.min.css')
-        ex.load_js('http://cdn.bootcss.com/cropper/2.3.4/cropper.min.js')
+        ex.load_css('https://cdn.bootcss.com/cropper/2.3.4/cropper.min.css')
+        ex.load_js('https://cdn.bootcss.com/cropper/2.3.4/cropper.min.js')
     },
     watch: {
         value: function (v) {
@@ -352,8 +359,8 @@ var img_crop={
 
     methods: {
         cancel:function(){
-            this.cropping=false
             $(this.$el).find('input[type=file]').val('')
+            this.cropping=false
         },
         zoom_in:function(){
             $(this.$el).find('.crop-img').cropper('zoom', 0.1);
@@ -371,6 +378,9 @@ var img_crop={
             $(this.$el).find('.crop-img').cropper('setDragMode','crop')
         },
         on_change: function (event) {
+            if($(this.$el).find('input[type=file]').val()==''){
+                return
+            }
             var self=this
             this.cropping=true
             var img_file = event.target.files[0]
@@ -398,16 +408,30 @@ var img_crop={
             var self=this
             // Upload cropped image to server if the browser supports `HTMLCanvasElement.toBlob`
 
-            $(this.$el).find('.crop-img').cropper('getCroppedCanvas',this.inn_config.size).toBlob(function (blob) {
-                //var formData = new FormData();
-                self.$emit('input',[blob])
-                self.cropping=false
-
-            });
+            //$(this.$el).find('.crop-img').cropper('getCroppedCanvas',this.inn_config.size).toBlob(function (blob) {
+            //    //var formData = new FormData();
+            //    self.$emit('input',[blob])
+            //    self.cropping=false
+            //
+            //});
+            var data_url = $(this.$el).find('.crop-img').cropper('getCroppedCanvas',this.inn_config.size).toDataURL('image/jpeg')
+            var blob=dataURLtoBlob(data_url)
+            self.$emit('input',[blob])
+            self.cropping=false
         }
     }
 
 }
+
+function dataURLtoBlob(dataurl) {
+    var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+        bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+    while(n--){
+        u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new Blob([u8arr], {type:mime});
+}
+
 
 Vue.component('img-crop',img_crop)
 

@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ 	return __webpack_require__(__webpack_require__.s = 1);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -73,15 +73,39 @@
 "use strict";
 
 
-/*
-Argments Format:
-=================
+/**
+ * Created by coblan on 2017/3/11.
 
-heads=[{name:'xxx',label:'label1'},
-        {name:'jb',label:'jb'}]
-rows=[{xxx:"jjy",jb:'hahaer'}]
+ >->front/filter.rst>
 
+
+ <-<
  */
+
+Vue.component('com-filter', {
+    props: ['heads', 'search', 'search_tip'],
+    template: ex.template('\n    <form class=\'button-group \' autocomplete="on" v-if=\'search_tip || heads.length>0\'>\n            <input v-if=\'search_tip\' type="text" name="_q" v-model=\'search._q\' :placeholder=\'search_tip\' class=\'form-control\'/>\n            <select v-if="filter.options"  v-for=\'filter in heads\' v-model=\'search[filter.name]\' class=\'form-control\'>\n                <option :value="undefined" v-text=\'filter.label\'></option>\n                <option value="">----</option>\n                <option v-for=\'option in filter.options\' :value="option.value" v-text=\'option.label\'></option>\n            </select>\n            <div  v-for=\'filter in heads\' v-if="[\'time\',\'date\',\'month\'].indexOf(filter.type)!=-1" class="date-filter">\n                <span>{From}</span>\n                <date v-if="filter.type==\'month\'" set="month" v-model="search[\'_start_\'+filter.name]"></date>\n                <span>{To}</span>\n                <date v-if="filter.type==\'month\'" set="month" v-model="search[\'_end_\'+filter.name]"></date>\n            </div>\n\n            <slot></slot>\n\n            <button name="go" type="button" class="btn btn-info" @click=\'submit()\' >{submit}</button>\n        </form>\n    ', ex.trList(['From', 'To', 'submit'])),
+    methods: {
+        submit: function submit() {
+            location = ex.template('{path}{search}', { path: location.pathname,
+                search: encodeURI(ex.searchfy(this.search, '?')) });
+        }
+    }
+
+});
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _filter = __webpack_require__(0);
+
+var myfilter = _interopRequireWildcard(_filter);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 Vue.component('sort-table', {
     props: {
@@ -169,6 +193,18 @@ Events:
 goto_page,num
 
 */
+
+
+/*
+Argments Format:
+=================
+
+heads=[{name:'xxx',label:'label1'},
+        {name:'jb',label:'jb'}]
+rows=[{xxx:"jjy",jb:'hahaer'}]
+
+ */
+
 Vue.component('paginator', {
     props: ['nums', 'crt'],
     methods: {
@@ -272,15 +308,15 @@ var table_fun = {
         map: function map(name, row) {
             var content = row[name];
 
-            if (name == heads[0].name) {
+            if (name == this.heads[0].name) {
                 return ex.template('<a href="edit/{pk}?next={next}">{value}</a>', { pk: row.pk,
                     next: btoa(location.href),
                     value: row[name]
                 });
             } else if (content === true) {
-                return '<img src="http://res.enjoyst.com/true.png" width="15px" />';
+                return '<img src="//res.enjoyst.com/true.png" width="15px" />';
             } else if (content === false) {
-                return '<img src="http://res.enjoyst.com/false.png" width="15px" />';
+                return '<img src="//res.enjoyst.com/false.png" width="15px" />';
             } else {
                 return content;
             }
