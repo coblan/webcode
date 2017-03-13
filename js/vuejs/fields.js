@@ -175,13 +175,14 @@ var field_base={
 	            })
             },
         },
-        logo:{
+        logo:{// absolate
 	        props:['name','row','kw'],
             template:`<logo-input :up_url="kw.up_url" :web_url.sync="row[name]" :id="'id_'+name"></logo-input>`
         },
 		picture:{
 			props:['name','row','kw'],
-			template:`<img-uploador :up_url="kw.up_url" v-model="row[name]" :id="'id_'+name" :config="kw.config"></img-uploador>`
+			template:`<div><img class="img-uploador" v-if='kw.readonly' :src='row[name]'/>
+			<img-uploador v-else :up_url="kw.up_url" v-model="row[name]" :id="'id_'+name" :config="kw.config"></img-uploador></div>`
 		},
         sim_select:{
 	        props:['name','row','kw'],
@@ -212,14 +213,14 @@ var field_base={
 				}
 			},
             methods:{
-            	//get_label:function(options,value){
-            	//	var option = ex.findone(options,{value:value})
-            	//	if(!option){
-            	//		return '---'
-            	//	}else{
-            	//		return option.label
-            	//	}
-            	//},
+            	get_label:function(options,value){
+            		var option = ex.findone(options,{value:value})
+            		if(!option){
+            			return '---'
+            		}else{
+            			return option.label
+            		}
+            	},
 	            //add:function () {
 		         //   var self=this
 	            //	window.open(this.kw.add_url+'edit/?_pop=1',location.pathname,'height=500,width=800,resizable=yes,scrollbars=yes,top=200,left=300')
@@ -373,18 +374,60 @@ export function merge(mains,subs) {
 			}
 		})
 	})
-	//for(let sub of sub){
-	//	for (let main of mains){
-	//		if(main.name==sub.name){
-	//			for(let k in sub){
-	//				main[k]=sub[k]
-	//			}
-	//			break
-	//		}
-	//	}
-	//}
 }
 
+var field_fun={
+	methods:{
+		submit:function () {
+			var self =this;
+			show_upload()
+			var search =ex.parseSearch() //parseSearch(location.search)
+			var post_data=[{fun:'save',row:this.kw.row}]
+			ex.post('',JSON.stringify(post_data),function (resp) {
+				if(resp.save.pk && resp.save._class){
+					sessionStorage.setItem(resp.save._class,resp.save.pk)
+				}
+				if( resp.save.errors){
+					self.kw.errors = resp.save.errors
+					hide_upload()
+				}else if(search._pop==1){
+					if(window.opener.on_subwin_close){
+						window.opener.on_subwin_close({pk:resp.save.pk,_class:resp.save._class})
+					}
+					window.close()
+				}else if(search.next){
+
+					location=atob(search.next)
+				}else{
+					hide_upload(1000)
+
+				}
+			})
+		},
+		cancel:function () {
+			var search =ex.parseSearch() //parseSearch(location.search)
+			if(search.next){
+				location=atob(search.next)
+			}
+		},
+		del_row:function (path) {
+			if(!confirm(ex.tr('relay delete?')))
+				return
+			var obj={
+				pk:this.kw.row.pk,
+				_class:this.kw.row._class
+			}
+			var obj_str=JSON.stringify([obj])
+
+			location=ex.template('{path}?rows={rows}&next={next}',{path:path,
+				rows:btoa(obj_str),
+				next:ex.parseSearch().next || btoa('/')})
+		}
+	}
+}
+
+
+window.field_fun=field_fun
 window.hook_ajax_msg=hook_ajax_msg
 window.update_vue_obj=update_vue_obj
 //window.use_color = use_color

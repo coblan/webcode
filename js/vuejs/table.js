@@ -130,6 +130,7 @@ Events:
 goto_page,num
 
 */
+
 Vue.component('paginator',{
     props:['nums','crt'],
     methods:{
@@ -202,26 +203,7 @@ var build_table_args = {
     }
 }
 
-document.write(`
-<style type="text/css" media="screen" id="test">
-ul.pagination li {display: inline;cursor: pointer}
 
-ul.pagination li span {
-    color: black;
-    float: left;
-    padding: 4px 10px;
-    text-decoration: none;
-    border: 1px solid #ddd;
-}
-
-ul.pagination li span.active {
-    background-color: #4CAF50;
-    color: white;
-}
-
-ul.pagination li span:hover:not(.active) {background-color: #ddd;}
-</style>
-`)
 
 var table_fun={
 	methods:{
@@ -278,7 +260,7 @@ var table_fun={
                 return content
             }
         },
-        del_item:function () {
+        del_item:function (path) {
 
             if (this.selected.length==0){
                 return
@@ -294,10 +276,10 @@ var table_fun={
                     }
                 }
             }
-            var path = '{% url "del_rows" %}'
+
             location=ex.template("{path}?rows={rows}&next={next}",{path:path,
                 rows:btoa(JSON.stringify(inst_ls)),
-                next:btoa(location.pathname+location.search)})
+                next: ex.parseSearch().next || btoa('/')})
         },
         goto_page:function (page) {
             this.search_args._page=page
@@ -372,13 +354,7 @@ Vue.component('sort-mark',{
 	//}
 	
 })
-document.write(`
-<style type="text/css" media="screen">
-	.sort-mark img{
-		width:20px;
-	}
-</style>
-`)
+
 
 
 

@@ -3,7 +3,7 @@ table.fake-suit{
   border: 1px solid #DDD;
   border-radius:6px;
 
-  thead{
+  th{
     font-weight: bold;
     background:{
       color: #e5e5e5;
@@ -42,7 +42,26 @@ table.fake-suit{
 
 }
 
+.sort-mark img{
+  width:20px;
+}
 
+ul.pagination li {display: inline;cursor: pointer}
+
+ul.pagination li span {
+  color: black;
+  float: left;
+  padding: 4px 10px;
+  text-decoration: none;
+  border: 1px solid #ddd;
+}
+
+ul.pagination li span.active {
+  background-color: #4CAF50;
+  color: white;
+}
+
+ul.pagination li span:hover:not(.active) {background-color: #ddd;}
 //.table td{
 //  border-left: 1px solid #F5F5F5;
 //}

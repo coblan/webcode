@@ -418,6 +418,10 @@ ex={
 		o[a[a.length-1]]=obj
 		return o;
 	},
+	tr:function(str){
+		var gettext=window.gettext||function(x){return x}
+		return gettext(str)
+	},
 	trList:function(strlist){
 		// translate string list to a map object
 		var gettext=window.gettext||function(x){return x}
