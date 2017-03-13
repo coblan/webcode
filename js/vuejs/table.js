@@ -11,6 +11,7 @@ rows=[{xxx:"jjy",jb:'hahaer'}]
  */
 
 import * as myfilter from './filter.js'
+require('./css/table.scss')
 
 
 Vue.component('sort-table',{
@@ -224,6 +225,10 @@ ul.pagination li span:hover:not(.active) {background-color: #ddd;}
 
 var table_fun={
 	methods:{
+        search:function () {
+            location =ex.template('{path}{search}',{path:location.pathname,
+                search: encodeURI(ex.searchfy(this.search_args,'?')) })
+        },
 		filter_minus:function (array) {
 			return ex.map(array,function (v) {
 					if(v.startsWith('-')){
@@ -272,7 +277,35 @@ var table_fun={
             }else{
                 return content
             }
-        }
+        },
+        del_item:function () {
+
+            if (this.selected.length==0){
+                return
+            }
+            var rows=[]
+            var inst_ls =[]
+            for(var j=0;j<this.selected.length;j++){
+                var pk = this.selected[j]
+                for(var i=0;i<this.rows.length;i++){
+                    if(this.rows[i].pk.toString()==pk){
+                        rows.push(this.rows[i])
+                        inst_ls.push({pk:pk,_class:this.rows[i]._class})
+                    }
+                }
+            }
+            var path = '{% url "del_rows" %}'
+            location=ex.template("{path}?rows={rows}&next={next}",{path:path,
+                rows:btoa(JSON.stringify(inst_ls)),
+                next:btoa(location.pathname+location.search)})
+        },
+        goto_page:function (page) {
+            this.search_args._page=page
+            this.search()
+        },
+        add_new:function () {
+            return 'edit/?next='+btoa(location.pathname+location.search)
+        },
 	},
 
 }

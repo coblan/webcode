@@ -27,9 +27,6 @@ field_base的参数都是采用的关键字参数，结构如下：
  <field name='username' :kw='kw' ></field>
 
 
-
-
-
 <-<
 *配合jsonpost使用，效果最好
 */

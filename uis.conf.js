@@ -70,11 +70,7 @@ module.exports =
 					loader: "sass-loader" // compiles Sass to CSS
 				}]
 			}
-	 //   {
-		//   test: /.scss$/,
-		//   loader: ExtractTextPlugin.extract('style', 'css!sass')
-		//}
-	    
+
 	  ],
 	
 	}
