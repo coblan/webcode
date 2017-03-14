@@ -247,11 +247,12 @@ var table_fun={
             var content=row[name]
 
             if(name==this.heads[0].name){
-                return ex.template('<a href="edit/{pk}?next={next}">{value}</a>',
-                    {	pk:row.pk,
-                        next:btoa(location.href),
-                        value:row[name]
-                    })
+                return this. form_link(name,row)
+                //return ex.template('<a href="edit/{pk}?next={next}">{value}</a>',
+                //    {	pk:row.pk,
+                //        next:btoa(location.href),
+                //        value:row[name]
+                //    })
             }else if(content===true){
                 return '<img src="//res.enjoyst.com/true.png" width="15px" />'
             }else if(content===false){
@@ -259,6 +260,13 @@ var table_fun={
             }else{
                 return content
             }
+        },
+        form_link:function(name,row){
+            return ex.template('<a href="edit/{pk}?next={next}">{value}</a>',
+                {	pk:row.pk,
+                    next:btoa(location.href),
+                    value:row[name]
+                })
         },
         del_item:function (path) {
 
