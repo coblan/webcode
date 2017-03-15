@@ -248,11 +248,6 @@ var table_fun={
 
             if(name==this.heads[0].name){
                 return this. form_link(name,row)
-                //return ex.template('<a href="edit/{pk}?next={next}">{value}</a>',
-                //    {	pk:row.pk,
-                //        next:btoa(location.href),
-                //        value:row[name]
-                //    })
             }else if(content===true){
                 return '<img src="//res.enjoyst.com/true.png" width="15px" />'
             }else if(content===false){

@@ -96,10 +96,14 @@ ex={
             }
 		}else{
 			 for (var key in args) {
-                if(args[key]!=undefined){
-                    var reg = new RegExp("({" + key + "})", "g");
-                    result = result.replace(reg, args[key]);
-                }
+				 var value= args[key]
+				 if(value==undefined){
+					 value=''
+				 }
+
+				var reg = new RegExp("({" + key + "})", "g");
+				result = result.replace(reg, value);
+
 	         }
 		}
 	    return result;
