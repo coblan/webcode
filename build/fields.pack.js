@@ -1396,9 +1396,45 @@ Vue.component('datetime', {
     }
 });
 
-ex.append_css("<style type=\"text/css\" media=\"screen\">\n    .datetime-picker{\n        position: relative;\n        display: inline-block;\n    }\n    .datetime-picker input[readonly]{\n        background-color: white;\n    }\n\t.datetime-picker .cross{\n\t    display: none;\n\t}\n\t.datetime-picker:hover .cross{\n\t    display: inline-block;\n\t    position: absolute;\n\t    right: 8px;\n\t    top:3px;\n\t    cursor: pointer;\n\t    /*z-index: 10;*/\n\t}\n</style>\n ");
+var color = {
+    props: ['value'],
+    template: "<input type=\"text\">",
+    methods: {
+        init_and_listen: function init_and_listen() {
+            var self = this;
+            Vue.nextTick(function () {
+                $(self.$el).spectrum({
+                    color: self.value,
+                    showInitial: true,
+                    showInput: true,
+                    preferredFormat: "name",
+                    change: function change(color) {
+                        self.src_color = color.toHexString();
+                        self.$emit('input', self.src_color);
+                    }
+                });
+            });
+        }
+    },
+    watch: {
+        value: function value(_value) {
+            if (this.src_color != _value) {
+                this.init_and_listen();
+            }
+        }
+    },
+    mounted: function mounted() {
+        var self = this;
+        ex.load_css('https://cdn.bootcss.com/spectrum/1.8.0/spectrum.min.css');
+        ex.load_js('https://cdn.bootcss.com/spectrum/1.8.0/spectrum.min.js', function () {
+            self.init_and_listen();
+        });
+    }
+};
 
-document.write("\n\n");
+Vue.component('color', color);
+
+ex.append_css("<style type=\"text/css\" media=\"screen\">\n    .datetime-picker{\n        position: relative;\n        display: inline-block;\n    }\n    .datetime-picker input[readonly]{\n        background-color: white;\n    }\n\t.datetime-picker .cross{\n\t    display: none;\n\t}\n\t.datetime-picker:hover .cross{\n\t    display: inline-block;\n\t    position: absolute;\n\t    right: 8px;\n\t    top:3px;\n\t    cursor: pointer;\n\t    /*z-index: 10;*/\n\t}\n</style>\n ");
 
 /***/ }),
 /* 6 */

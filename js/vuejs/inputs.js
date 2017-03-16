@@ -143,6 +143,44 @@ Vue.component('datetime',{
     }
 })
 
+var color={
+    props:['value'],
+    template: `<input type="text">`,
+    methods:{
+        init_and_listen:function(){
+            var self = this
+            Vue.nextTick(function(){
+                $(self.$el).spectrum({
+                    color: self.value,
+                    showInitial: true,
+                    showInput: true,
+                    preferredFormat: "name",
+                    change: function(color) {
+                        self.src_color=color.toHexString()
+                        self.$emit('input',self.src_color)
+                    }
+                });
+            })
+        }
+    },
+    watch:{
+        value:function (value) {
+            if(this.src_color !=value){
+                this.init_and_listen()
+            }
+        }
+    },
+    mounted:function(){
+        var self=this;
+        ex.load_css('https://cdn.bootcss.com/spectrum/1.8.0/spectrum.min.css')
+        ex.load_js('https://cdn.bootcss.com/spectrum/1.8.0/spectrum.min.js',function () {
+            self.init_and_listen()
+        })
+    },
+}
+
+Vue.component('color',color)
+
 ex.append_css(
     `<style type="text/css" media="screen">
     .datetime-picker{
@@ -167,6 +205,3 @@ ex.append_css(
  `
 )
 
-document.write(`
-
-`)
