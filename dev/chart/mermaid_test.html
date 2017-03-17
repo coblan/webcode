@@ -1,0 +1,73 @@
+
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Deposits and Withdrawals</title>
+    <script type="text/javascript" src='http://apps.bdimg.com/libs/jquery/1.9.1/jquery.min.js'></script>
+    <script src="http://cdn.bootcss.com/vue/2.1.6/vue.js"></script>
+    <script src="http://cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <!--<script src="../js/exfun.js"></script>
+    <script src="../build/fields.pack.js"></script>-->
+
+    <!--<script src="https://cdn.bootcss.com/fabric.js/1.7.7/fabric.min.js"></script>-->
+    <!--<script src="https://cdn.bootcss.com/gojs/1.7.3/go-debug.js"></script>-->
+    <!--<script src="https://cdn.bootcss.com/gojs/1.7.3/go.js"></script>-->
+    <link href="https://cdn.bootcss.com/mermaid/7.0.0/mermaid.min.css" rel="stylesheet">
+    <script src="https://cdn.bootcss.com/mermaid/7.0.0/mermaid.min.js"></script>
+
+
+    <script type="text/javascript">
+        Vue.config.devtools = true
+        var bus=new Vue()
+        $(function(){
+            mermaid.init({noteMargin: 10}, ".mermaid");
+
+            $('.node').bind('click',function(e){
+                $(this).attr('class','node active')
+            })
+        })
+        function callback(e){
+            alert(e)
+        }
+    </script>
+</head>
+<body >
+
+<div class="mermaid">
+    graph LR
+    A-->B
+    B-->C
+    C-->A
+    D-->C
+
+    click A callback "Tooltip for a callback"
+</div>
+
+<div class="mermaid">
+    %% Subgraph example
+    graph TB
+    subgraph one
+    a1-->a2
+    end
+    subgraph two
+    b1-->b2
+    end
+    subgraph three
+    c1-->c2
+    end
+    c1-->a2
+</div>
+
+</body>
+
+<style>
+    .node{
+        cursor: pointer;
+    }
+    .node.active rect{
+        fill: darkseagreen;
+    }
+</style>
+</html>
