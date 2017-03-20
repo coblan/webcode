@@ -1,0 +1,157 @@
+
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Deposits and Withdrawals</title>
+    <script type="text/javascript" src='http://apps.bdimg.com/libs/jquery/1.9.1/jquery.min.js'></script>
+    <script src="http://cdn.bootcss.com/vue/2.1.6/vue.js"></script>
+    <script src="http://cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <!--<script src="../js/exfun.js"></script>
+    <script src="../build/fields.pack.js"></script>-->
+
+    <!--<script src="https://cdn.bootcss.com/fabric.js/1.7.7/fabric.min.js"></script>-->
+    <!--<script src="https://cdn.bootcss.com/gojs/1.7.3/go-debug.js"></script>-->
+    <!--<script src="https://cdn.bootcss.com/gojs/1.7.3/go.js"></script>-->
+    <script src="./go.js"></script>
+
+    <script type="text/javascript">
+        Vue.config.devtools = true
+        var bus=new Vue()
+
+        mydata=[
+            { key: "1",              name: "Don Meow",   source: "cat1.png" },
+            { key: "2", parent: "1", name: "Demeter",    source: "cat2.png" },
+            { key: "3", parent: "1", name: "Copricat",   source: "cat3.png" },
+            { key: "4", parent: "3", name: "Jellylorum", source: "cat4.png" },
+            { key: "5", parent: "3", name: "Alonzo",     source: "cat5.png" },
+            { key: "6", parent: "2", name: "Munkustrap", source: "cat6.png" }
+        ];
+
+        $(function () {
+
+                   dog= new Vue({
+                        el:'#there',
+                        data:{
+                            x:100,
+                            y:100,
+                            mydata:mydata,
+                            crt_data:'',
+                            fuck:''
+                        },
+                        created:function () {
+                            bus.$on('pos',this.set_pos)
+                        },
+
+                        methods:{
+                            on_click:function(){
+                                update(this.diagram,this.crt_data,{name:this.fuck})
+                            },
+                            set_pos:function (data) {
+                               this.crt_data=data
+                                this.fuck=this.crt_data.name
+                            },
+                            set_diagram:function(diagram){
+                                this.diagram=diagram
+                            },
+                            add_new:function(){
+                                this.diagram.model.addNodeData({ key: "7", parent: "2", name: "sssssss", source: "cat6.png" })
+                            },
+                            remove:function(){
+                                var n = this.diagram.findPartForKey('7')
+                                this.diagram.remove(n)
+                            }
+                        }
+                    })
+                }
+        )
+
+        function nodeClicked(e,obj){
+            dog.set_pos(obj.data)
+        }
+        function update(myDiagram,data,props){
+            myDiagram.startTransaction("update");
+            for(var key in props){
+                myDiagram.model.setDataProperty(data,key,props[key])
+            }
+//            myDiagram.model.setDataProperty(data, "name", "(Vacant)");
+//            myDiagram.model.setDataProperty(data, "comments", "");
+            myDiagram.commitTransaction("update");
+        }
+
+        $(function () {
+
+            var $ = go.GraphObject.make;
+
+            var myDiagram =
+                    $(go.Diagram, "myDiagramDiv",
+                            {
+//                                initialContentAlignment: go.Spot.Center, // center Diagram contents
+                                "undoManager.isEnabled": true, // enable Ctrl-Z to undo and Ctrl-Y to redo
+                                layout: $(go.TreeLayout, // specify a Diagram.layout that arranges trees
+                                        { angle: 90, layerSpacing: 35 })
+                            });
+
+// the template we defined earlier
+            myDiagram.nodeTemplate =
+                    $(go.Node, "Horizontal",
+                            { background: "#44CCFF",
+                                click: nodeClicked,},
+                            $(go.Picture,
+                                    { margin: 10, width: 50, height: 50, background: "red" },
+                                    new go.Binding("source")),
+                            $(go.TextBlock, "Default Text",
+                                    { margin: 12, stroke: "white", font: "bold 16px sans-serif" },
+                                    new go.Binding("text", "name"))
+                    );
+
+// define a Link template that routes orthogonally, with no arrowhead
+            myDiagram.linkTemplate =
+                    $(go.Link,
+                            { routing: go.Link.Orthogonal, corner: 5 },
+                            $(go.Shape, { strokeWidth: 3, stroke: "#555" })); // the link shape
+
+            var model = $(go.TreeModel);
+
+
+
+            model.nodeDataArray = mydata
+
+            myDiagram.model = model;
+
+
+            dog.set_diagram(myDiagram)
+
+        })
+    </script>
+</head>
+<body >
+<div id="there">
+    <button @click="on_click()">sss</button>
+    <button @click="add_new()">add</button>
+    
+    <div>
+        <input type="text" v-model="fuck"/>
+    </div>
+    
+    <!--<div style="width: 300px;float: right">-->
+        <!--<div id="myInspectorDiv" class="inspector" ></div>-->
+        <!--<div>-->
+            <!--<span>sssjj</span>-->
+        <!--</div>-->
+    <!--</div>-->
+
+    <div id="myDiagramDiv"
+         style="width:900px; height:950px; background-color: #DAE4E4;"></div>
+</div>
+
+
+
+
+
+
+</body>
+
+
+</html>

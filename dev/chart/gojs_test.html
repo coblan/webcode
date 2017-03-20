@@ -15,22 +15,37 @@
 		<!--<script src="https://cdn.bootcss.com/gojs/1.7.3/go-debug.js"></script>-->
 		<!--<script src="https://cdn.bootcss.com/gojs/1.7.3/go.js"></script>-->
 		<script src="./go.js"></script>
+		<script src="./DataInspector.js"></script>
 
 	<script type="text/javascript">
 		Vue.config.devtools = true
 var bus=new Vue()
+
+		mydata=[
+			{ key: "1",              name: "Don Meow",   source: "cat1.png" },
+			{ key: "2", parent: "1", name: "Demeter",    source: "cat2.png" },
+			{ key: "3", parent: "1", name: "Copricat",   source: "cat3.png" },
+			{ key: "4", parent: "3", name: "Jellylorum", source: "cat4.png" },
+			{ key: "5", parent: "3", name: "Alonzo",     source: "cat5.png" },
+		];
+
 		$(function () {
 			
 			new Vue({
-				el:'.wawa',
+				el:'#there',
 				data:{
 					x:100,
 					y:100,
+					mydata:mydata
 				},
 				created:function () {
 					bus.$on('pos',this.set_pos)
 				},
 				methods:{
+					on_click:function(){
+						this.mydata.push({ key: "6", parent: "2", name: "Munkustrap", source: "cat6.png" })
+						alert('ok')
+					},
 					set_pos:function (pos) {
 						this.x=pos[0]
 						this.y=pos[1]
@@ -39,6 +54,10 @@ var bus=new Vue()
 			})
 		}
 		)
+
+		function nodeClicked(e){
+			alert('sss')
+		}
 
 		$(function () {
 
@@ -56,7 +75,8 @@ var bus=new Vue()
 // the template we defined earlier
 			myDiagram.nodeTemplate =
 					$(go.Node, "Horizontal",
-							{ background: "#44CCFF" },
+							{ background: "#44CCFF",
+								click: nodeClicked,},
 							$(go.Picture,
 									{ margin: 10, width: 50, height: 50, background: "red" },
 									new go.Binding("source")),
@@ -72,25 +92,51 @@ var bus=new Vue()
 							$(go.Shape, { strokeWidth: 3, stroke: "#555" })); // the link shape
 
 			var model = $(go.TreeModel);
-			model.nodeDataArray =
-					[
-						{ key: "1",              name: "Don Meow",   source: "cat1.png" },
-						{ key: "2", parent: "1", name: "Demeter",    source: "cat2.png" },
-						{ key: "3", parent: "1", name: "Copricat",   source: "cat3.png" },
-						{ key: "4", parent: "3", name: "Jellylorum", source: "cat4.png" },
-						{ key: "5", parent: "3", name: "Alonzo",     source: "cat5.png" },
-						{ key: "6", parent: "2", name: "Munkustrap", source: "cat6.png" }
-					];
+
+
+
+			model.nodeDataArray = mydata
+
 			myDiagram.model = model;
 
 
+			var inspector = new Inspector('myInspectorDiv', myDiagram,
+					{
+						// uncomment this line to only inspect the named properties below instead of all properties on each object:
+						// includesOwnProperties: false,
+						properties: {
+							"name": { show: Inspector.showIfNode  },
+							// key would be automatically added for nodes, but we want to declare it read-only also:
+							"key": { readOnly: true, show: Inspector.showIfPresent },
+							// color would be automatically added for nodes, but we want to declare it a color also:
+//							"color": { show: Inspector.showIfPresent, type: 'color' },
+//							// Comments and LinkComments are not in any node or link data (yet), so we add them here:
+//							"Comments": { show: Inspector.showIfNode  },
+//							"flag": { show: Inspector.showIfNode, type: 'boolean', defaultValue: true  },
+//							"LinkComments": { show: Inspector.showIfLink },
+						}
+					});
 
 		})
 	</script>
 	</head>
     <body >
-<div id="myDiagramDiv"
-     style="width:900px; height:950px; background-color: #DAE4E4;"></div>
+	<div id="there">
+		<button @click="on_click()">sss</button>
+	</div>
+	<div class="flex">
+		<div style="width: 300px;float: right">
+			<div id="myInspectorDiv" class="inspector" ></div>
+			<div>
+				<span>sssjj</span>
+			</div>
+		</div>
+
+		<div id="myDiagramDiv"
+			 style="width:900px; height:950px; background-color: #DAE4E4;"></div>
+
+	</div>
+
 
     </body>
 
