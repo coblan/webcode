@@ -209,12 +209,55 @@ ex={
 			return array.indexOf(obj)!=-1
 		}
 	},
-	filter:function (array,func) {
+	filter:function (array,func_or_obj) {
 		var out=[]
-		for(var x=0;x<array.length;x++){
-			if(func(array[x])){
-				out.push(array[x])
+		if(typeof func_or_obj == 'function'){
+			for(var x=0;x<array.length;x++){
+				if(func_or_obj(array[x])){
+					out.push(array[x])
+				}
 			}
+		}else{
+			var obj=func_or_obj
+			ex.each(array,function(doc){
+				var match=true
+				for(var key in obj){
+					if(doc[key]!=obj[key]){
+						match=false
+						break
+					}
+				}
+				if(match){
+					out.push(doc)
+				}
+			})
+
+		}
+		return out
+	},
+	exclude:function(array,func_or_obj){
+		var out=[]
+		if(typeof func_or_obj == 'function'){
+			for(var x=0;x<array.length;x++){
+				if(!func_or_obj(array[x])){
+					out.push(array[x])
+				}
+			}
+		}else{
+			var obj=func_or_obj
+			ex.each(array,function(doc){
+				var match=true
+				for(var key in obj){
+					if(doc[key]!=obj[key]){
+						match=false
+						break
+					}
+				}
+				if(!match){
+					out.push(doc)
+				}
+			})
+
 		}
 		return out
 	},
@@ -251,9 +294,6 @@ ex={
 				if(match){
 					index_ls.push(i)
 				}
-				//if(array[i]==obj){
-				//	index_ls.push(i)
-				//}
 			}
 		}
 		var rm_item=[]
