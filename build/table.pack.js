@@ -661,11 +661,6 @@ var table_fun = {
 
             if (name == this.heads[0].name) {
                 return this.form_link(name, row);
-                //return ex.template('<a href="edit/{pk}?next={next}">{value}</a>',
-                //    {	pk:row.pk,
-                //        next:btoa(location.href),
-                //        value:row[name]
-                //    })
             } else if (content === true) {
                 return '<img src="//res.enjoyst.com/true.png" width="15px" />';
             } else if (content === false) {
@@ -681,25 +676,42 @@ var table_fun = {
             });
         },
         del_item: function del_item(path) {
-
+            /*@path: url of delete
+            *usage:
+            * var path= {% url "del_rows" %}
+            * table_fun.methods.del_item.call(this,path)
+             */
             if (this.selected.length == 0) {
                 return;
             }
+            var self = this;
             var rows = [];
             var inst_ls = [];
-            for (var j = 0; j < this.selected.length; j++) {
-                var pk = this.selected[j];
-                for (var i = 0; i < this.rows.length; i++) {
-                    if (this.rows[i].pk.toString() == pk) {
-                        rows.push(this.rows[i]);
-                        inst_ls.push({ pk: pk, _class: this.rows[i]._class });
-                    }
+
+            var inst_ls = ex.map(this.rows, function (row) {
+                if (ex.isin(row.pk, self.selected)) {
+                    return { pk: row.pk, _class: row._class };
+                } else {
+                    return null;
                 }
-            }
+            });
+            ex.remove(inst_ls, function (inst) {
+                return inst == null;
+            });
+
+            //for(var j=0;j<this.selected.length;j++){
+            //    var pk = this.selected[j]
+            //    for(var i=0;i<this.rows.length;i++){
+            //        if(this.rows[i].pk.toString()==pk){
+            //            rows.push(this.rows[i])
+            //            inst_ls.push({pk:pk,_class:this.rows[i]._class})
+            //        }
+            //    }
+            //}
 
             location = ex.template("{path}?rows={rows}&next={next}", { path: path,
                 rows: btoa(JSON.stringify(inst_ls)),
-                next: ex.parseSearch().next || btoa('/') });
+                next: encodeURIComponent(location.href) });
         },
         goto_page: function goto_page(page) {
             this.search_args._page = page;

@@ -82,6 +82,9 @@ var ln={
     },
 
     openWin:function(url,callback){
+        /*
+
+        * */
         var norm_url = ex.appendSearch(url,{_pop:1})
         window.open(norm_url,url,'height=500,width=800,resizable=yes,scrollbars=yes,top=200,left=300')
         window.__on_subwin_close=callback
@@ -93,7 +96,8 @@ var ln={
         }
         window.opener.__on_subwin_close=null
         window.close()
-    }
+    },
+
 }
 
 

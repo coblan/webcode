@@ -264,25 +264,42 @@ var table_fun={
                 })
         },
         del_item:function (path) {
-
+            /*@path: url of delete
+            *usage:
+            * var path= {% url "del_rows" %}
+            * table_fun.methods.del_item.call(this,path)
+             */
             if (this.selected.length==0){
                 return
             }
+            var self=this;
             var rows=[]
             var inst_ls =[]
-            for(var j=0;j<this.selected.length;j++){
-                var pk = this.selected[j]
-                for(var i=0;i<this.rows.length;i++){
-                    if(this.rows[i].pk.toString()==pk){
-                        rows.push(this.rows[i])
-                        inst_ls.push({pk:pk,_class:this.rows[i]._class})
-                    }
+
+            var inst_ls=ex.map(this.rows,function(row){
+                if(ex.isin(row.pk,self.selected) ) {
+                    return {pk: row.pk, _class: row._class}
+                }else{
+                    return null
                 }
-            }
+            })
+            ex.remove(inst_ls,function(inst){
+                return inst==null
+            })
+
+            //for(var j=0;j<this.selected.length;j++){
+            //    var pk = this.selected[j]
+            //    for(var i=0;i<this.rows.length;i++){
+            //        if(this.rows[i].pk.toString()==pk){
+            //            rows.push(this.rows[i])
+            //            inst_ls.push({pk:pk,_class:this.rows[i]._class})
+            //        }
+            //    }
+            //}
 
             location=ex.template("{path}?rows={rows}&next={next}",{path:path,
                 rows:btoa(JSON.stringify(inst_ls)),
-                next: ex.parseSearch().next || btoa('/')})
+                next: encodeURIComponent(location.href) })
         },
         goto_page:function (page) {
             this.search_args._page=page
