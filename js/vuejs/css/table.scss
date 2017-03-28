@@ -42,6 +42,18 @@ table.fake-suit{
 
 }
 
+.paginator{
+  input{
+    width:20px;
+  }
+  .page-input-block{
+    display: inline-block;
+  }
+  button{
+    vertical-align: top;
+  }
+}
+
 .sort-mark img{
   width:20px;
 }

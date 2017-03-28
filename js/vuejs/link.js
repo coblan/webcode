@@ -97,8 +97,25 @@ var ln={
         window.opener.__on_subwin_close=null
         window.close()
     },
+    pushUrl:function(url){
+        window.history.pushState(url,0,url);
+    },
+    popUrlListen:function(){
+        window.addEventListener('popstate', function(e) {
+/// <summary>
+///　　　&#10;　在页面初始化加载完成中添加该事件，则可以监听到onpopstate事件，而浏览器进行前进、后退、刷新操作都会触发本事件
+///　　　&#10;　linkFly原创，引用请注明出处，谢谢
+/// </summary>/// <returns type="void" />
+            if (e.state) {
+                location= e.state
+                //e.state就是pushState中保存的Data，我们只需要将相应的数据读取下来即可
+            }
+        })
+    }
+
 
 }
+
 
 
 window.ln=ln
