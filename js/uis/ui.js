@@ -4,3 +4,5 @@ import * as page from  './page_tab.js'
 
 require('./scss/flex.scss')
 require('./scss/button.scss')
+require('./scss/adapt.scss')
+

@@ -90,6 +90,12 @@ drag_mix={
 			$(document).on('mousemove', function(e){
 				self.x=e.clientX //pageX
 				self.y=e.clientY //pageY
+				if(e.which!=1){
+					if(self.is_drag){
+						self.reset()
+					}
+					return
+				}
 				self.drag_engin(e.pageX, e.pageY)
 				if(self.is_drag){
 					e.preventDefault()
@@ -99,6 +105,10 @@ drag_mix={
 				if(self.is_drag){
 					self._drag_end()
 					e.preventDefault()
+				}
+			}).on('mousedown',function(e){
+				if(e.which!=1 &&self.is_drag){
+					self.reset()
 				}
 			})
 			$(window).scroll(function (e) {
@@ -113,6 +123,16 @@ drag_mix={
 	//	}
 	//},
 	methods:{
+		reset:function(){
+			this.is_down=false
+			this.is_drag=false
+			this.moveing_block=this.virtual
+			this.face.hide()
+			this.blocks=this._org_blocks
+			$('body').css('cursor','auto')
+			this.$emit('drag_over',this)
+
+		},
 		drag_engin:function (x,y) {
 			if(!this.is_drag &&this.is_down ){
 				var del_x = x-this.last_start_x
@@ -127,6 +147,7 @@ drag_mix={
 		},
 		_drag_start:function () {
 			this.is_drag=true
+			this._org_blocks=this.blocks.slice()
 			this.face.show()
 			$('body').css('cursor','move')
 			this.drag_start()
