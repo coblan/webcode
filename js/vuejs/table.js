@@ -267,9 +267,10 @@ var table_fun={
             }
         },
         form_link:function(name,row){
-            return ex.template('<a href="edit/{pk}?next={next}">{value}</a>',
-                {	pk:row.pk,
-                    next:btoa(location.href),
+            return ex.template('<a href="{edit}?pk={pk}&next={next}">{value}</a>',
+                {	edit:page_name+'.edit',
+                    pk:row.pk,
+                    next:encodeURIComponent(location.href),
                     value:row[name]
                 })
         },
