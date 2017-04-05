@@ -31,7 +31,19 @@ readCache
 
 cache
 	@cache_meta
-	@root_obj : 如果没写，默认是window 
+	@root_obj : 如果没写，默认是window
+
+
+history
+========
+利用h5的history功能，是的地址栏发生变化，并且不会触发服务器请求。该功能可以用在ajax请求，将ajax请求记录在history中，可以达到前进后退的功能。
+
+pushUrl
+    url入栈
+
+popUrlListen:
+    监听pop history事件，点击前进后退按钮时，刷新整个页面。如果需要精细的控制，在不刷新页面的情况下，切换状态，需要自定义事件handler
+
 <-<
  */
 
@@ -115,7 +127,6 @@ var ln={
 
 
 }
-
 
 
 window.ln=ln

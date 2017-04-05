@@ -384,20 +384,17 @@ var field_fun={
 			var search =ex.parseSearch() //parseSearch(location.search)
 			var post_data=[{fun:'save',row:this.kw.row}]
 			ex.post('',JSON.stringify(post_data),function (resp) {
-				if(resp.save.pk && resp.save._class){
-					sessionStorage.setItem(resp.save._class,resp.save.pk)
-				}
+				//if(resp.save.pk && resp.save._class){
+				//	sessionStorage.setItem(resp.save._class,resp.save.pk)
+				//}
 				if( resp.save.errors){
 					self.kw.errors = resp.save.errors
 					hide_upload()
 				}else if(search._pop==1){
-					if(window.opener.on_subwin_close){
-						window.opener.on_subwin_close({pk:resp.save.pk,_class:resp.save._class})
-					}
-					window.close()
+					window.ln.rtWin({row:resp.save.row})
 				}else if(search.next){
 
-					location=atob(search.next)
+					location=decodeURIComponent(search.next)
 				}else{
 					hide_upload(1000)
 
@@ -406,22 +403,23 @@ var field_fun={
 		},
 		cancel:function () {
 			var search =ex.parseSearch() //parseSearch(location.search)
-			if(search.next){
-				location=atob(search.next)
+			if(search._pop){
+				window.close()
+			} else if(search.next){
+				location=decodeURIComponent(search.next)
+			}else{
+				location='/'
 			}
 		},
 		del_row:function (path) {
-			if(!confirm(ex.tr('relay delete?')))
-				return
-			var obj={
+			var search_args=ex.parseSearch()
+			location=ex.template('{engine_url}/del_rows?rows={class}:{pk}&next={next}&_pop={pop}',{class:this.kw.row._class,
+				engine_url:engine_url,
 				pk:this.kw.row.pk,
-				_class:this.kw.row._class
-			}
-			var obj_str=JSON.stringify([obj])
+				next:search_args.next,
+				pop:search_args._pop,
 
-			location=ex.template('{path}?rows={rows}&next={next}',{path:path,
-				rows:btoa(obj_str),
-				next:ex.parseSearch().next || btoa('/')})
+			})
 		}
 	}
 }
