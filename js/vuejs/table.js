@@ -216,6 +216,12 @@ var build_table_args = {
 
 
 var table_fun={
+    watch:{
+        'row_sort.sort_str':function (v) {
+            this.search_args._sort=v
+            this.search()
+        }
+    },
 	methods:{
         search:function () {
             location =ex.template('{path}{search}',{path:location.pathname,
@@ -274,50 +280,41 @@ var table_fun={
                     value:row[name]
                 })
         },
-        del_item:function (path) {
-            /*@path: url of delete
-            *usage:
-            * var path= {% url "del_rows" %}
-            * table_fun.methods.del_item.call(this,path)
-             */
+
+        del_item:function () {
             if (this.selected.length==0){
                 return
             }
-            var self=this;
-            var rows=[]
-            var inst_ls =[]
-
-            var inst_ls=ex.map(this.rows,function(row){
-                if(ex.isin(row.pk,self.selected) ) {
-                    return {pk: row.pk, _class: row._class}
-                }else{
-                    return null
+            var del_obj={}
+            for(var j=0;j<this.selected.length;j++){
+                var pk = this.selected[j]
+                for(var i=0;i<this.rows.length;i++){
+                    if(this.rows[i].pk.toString()==pk){
+                        if(!del_obj[this.rows[i]._class]){
+                            del_obj[this.rows[i]._class]=[]
+                        }
+                        del_obj[this.rows[i]._class].push(pk)
+                    }
                 }
-            })
-            ex.remove(inst_ls,function(inst){
-                return inst==null
-            })
-
-            //for(var j=0;j<this.selected.length;j++){
-            //    var pk = this.selected[j]
-            //    for(var i=0;i<this.rows.length;i++){
-            //        if(this.rows[i].pk.toString()==pk){
-            //            rows.push(this.rows[i])
-            //            inst_ls.push({pk:pk,_class:this.rows[i]._class})
-            //        }
-            //    }
-            //}
-
-            location=ex.template("{path}?rows={rows}&next={next}",{path:path,
-                rows:btoa(JSON.stringify(inst_ls)),
-                next: encodeURIComponent(location.href) })
+            }
+            var out_str=''
+            for(var key in del_obj){
+                out_str += (key+':'+ del_obj[key].join(':')+',')
+            }
+            location=ex.template("{engine_url}/del_rows?rows={rows}&next={next}",{engine_url:engine_url,
+                rows:encodeURI(out_str),
+                next:encodeURIComponent(location.href)})
         },
         goto_page:function (page) {
             this.search_args._page=page
             this.search()
         },
         add_new:function () {
-            return 'edit/?next='+btoa(location.pathname+location.search)
+            return ex.template('{engine_url}/{page}.edit/?next={next}',{
+                    engine_url:engine_url,
+                    page:page_name,
+                    next:encodeURIComponent(location.href)
+                })
         },
 	},
 
