@@ -53,9 +53,11 @@
   .form-group.field .field_input ._tow-col-sel{
     /*width:750px;*/
   }
-  //._tow-col-sel .sel {
-  //  width: 350px;
-  //}
+  .form-group.field .help_text{
+    padding: 8px 20px;
+    color: #999;
+    font-style: italic;
+  }
   .field.error .error{
     display: inline-block;
     vertical-align: top;

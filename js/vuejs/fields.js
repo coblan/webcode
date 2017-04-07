@@ -345,6 +345,7 @@ var field={
 				:kw='head'>
 			</component>
 		</div>
+		<div class="help_text"><span v-text="head.help_text"></span></div>
 		<slot> </slot>
 		<div v-for='error in error_data(name)' v-text='error' class='error'></div>
 		</div>
