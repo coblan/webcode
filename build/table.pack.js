@@ -102,19 +102,44 @@ if(false) {
 /**
  * Created by coblan on 2017/3/11.
 
- >->front/filter.rst>
+ >->front/table.rst>
 
+ table的过滤器
+ ============
+
+ class SalaryFilter(RowFilter):
+ names=['is_checked']
+ range_fields=[{'name':'month','type':'month'}]
+ model=SalaryRecords
 
  <-<
  */
 
 Vue.component('com-filter', {
     props: ['heads', 'search', 'search_tip'],
-    template: ex.template('\n    <form class=\'button-group \' autocomplete="on" v-if=\'search_tip || heads.length>0\'>\n            <input v-if=\'search_tip\' type="text" name="_q" v-model=\'search._q\' :placeholder=\'search_tip\' class=\'form-control\'/>\n            <select v-if="filter.options"  v-for=\'filter in heads\' v-model=\'search[filter.name]\' class=\'form-control\'>\n                <option :value="undefined" v-text=\'filter.label\'></option>\n                <option value="">----</option>\n                <option v-for=\'option in filter.options\' :value="option.value" v-text=\'option.label\'></option>\n            </select>\n            <div  v-for=\'filter in heads\' v-if="[\'time\',\'date\',\'month\'].indexOf(filter.type)!=-1" class="date-filter">\n                <span>{From}</span>\n                <date v-if="filter.type==\'month\'" set="month" v-model="search[\'_start_\'+filter.name]"></date>\n                <span>{To}</span>\n                <date v-if="filter.type==\'month\'" set="month" v-model="search[\'_end_\'+filter.name]"></date>\n            </div>\n\n            <slot></slot>\n\n            <button name="go" type="button" class="btn btn-info" @click=\'submit()\' >{submit}</button>\n        </form>\n    ', ex.trList(['From', 'To', 'submit'])),
+    template: ex.template('\n    <form class=\'button-group \' autocomplete="on" v-if=\'search_tip || heads.length>0\'>\n            <input v-if=\'search_tip\' type="text" name="_q" v-model=\'search._q\' :placeholder=\'search_tip\' class=\'form-control\'/>\n            <select v-if="filter.options"  v-for=\'filter in heads\' v-model=\'search[filter.name]\' class=\'form-control\'>\n                <option :value="undefined" v-text=\'filter.label\'></option>\n                <option value="">----</option>\n                <option v-for=\'option in filter.options\' :value="option.value" v-text=\'option.label\'></option>\n            </select>\n            <div  v-for=\'filter in heads\' v-if="[\'time\',\'date\',\'month\'].indexOf(filter.type)!=-1" class="date-filter">\n                <span>{From}</span>\n                <date v-if="filter.type==\'month\'" set="month" v-model="search[\'_start_\'+filter.name]"></date>\n                <date v-if="filter.type==\'date\'"  v-model="search[\'_start_\'+filter.name]"></date>\n                <span>{To}</span>\n                <date v-if="filter.type==\'month\'" set="month" v-model="search[\'_end_\'+filter.name]"></date>\n                <date v-if="filter.type==\'date\'"  v-model="search[\'_end_\'+filter.name]"></date>\n            </div>\n\n            <slot></slot>\n\n            <button name="go" type="button" class="btn btn-info" @click=\'m_submit()\' >{submit}</button>\n        </form>\n    ', ex.trList(['From', 'To', 'submit'])),
+    created: function created() {
+        var self = this;
+        ex.each(self.heads, function (filter) {
+            if (ex.isin(filter.type, ['month', 'date'])) {
+                if (!self.search['_start_' + filter.name]) {
+                    Vue.set(self.search, '_start_' + filter.name, '');
+                }
+                if (!self.search['_end_' + filter.name]) {
+                    Vue.set(self.search, '_end_' + filter.name, '');
+                }
+            }
+        });
+    },
     methods: {
-        submit: function submit() {
-            location = ex.template('{path}{search}', { path: location.pathname,
-                search: encodeURI(ex.searchfy(this.search, '?')) });
+        m_submit: function m_submit() {
+            this.$emit('submit');
+            //if(this.submit){
+            //    this.submit()
+            //}else{
+            //    location =ex.template('{path}{search}',{path:location.pathname,
+            //        search: encodeURI(ex.searchfy(this.search,'?')) })
+            //}
         }
     }
 
@@ -457,7 +482,10 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 __webpack_require__(0);
 
+// 下面这个sort-table应该是不用了的。有空来清理它
+
 /*
+>->front/table.rst>
 Argments Format:
 =================
 
@@ -465,6 +493,7 @@ heads=[{name:'xxx',label:'label1'},
         {name:'jb',label:'jb'}]
 rows=[{xxx:"jjy",jb:'hahaer'}]
 
+<-<
  */
 
 Vue.component('sort-table', {
@@ -538,6 +567,54 @@ Vue.component('sort-table', {
     },
     template: '<table>\n\t\t\t<thead>\n\t\t\t\t<tr>\n\t\t\t\t\t<td style=\'width:50px\' v-if=\'selected\'>\n\t\t\t\t\t\t<input type="checkbox" name="test" value=""/>\n\t\t\t\t\t</td>\n\t\t\t\t\t<td v-for=\'head in heads\' :class=\'"td_"+head.name\'>\n\t\t\t\t\t\t<span v-if=\'head.sortable\' v-text=\'head.label\' class=\'clickable\' @click=\'sort_col(head.name)\'></span>\n\t\t\t\t\t\t<span v-else v-text=\'head.label\'></span>\n\t\t\t\t\t\t<span v-if=\'icatch = get_sort_pos(head.name),icatch!=-1\'>\n\t\t\t\t\t\t\t<span v-text=\'icatch\'></span>\n\t\t\t\t\t\t\t<span class="glyphicon glyphicon-chevron-up clickable" v-if=\'in_sort(head.name)\'\n\t\t\t\t\t\t\t\t @click=\'sort_col("-"+head.name)\'></span>\n\t\t\t\t\t\t\t<span v-if=\'in_sort("-"+head.name)\' class="glyphicon  glyphicon-chevron-down clickable"\n\t\t\t\t\t\t\t\t @click=\'sort_col(head.name)\'></span>\n\t\t\t\t\t\t\t<span v-if=\'in_sort(head.name)||in_sort("-"+head.name)\' class="glyphicon glyphicon-remove clickable"\n\t\t\t\t\t\t\t\t @click=\'rm_sort(head.name)\'></span>\n\t\t\t\t\t\t</span>\n\t\t\t\t\t</td>\n\t\t\t\t</tr>\n\t\t\t</thead>\n\t\t\t<tbody>\n\t\t\t\t<tr v-for=\'row in rows\'>\n\t\t\t\t\t<td v-if=\'selected\'><input type="checkbox" name="test" :value="row.pk" v-model=\'selected\'/></td>\n\t\t\t\t\t<td v-for=\'head in heads\' :class=\'"td_"+head.name\'>\n\t\t\t\t\t\t\n\t\t\t\t\t\t<span v-html=\'map(head.name,row)\'></span>\n\t\t\t\t\t</td>\n\t\t\t\t</tr>\n\t\t\t</tbody>\n\t\t</table>'
 });
+
+var com_table = {
+    props: {
+        has_check: {},
+        heads: {},
+        rows: {
+            default: function _default() {
+                return [];
+            }
+        },
+        map: {},
+        row_sort: {
+            default: function _default() {
+                return { sort_str: '', sortable: [] };
+            }
+        },
+        selected: {}
+    },
+    methods: {
+        m_map: function m_map(name, row) {
+            if (this.map) {
+                return this.map(name, row);
+            } else {
+                return row[name];
+            }
+        },
+        is_sorted: function is_sorted(sort_str, name) {
+            var ls = sort_str.split(',');
+            var norm_ls = this.filter_minus(ls);
+            return ex.isin(name, norm_ls);
+        },
+        filter_minus: function filter_minus(array) {
+            return ex.map(array, function (v) {
+                if (v.startsWith('-')) {
+                    return v.slice(1);
+                } else {
+                    return v;
+                }
+            });
+        },
+        is_sortable: function is_sortable(name) {
+            return ex.isin(name, this.row_sort.sortable);
+        }
+    },
+    template: '\t<table>\n\t\t<thead>\n\t\t\t<tr >\n\t\t\t\t<th style=\'width:50px\' v-if=\'has_check\'>\n\t\t\t\t\t<input type="checkbox" name="test" value=""/>\n\t\t\t\t</th>\n\t\t\t\t<th v-for=\'head in heads\' :class=\'["td_"+head.name,{"selected":is_sorted(row_sort.sort_str ,head.name )}]\'>\n\t\t\t\t\t<span v-if=\'is_sortable(head.name)\' v-text=\'head.label\' class=\'clickable\'\n\t\t\t\t\t\t@click=\'row_sort.sort_str = toggle( row_sort.sort_str,head.name)\'></span>\n\t\t\t\t\t<span v-else v-text=\'head.label\'></span>\n\t\t\t\t\t<sort-mark class=\'sort-mark\' v-model=\'row_sort.sort_str\' :name=\'head.name\'></sort-mark>\n\t\t\t\t</th>\n\t\t\t</tr>\n\t\t</thead>\n\t\t<tbody>\n\t\t\t<tr v-for=\'row in rows\'>\n\t\t\t\t<td v-if=\'has_check\'>\n\t\t\t\t\t<input type="checkbox" name="test" :value="row.pk" v-model=\'selected\'/>\n\t\t\t\t</td>\n\t\t\t\t<td v-for=\'head in heads\' :class=\'"td_"+head.name\'>\n\t\t\t\t\t<span v-html=\'m_map(head.name,row)\'></span>\n\t\t\t\t</td>\n\t\t\t</tr>\n\t\t</tbody>\n\t</table>'
+};
+
+Vue.component('com-table', com_table);
 
 //<component v-if='icatch = map(head.name,row),icatch.com' :is='icatch.com' :kw='icatch.kw'></component>
 
@@ -637,6 +714,7 @@ var table_fun = {
                 search: encodeURI(ex.searchfy(this.search_args, '?')) });
         },
         filter_minus: function filter_minus(array) {
+            // 移到 com-table 中去了
             return ex.map(array, function (v) {
                 if (v.startsWith('-')) {
                     return v.slice(1);
@@ -646,6 +724,7 @@ var table_fun = {
             });
         },
         is_sorted: function is_sorted(sort_str, name) {
+            // 该函数被移到 com-table 中去了。
             var ls = sort_str.split(',');
             var norm_ls = this.filter_minus(ls);
             return ex.isin(name, norm_ls);

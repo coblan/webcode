@@ -1,6 +1,6 @@
 
-
 /*
+>->front/table.rst>
 Argments Format:
 =================
 
@@ -8,12 +8,13 @@ heads=[{name:'xxx',label:'label1'},
         {name:'jb',label:'jb'}]
 rows=[{xxx:"jjy",jb:'hahaer'}]
 
+<-<
  */
 
 import * as myfilter from './filter.js'
 require('./css/table.scss')
 
-
+// 下面这个sort-table应该是不用了的。有空来清理它
 Vue.component('sort-table',{
     props:{
 	    value:{},
@@ -115,6 +116,79 @@ Vue.component('sort-table',{
 			</tbody>
 		</table>`,
 })
+
+
+var com_table={
+    props: {
+        has_check: {},
+        heads: {},
+        rows: {
+            default: function () {
+                return []
+            }
+        },
+        map: {},
+        row_sort: {
+            default: function () {
+                return {sort_str: '', sortable: []}
+            }
+        },
+        selected: {}
+    } ,
+    methods:{
+      m_map:function(name,row){
+          if(this.map){
+              return this.map(name,row)
+          }else{
+              return row[name]
+          }
+      },
+        is_sorted:function (sort_str,name) {
+            var ls=sort_str.split(',')
+            var norm_ls=this.filter_minus(ls)
+            return ex.isin(name,norm_ls)
+        },
+        filter_minus:function (array) {
+            return ex.map(array,function (v) {
+                if(v.startsWith('-')){
+                    return v.slice(1)
+                }else{
+                    return v
+                }
+            })
+        },
+        is_sortable:function(name){
+            return ex.isin(name,this.row_sort.sortable)
+        }
+    },
+    template:`	<table>
+		<thead>
+			<tr >
+				<th style='width:50px' v-if='has_check'>
+					<input type="checkbox" name="test" value=""/>
+				</th>
+				<th v-for='head in heads' :class='["td_"+head.name,{"selected":is_sorted(row_sort.sort_str ,head.name )}]'>
+					<span v-if='is_sortable(head.name)' v-text='head.label' class='clickable'
+						@click='row_sort.sort_str = toggle( row_sort.sort_str,head.name)'></span>
+					<span v-else v-text='head.label'></span>
+					<sort-mark class='sort-mark' v-model='row_sort.sort_str' :name='head.name'></sort-mark>
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr v-for='row in rows'>
+				<td v-if='has_check'>
+					<input type="checkbox" name="test" :value="row.pk" v-model='selected'/>
+				</td>
+				<td v-for='head in heads' :class='"td_"+head.name'>
+					<span v-html='m_map(head.name,row)'></span>
+				</td>
+			</tr>
+		</tbody>
+	</table>`
+}
+
+Vue.component('com-table',com_table)
 
 //<component v-if='icatch = map(head.name,row),icatch.com' :is='icatch.com' :kw='icatch.kw'></component>
 
@@ -228,6 +302,7 @@ var table_fun={
                 search: encodeURI(ex.searchfy(this.search_args,'?')) })
         },
 		filter_minus:function (array) {
+            // 移到 com-table 中去了
 			return ex.map(array,function (v) {
 					if(v.startsWith('-')){
 						return v.slice(1)
@@ -237,6 +312,7 @@ var table_fun={
 				})
 		},
 		is_sorted:function (sort_str,name) {
+            // 该函数被移到 com-table 中去了。
 			var ls=sort_str.split(',')
 			var norm_ls=this.filter_minus(ls)
 			return ex.isin(name,norm_ls)
