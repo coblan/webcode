@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>5. 前端 &mdash; webcode 1.0 documentation</title>
+  <title>6. helpers &mdash; webcode 1.0 documentation</title>
   
 
   
@@ -31,8 +31,8 @@
 
   
     <link rel="top" title="webcode 1.0 documentation" href="index.html"/>
-        <link rel="next" title="5.1. ckeditor" href="front/ckedit.html"/>
-        <link rel="prev" title="4.4. input" href="uis/input.html"/> 
+        <link rel="next" title="6.1. 数据库快捷函数" href="helpers/db.html"/>
+        <link rel="prev" title="5.6. table" href="front/table.html"/> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -86,16 +86,12 @@
 <li class="toctree-l1"><a class="reference internal" href="backend/index.html">2. 后端</a></li>
 <li class="toctree-l1"><a class="reference internal" href="frontend/index.html">3. 前端</a></li>
 <li class="toctree-l1"><a class="reference internal" href="uis/index.html">4. 前端uis</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">5. 前端</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="front/ckedit.html">5.1. ckeditor</a></li>
-<li class="toctree-l2"><a class="reference internal" href="front/fields.html">5.2. 基本内容</a></li>
-<li class="toctree-l2"><a class="reference internal" href="front/fields.html#id2">5.3. 参数结构</a></li>
-<li class="toctree-l2"><a class="reference internal" href="front/file.html">5.4. 文件上传</a></li>
-<li class="toctree-l2"><a class="reference internal" href="front/link.html">5.5. link</a></li>
-<li class="toctree-l2"><a class="reference internal" href="front/table.html">5.6. table</a></li>
+<li class="toctree-l1"><a class="reference internal" href="front.html">5. 前端</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">6. helpers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="helpers/db.html">6.1. 数据库快捷函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="helpers/engine.html">6.2. director engine</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="helpers.html">6. helpers</a></li>
 </ul>
 
             
@@ -126,11 +122,11 @@
   <ul class="wy-breadcrumbs">
     <li><a href="index.html">Docs</a> &raquo;</li>
       
-    <li>5. 前端</li>
+    <li>6. helpers</li>
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="_sources/front.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/helpers.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -140,34 +136,17 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="id1">
-<h1>5. 前端<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="helpers">
+<h1>6. helpers<a class="headerlink" href="#helpers" title="Permalink to this headline">¶</a></h1>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="front/ckedit.html">5.1. ckeditor</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="front/ckedit.html#id1">5.1.1. 使用示例</a></li>
-<li class="toctree-l2"><a class="reference internal" href="front/ckedit.html#set">5.1.2. set</a></li>
+<li class="toctree-l1"><a class="reference internal" href="helpers/db.html">6.1. 数据库快捷函数</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="helpers/db.html#redis">6.1.1. redis</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="front/fields.html">5.2. 基本内容</a></li>
-<li class="toctree-l1"><a class="reference internal" href="front/fields.html#id2">5.3. 参数结构</a></li>
-<li class="toctree-l1"><a class="reference internal" href="front/file.html">5.4. 文件上传</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="front/file.html#id2">5.4.1. 主要内容</a></li>
-<li class="toctree-l2"><a class="reference internal" href="front/file.html#id3">5.4.2. 多个文件上传步骤</a></li>
-<li class="toctree-l2"><a class="reference internal" href="front/file.html#id4">5.4.3. 单个文件</a></li>
-<li class="toctree-l2"><a class="reference internal" href="front/file.html#id5">5.4.4. 上传进度</a></li>
-<li class="toctree-l2"><a class="reference internal" href="front/file.html#id6">5.4.5. 预览图片</a></li>
-<li class="toctree-l2"><a class="reference internal" href="front/file.html#id7">5.4.6. 上传图片</a></li>
-<li class="toctree-l2"><a class="reference internal" href="front/file.html#id8">5.4.7. 样式技巧</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="front/link.html">5.5. link</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="front/link.html#history">5.5.1. history</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="front/table.html">5.6. table</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="front/table.html#argments-format">5.6.1. Argments Format:</a></li>
-<li class="toctree-l2"><a class="reference internal" href="front/table.html#id1">5.6.2. table的过滤器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="helpers/engine.html">6.2. director engine</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="helpers/engine.html#id1">6.2.1. 步骤</a></li>
+<li class="toctree-l2"><a class="reference internal" href="helpers/engine.html#id2">6.2.2. 说明</a></li>
 </ul>
 </li>
 </ul>
@@ -181,10 +160,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="front/ckedit.html" class="btn btn-neutral float-right" title="5.1. ckeditor" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="helpers/db.html" class="btn btn-neutral float-right" title="6.1. 数据库快捷函数" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="uis/input.html" class="btn btn-neutral" title="4.4. input" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="front/table.html" class="btn btn-neutral" title="5.6. table" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

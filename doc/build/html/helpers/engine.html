@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>5.1. ckeditor &mdash; webcode 1.0 documentation</title>
+  <title>6.2. director engine &mdash; webcode 1.0 documentation</title>
   
 
   
@@ -31,9 +31,8 @@
 
   
     <link rel="top" title="webcode 1.0 documentation" href="../index.html"/>
-        <link rel="up" title="5. 前端" href="../front.html"/>
-        <link rel="next" title="5.2. 基本内容" href="fields.html"/>
-        <link rel="prev" title="5. 前端" href="../front.html"/> 
+        <link rel="up" title="6. helpers" href="../helpers.html"/>
+        <link rel="prev" title="6.1. 数据库快捷函数" href="db.html"/> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
@@ -87,20 +86,16 @@
 <li class="toctree-l1"><a class="reference internal" href="../backend/index.html">2. 后端</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../frontend/index.html">3. 前端</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../uis/index.html">4. 前端uis</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="../front.html">5. 前端</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">5.1. ckeditor</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#id1">5.1.1. 使用示例</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#set">5.1.2. set</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../front.html">5. 前端</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../helpers.html">6. helpers</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="db.html">6.1. 数据库快捷函数</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">6.2. director engine</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">6.2.1. 步骤</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id2">6.2.2. 说明</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="fields.html">5.2. 基本内容</a></li>
-<li class="toctree-l2"><a class="reference internal" href="fields.html#id2">5.3. 参数结构</a></li>
-<li class="toctree-l2"><a class="reference internal" href="file.html">5.4. 文件上传</a></li>
-<li class="toctree-l2"><a class="reference internal" href="link.html">5.5. link</a></li>
-<li class="toctree-l2"><a class="reference internal" href="table.html">5.6. Argments Format:</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../helpers.html">6. helpers</a></li>
 </ul>
 
             
@@ -131,13 +126,13 @@
   <ul class="wy-breadcrumbs">
     <li><a href="../index.html">Docs</a> &raquo;</li>
       
-          <li><a href="../front.html">5. 前端</a> &raquo;</li>
+          <li><a href="../helpers.html">6. helpers</a> &raquo;</li>
       
-    <li>5.1. ckeditor</li>
+    <li>6.2. director engine</li>
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="../_sources/front/ckedit.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/helpers/engine.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -147,24 +142,36 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="ckeditor">
-<h1>5.1. ckeditor<a class="headerlink" href="#ckeditor" title="Permalink to this headline">¶</a></h1>
-<p>源文件:vuejs/ckeditor.js</p>
-<p>使用时，引入fields.pack.js即可。</p>
+  <div class="section" id="director-engine">
+<h1>6.2. director engine<a class="headerlink" href="#director-engine" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="id1">
-<h2>5.1.1. 使用示例<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-default"><div class="highlight"><pre><span></span>bus=new Vue()  //因为ckeditor的数据不是时时同步的，所以提交时，需要触发数据同步
-// 提交时:
-bus.$emit(&#39;sync_data&#39;)
-
-&lt;ckeditor set=&#39;complex&#39; config=&#39;{}&#39;&gt;&lt;/ckeditor&gt;
+<h2>6.2.1. 步骤<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p class="first">自定义engine:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">XicheEngine</span><span class="p">(</span><span class="n">BaseEngine</span><span class="p">):</span>
+    <span class="n">menu</span><span class="o">=</span><span class="p">[</span>
+    <span class="p">{</span><span class="s1">&#39;label&#39;</span><span class="p">:</span><span class="s1">&#39;home&#39;</span><span class="p">,</span><span class="s1">&#39;url&#39;</span><span class="p">:</span><span class="s1">&#39;/home&#39;</span><span class="p">,</span><span class="s1">&#39;icon&#39;</span><span class="p">:</span><span class="n">fa</span><span class="p">(</span><span class="s1">&#39;fa-home&#39;</span><span class="p">)},</span>
+    <span class="o">...</span>
 </pre></div>
 </div>
+</li>
+</ol>
+<p>2. 加入页面主要有两种方式，一种是baseengine.add_pages(dc),一种是base.page_dc.update(dc).
+如果用的是第二种方式，需要调用add_pages(page_dc)</p>
+<ol class="arabic" start="3">
+<li><p class="first">在总的url.py文件中注册engine的入口地址:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">url</span><span class="p">(</span><span class="s1">r&#39;^d/([\w\.]+)&#39;</span><span class="p">,</span><span class="n">XicheEngine</span><span class="o">.</span><span class="n">as_view</span><span class="p">(),</span><span class="n">name</span><span class="o">=</span><span class="n">XicheEngine</span><span class="o">.</span><span class="n">url_name</span><span class="p">)</span>
+</pre></div>
 </div>
-<div class="section" id="set">
-<h2>5.1.2. set<a class="headerlink" href="#set" title="Permalink to this headline">¶</a></h2>
-<p>set是指预先定义好的一套设置。可以在Vue component中定义映射。</p>
-<p>当前有的set有:</p>
+</li>
+</ol>
+</div>
+<div class="section" id="id2">
+<h2>6.2.2. 说明<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p><a href="#id3"><span class="problematic" id="id4">*</span></a>. add_pages时传入的字典，记载了各个页面之间的逻辑关系。例如:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">dc</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;user&#39;</span><span class="p">:</span><span class="n">usertablepage</span><span class="p">,</span><span class="s1">&#39;user.edit&#39;</span><span class="p">:</span><span class="n">userformpage</span><span class="p">}</span>
+</pre></div>
+</div>
 </div>
 </div>
 
@@ -175,10 +182,8 @@ bus.$emit(&#39;sync_data&#39;)
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="fields.html" class="btn btn-neutral float-right" title="5.2. 基本内容" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
-      
-        <a href="../front.html" class="btn btn-neutral" title="5. 前端" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="db.html" class="btn btn-neutral" title="6.1. 数据库快捷函数" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

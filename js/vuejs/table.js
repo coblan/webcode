@@ -1,6 +1,10 @@
 
 /*
 >->front/table.rst>
+=========
+table
+=========
+
 Argments Format:
 =================
 

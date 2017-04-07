@@ -1,17 +1,16 @@
 /**
- * Created by coblan on 2017/3/11.
+>5>front/table.rst>
 
- >->front/table.rst>
+table的过滤器
+============
+::
 
- table的过滤器
- ============
+    class SalaryFilter(RowFilter):
+    names=['is_checked']
+    range_fields=[{'name':'month','type':'month'}]
+    model=SalaryRecords
 
- class SalaryFilter(RowFilter):
- names=['is_checked']
- range_fields=[{'name':'month','type':'month'}]
- model=SalaryRecords
-
- <-<
+<-<
  */
 
 Vue.component('com-filter',{

@@ -1,13 +1,19 @@
 
 /*
 >->front/fields.rst>
-基本内容
-==============
+=========
+fields
+=========
+
+fields模块的目标是利用vuejs快速生成form表单。
+
+主要结构
+===========
 1. field_base
-    基类，几乎有所逻辑都在里面。如果需要特殊的field，可以继承field_base，然后修改template
+    基类，包括操作逻辑，专用input组件。如果需要修改整个field的外观，可以继承field_base，然后自定义wrap template
 
 2. field
-    Vue组件，在field_base外面套上了一层外观，例如label，error等。
+    wrap功能，在field_base外面套上了一层外观template，例如label，error,help_text等的显示。
 
 参数结构
 ==============

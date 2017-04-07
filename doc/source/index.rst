@@ -21,6 +21,7 @@ Contents:
    frontend/index
    uis/index
    front
+   helpers
 
 
 

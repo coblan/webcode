@@ -10,7 +10,7 @@ logging.basicConfig(level=logging.INFO)
 config={
     'entry':'d:/coblan/webcode',
     'out':'d:/coblan/webcode/doc/source',
-    'ext':['html','js'],
+    'ext':['html','js','py'],
     'exclude':[r'd:/coblan/webcode/node_modules',r'd:/coblan/webcode/build']
 }
 
