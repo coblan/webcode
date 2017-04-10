@@ -137,8 +137,23 @@ var com_table={
                 return {sort_str: '', sortable: []}
             }
         },
-        selected: {}
+        value: {}
     } ,
+    computed:{
+        selected:{
+            get:function(){
+                return this.value
+            },
+            set:function(v){
+                this.$emit('input',v)
+            }
+        }
+    },
+    watchs:{
+        selected:function(v){
+            this.$emit('input',v)
+        }
+    },
     methods:{
       m_map:function(name,row){
           if(this.map){

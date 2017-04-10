@@ -341,9 +341,10 @@ var field={
 		mixins:[field_base],
 		template:`
 		<div for='field' class="form-group field" :class='{"error":error_data(name)}' v-if="head">
-		<label :for="'id_'+name" v-text="head.label" class="control-label" v-if='!head.no_auto_label'>
-			<span class="req_star" v-if='head.required'> *</span>
+		<label :for="'id_'+name"  class="control-label" v-if='!head.no_auto_label'>
+			<span v-text="head.label"></span><span class="req_star" v-if='head.required'>*</span>
 		</label>
+
 		<div class="field_input">
 			<component :is='head.type'
 				:row='row'
@@ -391,9 +392,6 @@ var field_fun={
 			var search =ex.parseSearch() //parseSearch(location.search)
 			var post_data=[{fun:'save',row:this.kw.row}]
 			ex.post('',JSON.stringify(post_data),function (resp) {
-				//if(resp.save.pk && resp.save._class){
-				//	sessionStorage.setItem(resp.save._class,resp.save.pk)
-				//}
 				if( resp.save.errors){
 					self.kw.errors = resp.save.errors
 					hide_upload()
@@ -412,10 +410,8 @@ var field_fun={
 			var search =ex.parseSearch() //parseSearch(location.search)
 			if(search._pop){
 				window.close()
-			} else if(search.next){
-				location=decodeURIComponent(search.next)
 			}else{
-				location='/'
+				history.back()
 			}
 		},
 		del_row:function (path) {
@@ -427,7 +423,16 @@ var field_fun={
 				pop:search_args._pop,
 
 			})
-		}
+		},
+		log_url:function(){
+			var obj={
+				pk:this.kw.row.pk,
+				_class:this.kw.row._class,
+				engine_url:engine_url,
+				page_name:page_name,
+			}
+			return ex.template('{engine_url}/log?rows={_class}:{pk}',obj)
+		},
 	}
 }
 

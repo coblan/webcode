@@ -1,27 +1,37 @@
 /**
  * Created by heyulin on 2017/1/24.
  *
- >->front/input.rst>
- =======
- inputs
- =======
+>->front/input.rst>
+=======
+inputs
+=======
 
- date
- ========
- ::
+date
+========
+::
 
-    <date v-model='variable'></date>  // 选择默认set=date ,即选择日期
+<date v-model='variable'></date>  // 选择默认set=date ,即选择日期
 
-    <date v-model='variable' set='month'></date> // 选择 set=month ,即选择月份
+<date v-model='variable' set='month'></date> // 选择 set=month ,即选择月份
 
-    <date v-model='variable' set='month' :config='{}'></date>  //  config 是自定义的配置对象，具体需要参加帮助文件
+<date v-model='variable' set='month' :config='{}'></date>  //  config 是自定义的配置对象，具体需要参加帮助文件
 
- datetime
- ===========
- ::
+datetime
+===========
+::
 
-    <datetime v-model='variable' :config='{}'></datetime> // 选择日期和时间
- <-<
+<datetime v-model='variable' :config='{}'></datetime> // 选择日期和时间
+
+color
+======
+
+forign-edit
+============
+示例::
+
+    <forign-edit :kw="person.emp_info" name="user" page_name="user" ></forign-edit>
+
+<-<
  */
 
 var date_config_set={

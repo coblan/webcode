@@ -1204,82 +1204,6 @@ Vue.component('logo-input', {
     }
 });
 
-//  if(!window._logo_input_css){
-//      document.write(`
-//
-//<style type="text/css" media="screen" >
-
-/*.img-uploader input{*/
-/*display: none;*/
-/*}*/
-
-/*.up_wrap{*/
-/*position: relative;*/
-/*text-align: center;*/
-/*border: 2px dashed #ccc;*/
-/*background: #FDFDFD;*/
-/*width:300px;*/
-/*}*/
-
-/*.closeDiv{*/
-/*width: 100%;*/
-/*height: 100%;*/
-/*position: absolute;*/
-/*top: 0;*/
-/*left: 0;*/
-/*background-color: #ffffff;*/
-/*}*/
-/*.choose{*/
-/*display: inline-block;*/
-/*text-decoration: none;*/
-/*padding: 5px;*/
-/*border: 1px solid #0092F2;*/
-/*border-radius: 4px;*/
-/*font-size: 14px;*/
-/*color: #0092F2;*/
-/*cursor: pointer;*/
-/*}*/
-/*.choose:hover,.choose:active{*/
-/*text-decoration: none;*/
-/*color: #0092F2;*/
-/*}*/
-/*.close{*/
-/*position: absolute;*/
-/*top: 5px;*/
-/*right: 10px;*/
-/*cursor: pointer;*/
-/*font-size: 14px;*/
-/*color: #242424;*/
-/*}*/
-/*.logoImg{*/
-/*max-height: 100px !important;*/
-/*vertical-align: middle;*/
-/*margin-top: 5px;*/
-/*}*/
-/*.req_star{*/
-/*color: red;*/
-/*font-size: 200%;*/
-/*}*/
-
-/*.total-wrap{*/
-/*padding: 30px;*/
-/*}*/
-
-/*.crop-wrap{*/
-/*max-width: 100%;*/
-/*max-height: 90%;*/
-/*overflow: hidden;*/
-/*}*/
-/*.crop-img{*/
-/*max-width:100%;*/
-/*max-height: 100%;*/
-/*}*/
-//</style>
-//
-//      `)
-//  }
-
-
 window.fl = fl;
 
 /***/ }),
@@ -1292,27 +1216,37 @@ window.fl = fl;
 /**
  * Created by heyulin on 2017/1/24.
  *
- >->front/input.rst>
- =======
- inputs
- =======
+>->front/input.rst>
+=======
+inputs
+=======
 
- date
- ========
- ::
+date
+========
+::
 
-    <date v-model='variable'></date>  // 选择默认set=date ,即选择日期
+<date v-model='variable'></date>  // 选择默认set=date ,即选择日期
 
-    <date v-model='variable' set='month'></date> // 选择 set=month ,即选择月份
+<date v-model='variable' set='month'></date> // 选择 set=month ,即选择月份
 
-    <date v-model='variable' set='month' :config='{}'></date>  //  config 是自定义的配置对象，具体需要参加帮助文件
+<date v-model='variable' set='month' :config='{}'></date>  //  config 是自定义的配置对象，具体需要参加帮助文件
 
- datetime
- ===========
- ::
+datetime
+===========
+::
 
-    <datetime v-model='variable' :config='{}'></datetime> // 选择日期和时间
- <-<
+<datetime v-model='variable' :config='{}'></datetime> // 选择日期和时间
+
+color
+======
+
+forign-edit
+============
+示例::
+
+    <forign-edit :kw="person.emp_info" name="user" page_name="user" ></forign-edit>
+
+<-<
  */
 
 var date_config_set = {
@@ -1790,7 +1724,7 @@ exports = module.exports = __webpack_require__(1)();
 
 
 // module
-exports.push([module.i, ".img-uploader input {\n  display: none; }\n\n.up_wrap {\n  position: relative;\n  text-align: center;\n  border: 2px dashed #ccc;\n  background: #FDFDFD;\n  width: 300px; }\n\n.closeDiv {\n  width: 100%;\n  height: 100%;\n  position: absolute;\n  top: 0;\n  left: 0;\n  background-color: #ffffff; }\n\n.choose {\n  display: inline-block;\n  text-decoration: none;\n  padding: 5px;\n  border: 1px solid #0092F2;\n  border-radius: 4px;\n  font-size: 14px;\n  color: #0092F2;\n  cursor: pointer; }\n\n.choose:hover, .choose:active {\n  text-decoration: none;\n  color: #0092F2; }\n\n.close {\n  position: absolute;\n  top: 5px;\n  right: 10px;\n  cursor: pointer;\n  font-size: 14px;\n  color: #242424; }\n\n.logoImg {\n  max-height: 100px !important;\n  vertical-align: middle;\n  margin-top: 5px; }\n\n.req_star {\n  color: red;\n  font-size: 200%; }\n\n.img-crop .total-wrap {\n  padding: 30px; }\n\n.img-crop .crop-wrap {\n  max-width: 100%;\n  max-height: 90%;\n  overflow: hidden; }\n\n.img-crop .crop-img {\n  max-width: 100%;\n  max-height: 100%; }\n", ""]);
+exports.push([module.i, ".img-uploader input {\n  display: none; }\n\n.up_wrap {\n  position: relative;\n  text-align: center;\n  border: 2px dashed #ccc;\n  background: #FDFDFD;\n  width: 300px; }\n\n.closeDiv {\n  width: 100%;\n  height: 100%;\n  position: absolute;\n  top: 0;\n  left: 0;\n  background-color: #ffffff; }\n\n.choose {\n  display: inline-block;\n  text-decoration: none;\n  padding: 5px;\n  border: 1px solid #0092F2;\n  border-radius: 4px;\n  font-size: 14px;\n  color: #0092F2;\n  cursor: pointer; }\n\n.choose:hover, .choose:active {\n  text-decoration: none;\n  color: #0092F2; }\n\n.close {\n  position: absolute;\n  top: 5px;\n  right: 10px;\n  cursor: pointer;\n  font-size: 14px;\n  color: #242424; }\n\n.logoImg {\n  max-height: 100px !important;\n  vertical-align: middle;\n  margin-top: 5px; }\n\n.img-crop .total-wrap {\n  padding: 30px; }\n\n.img-crop .crop-wrap {\n  max-width: 100%;\n  max-height: 90%;\n  overflow: hidden; }\n\n.img-crop .crop-img {\n  max-width: 100%;\n  max-height: 100%; }\n", ""]);
 
 // exports
 
@@ -1804,7 +1738,7 @@ exports = module.exports = __webpack_require__(1)();
 
 
 // module
-exports.push([module.i, ".error {\n  color: red; }\n\n.field-panel {\n  background-color: #F5F5F5;\n  margin: 20px;\n  padding: 20px 30px;\n  position: relative;\n  border: 1px solid #D9D9D9;\n  overflow: auto; }\n  .field-panel:after {\n    content: '';\n    display: block;\n    position: absolute;\n    top: 0px;\n    left: 0px;\n    bottom: 0px;\n    width: 180px;\n    border-radius: 6px;\n    background-color: #fff;\n    z-index: 0; }\n  .field-panel .form-group.field {\n    display: flex;\n    align-items: flex-start; }\n    .field-panel .form-group.field .field_input {\n      flex-grow: 0;\n      padding: 5px 20px; }\n      .field-panel .form-group.field .field_input .ckeditor {\n        padding: 20px; }\n    .field-panel .form-group.field:first-child .control-label {\n      border-top: 5px solid #FFF; }\n    .field-panel .form-group.field .control-label {\n      width: 150px;\n      text-align: right;\n      padding: 5px 30px;\n      z-index: 100;\n      flex-shrink: 0;\n      border-top: 1px solid #EEE; }\n  .field-panel .form-group.field .field_input ._tow-col-sel {\n    /*width:750px;*/ }\n  .field-panel .form-group.field .help_text {\n    padding: 10px;\n    color: #999;\n    font-style: italic;\n    font-size: 0.9em; }\n  .field-panel .field.error .error {\n    display: inline-block;\n    vertical-align: top;\n    padding-top: 8px; }\n\n._tow-col-sel select {\n  min-height: 7em; }\n\nimg.img-uploador {\n  max-width: 100px;\n  max-height: 100px; }\n", ""]);
+exports.push([module.i, ".error {\n  color: red; }\n\n.field-panel {\n  background-color: #F5F5F5;\n  margin: 20px;\n  padding: 20px 30px;\n  position: relative;\n  border: 1px solid #D9D9D9;\n  overflow: auto; }\n  .field-panel:after {\n    content: '';\n    display: block;\n    position: absolute;\n    top: 0px;\n    left: 0px;\n    bottom: 0px;\n    width: 180px;\n    border-radius: 6px;\n    background-color: #fff;\n    z-index: 0; }\n  .field-panel .form-group.field {\n    display: flex;\n    align-items: flex-start; }\n    .field-panel .form-group.field .field_input {\n      flex-grow: 0;\n      padding: 5px 20px; }\n      .field-panel .form-group.field .field_input .ckeditor {\n        padding: 20px; }\n    .field-panel .form-group.field:first-child .control-label {\n      border-top: 5px solid #FFF; }\n    .field-panel .form-group.field .control-label {\n      width: 150px;\n      text-align: right;\n      padding: 5px 30px;\n      z-index: 100;\n      flex-shrink: 0;\n      border-top: 1px solid #EEE; }\n  .field-panel .form-group.field .field_input ._tow-col-sel {\n    /*width:750px;*/ }\n  .field-panel .form-group.field .help_text {\n    padding: 10px;\n    color: #999;\n    font-style: italic;\n    font-size: 0.9em; }\n  .field-panel .field.error .error {\n    display: inline-block;\n    vertical-align: top;\n    padding-top: 8px; }\n\n._tow-col-sel select {\n  min-height: 7em; }\n\nimg.img-uploador {\n  max-width: 100px;\n  max-height: 100px; }\n\n.req_star {\n  color: red; }\n", ""]);
 
 // exports
 
@@ -2090,7 +2024,7 @@ var field_base = {
 
 var field = {
 	mixins: [field_base],
-	template: '\n\t\t<div for=\'field\' class="form-group field" :class=\'{"error":error_data(name)}\' v-if="head">\n\t\t<label :for="\'id_\'+name" v-text="head.label" class="control-label" v-if=\'!head.no_auto_label\'>\n\t\t\t<span class="req_star" v-if=\'head.required\'> *</span>\n\t\t</label>\n\t\t<div class="field_input">\n\t\t\t<component :is=\'head.type\'\n\t\t\t\t:row=\'row\'\n\t\t\t\t:name=\'name\'\n\t\t\t\t:kw=\'head\'>\n\t\t\t</component>\n\t\t</div>\n\t\t<div class="help_text"><span v-text="head.help_text"></span></div>\n\t\t<slot> </slot>\n\t\t<div v-for=\'error in error_data(name)\' v-text=\'error\' class=\'error\'></div>\n\t\t</div>\n\t'
+	template: '\n\t\t<div for=\'field\' class="form-group field" :class=\'{"error":error_data(name)}\' v-if="head">\n\t\t<label :for="\'id_\'+name"  class="control-label" v-if=\'!head.no_auto_label\'>\n\t\t\t<span v-text="head.label"></span><span class="req_star" v-if=\'head.required\'>*</span>\n\t\t</label>\n\n\t\t<div class="field_input">\n\t\t\t<component :is=\'head.type\'\n\t\t\t\t:row=\'row\'\n\t\t\t\t:name=\'name\'\n\t\t\t\t:kw=\'head\'>\n\t\t\t</component>\n\t\t</div>\n\t\t<div class="help_text"><span v-text="head.help_text"></span></div>\n\t\t<slot> </slot>\n\t\t<div v-for=\'error in error_data(name)\' v-text=\'error\' class=\'error\'></div>\n\t\t</div>\n\t'
 
 };
 
@@ -2125,9 +2059,6 @@ var field_fun = {
 			var search = ex.parseSearch(); //parseSearch(location.search)
 			var post_data = [{ fun: 'save', row: this.kw.row }];
 			ex.post('', JSON.stringify(post_data), function (resp) {
-				//if(resp.save.pk && resp.save._class){
-				//	sessionStorage.setItem(resp.save._class,resp.save.pk)
-				//}
 				if (resp.save.errors) {
 					self.kw.errors = resp.save.errors;
 					(0, _ajax_fun.hide_upload)();
@@ -2145,10 +2076,8 @@ var field_fun = {
 			var search = ex.parseSearch(); //parseSearch(location.search)
 			if (search._pop) {
 				window.close();
-			} else if (search.next) {
-				location = decodeURIComponent(search.next);
 			} else {
-				location = '/';
+				history.back();
 			}
 		},
 		del_row: function del_row(path) {
@@ -2160,6 +2089,15 @@ var field_fun = {
 				pop: search_args._pop
 
 			});
+		},
+		log_url: function log_url() {
+			var obj = {
+				pk: this.kw.row.pk,
+				_class: this.kw.row._class,
+				engine_url: engine_url,
+				page_name: page_name
+			};
+			return ex.template('{engine_url}/log?rows={_class}:{pk}', obj);
 		}
 	}
 };
