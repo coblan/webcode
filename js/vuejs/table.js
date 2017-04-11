@@ -309,6 +309,25 @@ var build_table_args = {
 
 
 var table_fun={
+    data:function(){
+      return {
+              heads:heads,
+              rows:rows,
+              row_filters:row_filters,
+              row_sort:row_sort,
+              row_pages:row_pages,
+             search_tip:search_tip,
+              selected:[],
+              del_info:[],
+              menu:menu,
+
+              can_add:can_add,
+              can_del:can_del,
+
+              search_args:ex.parseSearch(),
+              ex:ex,
+      }
+    },
     watch:{
         'row_sort.sort_str':function (v) {
             this.search_args._sort=v
@@ -320,6 +339,9 @@ var table_fun={
             location =ex.template('{path}{search}',{path:location.pathname,
                 search: encodeURI(ex.searchfy(this.search_args,'?')) })
         },
+        //rt_win:function(row){
+        //    ln.rtWin(row)
+        //},
 		filter_minus:function (array) {
             // 移到 com-table 中去了
 			return ex.map(array,function (v) {
@@ -356,9 +378,10 @@ var table_fun={
 		},
         map:function(name,row){
             var content=row[name]
-
-            if(name==this.heads[0].name){
-                return this. form_link(name,row)
+            if(this.search_args._pop){
+                ln.rtWin(row)
+            }else if(name==this.heads[0].name){
+                return this.form_link(name,row)
             }else if(content===true){
                 return '<img src="//res.enjoyst.com/true.png" width="15px" />'
             }else if(content===false){
@@ -414,6 +437,22 @@ var table_fun={
 	},
 
 }
+
+var com_table_btn={
+    data:function(){
+        return {
+            can_add:can_add,
+            can_del:can_del,
+        }
+    },
+    props:['add_new','del_item'],
+    template:`<div class='btn-group' style='float: right;'>
+			<a type="button" class="btn btn-success btn-sm" :href='add_new()' v-if='can_add' role="button">创建</a>
+			<button type="button" class="btn btn-danger btn-sm" @click='del_item()' v-if='can_del'>删除</button>
+		</div>`
+}
+
+Vue.component('com-table-btn',com_table_btn)
 
 Vue.component('sort-mark',{
 	props:['value','name'],

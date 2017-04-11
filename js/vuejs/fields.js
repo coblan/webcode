@@ -385,6 +385,20 @@ export function merge(mains,subs) {
 }
 
 var field_fun={
+	data:function(){
+		return {
+			kw:{
+				heads:heads,
+				row:row,
+				errors:{},
+			},
+			menu:menu,
+
+			can_add:can_add,
+			can_del:can_del,
+			can_log:can_log,
+		}
+	},
 	methods:{
 		submit:function () {
 			var self =this;
@@ -435,12 +449,26 @@ var field_fun={
 		},
 	}
 }
-
+Vue.component('com-form-btn',{
+	data:function(){
+		return {
+			can_add:can_add,
+			can_del:can_del,
+		}
+	},
+	props:['submit','del_row','cancel'],
+	template:`<div style='overflow: hidden;'>
+		<div class="btn-group" style='float: right;'>
+			<button type="button" class="btn btn-default" @click='submit()' v-if='can_add'>Save</button>
+			<button type="button" class="btn btn-default" v-if='can_del' @click='del_row()'>删除</button>
+			<button type="button" class="btn btn-default" @click='cancel()' >Cancel</button>
+		</div>
+	</div>`
+})
 
 window.field_fun=field_fun
 window.hook_ajax_msg=hook_ajax_msg
 window.update_vue_obj=update_vue_obj
-//window.use_color = use_color
 window.use_ckeditor= ck.use_ckeditor
 window.show_upload =show_upload
 window.hide_upload =hide_upload
