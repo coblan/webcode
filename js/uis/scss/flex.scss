@@ -12,6 +12,12 @@
 .flex-grow{
   flex-grow:10;
 }
+.flex-center{
+  justify-content: center;
+}
+.flex-sb{
+  justify-content:space-between;
+}
 .flex-vh-center{
   justify-content: center;
   align-items: center;
