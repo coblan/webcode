@@ -1,37 +1,37 @@
 /**
  * Created by heyulin on 2017/1/24.
  *
->->front/input.rst>
-=======
-inputs
-=======
+ >->front/input.rst>
+ =======
+ inputs
+ =======
 
-date
-========
-::
+ date
+ ========
+ ::
 
-<date v-model='variable'></date>  // 选择默认set=date ,即选择日期
+ <date v-model='variable'></date>  // 选择默认set=date ,即选择日期
 
-<date v-model='variable' set='month'></date> // 选择 set=month ,即选择月份
+ <date v-model='variable' set='month'></date> // 选择 set=month ,即选择月份
 
-<date v-model='variable' set='month' :config='{}'></date>  //  config 是自定义的配置对象，具体需要参加帮助文件
+ <date v-model='variable' set='month' :config='{}'></date>  //  config 是自定义的配置对象，具体需要参加帮助文件
 
-datetime
-===========
-::
+ datetime
+ ===========
+ ::
 
-<datetime v-model='variable' :config='{}'></datetime> // 选择日期和时间
+ <datetime v-model='variable' :config='{}'></datetime> // 选择日期和时间
 
-color
-======
+ color
+ ======
 
-forign-edit
-============
-示例::
+ forign-edit
+ ============
+ 示例::
 
-    <forign-edit :kw="person.emp_info" name="user" page_name="user" ></forign-edit>
+ <forign-edit :kw="person.emp_info" name="user" page_name="user" ></forign-edit>
 
-<-<
+ <-<
  */
 
 var date_config_set={
@@ -54,8 +54,7 @@ var date_config_set={
 Vue.component('date',{
     //template:'<input type="text" class="form-control">',
     template:`<span class="datetime-picker">
-                <span class="cross" @click="$emit('input','')">X</span>
-                <input type="text" readonly class="form-control"/>
+                <input type="text"  class="weui-input"/>
                 </span>`,
     props:['value','set','config'],
     mounted:function () {
@@ -129,9 +128,9 @@ Vue.component('datetime',{
         ex.load_js('https://cdn.bootcss.com/moment.js/2.17.1/moment.min.js')
         ex.load_js('https://cdn.bootcss.com/smalot-bootstrap-datetimepicker/2.4.3/js/bootstrap-datetimepicker.min.js',function(){
 
-                self.input.datetimepicker(def_conf).on('changeDate', function(e) {
-                    self.$emit('input',self.input.val())
-                })
+            self.input.datetimepicker(def_conf).on('changeDate', function(e) {
+                self.$emit('input',self.input.val())
+            })
 
             // if has init value,then init it
             if(self.value){

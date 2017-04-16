@@ -3,7 +3,7 @@
 	<head>
     	<meta charset="utf-8">
         <title>test</title>
-        <script src="//cdn.bootcss.com/vue/2.0.6/vue.js"></script>
+        <script src="https://cdn.bootcss.com/vue/2.0.6/vue.js"></script>
         <script type="text/javascript">
 			Vue.config.devtools = true
 			var ls=[{'label':'1024','url':'aa'},
@@ -36,6 +36,12 @@
 				}
         	})
          }
+
+//			Vue.component('my-com',{
+//				template: function(){
+//					return '<span>yes</span>'
+//				}
+//			})
         </script>
     </head>
     <body>
@@ -57,7 +63,8 @@
 				  <input placeholder="Enter your email address" v-model='hehe' style='background-color: #999;'>
 				</template>
 			</div>
-			
+
+			<!--<my-com></my-com>-->
 		</div>
     </body>
 </html>

@@ -9,8 +9,8 @@ link
 
      var cache_meta={
      cache:['person.emp_info.row',
-     'person.bas_info.row',
-     'crt_view'],
+            'person.bas_info.row',
+            'crt_view'],
      rt_key:{'auth.user':'person.emp_info.row.user'}
      }
 
@@ -52,9 +52,9 @@ var ln={
 
     readCache:function(root_obj){
         var root_obj=root_obj||window
-        if(ex.parseSearch().cache){
-            var cache_obj_str=sessionStorage.getItem(btoa(location.pathname))
-            sessionStorage.removeItem(btoa(location.pathname))
+        //if(ex.parseSearch().cache){
+            var cache_obj_str=sessionStorage.getItem(location.href)
+            sessionStorage.removeItem(location.href)
             if(cache_obj_str){
                 var cache_obj=JSON.parse(cache_obj_str)
                 for(var key in cache_obj.window){
@@ -73,8 +73,22 @@ var ln={
 
                     }
                 }
+                onload=function(){
+                    setTimeout(function(){
+                        console.log(cache_obj._scroll.y)
+                        window.scrollTo(cache_obj._scroll.x,cache_obj._scroll.y)
+                    },10)
+                }
+                $(function(){
+                    //setTimeout(function(){
+                    //    console.log(cache_obj._scroll.y)
+                    //    window.scrollTo(cache_obj._scroll.x,cache_obj._scroll.y)
+                    //},3000)
+
+                })
+
             }
-        }
+        //}
     },
 
     cache:function(cache_meta,root_obj){
@@ -82,7 +96,8 @@ var ln={
         var root_obj=root_obj||window
         var cache_obj={
             cache_meta:cache_meta,
-            window:{}
+            window:{},
+            _scroll:{x:scrollX,y:scrollY}
         }
 
         if(cache_meta.cache){
@@ -90,7 +105,7 @@ var ln={
                 cache_obj.window[key]=ex.access(root_obj,key)
             })
         }
-        sessionStorage.setItem(btoa(location.pathname),JSON.stringify(cache_obj))
+        sessionStorage.setItem(location.href,JSON.stringify(cache_obj))
     },
 
     openWin:function(url,callback){
