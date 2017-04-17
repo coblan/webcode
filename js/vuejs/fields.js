@@ -466,6 +466,73 @@ Vue.component('com-form-btn',{
 	</div>`
 })
 
+var fieldset_fun={
+	data:function(){
+		return {
+			fieldset:fieldset,
+			namelist:namelist,
+			menu:menu,
+
+			can_add:can_add,
+			can_del:can_del,
+			can_log:can_log,
+		}
+	},
+
+	methods:{
+		submit:function () {
+			var self =this;
+			show_upload()
+			var search =ex.parseSearch() //parseSearch(location.search)
+			var post_data=[{fun:'save',row:this.kw.row}]
+			ex.post('',JSON.stringify(post_data),function (resp) {
+				if( resp.save.errors){
+					self.kw.errors = resp.save.errors
+					hide_upload()
+				}else if(search._pop==1){
+					window.ln.rtWin({row:resp.save.row})
+				}else if(search.next){
+
+					location=decodeURIComponent(search.next)
+				}else{
+					hide_upload(1000)
+
+				}
+			})
+		},
+		cancel:function () {
+			var search =ex.parseSearch() //parseSearch(location.search)
+			if(search._pop){
+				window.close()
+			}else{
+				history.back()
+			}
+		},
+		del_row:function (path) {
+			var search_args=ex.parseSearch()
+			location=ex.template('{engine_url}/del_rows?rows={class}:{pk}&next={next}&_pop={pop}',{class:this.kw.row._class,
+				engine_url:engine_url,
+				pk:this.kw.row.pk,
+				next:search_args.next,
+				pop:search_args._pop,
+
+			})
+		},
+		log_url:function(){
+			var rows=ex.map(this.fieldset,function(kw){
+				return kw.row._class+':'+kw.row.pk
+			})
+			var obj={
+				rows:rows.join(','),
+				engine_url:engine_url,
+				page_name:page_name,
+			}
+			return ex.template('{engine_url}/log?rows={rows}',obj)
+		},
+	}
+}
+window.fieldset_fun=fieldset_fun
+
 window.field_fun=field_fun
 window.hook_ajax_msg=hook_ajax_msg
 window.update_vue_obj=update_vue_obj

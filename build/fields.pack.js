@@ -74,62 +74,6 @@
 	MIT License http://www.opensource.org/licenses/mit-license.php
 	Author Tobias Koppers @sokra
 */
-// css base code, injected by the css-loader
-module.exports = function() {
-	var list = [];
-
-	// return the list of modules as css string
-	list.toString = function toString() {
-		var result = [];
-		for(var i = 0; i < this.length; i++) {
-			var item = this[i];
-			if(item[2]) {
-				result.push("@media " + item[2] + "{" + item[1] + "}");
-			} else {
-				result.push(item[1]);
-			}
-		}
-		return result.join("");
-	};
-
-	// import a list of modules into the list
-	list.i = function(modules, mediaQuery) {
-		if(typeof modules === "string")
-			modules = [[null, modules, ""]];
-		var alreadyImportedModules = {};
-		for(var i = 0; i < this.length; i++) {
-			var id = this[i][0];
-			if(typeof id === "number")
-				alreadyImportedModules[id] = true;
-		}
-		for(i = 0; i < modules.length; i++) {
-			var item = modules[i];
-			// skip already imported module
-			// this implementation is not 100% perfect for weird media query combinations
-			//  when a module is imported multiple times with different media queries.
-			//  I hope this will never occur (Hey this way we have smaller bundles)
-			if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
-				if(mediaQuery && !item[2]) {
-					item[2] = mediaQuery;
-				} else if(mediaQuery) {
-					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
-				}
-				list.push(item);
-			}
-		}
-	};
-	return list;
-};
-
-
-/***/ }),
-/* 1 */
-/***/ (function(module, exports) {
-
-/*
-	MIT License http://www.opensource.org/licenses/mit-license.php
-	Author Tobias Koppers @sokra
-*/
 var stylesInDom = {},
 	memoize = function(fn) {
 		var memo;
@@ -375,7 +319,89 @@ function updateLink(linkElement, obj) {
 
 
 /***/ }),
+/* 1 */
+/***/ (function(module, exports) {
+
+/*
+	MIT License http://www.opensource.org/licenses/mit-license.php
+	Author Tobias Koppers @sokra
+*/
+// css base code, injected by the css-loader
+module.exports = function() {
+	var list = [];
+
+	// return the list of modules as css string
+	list.toString = function toString() {
+		var result = [];
+		for(var i = 0; i < this.length; i++) {
+			var item = this[i];
+			if(item[2]) {
+				result.push("@media " + item[2] + "{" + item[1] + "}");
+			} else {
+				result.push(item[1]);
+			}
+		}
+		return result.join("");
+	};
+
+	// import a list of modules into the list
+	list.i = function(modules, mediaQuery) {
+		if(typeof modules === "string")
+			modules = [[null, modules, ""]];
+		var alreadyImportedModules = {};
+		for(var i = 0; i < this.length; i++) {
+			var id = this[i][0];
+			if(typeof id === "number")
+				alreadyImportedModules[id] = true;
+		}
+		for(i = 0; i < modules.length; i++) {
+			var item = modules[i];
+			// skip already imported module
+			// this implementation is not 100% perfect for weird media query combinations
+			//  when a module is imported multiple times with different media queries.
+			//  I hope this will never occur (Hey this way we have smaller bundles)
+			if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
+				if(mediaQuery && !item[2]) {
+					item[2] = mediaQuery;
+				} else if(mediaQuery) {
+					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
+				}
+				list.push(item);
+			}
+		}
+	};
+	return list;
+};
+
+
+/***/ }),
 /* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(11);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// add the styles to the DOM
+var update = __webpack_require__(0)(content, {});
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!./../../node_modules/.0.26.1@css-loader/index.js!./../../node_modules/.6.0.0@sass-loader/lib/loader.js!./fields.scss", function() {
+			var newContent = require("!!./../../node_modules/.0.26.1@css-loader/index.js!./../../node_modules/.6.0.0@sass-loader/lib/loader.js!./fields.scss");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -555,7 +581,7 @@ if (!window.__uploading_mark) {
 }
 
 /***/ }),
-/* 3 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -713,7 +739,7 @@ var edit_level = {
 };
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -817,7 +843,7 @@ img-uploador
 <<<<
 */
 
-__webpack_require__(11);
+__webpack_require__(9);
 
 var fl = {
     read: function read(file, callback) {
@@ -1181,7 +1207,7 @@ Vue.component('logo-input', {
 window.fl = fl;
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1306,9 +1332,9 @@ Vue.component('datetime', {
         }
         self.input = $(this.$el).find('input');
 
-        ex.load_css('//cdn.bootcss.com/smalot-bootstrap-datetimepicker/2.4.3/css/bootstrap-datetimepicker.min.css');
-        ex.load_js('//cdn.bootcss.com/moment.js/2.17.1/moment.min.js');
-        ex.load_js('//cdn.bootcss.com/smalot-bootstrap-datetimepicker/2.4.3/js/bootstrap-datetimepicker.min.js', function () {
+        ex.load_css('https://cdn.bootcss.com/smalot-bootstrap-datetimepicker/2.4.3/css/bootstrap-datetimepicker.min.css');
+        ex.load_js('https://cdn.bootcss.com/moment.js/2.17.1/moment.min.js');
+        ex.load_js('https://cdn.bootcss.com/smalot-bootstrap-datetimepicker/2.4.3/js/bootstrap-datetimepicker.min.js', function () {
 
             self.input.datetimepicker(def_conf).on('changeDate', function (e) {
                 self.$emit('input', self.input.val());
@@ -1420,7 +1446,7 @@ ex.append_css("\n<style type=\"text/css\">\n    .forign-key-panel{\n        padd
 Vue.component('forign-edit', forignEdit);
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1437,8 +1463,8 @@ link
 
      var cache_meta={
      cache:['person.emp_info.row',
-     'person.bas_info.row',
-     'crt_view'],
+            'person.bas_info.row',
+            'crt_view'],
      rt_key:{'auth.user':'person.emp_info.row.user'}
      }
 
@@ -1479,28 +1505,41 @@ var ln = {
 
     readCache: function readCache(root_obj) {
         var root_obj = root_obj || window;
-        if (ex.parseSearch().cache) {
-            var cache_obj_str = sessionStorage.getItem(btoa(location.pathname));
-            sessionStorage.removeItem(btoa(location.pathname));
-            if (cache_obj_str) {
-                var cache_obj = JSON.parse(cache_obj_str);
-                for (var key in cache_obj.window) {
-                    ex.set(root_obj, key, cache_obj.window[key]);
-                }
+        //if(ex.parseSearch().cache){
+        var cache_obj_str = sessionStorage.getItem(location.href);
+        sessionStorage.removeItem(location.href);
+        if (cache_obj_str) {
+            var cache_obj = JSON.parse(cache_obj_str);
+            for (var key in cache_obj.window) {
+                ex.set(root_obj, key, cache_obj.window[key]);
+            }
 
-                var cache_meta = cache_obj.cache_meta;
-                if (cache_meta && cache_meta.rt_key) {
-                    for (var key in cache_meta.rt_key) {
-                        var value = sessionStorage.getItem(key);
-                        if (value) {
-                            var targ_key = cache_meta.rt_key[key];
-                            sessionStorage.removeItem(key);
-                            ex.set(root_obj, targ_key, value);
-                        }
+            var cache_meta = cache_obj.cache_meta;
+            if (cache_meta && cache_meta.rt_key) {
+                for (var key in cache_meta.rt_key) {
+                    var value = sessionStorage.getItem(key);
+                    if (value) {
+                        var targ_key = cache_meta.rt_key[key];
+                        sessionStorage.removeItem(key);
+                        ex.set(root_obj, targ_key, value);
                     }
                 }
             }
+            onload = function onload() {
+                setTimeout(function () {
+                    console.log(cache_obj._scroll.y);
+                    window.scrollTo(cache_obj._scroll.x, cache_obj._scroll.y);
+                }, 10);
+            };
+            $(function () {
+                //setTimeout(function(){
+                //    console.log(cache_obj._scroll.y)
+                //    window.scrollTo(cache_obj._scroll.x,cache_obj._scroll.y)
+                //},3000)
+
+            });
         }
+        //}
     },
 
     cache: function cache(cache_meta, root_obj) {
@@ -1508,7 +1547,8 @@ var ln = {
         var root_obj = root_obj || window;
         var cache_obj = {
             cache_meta: cache_meta,
-            window: {}
+            window: {},
+            _scroll: { x: scrollX, y: scrollY }
         };
 
         if (cache_meta.cache) {
@@ -1516,7 +1556,7 @@ var ln = {
                 cache_obj.window[key] = ex.access(root_obj, key);
             });
         }
-        sessionStorage.setItem(btoa(location.pathname), JSON.stringify(cache_obj));
+        sessionStorage.setItem(location.href, JSON.stringify(cache_obj));
     },
 
     openWin: function openWin(url, callback) {
@@ -1554,7 +1594,7 @@ var ln = {
 window.ln = ln;
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1664,7 +1704,7 @@ Vue.component('tow-col-sel', {
 });
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
@@ -1673,14 +1713,14 @@ Vue.component('tow-col-sel', {
 var content = __webpack_require__(10);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(1)(content, {});
+var update = __webpack_require__(0)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
 	// When the styles change, update the <style> tags
 	if(!content.locals) {
-		module.hot.accept("!!./../../node_modules/css-loader/index.js!./../../node_modules/sass-loader/lib/loader.js!./fields.scss", function() {
-			var newContent = require("!!./../../node_modules/css-loader/index.js!./../../node_modules/sass-loader/lib/loader.js!./fields.scss");
+		module.hot.accept("!!./../../../node_modules/.0.26.1@css-loader/index.js!./../../../node_modules/.6.0.0@sass-loader/lib/loader.js!./file.scss", function() {
+			var newContent = require("!!./../../../node_modules/.0.26.1@css-loader/index.js!./../../../node_modules/.6.0.0@sass-loader/lib/loader.js!./file.scss");
 			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 			update(newContent);
 		});
@@ -1690,10 +1730,10 @@ if(false) {
 }
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(0)();
+exports = module.exports = __webpack_require__(1)();
 // imports
 
 
@@ -1704,10 +1744,10 @@ exports.push([module.i, ".img-uploader input {\n  display: none; }\n\n.up_wrap {
 
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(0)();
+exports = module.exports = __webpack_require__(1)();
 // imports
 
 
@@ -1716,32 +1756,6 @@ exports.push([module.i, ".error {\n  color: red; }\n\n.field-panel {\n  backgrou
 
 // exports
 
-
-/***/ }),
-/* 11 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(9);
-if(typeof content === 'string') content = [[module.i, content, '']];
-// add the styles to the DOM
-var update = __webpack_require__(1)(content, {});
-if(content.locals) module.exports = content.locals;
-// Hot Module Replacement
-if(false) {
-	// When the styles change, update the <style> tags
-	if(!content.locals) {
-		module.hot.accept("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/sass-loader/lib/loader.js!./file.scss", function() {
-			var newContent = require("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/sass-loader/lib/loader.js!./file.scss");
-			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-			update(newContent);
-		});
-	}
-	// When the module is disposed, remove the <style> tags
-	module.hot.dispose(function() { update(); });
-}
 
 /***/ }),
 /* 12 */
@@ -1755,25 +1769,25 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.merge = merge;
 
-var _ajax_fun = __webpack_require__(2);
+var _ajax_fun = __webpack_require__(3);
 
-var _file = __webpack_require__(4);
+var _file = __webpack_require__(5);
 
 var f = _interopRequireWildcard(_file);
 
-var _ckeditor = __webpack_require__(3);
+var _ckeditor = __webpack_require__(4);
 
 var ck = _interopRequireWildcard(_ckeditor);
 
-var _multi_sel = __webpack_require__(7);
+var _multi_sel = __webpack_require__(8);
 
 var multi = _interopRequireWildcard(_multi_sel);
 
-var _inputs = __webpack_require__(5);
+var _inputs = __webpack_require__(6);
 
 var inputs = _interopRequireWildcard(_inputs);
 
-var _link = __webpack_require__(6);
+var _link = __webpack_require__(7);
 
 var ln = _interopRequireWildcard(_link);
 
@@ -1830,7 +1844,7 @@ $.post('',JSON.stringify(post_data),function (data) {
 
 //import {use_color} from '../dosome/color.js'
 //import {load_js,load_css} from '../dosome/pkg.js'
-__webpack_require__(8);
+__webpack_require__(2);
 
 (0, _ajax_fun.hook_ajax_msg)();
 (0, _ajax_fun.hook_ajax_csrf)();
@@ -2125,6 +2139,72 @@ Vue.component('com-form-btn', {
 	props: ['submit', 'del_row', 'cancel'],
 	template: '<div style=\'overflow: hidden;\'>\n\t\t<div class="btn-group" style=\'float: right;\'>\n\t\t\t<button type="button" class="btn btn-default" @click=\'submit()\' v-if=\'can_add\'>Save</button>\n\t\t\t<button type="button" class="btn btn-default" v-if=\'can_del\' @click=\'del_row()\'>\u5220\u9664</button>\n\t\t\t<button type="button" class="btn btn-default" @click=\'cancel()\' >Cancel</button>\n\t\t</div>\n\t</div>'
 });
+
+var fieldset_fun = {
+	data: function data() {
+		return {
+			fieldset: fieldset,
+			namelist: namelist,
+			menu: menu,
+
+			can_add: can_add,
+			can_del: can_del,
+			can_log: can_log
+		};
+	},
+
+	methods: {
+		submit: function submit() {
+			var self = this;
+			(0, _ajax_fun.show_upload)();
+			var search = ex.parseSearch(); //parseSearch(location.search)
+			var post_data = [{ fun: 'save', row: this.kw.row }];
+			ex.post('', JSON.stringify(post_data), function (resp) {
+				if (resp.save.errors) {
+					self.kw.errors = resp.save.errors;
+					(0, _ajax_fun.hide_upload)();
+				} else if (search._pop == 1) {
+					window.ln.rtWin({ row: resp.save.row });
+				} else if (search.next) {
+
+					location = decodeURIComponent(search.next);
+				} else {
+					(0, _ajax_fun.hide_upload)(1000);
+				}
+			});
+		},
+		cancel: function cancel() {
+			var search = ex.parseSearch(); //parseSearch(location.search)
+			if (search._pop) {
+				window.close();
+			} else {
+				history.back();
+			}
+		},
+		del_row: function del_row(path) {
+			var search_args = ex.parseSearch();
+			location = ex.template('{engine_url}/del_rows?rows={class}:{pk}&next={next}&_pop={pop}', { class: this.kw.row._class,
+				engine_url: engine_url,
+				pk: this.kw.row.pk,
+				next: search_args.next,
+				pop: search_args._pop
+
+			});
+		},
+		log_url: function log_url() {
+			var rows = ex.map(this.fieldset, function (kw) {
+				return kw.row._class + ':' + kw.row.pk;
+			});
+			var obj = {
+				rows: rows.join(','),
+				engine_url: engine_url,
+				page_name: page_name
+			};
+			return ex.template('{engine_url}/log?rows={rows}', obj);
+		}
+	}
+};
+window.fieldset_fun = fieldset_fun;
 
 window.field_fun = field_fun;
 window.hook_ajax_msg = _ajax_fun.hook_ajax_msg;
