@@ -180,7 +180,6 @@ ex={
 			rt = func(array[i])
 			if(rt=='break'){break;}
 			else if(rt=='continue'){continue;}
-
 		}
 	},
 	split:function (base_str,sep) {

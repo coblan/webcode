@@ -74,6 +74,62 @@
 	MIT License http://www.opensource.org/licenses/mit-license.php
 	Author Tobias Koppers @sokra
 */
+// css base code, injected by the css-loader
+module.exports = function() {
+	var list = [];
+
+	// return the list of modules as css string
+	list.toString = function toString() {
+		var result = [];
+		for(var i = 0; i < this.length; i++) {
+			var item = this[i];
+			if(item[2]) {
+				result.push("@media " + item[2] + "{" + item[1] + "}");
+			} else {
+				result.push(item[1]);
+			}
+		}
+		return result.join("");
+	};
+
+	// import a list of modules into the list
+	list.i = function(modules, mediaQuery) {
+		if(typeof modules === "string")
+			modules = [[null, modules, ""]];
+		var alreadyImportedModules = {};
+		for(var i = 0; i < this.length; i++) {
+			var id = this[i][0];
+			if(typeof id === "number")
+				alreadyImportedModules[id] = true;
+		}
+		for(i = 0; i < modules.length; i++) {
+			var item = modules[i];
+			// skip already imported module
+			// this implementation is not 100% perfect for weird media query combinations
+			//  when a module is imported multiple times with different media queries.
+			//  I hope this will never occur (Hey this way we have smaller bundles)
+			if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
+				if(mediaQuery && !item[2]) {
+					item[2] = mediaQuery;
+				} else if(mediaQuery) {
+					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
+				}
+				list.push(item);
+			}
+		}
+	};
+	return list;
+};
+
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports) {
+
+/*
+	MIT License http://www.opensource.org/licenses/mit-license.php
+	Author Tobias Koppers @sokra
+*/
 var stylesInDom = {},
 	memoize = function(fn) {
 		var memo;
@@ -319,89 +375,7 @@ function updateLink(linkElement, obj) {
 
 
 /***/ }),
-/* 1 */
-/***/ (function(module, exports) {
-
-/*
-	MIT License http://www.opensource.org/licenses/mit-license.php
-	Author Tobias Koppers @sokra
-*/
-// css base code, injected by the css-loader
-module.exports = function() {
-	var list = [];
-
-	// return the list of modules as css string
-	list.toString = function toString() {
-		var result = [];
-		for(var i = 0; i < this.length; i++) {
-			var item = this[i];
-			if(item[2]) {
-				result.push("@media " + item[2] + "{" + item[1] + "}");
-			} else {
-				result.push(item[1]);
-			}
-		}
-		return result.join("");
-	};
-
-	// import a list of modules into the list
-	list.i = function(modules, mediaQuery) {
-		if(typeof modules === "string")
-			modules = [[null, modules, ""]];
-		var alreadyImportedModules = {};
-		for(var i = 0; i < this.length; i++) {
-			var id = this[i][0];
-			if(typeof id === "number")
-				alreadyImportedModules[id] = true;
-		}
-		for(i = 0; i < modules.length; i++) {
-			var item = modules[i];
-			// skip already imported module
-			// this implementation is not 100% perfect for weird media query combinations
-			//  when a module is imported multiple times with different media queries.
-			//  I hope this will never occur (Hey this way we have smaller bundles)
-			if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
-				if(mediaQuery && !item[2]) {
-					item[2] = mediaQuery;
-				} else if(mediaQuery) {
-					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
-				}
-				list.push(item);
-			}
-		}
-	};
-	return list;
-};
-
-
-/***/ }),
 /* 2 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(11);
-if(typeof content === 'string') content = [[module.i, content, '']];
-// add the styles to the DOM
-var update = __webpack_require__(0)(content, {});
-if(content.locals) module.exports = content.locals;
-// Hot Module Replacement
-if(false) {
-	// When the styles change, update the <style> tags
-	if(!content.locals) {
-		module.hot.accept("!!./../../node_modules/.0.26.1@css-loader/index.js!./../../node_modules/.6.0.0@sass-loader/lib/loader.js!./fields.scss", function() {
-			var newContent = require("!!./../../node_modules/.0.26.1@css-loader/index.js!./../../node_modules/.6.0.0@sass-loader/lib/loader.js!./fields.scss");
-			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-			update(newContent);
-		});
-	}
-	// When the module is disposed, remove the <style> tags
-	module.hot.dispose(function() { update(); });
-}
-
-/***/ }),
-/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -581,7 +555,7 @@ if (!window.__uploading_mark) {
 }
 
 /***/ }),
-/* 4 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -739,7 +713,7 @@ var edit_level = {
 };
 
 /***/ }),
-/* 5 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -843,7 +817,7 @@ img-uploador
 <<<<
 */
 
-__webpack_require__(9);
+__webpack_require__(11);
 
 var fl = {
     read: function read(file, callback) {
@@ -1207,7 +1181,7 @@ Vue.component('logo-input', {
 window.fl = fl;
 
 /***/ }),
-/* 6 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1446,7 +1420,7 @@ ex.append_css("\n<style type=\"text/css\">\n    .forign-key-panel{\n        padd
 Vue.component('forign-edit', forignEdit);
 
 /***/ }),
-/* 7 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1594,7 +1568,7 @@ var ln = {
 window.ln = ln;
 
 /***/ }),
-/* 8 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1620,30 +1594,45 @@ Vue.component('tow-col-sel', {
 		}
 	},
 	data: function data() {
-
+		var self = this;
+		if (!this.value) {
+			var norm_selected = [];
+		} else {
+			norm_selected = ex.filter(this.choices, function (choice) {
+				return ex.isin(choice.value, self.value);
+			});
+		}
 		return {
-			//selected:this.value,
-			selected: this.value,
-			can_select: JSON.parse(JSON.stringify(this.choices)),
+			selected: norm_selected,
+			//can_select:JSON.parse(JSON.stringify(this.choices)),
 			left_sel: [],
 			right_sel: []
 		};
 	},
 	mounted: function mounted() {
-		var self = this;
-		this.can_select = ex.filter(this.can_select, function (choice) {
-			return !ex.isin(choice, self.selected);
-		});
+		//var self=this
+		//this.can_select=ex.filter(this.choices,function(choice){
+		//	return !ex.isin(choice,self.selected)
+		//})
 		//this.selected__ = ex.remove(this.can_select,function (item) {
 		//		return ex.isin(item.value,self.value)
 		//	})
 	},
 	watch: {
 		selected: function selected(v) {
-			this.$emit('input', v);
+			this.$emit('input', ex.map(v, function (choice) {
+				return choice.value;
+			}));
 		}
 	},
-
+	computed: {
+		can_select: function can_select() {
+			var self = this;
+			return ex.filter(this.choices, function (choice) {
+				return !ex.isin(choice, self.selected);
+			});
+		}
+	},
 	methods: {
 		orderBy: function orderBy(array, key) {
 			return array.slice().sort(function (a, b) {
@@ -1656,36 +1645,6 @@ Vue.component('tow-col-sel', {
 				}
 			});
 		},
-		//db_add:function(){
-		//	if(this.left_sel.length>0){
-		//		var opt = ex.findone(this.can_select,{value:this.left_sel[0]})
-		//		if(opt){
-		//			this.add(opt)
-		//		}
-		//	}
-		//
-		//},
-		//add:function (opt) {
-		//	if(!ex.isin(opt,this.selected)){
-		//		this.selected.push(opt)
-		//	}
-		//
-		//	ex.remove(this.can_select,opt)
-		//	this.left_sel=[]
-		//},
-		//db_rem:function(){
-		//	if(this.right_sel.length>0){
-		//		var opt = ex.findone(this.selected,{value:this.right_sel[0]})
-		//		if(opt){
-		//			this.rm(opt)
-		//		}
-		//	}
-		//},
-		//rm:function (opt) {
-		//	ex.remove(this.selected,opt)
-		//	this.can_select.push(opt)
-		//	this.right_sel=[]
-		//},
 		batch_add: function batch_add() {
 			var self = this;
 			var added_choice = ex.remove(this.can_select, function (choice) {
@@ -1698,13 +1657,13 @@ Vue.component('tow-col-sel', {
 			var del_choice = ex.remove(this.selected, function (choice) {
 				return ex.isin(choice.value, self.right_sel);
 			});
-			ex.extend(this.can_select, del_choice);
+			//ex.extend(this.can_select,del_choice)
 		}
 	}
 });
 
 /***/ }),
-/* 9 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
@@ -1713,14 +1672,14 @@ Vue.component('tow-col-sel', {
 var content = __webpack_require__(10);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(0)(content, {});
+var update = __webpack_require__(1)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
 	// When the styles change, update the <style> tags
 	if(!content.locals) {
-		module.hot.accept("!!./../../../node_modules/.0.26.1@css-loader/index.js!./../../../node_modules/.6.0.0@sass-loader/lib/loader.js!./file.scss", function() {
-			var newContent = require("!!./../../../node_modules/.0.26.1@css-loader/index.js!./../../../node_modules/.6.0.0@sass-loader/lib/loader.js!./file.scss");
+		module.hot.accept("!!./../../node_modules/css-loader/index.js!./../../node_modules/sass-loader/lib/loader.js!./fields.scss", function() {
+			var newContent = require("!!./../../node_modules/css-loader/index.js!./../../node_modules/sass-loader/lib/loader.js!./fields.scss");
 			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 			update(newContent);
 		});
@@ -1730,10 +1689,10 @@ if(false) {
 }
 
 /***/ }),
-/* 10 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(1)();
+exports = module.exports = __webpack_require__(0)();
 // imports
 
 
@@ -1744,10 +1703,10 @@ exports.push([module.i, ".img-uploader input {\n  display: none; }\n\n.up_wrap {
 
 
 /***/ }),
-/* 11 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(1)();
+exports = module.exports = __webpack_require__(0)();
 // imports
 
 
@@ -1756,6 +1715,32 @@ exports.push([module.i, ".error {\n  color: red; }\n\n.field-panel {\n  backgrou
 
 // exports
 
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(9);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// add the styles to the DOM
+var update = __webpack_require__(1)(content, {});
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/sass-loader/lib/loader.js!./file.scss", function() {
+			var newContent = require("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/sass-loader/lib/loader.js!./file.scss");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
 
 /***/ }),
 /* 12 */
@@ -1769,25 +1754,25 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.merge = merge;
 
-var _ajax_fun = __webpack_require__(3);
+var _ajax_fun = __webpack_require__(2);
 
-var _file = __webpack_require__(5);
+var _file = __webpack_require__(4);
 
 var f = _interopRequireWildcard(_file);
 
-var _ckeditor = __webpack_require__(4);
+var _ckeditor = __webpack_require__(3);
 
 var ck = _interopRequireWildcard(_ckeditor);
 
-var _multi_sel = __webpack_require__(8);
+var _multi_sel = __webpack_require__(7);
 
 var multi = _interopRequireWildcard(_multi_sel);
 
-var _inputs = __webpack_require__(6);
+var _inputs = __webpack_require__(5);
 
 var inputs = _interopRequireWildcard(_inputs);
 
-var _link = __webpack_require__(7);
+var _link = __webpack_require__(6);
 
 var ln = _interopRequireWildcard(_link);
 
@@ -1844,7 +1829,7 @@ $.post('',JSON.stringify(post_data),function (data) {
 
 //import {use_color} from '../dosome/color.js'
 //import {load_js,load_css} from '../dosome/pkg.js'
-__webpack_require__(2);
+__webpack_require__(8);
 
 (0, _ajax_fun.hook_ajax_msg)();
 (0, _ajax_fun.hook_ajax_csrf)();
@@ -2110,13 +2095,17 @@ var field_fun = {
 		},
 		del_row: function del_row(path) {
 			var search_args = ex.parseSearch();
-			location = ex.template('{engine_url}/del_rows?rows={class}:{pk}&next={next}&_pop={pop}', { class: this.kw.row._class,
-				engine_url: engine_url,
-				pk: this.kw.row.pk,
-				next: search_args.next,
-				pop: search_args._pop
+			if (this.kw.row.pk) {
+				return ex.template('{engine_url}/del_rows?rows={class}:{pk}&next={next}&_pop={pop}', { class: this.kw.row._class,
+					engine_url: engine_url,
+					pk: this.kw.row.pk,
+					next: search_args.next,
+					pop: search_args._pop
 
-			});
+				});
+			} else {
+				return null;
+			}
 		},
 		log_url: function log_url() {
 			var obj = {
@@ -2137,7 +2126,12 @@ Vue.component('com-form-btn', {
 		};
 	},
 	props: ['submit', 'del_row', 'cancel'],
-	template: '<div style=\'overflow: hidden;\'>\n\t\t<div class="btn-group" style=\'float: right;\'>\n\t\t\t<button type="button" class="btn btn-default" @click=\'submit()\' v-if=\'can_add\'>Save</button>\n\t\t\t<button type="button" class="btn btn-default" v-if=\'can_del\' @click=\'del_row()\'>\u5220\u9664</button>\n\t\t\t<button type="button" class="btn btn-default" @click=\'cancel()\' >Cancel</button>\n\t\t</div>\n\t</div>'
+	computed: {
+		del_link: function del_link() {
+			return this.del_row();
+		}
+	},
+	template: '<div style=\'overflow: hidden;\'>\n\t\t<div class="btn-group" style=\'float: right;\'>\n\t\t\t<button type="button" class="btn btn-default" @click=\'submit()\' v-if=\'can_add\'>Save</button>\n\t\t\t<a type="button" class="btn btn-default" v-if=\'can_del &&del_link\' :href=\'del_link\'>\u5220\u9664</a>\n\t\t\t<button type="button" class="btn btn-default" @click=\'cancel()\' >Cancel</button>\n\t\t</div>\n\t</div>'
 });
 
 var fieldset_fun = {
@@ -2157,19 +2151,25 @@ var fieldset_fun = {
 		submit: function submit() {
 			var self = this;
 			(0, _ajax_fun.show_upload)();
-			var search = ex.parseSearch(); //parseSearch(location.search)
-			var post_data = [{ fun: 'save', row: this.kw.row }];
+			var search = ex.parseSearch();
+			var fieldset_row = {};
+			for (var k in this.fieldset) {
+				fieldset_row[k] = this.fieldset[k].row;
+			}
+
+			var post_data = [{ fun: 'save_fieldset', fieldset: fieldset_row, save_step: save_step }];
 			ex.post('', JSON.stringify(post_data), function (resp) {
-				if (resp.save.errors) {
-					self.kw.errors = resp.save.errors;
-					(0, _ajax_fun.hide_upload)();
+				if (resp.save_fieldset.errors) {
+					var error_path = resp.save_fieldset.path;
+					ex.set(self.fieldset, error_path, resp.save_fieldset.errors);
+					(0, _ajax_fun.hide_upload)(200);
 				} else if (search._pop == 1) {
-					window.ln.rtWin({ row: resp.save.row });
+					window.ln.rtWin({ row: resp.save_fieldset.fieldset });
 				} else if (search.next) {
 
 					location = decodeURIComponent(search.next);
 				} else {
-					(0, _ajax_fun.hide_upload)(1000);
+					(0, _ajax_fun.hide_upload)(200);
 				}
 			});
 		},
@@ -2182,23 +2182,34 @@ var fieldset_fun = {
 			}
 		},
 		del_row: function del_row(path) {
+			var self = this;
 			var search_args = ex.parseSearch();
-			location = ex.template('{engine_url}/del_rows?rows={class}:{pk}&next={next}&_pop={pop}', { class: this.kw.row._class,
-				engine_url: engine_url,
-				pk: this.kw.row.pk,
-				next: search_args.next,
-				pop: search_args._pop
-
+			var rows = [];
+			ex.each(delset, function (name) {
+				var row = self.fieldset[name].row;
+				if (row.pk) {
+					rows.push(row._class + ':' + row.pk);
+				}
 			});
+			if (rows.length > 1) {
+				return ex.template('{engine_url}/del_rows?rows={rows}&next={next}&_pop={pop}', { engine_url: engine_url,
+					rows: rows,
+					next: search_args.next,
+					pop: search_args._pop
+				});
+			} else {
+				return null;
+			}
 		},
 		log_url: function log_url() {
-			var rows = ex.map(this.fieldset, function (kw) {
-				return kw.row._class + ':' + kw.row.pk;
-			});
+			var rows = [];
+			for (var k in this.fieldset) {
+				var kw = this.fieldset[k];
+				rows.push(kw.row._class + ':' + kw.row.pk);
+			}
 			var obj = {
 				rows: rows.join(','),
-				engine_url: engine_url,
-				page_name: page_name
+				engine_url: engine_url
 			};
 			return ex.template('{engine_url}/log?rows={rows}', obj);
 		}

@@ -86,30 +86,45 @@ Vue.component('tow-col-sel',{
 		},
 	},
 	data:function () {
-
+		var self=this
+		if(!this.value){
+			var norm_selected=[]
+		}else{
+			norm_selected=ex.filter(this.choices,function(choice){
+				return ex.isin(choice.value,self.value)
+			})
+		}
 		return {
-			//selected:this.value,
-			selected:this.value,
-			can_select:JSON.parse(JSON.stringify(this.choices)),
+			selected:norm_selected,
+			//can_select:JSON.parse(JSON.stringify(this.choices)),
 			left_sel:[],
 			right_sel:[]
 		}
 	},
 	mounted:function () {
-		var self=this
-		this.can_select=ex.filter(this.can_select,function(choice){
-			return !ex.isin(choice,self.selected)
-		})
+		//var self=this
+		//this.can_select=ex.filter(this.choices,function(choice){
+		//	return !ex.isin(choice,self.selected)
+		//})
 		//this.selected__ = ex.remove(this.can_select,function (item) {
 		//		return ex.isin(item.value,self.value)
 		//	})
 	},
 	watch:{
 		selected:function (v) {
-			this.$emit('input',v)
+			this.$emit('input',ex.map(v,function(choice){
+				return choice.value
+			}))
 		}
 	},
-	
+	computed:{
+		can_select:function(){
+			var self=this
+			return ex.filter(this.choices,function(choice){
+				return !ex.isin(choice,self.selected)
+			})
+		}
+	},
 	methods:{
 		orderBy:function (array,key) {
 			return  array.slice().sort(function (a,b) {
@@ -122,36 +137,6 @@ Vue.component('tow-col-sel',{
 				}
 			})
 		},
-		//db_add:function(){
-		//	if(this.left_sel.length>0){
-		//		var opt = ex.findone(this.can_select,{value:this.left_sel[0]})
-		//		if(opt){
-		//			this.add(opt)
-		//		}
-		//	}
-        //
-		//},
-		//add:function (opt) {
-		//	if(!ex.isin(opt,this.selected)){
-		//		this.selected.push(opt)
-		//	}
-        //
-		//	ex.remove(this.can_select,opt)
-		//	this.left_sel=[]
-		//},
-		//db_rem:function(){
-		//	if(this.right_sel.length>0){
-		//		var opt = ex.findone(this.selected,{value:this.right_sel[0]})
-		//		if(opt){
-		//			this.rm(opt)
-		//		}
-		//	}
-		//},
-		//rm:function (opt) {
-		//	ex.remove(this.selected,opt)
-		//	this.can_select.push(opt)
-		//	this.right_sel=[]
-		//},
 		batch_add:function () {
 			var self=this
 			var added_choice= ex.remove(this.can_select,function(choice){
@@ -164,7 +149,7 @@ Vue.component('tow-col-sel',{
 			var del_choice=ex.remove(this.selected,function(choice){
 				return ex.isin(choice.value,self.right_sel)
 			})
-			ex.extend(this.can_select,del_choice)
+			//ex.extend(this.can_select,del_choice)
 		}
 	}
 })
