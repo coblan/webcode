@@ -17,13 +17,17 @@
 			el:'#there',
 			data:{
 				name:'dog',
-				fuck:'<dog></dog>'
 			}
 		})
 	})
 
 	Vue.component('dog',{
-		template:'<span>hash</span>'
+		template:'<span>hash</span>',
+		data:function(){
+			return {
+				pig:'i m pig'
+			}
+		}
 	})
 	
 	</script>
@@ -31,7 +35,10 @@
     <body >
 		<div id="there" class="test">
 			<span v-text='name'></span>
-			<div  v-html='fuck'>	</div>
+			<dog></dog>
+			<dog inline-template>
+				<span v-text="pig">jjyy</span>
+			</dog>
 		</div>
     </body>
 
