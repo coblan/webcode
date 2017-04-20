@@ -393,7 +393,7 @@ var field_fun={
 				errors:{},
 			},
 			menu:menu,
-
+			search_args:ex.parseSearch(),
 			can_add:can_add,
 			can_del:can_del,
 			can_log:can_log,
@@ -481,7 +481,7 @@ var fieldset_fun={
 			fieldset:fieldset,
 			namelist:namelist,
 			menu:menu,
-
+			search_args:ex.parseSearch(),
 			can_add:can_add,
 			can_del:can_del,
 			can_log:can_log,
