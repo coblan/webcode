@@ -13,24 +13,24 @@
  <-<
  */
 
-Vue.component('com-filter',{
-    props:['heads','search','search_tip'],
+var com_filter={
+    props:['row_filters','search_args','search_tip'],
     computed:{
-        filters:function(){
-          return ex.filter(this.heads,function(head){
-              return head.options
-          })
+        option_filters:function(){
+            return ex.filter(this.row_filters,function(head){
+                return head.options
+            })
         },
-      time_spans:function(){
-          var time_spans=ex.filter(this.heads,function(head){
-              return ex.isin(head.type,['time','date','month'])
-          })
-          return time_spans
-      }
+        time_filters:function(){
+            var time_spans=ex.filter(this.row_filters,function(head){
+                return ex.isin(head.type,['time','date','month'])
+            })
+            return time_spans
+        }
     },
     template:ex.template(`
     <div>
-    <div class="weui-panel" v-if='search_tip || heads.length>0'>
+    <div class="weui-panel" v-if='search_tip'>
         <div class="weui-cells__title">搜索</div>
         <div class="weui-cells weui-cells_form">
             <div class="weui-cell">
@@ -38,7 +38,7 @@ Vue.component('com-filter',{
                     <label for=''  class="weui-label">关键字</label>
                 </div>
                  <div class="weui-cell__bd">
-                      <input v-if='search_tip' class="weui-input" type="text" name="_q" v-model='search._q' :placeholder='"请输入"+search_tip'/>
+                      <input v-if='search_tip' class="weui-input" type="text" name="_q" v-model='search_args._q' :placeholder='"请输入"+search_tip'/>
                  </div>
 
             </div>
@@ -46,50 +46,50 @@ Vue.component('com-filter',{
     </div>
 
 
-    <div class="weui-panel" v-if='filters.length>0'>
+    <div class="weui-panel" v-if='option_filters.length>0'>
 
-    <div class="weui-cells__title">选择过滤</div>
-    <div class="weui-cells weui-cells_form">
-        <div class="weui-cell weui-cell_select weui-cell_select-after" v-for='filter in filters'>
-            <div class="weui-cell__hd" >
-                <label for=''  class="weui-label">
-                    <span v-text='filter.label'></span>
-                </label>
-            </div>
-            <div class="weui-cell__bd">
-                <select v-if="filter.options" name=""   v-model='search[filter.name]' class='weui-select'>
-                    <!--<option :value="undefined" v-text='filter.label'></option>-->
-                    <option :value="null">----</option>
-                    <option v-for='option in filter.options' :value="option.value" v-text='option.label'></option>
-                </select>
+        <div class="weui-cells__title">选择过滤</div>
+        <div class="weui-cells weui-cells_form">
+            <div class="weui-cell weui-cell_select weui-cell_select-after" v-for='filter in option_filters'>
+                <div class="weui-cell__hd" >
+                    <label for=''  class="weui-label">
+                        <span v-text='filter.label'></span>
+                    </label>
+                </div>
+                <div class="weui-cell__bd">
+                    <select v-if="filter.options" name=""   v-model='search_args[filter.name]' class='weui-select'>
+                        <!--<option :value="undefined" v-text='filter.label'></option>-->
+                        <option :value="null">----</option>
+                        <option v-for='option in filter.options' :value="option.value" v-text='option.label'></option>
+                    </select>
+                </div>
             </div>
         </div>
     </div>
-</div>
             <!--<input v-if='search_tip' type="text" name="_q" v-model='search._q' :placeholder='search_tip' class='form-control'/>-->
-   <div class="weui-panel" v-if="time_spans.length>0">
+   <div class="weui-panel" v-if="time_filters.length>0">
         <div class="weui-cells__title">时间段</div>
-        <div  v-for='filter in time_spans'  class="weui-cells weui-cells_form date-filter">
+        <div  v-for='filter in time_filters'  class="weui-cells weui-cells_form date-filter">
             <div class="weui-cell">
                  <div class="weui-cell__hd" >
                     <label for=''  class="weui-label">
-                        <span>{From}</span>
+                        <span>从</span>
                     </label>
                 </div>
                  <div class="weui-cell__bd">
-                     <date v-if="filter.type=='month'" set="month" v-model="search['_start_'+filter.name]"></date>
-                     <date v-if="filter.type=='date'"  v-model="search['_start_'+filter.name]"></date>
+                     <date v-if="filter.type=='month'" set="month" v-model="search_args['_start_'+filter.name]" ></date>
+                     <date v-if="filter.type=='date'"  v-model="search_args['_start_'+filter.name]" ></date>
                 </div>
             </div>
             <div class="weui-cell">
                 <div class="weui-cell__hd" >
                     <label for=''  class="weui-label">
-                        <span>{To}</span>
+                        <span>到</span>
                     </label>
                 </div>
                 <div class="weui-cell__bd">
-                      <date v-if="filter.type=='month'" set="month" v-model="search['_end_'+filter.name]"></date>
-                      <date v-if="filter.type=='date'"  v-model="search['_end_'+filter.name]"></date>
+                      <date v-if="filter.type=='month'" set="month" v-model="search_args['_end_'+filter.name]"></date>
+                      <date v-if="filter.type=='date'"  v-model="search_args['_end_'+filter.name]" ></date>
                 </div>
             </div>
         </div>
@@ -102,13 +102,14 @@ Vue.component('com-filter',{
     `,ex.trList(['From','To','submit'])),
     created:function(){
         var self=this
-        ex.each(self.heads,function(filter){
+        ex.each(self.row_filters,function(filter){
+            // 初始化 Vue 变量属性。
             if(ex.isin(filter.type,['month','date'])){
-                if(!self.search['_start_'+filter.name]){
-                    Vue.set(self.search,'_start_'+filter.name,'')
+                if(!self.search_args['_start_'+filter.name]){
+                    Vue.set(self.search_args,'_start_'+filter.name,'')
                 }
-                if(!self.search['_end_'+filter.name]){
-                    Vue.set(self.search,'_end_'+filter.name,'')
+                if(!self.search_args['_end_'+filter.name]){
+                    Vue.set(self.search_args,'_end_'+filter.name,'')
                 }
 
             }
@@ -127,7 +128,8 @@ Vue.component('com-filter',{
         },
     }
 
-})
+}
+Vue.component('com-filter',com_filter)
 
 
 var com_sort={
@@ -341,7 +343,7 @@ var table_fun={
 
             can_add:can_add,
             can_del:can_del,
-
+            show_menu:false,
             search_args:ex.parseSearch(),
             ex:ex,
         }
@@ -350,6 +352,15 @@ var table_fun={
         'row_sort.sort_str':function (v) {
             this.search_args._sort=v
             this.search()
+        }
+    },
+    computed:{
+        can_search:function(){
+            if(this.row_filters.length>0 || this.row_sort.length>0 || this.search_tip){
+                return true
+            }else{
+                return false
+            }
         }
     },
     methods:{
@@ -446,7 +457,7 @@ var table_fun={
             this.search()
         },
         add_new:function () {
-            return ex.template('{engine_url}/{page}.edit/?next={next}',{
+            location= ex.template('{engine_url}/{page}.edit/?next={next}',{
                 engine_url:engine_url,
                 page:page_name,
                 next:encodeURIComponent(location.href)

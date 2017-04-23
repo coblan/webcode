@@ -254,25 +254,6 @@ var field_base={
 
 
 
-//    <div for='field' class="form-group field" :class='{"error":error_data(name)}' v-if="head">
-//    <label :for="'id_'+name"  class="control-label" v-if='!head.no_auto_label'>
-//    <span v-text="head.label"></span><span class="req_star" v-if='head.required'>*</span>
-//</label>
-//
-//<div class="field_input">
-//    <component :is='head.type'
-//:row='row'
-//:name='name'
-//:kw='head'>
-//    </component>
-//    </div>
-//    <div class="help_text"><span v-text="head.help_text"></span></div>
-//<slot> </slot>
-//<div v-for='error in error_data(name)' v-text='error' class='error'></div>
-//    </div>
-
-    //<div v-if="show_title(head)" class="weui-cells__title" v-text="head.label"></div>
-
 var field={
     mixins:[field_base],
     methods:{
@@ -290,7 +271,7 @@ var field={
     template:`<div class="flex-v"  v-if="head">
         <span></span>
         <div v-if="show_title(head)" class="weui-cells__title block-title weui-cell" v-text="head.label"></div>
-        <div :class='["weui-cell","field",{"error":error_data(name),"weui-cell_select weui-cell_select-after":head.type=="sim_select"}]'>
+        <div :class='["weui-cell","field",{"error":error_data(name),"weui-cell_select weui-cell_select-after":head.type=="sim_select"&&!head.readonly}]'>
             <div class="weui-cell__hd" v-if='show_label(head)'>
                 <label  class="weui-label" :for="'id_'+name">
                     <span v-text="head.label"></span>
@@ -348,25 +329,32 @@ var field_fun={
             can_log:can_log,
         }
     },
-
+    created:function(){
+        ex.each(this.kw.heads,function(head){
+            if(!head.placeholder){
+                head.placeholder='请输入'+head.label
+            }
+        })
+    },
     methods:{
+        after_sub:function(){
+            location=document.referrer
+        },
         submit:function () {
             var self =this;
             show_upload()
-            var search =ex.parseSearch() //parseSearch(location.search)
+            var search =ex.parseSearch()
             var post_data=[{fun:'save',row:this.kw.row}]
             ex.post('',JSON.stringify(post_data),function (resp) {
+                hide_upload(500)
                 if( resp.save.errors){
                     self.kw.errors = resp.save.errors
-                    hide_upload()
                 }else if(search._pop==1){
-                    window.ln.rtWin({row:resp.save.row})
+                    window.ln.try_rt({row:resp.save.row})
                 }else if(search.next){
-
                     location=decodeURIComponent(search.next)
                 }else{
-                    hide_upload(1000)
-
+                    self.after_sub()
                 }
             })
         },

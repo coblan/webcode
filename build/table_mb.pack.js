@@ -88,31 +88,32 @@
  <-<
  */
 
-Vue.component('com-filter', {
-    props: ['heads', 'search', 'search_tip'],
+var com_filter = {
+    props: ['row_filters', 'search_args', 'search_tip'],
     computed: {
-        filters: function filters() {
-            return ex.filter(this.heads, function (head) {
+        option_filters: function option_filters() {
+            return ex.filter(this.row_filters, function (head) {
                 return head.options;
             });
         },
-        time_spans: function time_spans() {
-            var time_spans = ex.filter(this.heads, function (head) {
+        time_filters: function time_filters() {
+            var time_spans = ex.filter(this.row_filters, function (head) {
                 return ex.isin(head.type, ['time', 'date', 'month']);
             });
             return time_spans;
         }
     },
-    template: ex.template('\n    <div>\n    <div class="weui-panel" v-if=\'search_tip || heads.length>0\'>\n        <div class="weui-cells__title">\u641C\u7D22</div>\n        <div class="weui-cells weui-cells_form">\n            <div class="weui-cell">\n                <div class="weui-cell__hd" >\n                    <label for=\'\'  class="weui-label">\u5173\u952E\u5B57</label>\n                </div>\n                 <div class="weui-cell__bd">\n                      <input v-if=\'search_tip\' class="weui-input" type="text" name="_q" v-model=\'search._q\' :placeholder=\'"\u8BF7\u8F93\u5165"+search_tip\'/>\n                 </div>\n\n            </div>\n        </div>\n    </div>\n\n\n    <div class="weui-panel" v-if=\'filters.length>0\'>\n\n    <div class="weui-cells__title">\u9009\u62E9\u8FC7\u6EE4</div>\n    <div class="weui-cells weui-cells_form">\n        <div class="weui-cell weui-cell_select weui-cell_select-after" v-for=\'filter in filters\'>\n            <div class="weui-cell__hd" >\n                <label for=\'\'  class="weui-label">\n                    <span v-text=\'filter.label\'></span>\n                </label>\n            </div>\n            <div class="weui-cell__bd">\n                <select v-if="filter.options" name=""   v-model=\'search[filter.name]\' class=\'weui-select\'>\n                    <!--<option :value="undefined" v-text=\'filter.label\'></option>-->\n                    <option :value="null">----</option>\n                    <option v-for=\'option in filter.options\' :value="option.value" v-text=\'option.label\'></option>\n                </select>\n            </div>\n        </div>\n    </div>\n</div>\n            <!--<input v-if=\'search_tip\' type="text" name="_q" v-model=\'search._q\' :placeholder=\'search_tip\' class=\'form-control\'/>-->\n   <div class="weui-panel" v-if="time_spans.length>0">\n        <div class="weui-cells__title">\u65F6\u95F4\u6BB5</div>\n        <div  v-for=\'filter in time_spans\'  class="weui-cells weui-cells_form date-filter">\n            <div class="weui-cell">\n                 <div class="weui-cell__hd" >\n                    <label for=\'\'  class="weui-label">\n                        <span>{From}</span>\n                    </label>\n                </div>\n                 <div class="weui-cell__bd">\n                     <date v-if="filter.type==\'month\'" set="month" v-model="search[\'_start_\'+filter.name]"></date>\n                     <date v-if="filter.type==\'date\'"  v-model="search[\'_start_\'+filter.name]"></date>\n                </div>\n            </div>\n            <div class="weui-cell">\n                <div class="weui-cell__hd" >\n                    <label for=\'\'  class="weui-label">\n                        <span>{To}</span>\n                    </label>\n                </div>\n                <div class="weui-cell__bd">\n                      <date v-if="filter.type==\'month\'" set="month" v-model="search[\'_end_\'+filter.name]"></date>\n                      <date v-if="filter.type==\'date\'"  v-model="search[\'_end_\'+filter.name]"></date>\n                </div>\n            </div>\n        </div>\n   </div>\n            <slot></slot>\n            <!--<button name="go" type="button" class="btn btn-info" @click=\'m_submit()\' >{submit}</button>-->\n\n\n    </div>\n    ', ex.trList(['From', 'To', 'submit'])),
+    template: ex.template('\n    <div>\n    <div class="weui-panel" v-if=\'search_tip\'>\n        <div class="weui-cells__title">\u641C\u7D22</div>\n        <div class="weui-cells weui-cells_form">\n            <div class="weui-cell">\n                <div class="weui-cell__hd" >\n                    <label for=\'\'  class="weui-label">\u5173\u952E\u5B57</label>\n                </div>\n                 <div class="weui-cell__bd">\n                      <input v-if=\'search_tip\' class="weui-input" type="text" name="_q" v-model=\'search_args._q\' :placeholder=\'"\u8BF7\u8F93\u5165"+search_tip\'/>\n                 </div>\n\n            </div>\n        </div>\n    </div>\n\n\n    <div class="weui-panel" v-if=\'option_filters.length>0\'>\n\n        <div class="weui-cells__title">\u9009\u62E9\u8FC7\u6EE4</div>\n        <div class="weui-cells weui-cells_form">\n            <div class="weui-cell weui-cell_select weui-cell_select-after" v-for=\'filter in option_filters\'>\n                <div class="weui-cell__hd" >\n                    <label for=\'\'  class="weui-label">\n                        <span v-text=\'filter.label\'></span>\n                    </label>\n                </div>\n                <div class="weui-cell__bd">\n                    <select v-if="filter.options" name=""   v-model=\'search_args[filter.name]\' class=\'weui-select\'>\n                        <!--<option :value="undefined" v-text=\'filter.label\'></option>-->\n                        <option :value="null">----</option>\n                        <option v-for=\'option in filter.options\' :value="option.value" v-text=\'option.label\'></option>\n                    </select>\n                </div>\n            </div>\n        </div>\n    </div>\n            <!--<input v-if=\'search_tip\' type="text" name="_q" v-model=\'search._q\' :placeholder=\'search_tip\' class=\'form-control\'/>-->\n   <div class="weui-panel" v-if="time_filters.length>0">\n        <div class="weui-cells__title">\u65F6\u95F4\u6BB5</div>\n        <div  v-for=\'filter in time_filters\'  class="weui-cells weui-cells_form date-filter">\n            <div class="weui-cell">\n                 <div class="weui-cell__hd" >\n                    <label for=\'\'  class="weui-label">\n                        <span>\u4ECE</span>\n                    </label>\n                </div>\n                 <div class="weui-cell__bd">\n                     <date v-if="filter.type==\'month\'" set="month" v-model="search_args[\'_start_\'+filter.name]" ></date>\n                     <date v-if="filter.type==\'date\'"  v-model="search_args[\'_start_\'+filter.name]" ></date>\n                </div>\n            </div>\n            <div class="weui-cell">\n                <div class="weui-cell__hd" >\n                    <label for=\'\'  class="weui-label">\n                        <span>\u5230</span>\n                    </label>\n                </div>\n                <div class="weui-cell__bd">\n                      <date v-if="filter.type==\'month\'" set="month" v-model="search_args[\'_end_\'+filter.name]"></date>\n                      <date v-if="filter.type==\'date\'"  v-model="search_args[\'_end_\'+filter.name]" ></date>\n                </div>\n            </div>\n        </div>\n   </div>\n            <slot></slot>\n            <!--<button name="go" type="button" class="btn btn-info" @click=\'m_submit()\' >{submit}</button>-->\n\n\n    </div>\n    ', ex.trList(['From', 'To', 'submit'])),
     created: function created() {
         var self = this;
-        ex.each(self.heads, function (filter) {
+        ex.each(self.row_filters, function (filter) {
+            // 初始化 Vue 变量属性。
             if (ex.isin(filter.type, ['month', 'date'])) {
-                if (!self.search['_start_' + filter.name]) {
-                    Vue.set(self.search, '_start_' + filter.name, '');
+                if (!self.search_args['_start_' + filter.name]) {
+                    Vue.set(self.search_args, '_start_' + filter.name, '');
                 }
-                if (!self.search['_end_' + filter.name]) {
-                    Vue.set(self.search, '_end_' + filter.name, '');
+                if (!self.search_args['_end_' + filter.name]) {
+                    Vue.set(self.search_args, '_end_' + filter.name, '');
                 }
             }
         });
@@ -129,7 +130,8 @@ Vue.component('com-filter', {
         }
     }
 
-});
+};
+Vue.component('com-filter', com_filter);
 
 var com_sort = {
     props: ['row_sort'],
@@ -301,7 +303,7 @@ var table_fun = {
 
             can_add: can_add,
             can_del: can_del,
-
+            show_menu: false,
             search_args: ex.parseSearch(),
             ex: ex
         };
@@ -310,6 +312,15 @@ var table_fun = {
         'row_sort.sort_str': function row_sortSort_str(v) {
             this.search_args._sort = v;
             this.search();
+        }
+    },
+    computed: {
+        can_search: function can_search() {
+            if (this.row_filters.length > 0 || this.row_sort.length > 0 || this.search_tip) {
+                return true;
+            } else {
+                return false;
+            }
         }
     },
     methods: {
@@ -405,7 +416,7 @@ var table_fun = {
             this.search();
         },
         add_new: function add_new() {
-            return ex.template('{engine_url}/{page}.edit/?next={next}', {
+            location = ex.template('{engine_url}/{page}.edit/?next={next}', {
                 engine_url: engine_url,
                 page: page_name,
                 next: encodeURIComponent(location.href)

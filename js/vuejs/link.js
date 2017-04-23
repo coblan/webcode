@@ -3,6 +3,29 @@
 =========
 link
 =========
+
+利用SessionStorage跳转页面
+===========================
+基本思想：将对象保存在sessionStorage中，切换到其他页面，当完成选择等任务后，再利用history.back()切换回原来的页面。这时将保存的信息恢复回来。
+::
+
+    // origin.html页面
+    // 以window为访问root，将对象的path保存下来。
+    var save_list=['row']
+    url=ex.template('{engine_url}/home.wx',{engine_url:engine_url,})
+    ln.getFromTab(url,save_list)
+
+    //在页面的初始阶段调用:
+    ln.readCache()  // 读取对应自身url的cache，如果有cache则恢复对应window属性。
+                   // 在页面加载后2秒，自动删除 cache 和_rt　值
+
+    // select.html页面
+    // 判断是否是 _pop=1，返回row对象。
+    ln.rt(row)  // 该函数是将结果存在sessionStorage中，以key=_rt存储。
+
+
+以前的SessionStorage
+=========================
 示例::
 
      var director = '{% url 'director' %}'
@@ -47,43 +70,130 @@ popUrlListen:
 <-<
  */
 
+require('./css/link.scss')
+
 
 var ln={
+    history_handle:function(obj){
+        this._his_handler=obj.handler
+        window.addEventListener('popstate', function(e){
+            if(e.state){
+                obj.handler(e.state)
 
-    readCache:function(root_obj){
-        var root_obj=root_obj||window
-        //if(ex.parseSearch().cache){
-            var cache_obj_str=sessionStorage.getItem(location.href)
-            sessionStorage.removeItem(location.href)
+            }else{
+                history.back()
+            }
+        },false)
+
+        if(obj.init && !history.state){
+            history.pushState(obj.init,'')
+        }
+
+    },
+    pushState:function(state,url){
+        url=url || ''
+        history.pushState(state,'',url)
+        this._his_handler(state)
+    },
+
+    getFromTab:function(url,cache_name_list,rt_obj_path){
+
+        cache_name_list =cache_name_list || []
+        var cache_obj={
+            _scroll:{x:scrollX,y:scrollY},
+            name_list:cache_name_list,
+            obj_list:[],
+            rt_obj_path:rt_obj_path,
+        }
+        ex.each(cache_name_list,function(name){
+            cache_obj.obj_list.push(ex.access(window,name))
+        })
+
+        sessionStorage.setItem('_stack_'+location.href,JSON.stringify(cache_obj))
+        location=ex.appendSearch(url,{_pop:1})
+
+    },
+    try_rt:function(value){
+        var search_args=ex.parseSearch()
+        if(search_args._pop){
+            if(search_args._frame){
+                if(parent.__fram_back){
+                    parent.__fram_back(value)
+                }
+            }else if(window.opener){
+                this.rtWin(value)
+            }else{
+                sessionStorage.setItem('_rt',JSON.stringify(value))
+                history.back()
+            }
+            return  true
+        }else{
+            return false
+        }
+    },
+
+
+    readCache:function(){
+            var cache_obj_str=sessionStorage.getItem('_stack_'+location.href)
+
             if(cache_obj_str){
                 var cache_obj=JSON.parse(cache_obj_str)
-                for(var key in cache_obj.window){
-                    ex.set(root_obj,key,cache_obj.window[key])
+
+                var name_list=cache_obj.name_list
+                var obj_list=cache_obj.obj_list
+                for(var i=0;i<name_list.length;i++){
+                    ex.set(window,name_list[i],obj_list[i])
                 }
 
-                var cache_meta=cache_obj.cache_meta
-                if(cache_meta && cache_meta.rt_key){
-                    for(var key in cache_meta.rt_key){
-                        var value = sessionStorage.getItem(key)
-                        if(value){
-                            var targ_key=cache_meta.rt_key[key]
-                            sessionStorage.removeItem(key)
-                            ex.set(root_obj,targ_key,value)
-                        }
+                // 将返回值赋予对应的window对象
+                var rt_value = sessionStorage.getItem('_rt')
 
+                if(rt_value){
+                    if(cache_obj.rt_obj_path){
+                        ex.set(window,cache_obj.rt_obj_path,JSON.parse(rt_value))
                     }
                 }
-                onload=function(){
-                    setTimeout(function(){
-                        console.log(cache_obj._scroll.y)
-                        window.scrollTo(cache_obj._scroll.x,cache_obj._scroll.y)
-                    },10)
+
+                //var cache_meta=cache_obj.cache_meta
+                //if(cache_meta && cache_meta.rt_key){
+                //    for(var key in cache_meta.rt_key){
+                //        var value = sessionStorage.getItem(key)
+                //        if(value){
+                //            var targ_key=cache_meta.rt_key[key]
+                //            sessionStorage.removeItem(key)
+                //            ex.set(root_obj,targ_key,value)
+                //        }
+                //
+                //    }
+                //}
+
+                // 尝试滚动到原来的位置
+                if(cache_obj._scroll){
+                    $(function(){
+                        setTimeout(function(){
+                            window.scrollTo(cache_obj._scroll.x,cache_obj._scroll.y)
+                        },10)
+                    })
                 }
-                $(function(){
+                //onload=function(){
+                //    setTimeout(function(){
+                //        console.log(cache_obj._scroll.y)
+                //        window.scrollTo(cache_obj._scroll.x,cache_obj._scroll.y)
+                //    },10)
+                //}
+                //$(function(){
                     //setTimeout(function(){
                     //    console.log(cache_obj._scroll.y)
                     //    window.scrollTo(cache_obj._scroll.x,cache_obj._scroll.y)
                     //},3000)
+
+                //})
+
+                $(function(){
+                    setTimeout(function(){
+                        sessionStorage.removeItem('_stack_'+location.href)
+                        sessionStorage.removeItem('_rt')
+                    },2000)
 
                 })
 
@@ -138,6 +248,32 @@ var ln={
                 //e.state就是pushState中保存的Data，我们只需要将相应的数据读取下来即可
             }
         })
+    },
+    openFrame:function(url,callback,css){
+        var self=this
+        if(!window.__load_frame){
+            $('body').append('<div id="_load_frame_wrap"><div class="imiddle popframe"><iframe id="_load_frame" frameborder="0" width="100%" height="100%"></iframe></div></div>')
+            window.__load_frame=true
+        }
+        var url=ex.appendSearch(url,{_pop:1,_frame:1})
+        $('#_load_frame').attr('src',url)
+        if(!callback){
+            window.__fram_back=null
+        }else{
+            window.__fram_back=function (v) {
+                callback(v)
+                self.closeFrame()
+            }
+        }
+
+        if(css){
+            $('.popframe').css(css)
+        }
+        $('#_load_frame_wrap').show()
+    },
+    closeFrame:function(){
+        $('#_load_frame').attr('src','')
+        $('#_load_frame_wrap').hide()
     }
 
 

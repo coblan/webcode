@@ -446,7 +446,7 @@ var com_table_btn={
         }
     },
     props:['add_new','del_item'],
-    template:`<div class='btn-group' style='float: right;'>
+    template:`<div class='btn-group'>
 			<a type="button" class="btn btn-success btn-sm" :href='add_new()' v-if='can_add' role="button">创建</a>
 			<button type="button" class="btn btn-danger btn-sm" @click='del_item()' v-if='can_del'>删除</button>
 		</div>`

@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 2);
+/******/ 	return __webpack_require__(__webpack_require__.s = 3);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -149,6 +149,8 @@ exports.hide_upload = hide_upload;
 //        }
 //}
 
+var lib = window.lib || {};
+
 function def_proc_error(jqxhr) {
 	if (!window.iclosed) {
 		if (jqxhr.status != 0) {
@@ -232,7 +234,7 @@ function hide_upload(second) {
 	}
 }
 
-ex.load_css('//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css');
+ex.load_css(lib['font_awesome'] || 'https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css');
 //if(!window.__font_awesome){
 //	window.__font_awesome=true
 //	document.write(`<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">`)
@@ -253,11 +255,275 @@ if (!window.__uploading_mark) {
 "use strict";
 
 
+/**
+ * Created by heyulin on 2017/1/24.
+ *
+ >->front/input.rst>
+ =======
+ inputs
+ =======
+
+ date
+ ========
+ ::
+
+ <date v-model='variable'></date>  // 选择默认set=date ,即选择日期
+
+ <date v-model='variable' set='month'></date> // 选择 set=month ,即选择月份
+
+ <date v-model='variable' set='month' :config='{}'></date>  //  config 是自定义的配置对象，具体需要参加帮助文件
+
+ datetime
+ ===========
+ ::
+
+ <datetime v-model='variable' :config='{}'></datetime> // 选择日期和时间
+
+ color
+ ======
+
+ forign-edit
+ ============
+ 示例::
+
+ <forign-edit :kw="person.emp_info" name="user" page_name="user" ></forign-edit>
+
+ <-<
+ */
+
+var date_config_set = {
+    date: {
+        language: "zh-CN",
+        format: "yyyy-mm-dd",
+        autoclose: true,
+        todayHighlight: true
+    },
+    month: {
+        language: "zh-CN",
+        format: "yyyy-mm",
+        startView: "months",
+        minViewMode: "months",
+        autoclose: true
+
+    }
+};
+
+var com_data = {
+    //template:'<input type="text" class="form-control">',
+    template: "<span class=\"datetime-picker\">\n                <input type=\"text\"  class=\"weui-input\" placeholder=\"\u70B9\u51FB\u8F93\u5165\u65E5\u671F\" readonly/>\n                </span>",
+    props: ['value', 'set', 'config'],
+    mounted: function mounted() {
+        var self = this;
+        if (!this.set) {
+            var def_conf = date_config_set.date;
+        } else {
+            var def_conf = date_config_set[this.set];
+        }
+        if (this.config) {
+            ex.assign(def_conf, this.config);
+        }
+        self.input = $(this.$el).find('input');
+
+        ex.load_css('//cdn.bootcss.com/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker.min.css');
+
+        ex.load_js('//cdn.bootcss.com/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.min.js', function () {
+            ex.load_js('//cdn.bootcss.com/bootstrap-datepicker/1.6.4/locales/bootstrap-datepicker.zh-CN.min.js', function () {
+                self.input.datepicker(def_conf).on('changeDate', function (e) {
+                    self.$emit('input', self.input.val());
+                });
+                // if has init value,then init it
+                if (self.value) {
+                    self.input.datepicker('update', self.value);
+                    self.input.val(self.value);
+                }
+            });
+        });
+    },
+    methods: {
+        click_input: function click_input() {
+            this.input.focus();
+        }
+    },
+    watch: {
+        value: function value(n) {
+            this.input.datepicker('update', n);
+            this.input.val(n);
+        }
+    }
+};
+
+Vue.component('date', com_data);
+
+Vue.component('datetime', {
+    //data:function(){
+    //    return {
+    //        input_value:'',
+    //    }
+    //},
+    //template:'<input type="text" class="form-control">',
+    template: "<span class=\"datetime-picker\">\n                <span class=\"cross\" @click=\"$emit('input','')\">X</span>\n                <input type=\"text\" readonly/>\n                </span>",
+    props: ['value', 'config'],
+    mounted: function mounted() {
+        var self = this;
+        var def_conf = {
+            language: "zh-CN",
+            format: "yyyy-mm-dd hh:ii",
+            autoclose: true,
+            todayHighlight: true
+        };
+        if (self.config) {
+            ex.assign(def_conf, this.config);
+        }
+        self.input = $(this.$el).find('input');
+
+        ex.load_css('https://cdn.bootcss.com/smalot-bootstrap-datetimepicker/2.4.3/css/bootstrap-datetimepicker.min.css');
+        ex.load_js('https://cdn.bootcss.com/moment.js/2.17.1/moment.min.js');
+        ex.load_js('https://cdn.bootcss.com/smalot-bootstrap-datetimepicker/2.4.3/js/bootstrap-datetimepicker.min.js', function () {
+
+            self.input.datetimepicker(def_conf).on('changeDate', function (e) {
+                self.$emit('input', self.input.val());
+            });
+
+            // if has init value,then init it
+            if (self.value) {
+                self.input.datepicker('update', self.value);
+                self.input.val(self.value);
+            }
+        });
+    },
+
+    watch: {
+        value: function value(n) {
+            this.input.val(n);
+            this.input.val(n);
+        }
+    }
+});
+
+var color = {
+    props: ['value'],
+    template: "<input type=\"text\">",
+    methods: {
+        init_and_listen: function init_and_listen() {
+            var self = this;
+            Vue.nextTick(function () {
+                $(self.$el).spectrum({
+                    color: self.value,
+                    showInitial: true,
+                    showInput: true,
+                    preferredFormat: "name",
+                    change: function change(color) {
+                        self.src_color = color.toHexString();
+                        self.$emit('input', self.src_color);
+                    }
+                });
+            });
+        }
+    },
+    watch: {
+        value: function value(_value) {
+            if (this.src_color != _value) {
+                this.init_and_listen();
+            }
+        }
+    },
+    mounted: function mounted() {
+        var self = this;
+        ex.load_css('https://cdn.bootcss.com/spectrum/1.8.0/spectrum.min.css');
+        ex.load_js('https://cdn.bootcss.com/spectrum/1.8.0/spectrum.min.js', function () {
+            self.init_and_listen();
+        });
+    }
+};
+
+Vue.component('color', color);
+
+ex.append_css("<style type=\"text/css\" media=\"screen\">\n    .datetime-picker{\n        position: relative;\n        display: inline-block;\n    }\n    .datetime-picker input[readonly]{\n        background-color: white;\n    }\n\t.datetime-picker .cross{\n\t    display: none;\n\t}\n\t.datetime-picker:hover .cross{\n\t    display: inline-block;\n\t    position: absolute;\n\t    right: 8px;\n\t    top:3px;\n\t    cursor: pointer;\n\t    /*z-index: 10;*/\n\t}\n</style>\n ");
+
+var forignEdit = {
+    template: "<div class=\"forign-key-panel\">\n        <button v-if=\"has_pk()\" @click=\"jump_edit(kw.row[name])\" title=\"{% trans 'edit' %}\">\n            <i class=\"fa fa-pencil-square-o\" aria-hidden=\"true\"></i></button>\n        <button @click=\"jump_edit()\" title=\"{% trans 'new' %}\"><i class=\"fa fa-plus\" aria-hidden=\"true\"></i></button>\n    </div>",
+    props: ['kw', 'name', 'page_name'],
+    methods: {
+        jump_edit: function jump_edit(pk) {
+            var name = this.name;
+            var kw = this.kw;
+            var page_name = this.page_name || this.name;
+            var options = ex.findone(kw.heads, { name: name }).options;
+            var row = kw.row;
+            var pk = pk || '';
+
+            var url = ex.template('{engine_url}/{page_name}.edit?pk={pk}', {
+                engine_url: engine_url,
+                page_name: page_name,
+                pk: pk
+            });
+            ln.openWin(url, function (resp) {
+                if (resp.del_rows) {
+                    ex.remove(options, function (option) {
+                        return ex.isin(option, resp.del_rows, function (op, del_row) {
+                            return op.value == del_row.pk;
+                        });
+                    });
+                } else if (resp.row) {
+                    if (pk) {
+                        var option = ex.findone(options, { value: pk });
+                        option.label = resp.row._label;
+                    } else {
+                        options.push({ label: resp.row._label, value: resp.row.pk });
+                        row[name] = resp.row.pk;
+                    }
+                }
+            });
+        },
+        has_pk: function has_pk() {
+            if (this.kw.row[this.name]) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+};
+
+ex.append_css("\n<style type=\"text/css\">\n    .forign-key-panel{\n        padding: 6px;\n    }\n</style>");
+
+Vue.component('forign-edit', forignEdit);
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
 /*
 >->front/link.rst>
 =========
 link
 =========
+
+利用SessionStorage跳转页面
+===========================
+基本思想：将对象保存在sessionStorage中，切换到其他页面，当完成选择等任务后，再利用history.back()切换回原来的页面。这时将保存的信息恢复回来。
+::
+
+    // origin.html页面
+    // 以window为访问root，将对象的path保存下来。
+    var save_list=['row']
+    url=ex.template('{engine_url}/home.wx',{engine_url:engine_url,})
+    ln.getFromTab(url,save_list)
+
+    //在页面的初始阶段调用:
+    ln.readCache()  // 读取对应自身url的cache，如果有cache则恢复对应window属性。
+                   // 在页面加载后2秒，自动删除 cache 和_rt　值
+
+    // select.html页面
+    // 判断是否是 _pop=1，返回row对象。
+    ln.rt(row)  // 该函数是将结果存在sessionStorage中，以key=_rt存储。
+
+
+以前的SessionStorage
+=========================
 示例::
 
      var director = '{% url 'director' %}'
@@ -302,42 +568,125 @@ popUrlListen:
 <-<
  */
 
-var ln = {
+__webpack_require__(5);
 
-    readCache: function readCache(root_obj) {
-        var root_obj = root_obj || window;
-        //if(ex.parseSearch().cache){
-        var cache_obj_str = sessionStorage.getItem(location.href);
-        sessionStorage.removeItem(location.href);
+var ln = {
+    history_handle: function history_handle(obj) {
+        this._his_handler = obj.handler;
+        window.addEventListener('popstate', function (e) {
+            if (e.state) {
+                obj.handler(e.state);
+            } else {
+                history.back();
+            }
+        }, false);
+
+        if (obj.init && !history.state) {
+            history.pushState(obj.init, '');
+        }
+    },
+    pushState: function pushState(state, url) {
+        url = url || '';
+        history.pushState(state, '', url);
+        this._his_handler(state);
+    },
+
+    getFromTab: function getFromTab(url, cache_name_list, rt_obj_path) {
+
+        cache_name_list = cache_name_list || [];
+        var cache_obj = {
+            _scroll: { x: scrollX, y: scrollY },
+            name_list: cache_name_list,
+            obj_list: [],
+            rt_obj_path: rt_obj_path
+        };
+        ex.each(cache_name_list, function (name) {
+            cache_obj.obj_list.push(ex.access(window, name));
+        });
+
+        sessionStorage.setItem('_stack_' + location.href, JSON.stringify(cache_obj));
+        location = ex.appendSearch(url, { _pop: 1 });
+    },
+    try_rt: function try_rt(value) {
+        var search_args = ex.parseSearch();
+        if (search_args._pop) {
+            if (search_args._frame) {
+                if (parent.__fram_back) {
+                    parent.__fram_back(value);
+                }
+            } else if (window.opener) {
+                this.rtWin(value);
+            } else {
+                sessionStorage.setItem('_rt', JSON.stringify(value));
+                history.back();
+            }
+            return true;
+        } else {
+            return false;
+        }
+    },
+
+    readCache: function readCache() {
+        var cache_obj_str = sessionStorage.getItem('_stack_' + location.href);
+
         if (cache_obj_str) {
             var cache_obj = JSON.parse(cache_obj_str);
-            for (var key in cache_obj.window) {
-                ex.set(root_obj, key, cache_obj.window[key]);
+
+            var name_list = cache_obj.name_list;
+            var obj_list = cache_obj.obj_list;
+            for (var i = 0; i < name_list.length; i++) {
+                ex.set(window, name_list[i], obj_list[i]);
             }
 
-            var cache_meta = cache_obj.cache_meta;
-            if (cache_meta && cache_meta.rt_key) {
-                for (var key in cache_meta.rt_key) {
-                    var value = sessionStorage.getItem(key);
-                    if (value) {
-                        var targ_key = cache_meta.rt_key[key];
-                        sessionStorage.removeItem(key);
-                        ex.set(root_obj, targ_key, value);
-                    }
+            // 将返回值赋予对应的window对象
+            var rt_value = sessionStorage.getItem('_rt');
+
+            if (rt_value) {
+                if (cache_obj.rt_obj_path) {
+                    ex.set(window, cache_obj.rt_obj_path, JSON.parse(rt_value));
                 }
             }
-            onload = function onload() {
-                setTimeout(function () {
-                    console.log(cache_obj._scroll.y);
-                    window.scrollTo(cache_obj._scroll.x, cache_obj._scroll.y);
-                }, 10);
-            };
-            $(function () {
-                //setTimeout(function(){
-                //    console.log(cache_obj._scroll.y)
-                //    window.scrollTo(cache_obj._scroll.x,cache_obj._scroll.y)
-                //},3000)
 
+            //var cache_meta=cache_obj.cache_meta
+            //if(cache_meta && cache_meta.rt_key){
+            //    for(var key in cache_meta.rt_key){
+            //        var value = sessionStorage.getItem(key)
+            //        if(value){
+            //            var targ_key=cache_meta.rt_key[key]
+            //            sessionStorage.removeItem(key)
+            //            ex.set(root_obj,targ_key,value)
+            //        }
+            //
+            //    }
+            //}
+
+            // 尝试滚动到原来的位置
+            if (cache_obj._scroll) {
+                $(function () {
+                    setTimeout(function () {
+                        window.scrollTo(cache_obj._scroll.x, cache_obj._scroll.y);
+                    }, 10);
+                });
+            }
+            //onload=function(){
+            //    setTimeout(function(){
+            //        console.log(cache_obj._scroll.y)
+            //        window.scrollTo(cache_obj._scroll.x,cache_obj._scroll.y)
+            //    },10)
+            //}
+            //$(function(){
+            //setTimeout(function(){
+            //    console.log(cache_obj._scroll.y)
+            //    window.scrollTo(cache_obj._scroll.x,cache_obj._scroll.y)
+            //},3000)
+
+            //})
+
+            $(function () {
+                setTimeout(function () {
+                    sessionStorage.removeItem('_stack_' + location.href);
+                    sessionStorage.removeItem('_rt');
+                }, 2000);
             });
         }
         //}
@@ -388,6 +737,32 @@ var ln = {
                 //e.state就是pushState中保存的Data，我们只需要将相应的数据读取下来即可
             }
         });
+    },
+    openFrame: function openFrame(url, callback, css) {
+        var self = this;
+        if (!window.__load_frame) {
+            $('body').append('<div id="_load_frame_wrap"><div class="imiddle popframe"><iframe id="_load_frame" frameborder="0" width="100%" height="100%"></iframe></div></div>');
+            window.__load_frame = true;
+        }
+        var url = ex.appendSearch(url, { _pop: 1, _frame: 1 });
+        $('#_load_frame').attr('src', url);
+        if (!callback) {
+            window.__fram_back = null;
+        } else {
+            window.__fram_back = function (v) {
+                callback(v);
+                self.closeFrame();
+            };
+        }
+
+        if (css) {
+            $('.popframe').css(css);
+        }
+        $('#_load_frame_wrap').show();
+    },
+    closeFrame: function closeFrame() {
+        $('#_load_frame').attr('src', '');
+        $('#_load_frame_wrap').hide();
     }
 
 };
@@ -395,7 +770,7 @@ var ln = {
 window.ln = ln;
 
 /***/ }),
-/* 2 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -408,11 +783,11 @@ exports.merge = merge;
 
 var _ajax_fun = __webpack_require__(0);
 
-var _inputs = __webpack_require__(4);
+var _inputs = __webpack_require__(1);
 
 var inputs = _interopRequireWildcard(_inputs);
 
-var _link = __webpack_require__(1);
+var _link = __webpack_require__(2);
 
 var ln = _interopRequireWildcard(_link);
 
@@ -640,25 +1015,6 @@ var field_base = {
 
 };
 
-//    <div for='field' class="form-group field" :class='{"error":error_data(name)}' v-if="head">
-//    <label :for="'id_'+name"  class="control-label" v-if='!head.no_auto_label'>
-//    <span v-text="head.label"></span><span class="req_star" v-if='head.required'>*</span>
-//</label>
-//
-//<div class="field_input">
-//    <component :is='head.type'
-//:row='row'
-//:name='name'
-//:kw='head'>
-//    </component>
-//    </div>
-//    <div class="help_text"><span v-text="head.help_text"></span></div>
-//<slot> </slot>
-//<div v-for='error in error_data(name)' v-text='error' class='error'></div>
-//    </div>
-
-//<div v-if="show_title(head)" class="weui-cells__title" v-text="head.label"></div>
-
 var field = {
     mixins: [field_base],
     methods: {
@@ -673,7 +1029,7 @@ var field = {
             return ex.isin(head.type, ['blocktext']);
         }
     },
-    template: '<div class="flex-v"  v-if="head">\n        <span></span>\n        <div v-if="show_title(head)" class="weui-cells__title block-title weui-cell" v-text="head.label"></div>\n        <div :class=\'["weui-cell","field",{"error":error_data(name),"weui-cell_select weui-cell_select-after":head.type=="sim_select"}]\'>\n            <div class="weui-cell__hd" v-if=\'show_label(head)\'>\n                <label  class="weui-label" :for="\'id_\'+name">\n                    <span v-text="head.label"></span>\n                </label>\n            </div>\n            <div class="weui-cell__bd field_input">\n                <component :is=\'head.type\'\n                    :row=\'row\'\n                    :name=\'name\'\n                    :kw=\'head\'>\n                </component>\n             </div>\n        </div>\n        <div v-for=\'error in error_data(name)\' v-text=\'error\' class=\'error\'></div>\n    </div>'
+    template: '<div class="flex-v"  v-if="head">\n        <span></span>\n        <div v-if="show_title(head)" class="weui-cells__title block-title weui-cell" v-text="head.label"></div>\n        <div :class=\'["weui-cell","field",{"error":error_data(name),"weui-cell_select weui-cell_select-after":head.type=="sim_select"&&!head.readonly}]\'>\n            <div class="weui-cell__hd" v-if=\'show_label(head)\'>\n                <label  class="weui-label" :for="\'id_\'+name">\n                    <span v-text="head.label"></span>\n                </label>\n            </div>\n            <div class="weui-cell__bd field_input">\n                <component :is=\'head.type\'\n                    :row=\'row\'\n                    :name=\'name\'\n                    :kw=\'head\'>\n                </component>\n             </div>\n        </div>\n        <div v-for=\'error in error_data(name)\' v-text=\'error\' class=\'error\'></div>\n    </div>'
 
 };
 
@@ -708,6 +1064,87 @@ var field_fun = {
                 row: row,
                 errors: {}
             },
+            menu: menu,
+            namelist: namelist,
+            can_add: can_add,
+            can_del: can_del,
+            can_log: can_log
+        };
+    },
+    created: function created() {
+        ex.each(this.kw.heads, function (head) {
+            if (!head.placeholder) {
+                head.placeholder = '请输入' + head.label;
+            }
+        });
+    },
+    methods: {
+        after_sub: function after_sub() {
+            location = document.referrer;
+        },
+        submit: function submit() {
+            var self = this;
+            (0, _ajax_fun.show_upload)();
+            var search = ex.parseSearch();
+            var post_data = [{ fun: 'save', row: this.kw.row }];
+            ex.post('', JSON.stringify(post_data), function (resp) {
+                (0, _ajax_fun.hide_upload)(500);
+                if (resp.save.errors) {
+                    self.kw.errors = resp.save.errors;
+                } else if (search._pop == 1) {
+                    window.ln.try_rt({ row: resp.save.row });
+                } else if (search.next) {
+                    location = decodeURIComponent(search.next);
+                } else {
+                    self.after_sub();
+                }
+            });
+        },
+        cancel: function cancel() {
+            var search = ex.parseSearch(); //parseSearch(location.search)
+            if (search._pop) {
+                window.close();
+            } else {
+                history.back();
+            }
+        },
+        del_row: function del_row(path) {
+            var search_args = ex.parseSearch();
+            location = ex.template('{engine_url}/del_rows?rows={class}:{pk}&next={next}&_pop={pop}', { class: this.kw.row._class,
+                engine_url: engine_url,
+                pk: this.kw.row.pk,
+                next: search_args.next,
+                pop: search_args._pop
+
+            });
+        },
+        log_url: function log_url() {
+            var obj = {
+                pk: this.kw.row.pk,
+                _class: this.kw.row._class,
+                engine_url: engine_url,
+                page_name: page_name
+            };
+            return ex.template('{engine_url}/log?rows={_class}:{pk}', obj);
+        }
+    }
+};
+Vue.component('com-form-btn', {
+    data: function data() {
+        return {
+            can_add: can_add,
+            can_del: can_del
+        };
+    },
+    props: ['submit', 'del_row', 'cancel'],
+    template: '<div style=\'overflow: hidden;\'>\n\t\t<div class="btn-group" style=\'float: right;\'>\n\t\t\t<button type="button" class="btn btn-default" @click=\'submit()\' v-if=\'can_add\'>Save</button>\n\t\t\t<button type="button" class="btn btn-default" v-if=\'can_del\' @click=\'del_row()\'>\u5220\u9664</button>\n\t\t\t<button type="button" class="btn btn-default" @click=\'cancel()\' >Cancel</button>\n\t\t</div>\n\t</div>'
+});
+
+var fieldset_fun = {
+    data: function data() {
+        return {
+            fieldset: fieldset,
+            namelist: namelist,
             menu: menu,
 
             can_add: can_add,
@@ -765,18 +1202,9 @@ var field_fun = {
         }
     }
 };
-Vue.component('com-form-btn', {
-    data: function data() {
-        return {
-            can_add: can_add,
-            can_del: can_del
-        };
-    },
-    props: ['submit', 'del_row', 'cancel'],
-    template: '<div style=\'overflow: hidden;\'>\n\t\t<div class="btn-group" style=\'float: right;\'>\n\t\t\t<button type="button" class="btn btn-default" @click=\'submit()\' v-if=\'can_add\'>Save</button>\n\t\t\t<button type="button" class="btn btn-default" v-if=\'can_del\' @click=\'del_row()\'>\u5220\u9664</button>\n\t\t\t<button type="button" class="btn btn-default" @click=\'cancel()\' >Cancel</button>\n\t\t</div>\n\t</div>'
-});
-
+window.fieldset_fun = fieldset_fun;
 window.field_fun = field_fun;
+
 window.hook_ajax_msg = _ajax_fun.hook_ajax_msg;
 window.update_vue_obj = update_vue_obj;
 //window.use_ckeditor= ck.use_ckeditor
@@ -785,244 +1213,352 @@ window.hide_upload = _ajax_fun.hide_upload;
 window.merge = merge;
 
 /***/ }),
-/* 3 */,
 /* 4 */
+/***/ (function(module, exports) {
+
+/*
+	MIT License http://www.opensource.org/licenses/mit-license.php
+	Author Tobias Koppers @sokra
+*/
+var stylesInDom = {},
+	memoize = function(fn) {
+		var memo;
+		return function () {
+			if (typeof memo === "undefined") memo = fn.apply(this, arguments);
+			return memo;
+		};
+	},
+	isOldIE = memoize(function() {
+		return /msie [6-9]\b/.test(window.navigator.userAgent.toLowerCase());
+	}),
+	getHeadElement = memoize(function () {
+		return document.head || document.getElementsByTagName("head")[0];
+	}),
+	singletonElement = null,
+	singletonCounter = 0,
+	styleElementsInsertedAtTop = [];
+
+module.exports = function(list, options) {
+	if(typeof DEBUG !== "undefined" && DEBUG) {
+		if(typeof document !== "object") throw new Error("The style-loader cannot be used in a non-browser environment");
+	}
+
+	options = options || {};
+	// Force single-tag solution on IE6-9, which has a hard limit on the # of <style>
+	// tags it will allow on a page
+	if (typeof options.singleton === "undefined") options.singleton = isOldIE();
+
+	// By default, add <style> tags to the bottom of <head>.
+	if (typeof options.insertAt === "undefined") options.insertAt = "bottom";
+
+	var styles = listToStyles(list);
+	addStylesToDom(styles, options);
+
+	return function update(newList) {
+		var mayRemove = [];
+		for(var i = 0; i < styles.length; i++) {
+			var item = styles[i];
+			var domStyle = stylesInDom[item.id];
+			domStyle.refs--;
+			mayRemove.push(domStyle);
+		}
+		if(newList) {
+			var newStyles = listToStyles(newList);
+			addStylesToDom(newStyles, options);
+		}
+		for(var i = 0; i < mayRemove.length; i++) {
+			var domStyle = mayRemove[i];
+			if(domStyle.refs === 0) {
+				for(var j = 0; j < domStyle.parts.length; j++)
+					domStyle.parts[j]();
+				delete stylesInDom[domStyle.id];
+			}
+		}
+	};
+}
+
+function addStylesToDom(styles, options) {
+	for(var i = 0; i < styles.length; i++) {
+		var item = styles[i];
+		var domStyle = stylesInDom[item.id];
+		if(domStyle) {
+			domStyle.refs++;
+			for(var j = 0; j < domStyle.parts.length; j++) {
+				domStyle.parts[j](item.parts[j]);
+			}
+			for(; j < item.parts.length; j++) {
+				domStyle.parts.push(addStyle(item.parts[j], options));
+			}
+		} else {
+			var parts = [];
+			for(var j = 0; j < item.parts.length; j++) {
+				parts.push(addStyle(item.parts[j], options));
+			}
+			stylesInDom[item.id] = {id: item.id, refs: 1, parts: parts};
+		}
+	}
+}
+
+function listToStyles(list) {
+	var styles = [];
+	var newStyles = {};
+	for(var i = 0; i < list.length; i++) {
+		var item = list[i];
+		var id = item[0];
+		var css = item[1];
+		var media = item[2];
+		var sourceMap = item[3];
+		var part = {css: css, media: media, sourceMap: sourceMap};
+		if(!newStyles[id])
+			styles.push(newStyles[id] = {id: id, parts: [part]});
+		else
+			newStyles[id].parts.push(part);
+	}
+	return styles;
+}
+
+function insertStyleElement(options, styleElement) {
+	var head = getHeadElement();
+	var lastStyleElementInsertedAtTop = styleElementsInsertedAtTop[styleElementsInsertedAtTop.length - 1];
+	if (options.insertAt === "top") {
+		if(!lastStyleElementInsertedAtTop) {
+			head.insertBefore(styleElement, head.firstChild);
+		} else if(lastStyleElementInsertedAtTop.nextSibling) {
+			head.insertBefore(styleElement, lastStyleElementInsertedAtTop.nextSibling);
+		} else {
+			head.appendChild(styleElement);
+		}
+		styleElementsInsertedAtTop.push(styleElement);
+	} else if (options.insertAt === "bottom") {
+		head.appendChild(styleElement);
+	} else {
+		throw new Error("Invalid value for parameter 'insertAt'. Must be 'top' or 'bottom'.");
+	}
+}
+
+function removeStyleElement(styleElement) {
+	styleElement.parentNode.removeChild(styleElement);
+	var idx = styleElementsInsertedAtTop.indexOf(styleElement);
+	if(idx >= 0) {
+		styleElementsInsertedAtTop.splice(idx, 1);
+	}
+}
+
+function createStyleElement(options) {
+	var styleElement = document.createElement("style");
+	styleElement.type = "text/css";
+	insertStyleElement(options, styleElement);
+	return styleElement;
+}
+
+function createLinkElement(options) {
+	var linkElement = document.createElement("link");
+	linkElement.rel = "stylesheet";
+	insertStyleElement(options, linkElement);
+	return linkElement;
+}
+
+function addStyle(obj, options) {
+	var styleElement, update, remove;
+
+	if (options.singleton) {
+		var styleIndex = singletonCounter++;
+		styleElement = singletonElement || (singletonElement = createStyleElement(options));
+		update = applyToSingletonTag.bind(null, styleElement, styleIndex, false);
+		remove = applyToSingletonTag.bind(null, styleElement, styleIndex, true);
+	} else if(obj.sourceMap &&
+		typeof URL === "function" &&
+		typeof URL.createObjectURL === "function" &&
+		typeof URL.revokeObjectURL === "function" &&
+		typeof Blob === "function" &&
+		typeof btoa === "function") {
+		styleElement = createLinkElement(options);
+		update = updateLink.bind(null, styleElement);
+		remove = function() {
+			removeStyleElement(styleElement);
+			if(styleElement.href)
+				URL.revokeObjectURL(styleElement.href);
+		};
+	} else {
+		styleElement = createStyleElement(options);
+		update = applyToTag.bind(null, styleElement);
+		remove = function() {
+			removeStyleElement(styleElement);
+		};
+	}
+
+	update(obj);
+
+	return function updateStyle(newObj) {
+		if(newObj) {
+			if(newObj.css === obj.css && newObj.media === obj.media && newObj.sourceMap === obj.sourceMap)
+				return;
+			update(obj = newObj);
+		} else {
+			remove();
+		}
+	};
+}
+
+var replaceText = (function () {
+	var textStore = [];
+
+	return function (index, replacement) {
+		textStore[index] = replacement;
+		return textStore.filter(Boolean).join('\n');
+	};
+})();
+
+function applyToSingletonTag(styleElement, index, remove, obj) {
+	var css = remove ? "" : obj.css;
+
+	if (styleElement.styleSheet) {
+		styleElement.styleSheet.cssText = replaceText(index, css);
+	} else {
+		var cssNode = document.createTextNode(css);
+		var childNodes = styleElement.childNodes;
+		if (childNodes[index]) styleElement.removeChild(childNodes[index]);
+		if (childNodes.length) {
+			styleElement.insertBefore(cssNode, childNodes[index]);
+		} else {
+			styleElement.appendChild(cssNode);
+		}
+	}
+}
+
+function applyToTag(styleElement, obj) {
+	var css = obj.css;
+	var media = obj.media;
+
+	if(media) {
+		styleElement.setAttribute("media", media)
+	}
+
+	if(styleElement.styleSheet) {
+		styleElement.styleSheet.cssText = css;
+	} else {
+		while(styleElement.firstChild) {
+			styleElement.removeChild(styleElement.firstChild);
+		}
+		styleElement.appendChild(document.createTextNode(css));
+	}
+}
+
+function updateLink(linkElement, obj) {
+	var css = obj.css;
+	var sourceMap = obj.sourceMap;
+
+	if(sourceMap) {
+		// http://stackoverflow.com/a/26603875
+		css += "\n/*# sourceMappingURL=data:application/json;base64," + btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap)))) + " */";
+	}
+
+	var blob = new Blob([css], { type: "text/css" });
+
+	var oldSrc = linkElement.href;
+
+	linkElement.href = URL.createObjectURL(blob);
+
+	if(oldSrc)
+		URL.revokeObjectURL(oldSrc);
+}
+
+
+/***/ }),
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(6);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// add the styles to the DOM
+var update = __webpack_require__(4)(content, {});
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!./../../../node_modules/.0.26.1@css-loader/index.js!./../../../node_modules/.6.0.0@sass-loader/lib/loader.js!./link.scss", function() {
+			var newContent = require("!!./../../../node_modules/.0.26.1@css-loader/index.js!./../../../node_modules/.6.0.0@sass-loader/lib/loader.js!./link.scss");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(7)();
+// imports
 
 
-/**
- * Created by heyulin on 2017/1/24.
- *
- >->front/input.rst>
- =======
- inputs
- =======
+// module
+exports.push([module.i, "@charset \"UTF-8\";\n#_load_frame_wrap {\n  position: fixed;\n  top: 0;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  display: none;\n  z-index: 1000;\n  background: rgba(88, 88, 88, 0.2); }\n\n.imiddle {\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n  -ms-transform: translate(-50%, -50%);\n  /* IE 9 */\n  -moz-transform: translate(-50%, -50%);\n  /* Firefox */\n  -webkit-transform: translate(-50%, -50%);\n  /* Safari 和 Chrome */\n  -o-transform: translate(-50%, -50%);\n  text-align: center;\n  /*display: table;*/\n  z-index: 10000; }\n\n.popframe {\n  width: 500px;\n  height: 400px; }\n", ""]);
 
- date
- ========
- ::
+// exports
 
- <date v-model='variable'></date>  // 选择默认set=date ,即选择日期
 
- <date v-model='variable' set='month'></date> // 选择 set=month ,即选择月份
+/***/ }),
+/* 7 */
+/***/ (function(module, exports) {
 
- <date v-model='variable' set='month' :config='{}'></date>  //  config 是自定义的配置对象，具体需要参加帮助文件
+/*
+	MIT License http://www.opensource.org/licenses/mit-license.php
+	Author Tobias Koppers @sokra
+*/
+// css base code, injected by the css-loader
+module.exports = function() {
+	var list = [];
 
- datetime
- ===========
- ::
+	// return the list of modules as css string
+	list.toString = function toString() {
+		var result = [];
+		for(var i = 0; i < this.length; i++) {
+			var item = this[i];
+			if(item[2]) {
+				result.push("@media " + item[2] + "{" + item[1] + "}");
+			} else {
+				result.push(item[1]);
+			}
+		}
+		return result.join("");
+	};
 
- <datetime v-model='variable' :config='{}'></datetime> // 选择日期和时间
-
- color
- ======
-
- forign-edit
- ============
- 示例::
-
- <forign-edit :kw="person.emp_info" name="user" page_name="user" ></forign-edit>
-
- <-<
- */
-
-var date_config_set = {
-    date: {
-        language: "zh-CN",
-        format: "yyyy-mm-dd",
-        autoclose: true,
-        todayHighlight: true
-    },
-    month: {
-        language: "zh-CN",
-        format: "yyyy-mm",
-        startView: "months",
-        minViewMode: "months",
-        autoclose: true
-
-    }
+	// import a list of modules into the list
+	list.i = function(modules, mediaQuery) {
+		if(typeof modules === "string")
+			modules = [[null, modules, ""]];
+		var alreadyImportedModules = {};
+		for(var i = 0; i < this.length; i++) {
+			var id = this[i][0];
+			if(typeof id === "number")
+				alreadyImportedModules[id] = true;
+		}
+		for(i = 0; i < modules.length; i++) {
+			var item = modules[i];
+			// skip already imported module
+			// this implementation is not 100% perfect for weird media query combinations
+			//  when a module is imported multiple times with different media queries.
+			//  I hope this will never occur (Hey this way we have smaller bundles)
+			if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
+				if(mediaQuery && !item[2]) {
+					item[2] = mediaQuery;
+				} else if(mediaQuery) {
+					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
+				}
+				list.push(item);
+			}
+		}
+	};
+	return list;
 };
 
-Vue.component('date', {
-    //template:'<input type="text" class="form-control">',
-    template: "<span class=\"datetime-picker\">\n                <input type=\"text\"  class=\"weui-input\"/>\n                </span>",
-    props: ['value', 'set', 'config'],
-    mounted: function mounted() {
-        var self = this;
-        if (!this.set) {
-            var def_conf = date_config_set.date;
-        } else {
-            var def_conf = date_config_set[this.set];
-        }
-        if (this.config) {
-            ex.assign(def_conf, this.config);
-        }
-        self.input = $(this.$el).find('input');
-
-        ex.load_css('//cdn.bootcss.com/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker.min.css');
-
-        ex.load_js('//cdn.bootcss.com/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.min.js', function () {
-            ex.load_js('//cdn.bootcss.com/bootstrap-datepicker/1.6.4/locales/bootstrap-datepicker.zh-CN.min.js', function () {
-                self.input.datepicker(def_conf).on('changeDate', function (e) {
-                    self.$emit('input', self.input.val());
-                });
-                // if has init value,then init it
-                if (self.value) {
-                    self.input.datepicker('update', self.value);
-                    self.input.val(self.value);
-                }
-            });
-        });
-    },
-    methods: {
-        click_input: function click_input() {
-            this.input.focus();
-        }
-    },
-    watch: {
-        value: function value(n) {
-            this.input.datepicker('update', n);
-            this.input.val(n);
-        }
-    }
-});
-
-Vue.component('datetime', {
-    //data:function(){
-    //    return {
-    //        input_value:'',
-    //    }
-    //},
-    //template:'<input type="text" class="form-control">',
-    template: "<span class=\"datetime-picker\">\n                <span class=\"cross\" @click=\"$emit('input','')\">X</span>\n                <input type=\"text\" readonly/>\n                </span>",
-    props: ['value', 'config'],
-    mounted: function mounted() {
-        var self = this;
-        var def_conf = {
-            language: "zh-CN",
-            format: "yyyy-mm-dd hh:ii",
-            autoclose: true,
-            todayHighlight: true
-        };
-        if (self.config) {
-            ex.assign(def_conf, this.config);
-        }
-        self.input = $(this.$el).find('input');
-
-        ex.load_css('https://cdn.bootcss.com/smalot-bootstrap-datetimepicker/2.4.3/css/bootstrap-datetimepicker.min.css');
-        ex.load_js('https://cdn.bootcss.com/moment.js/2.17.1/moment.min.js');
-        ex.load_js('https://cdn.bootcss.com/smalot-bootstrap-datetimepicker/2.4.3/js/bootstrap-datetimepicker.min.js', function () {
-
-            self.input.datetimepicker(def_conf).on('changeDate', function (e) {
-                self.$emit('input', self.input.val());
-            });
-
-            // if has init value,then init it
-            if (self.value) {
-                self.input.datepicker('update', self.value);
-                self.input.val(self.value);
-            }
-        });
-    },
-
-    watch: {
-        value: function value(n) {
-            this.input.val(n);
-            this.input.val(n);
-        }
-    }
-});
-
-var color = {
-    props: ['value'],
-    template: "<input type=\"text\">",
-    methods: {
-        init_and_listen: function init_and_listen() {
-            var self = this;
-            Vue.nextTick(function () {
-                $(self.$el).spectrum({
-                    color: self.value,
-                    showInitial: true,
-                    showInput: true,
-                    preferredFormat: "name",
-                    change: function change(color) {
-                        self.src_color = color.toHexString();
-                        self.$emit('input', self.src_color);
-                    }
-                });
-            });
-        }
-    },
-    watch: {
-        value: function value(_value) {
-            if (this.src_color != _value) {
-                this.init_and_listen();
-            }
-        }
-    },
-    mounted: function mounted() {
-        var self = this;
-        ex.load_css('https://cdn.bootcss.com/spectrum/1.8.0/spectrum.min.css');
-        ex.load_js('https://cdn.bootcss.com/spectrum/1.8.0/spectrum.min.js', function () {
-            self.init_and_listen();
-        });
-    }
-};
-
-Vue.component('color', color);
-
-ex.append_css("<style type=\"text/css\" media=\"screen\">\n    .datetime-picker{\n        position: relative;\n        display: inline-block;\n    }\n    .datetime-picker input[readonly]{\n        background-color: white;\n    }\n\t.datetime-picker .cross{\n\t    display: none;\n\t}\n\t.datetime-picker:hover .cross{\n\t    display: inline-block;\n\t    position: absolute;\n\t    right: 8px;\n\t    top:3px;\n\t    cursor: pointer;\n\t    /*z-index: 10;*/\n\t}\n</style>\n ");
-
-var forignEdit = {
-    template: "<div class=\"forign-key-panel\">\n        <button v-if=\"has_pk()\" @click=\"jump_edit(kw.row[name])\" title=\"{% trans 'edit' %}\">\n            <i class=\"fa fa-pencil-square-o\" aria-hidden=\"true\"></i></button>\n        <button @click=\"jump_edit()\" title=\"{% trans 'new' %}\"><i class=\"fa fa-plus\" aria-hidden=\"true\"></i></button>\n    </div>",
-    props: ['kw', 'name', 'page_name'],
-    methods: {
-        jump_edit: function jump_edit(pk) {
-            var name = this.name;
-            var kw = this.kw;
-            var page_name = this.page_name || this.name;
-            var options = ex.findone(kw.heads, { name: name }).options;
-            var row = kw.row;
-            var pk = pk || '';
-
-            var url = ex.template('{engine_url}/{page_name}.edit?pk={pk}', {
-                engine_url: engine_url,
-                page_name: page_name,
-                pk: pk
-            });
-            ln.openWin(url, function (resp) {
-                if (resp.del_rows) {
-                    ex.remove(options, function (option) {
-                        return ex.isin(option, resp.del_rows, function (op, del_row) {
-                            return op.value == del_row.pk;
-                        });
-                    });
-                } else if (resp.row) {
-                    if (pk) {
-                        var option = ex.findone(options, { value: pk });
-                        option.label = resp.row._label;
-                    } else {
-                        options.push({ label: resp.row._label, value: resp.row.pk });
-                        row[name] = resp.row.pk;
-                    }
-                }
-            });
-        },
-        has_pk: function has_pk() {
-            if (this.kw.row[this.name]) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-    }
-};
-
-ex.append_css("\n<style type=\"text/css\">\n    .forign-key-panel{\n        padding: 6px;\n    }\n</style>");
-
-Vue.component('forign-edit', forignEdit);
 
 /***/ })
 /******/ ]);

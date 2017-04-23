@@ -51,10 +51,10 @@ var date_config_set={
     },
 }
 
-Vue.component('date',{
+var com_data={
     //template:'<input type="text" class="form-control">',
     template:`<span class="datetime-picker">
-                <input type="text"  class="weui-input"/>
+                <input type="text"  class="weui-input" placeholder="点击输入日期" readonly/>
                 </span>`,
     props:['value','set','config'],
     mounted:function () {
@@ -96,7 +96,9 @@ Vue.component('date',{
 
         }
     }
-})
+}
+
+Vue.component('date',com_data)
 
 
 Vue.component('datetime',{
