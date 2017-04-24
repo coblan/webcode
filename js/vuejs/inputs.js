@@ -217,9 +217,9 @@ ex.append_css(
 
 var forignEdit={
     template:`<div class="forign-key-panel">
-        <button v-if="has_pk()" @click="jump_edit(kw.row[name])" title="{% trans 'edit' %}">
+        <button v-if="has_pk()" @click="jump_edit(kw.row[name])" title="edit">
             <i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
-        <button @click="jump_edit()" title="{% trans 'new' %}"><i class="fa fa-plus" aria-hidden="true"></i></button>
+        <button @click="jump_edit()" title="create new"><i class="fa fa-plus" aria-hidden="true"></i></button>
     </div>`,
     props:['kw','name','page_name'],
     methods:{

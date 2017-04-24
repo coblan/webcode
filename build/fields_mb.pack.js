@@ -441,7 +441,7 @@ Vue.component('color', color);
 ex.append_css("<style type=\"text/css\" media=\"screen\">\n    .datetime-picker{\n        position: relative;\n        display: inline-block;\n    }\n    .datetime-picker input[readonly]{\n        background-color: white;\n    }\n\t.datetime-picker .cross{\n\t    display: none;\n\t}\n\t.datetime-picker:hover .cross{\n\t    display: inline-block;\n\t    position: absolute;\n\t    right: 8px;\n\t    top:3px;\n\t    cursor: pointer;\n\t    /*z-index: 10;*/\n\t}\n</style>\n ");
 
 var forignEdit = {
-    template: "<div class=\"forign-key-panel\">\n        <button v-if=\"has_pk()\" @click=\"jump_edit(kw.row[name])\" title=\"{% trans 'edit' %}\">\n            <i class=\"fa fa-pencil-square-o\" aria-hidden=\"true\"></i></button>\n        <button @click=\"jump_edit()\" title=\"{% trans 'new' %}\"><i class=\"fa fa-plus\" aria-hidden=\"true\"></i></button>\n    </div>",
+    template: "<div class=\"forign-key-panel\">\n        <span  @click=\"jump_edit(kw.row[name])\" style=\"width: 3em;height: 1.5em;\">\n            <i class=\"fa fa-pencil-square-o\" aria-hidden=\"true\"></i></span>\n        <!--<button @click=\"jump_edit()\" title=\"{% trans 'new' %}\"><i class=\"fa fa-plus\" aria-hidden=\"true\"></i></button>-->\n    </div>",
     props: ['kw', 'name', 'page_name'],
     methods: {
         jump_edit: function jump_edit(pk) {
@@ -457,7 +457,7 @@ var forignEdit = {
                 page_name: page_name,
                 pk: pk
             });
-            ln.openWin(url, function (resp) {
+            ln.openFrame(url, function (resp) {
                 if (resp.del_rows) {
                     ex.remove(options, function (option) {
                         return ex.isin(option, resp.del_rows, function (op, del_row) {
@@ -473,7 +473,7 @@ var forignEdit = {
                         row[name] = resp.row.pk;
                     }
                 }
-            });
+            }, { width: '100vw', height: '100vh' });
         },
         has_pk: function has_pk() {
             if (this.kw.row[this.name]) {
@@ -1157,19 +1157,26 @@ var fieldset_fun = {
         submit: function submit() {
             var self = this;
             (0, _ajax_fun.show_upload)();
-            var search = ex.parseSearch(); //parseSearch(location.search)
-            var post_data = [{ fun: 'save', row: this.kw.row }];
+            var search = ex.parseSearch();
+            var fieldset_row = {};
+            for (var k in this.fieldset) {
+                fieldset_row[k] = this.fieldset[k].row;
+            }
+            var post_data = [{ fun: 'save_fieldset', fieldset: fieldset_row, save_step: save_step }];
             ex.post('', JSON.stringify(post_data), function (resp) {
-                if (resp.save.errors) {
-                    self.kw.errors = resp.save.errors;
-                    (0, _ajax_fun.hide_upload)();
+                if (resp.save_fieldset.errors) {
+                    var error_path = resp.save_fieldset.path;
+                    ex.set(self.fieldset, error_path, resp.save_fieldset.errors);
+                    (0, _ajax_fun.hide_upload)(200);
                 } else if (search._pop == 1) {
-                    window.ln.rtWin({ row: resp.save.row });
+                    window.ln.rtWin({ row: resp.save_fieldset.fieldset });
                 } else if (search.next) {
-
                     location = decodeURIComponent(search.next);
                 } else {
-                    (0, _ajax_fun.hide_upload)(1000);
+                    if (document.referrer) {
+                        location = document.referrer;
+                    }
+                    (0, _ajax_fun.hide_upload)(200);
                 }
             });
         },
@@ -1182,14 +1189,24 @@ var fieldset_fun = {
             }
         },
         del_row: function del_row(path) {
+            var self = this;
             var search_args = ex.parseSearch();
-            location = ex.template('{engine_url}/del_rows?rows={class}:{pk}&next={next}&_pop={pop}', { class: this.kw.row._class,
-                engine_url: engine_url,
-                pk: this.kw.row.pk,
-                next: search_args.next,
-                pop: search_args._pop
-
+            var rows = [];
+            ex.each(delset, function (name) {
+                var row = self.fieldset[name].row;
+                if (row.pk) {
+                    rows.push(row._class + ':' + row.pk);
+                }
             });
+            if (rows.length > 1) {
+                return ex.template('{engine_url}/del_rows?rows={rows}&next={next}&_pop={pop}', { engine_url: engine_url,
+                    rows: rows,
+                    next: search_args.next,
+                    pop: search_args._pop
+                });
+            } else {
+                return null;
+            }
         },
         log_url: function log_url() {
             var obj = {

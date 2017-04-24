@@ -53,6 +53,8 @@ import * as ck from './ckeditor.js'
 import * as multi from './multi_sel.js'
 import * as inputs from './inputs.js'
 import * as ln from './link.js'
+
+import * as fb from './field_base.js'
 //import * as js from './adapt.js'
 
 
@@ -400,23 +402,24 @@ var field_fun={
 		}
 	},
 	methods:{
+		after_sub:function(){
+			location=document.referrer
+		},
 		submit:function () {
 			var self =this;
 			show_upload()
-			var search =ex.parseSearch() //parseSearch(location.search)
+			var search =ex.parseSearch()
 			var post_data=[{fun:'save',row:this.kw.row}]
 			ex.post('',JSON.stringify(post_data),function (resp) {
+				hide_upload(500)
 				if( resp.save.errors){
 					self.kw.errors = resp.save.errors
-					hide_upload()
 				}else if(search._pop==1){
-					window.ln.rtWin({row:resp.save.row})
+					window.ln.try_rt({row:resp.save.row})
 				}else if(search.next){
-
 					location=decodeURIComponent(search.next)
 				}else{
-					hide_upload(1000)
-
+					self.after_sub()
 				}
 			})
 		},

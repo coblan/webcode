@@ -421,20 +421,26 @@ var fieldset_fun={
         submit:function () {
             var self =this;
             show_upload()
-            var search =ex.parseSearch() //parseSearch(location.search)
-            var post_data=[{fun:'save',row:this.kw.row}]
+            var search =ex.parseSearch()
+            var fieldset_row={}
+            for(var k in this.fieldset){
+                fieldset_row[k]=this.fieldset[k].row
+            }
+            var post_data=[{fun:'save_fieldset',fieldset:fieldset_row,save_step:save_step}]
             ex.post('',JSON.stringify(post_data),function (resp) {
-                if( resp.save.errors){
-                    self.kw.errors = resp.save.errors
-                    hide_upload()
+                if( resp.save_fieldset.errors ){
+                    var error_path =resp.save_fieldset.path
+                    ex.set(self.fieldset,error_path,resp.save_fieldset.errors)
+                    hide_upload(200)
                 }else if(search._pop==1){
-                    window.ln.rtWin({row:resp.save.row})
+                    window.ln.rtWin({row:resp.save_fieldset.fieldset})
                 }else if(search.next){
-
                     location=decodeURIComponent(search.next)
                 }else{
-                    hide_upload(1000)
-
+                    if(document.referrer){
+                        location=document.referrer
+                    }
+                    hide_upload(200)
                 }
             })
         },
@@ -447,14 +453,25 @@ var fieldset_fun={
             }
         },
         del_row:function (path) {
+            var self=this
             var search_args=ex.parseSearch()
-            location=ex.template('{engine_url}/del_rows?rows={class}:{pk}&next={next}&_pop={pop}',{class:this.kw.row._class,
-                engine_url:engine_url,
-                pk:this.kw.row.pk,
-                next:search_args.next,
-                pop:search_args._pop,
-
+            var rows=[]
+            ex.each(delset,function(name){
+                var row = self.fieldset[name].row
+                if (row.pk){
+                    rows.push(row._class+':'+row.pk)
+                }
             })
+            if(rows.length>1){
+                return ex.template('{engine_url}/del_rows?rows={rows}&next={next}&_pop={pop}',
+                    {engine_url:engine_url,
+                        rows:rows,
+                        next:search_args.next,
+                        pop:search_args._pop,
+                    })
+            }else{
+                return null
+            }
         },
         log_url:function(){
             var obj={
