@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 3);
+/******/ 	return __webpack_require__(__webpack_require__.s = 7);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -568,7 +568,7 @@ popUrlListen:
 <-<
  */
 
-__webpack_require__(5);
+__webpack_require__(6);
 
 var ln = {
     history_handle: function history_handle(obj) {
@@ -773,6 +773,354 @@ window.ln = ln;
 /* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
+exports = module.exports = __webpack_require__(4)();
+// imports
+
+
+// module
+exports.push([module.i, "@charset \"UTF-8\";\n#_load_frame_wrap {\n  position: fixed;\n  top: 0;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  display: none;\n  z-index: 1000;\n  background: rgba(88, 88, 88, 0.2); }\n\n.imiddle {\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n  -ms-transform: translate(-50%, -50%);\n  /* IE 9 */\n  -moz-transform: translate(-50%, -50%);\n  /* Firefox */\n  -webkit-transform: translate(-50%, -50%);\n  /* Safari 和 Chrome */\n  -o-transform: translate(-50%, -50%);\n  text-align: center;\n  /*display: table;*/\n  z-index: 10000; }\n\n.popframe {\n  width: 500px;\n  height: 400px; }\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports) {
+
+/*
+	MIT License http://www.opensource.org/licenses/mit-license.php
+	Author Tobias Koppers @sokra
+*/
+// css base code, injected by the css-loader
+module.exports = function() {
+	var list = [];
+
+	// return the list of modules as css string
+	list.toString = function toString() {
+		var result = [];
+		for(var i = 0; i < this.length; i++) {
+			var item = this[i];
+			if(item[2]) {
+				result.push("@media " + item[2] + "{" + item[1] + "}");
+			} else {
+				result.push(item[1]);
+			}
+		}
+		return result.join("");
+	};
+
+	// import a list of modules into the list
+	list.i = function(modules, mediaQuery) {
+		if(typeof modules === "string")
+			modules = [[null, modules, ""]];
+		var alreadyImportedModules = {};
+		for(var i = 0; i < this.length; i++) {
+			var id = this[i][0];
+			if(typeof id === "number")
+				alreadyImportedModules[id] = true;
+		}
+		for(i = 0; i < modules.length; i++) {
+			var item = modules[i];
+			// skip already imported module
+			// this implementation is not 100% perfect for weird media query combinations
+			//  when a module is imported multiple times with different media queries.
+			//  I hope this will never occur (Hey this way we have smaller bundles)
+			if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
+				if(mediaQuery && !item[2]) {
+					item[2] = mediaQuery;
+				} else if(mediaQuery) {
+					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
+				}
+				list.push(item);
+			}
+		}
+	};
+	return list;
+};
+
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports) {
+
+/*
+	MIT License http://www.opensource.org/licenses/mit-license.php
+	Author Tobias Koppers @sokra
+*/
+var stylesInDom = {},
+	memoize = function(fn) {
+		var memo;
+		return function () {
+			if (typeof memo === "undefined") memo = fn.apply(this, arguments);
+			return memo;
+		};
+	},
+	isOldIE = memoize(function() {
+		return /msie [6-9]\b/.test(window.navigator.userAgent.toLowerCase());
+	}),
+	getHeadElement = memoize(function () {
+		return document.head || document.getElementsByTagName("head")[0];
+	}),
+	singletonElement = null,
+	singletonCounter = 0,
+	styleElementsInsertedAtTop = [];
+
+module.exports = function(list, options) {
+	if(typeof DEBUG !== "undefined" && DEBUG) {
+		if(typeof document !== "object") throw new Error("The style-loader cannot be used in a non-browser environment");
+	}
+
+	options = options || {};
+	// Force single-tag solution on IE6-9, which has a hard limit on the # of <style>
+	// tags it will allow on a page
+	if (typeof options.singleton === "undefined") options.singleton = isOldIE();
+
+	// By default, add <style> tags to the bottom of <head>.
+	if (typeof options.insertAt === "undefined") options.insertAt = "bottom";
+
+	var styles = listToStyles(list);
+	addStylesToDom(styles, options);
+
+	return function update(newList) {
+		var mayRemove = [];
+		for(var i = 0; i < styles.length; i++) {
+			var item = styles[i];
+			var domStyle = stylesInDom[item.id];
+			domStyle.refs--;
+			mayRemove.push(domStyle);
+		}
+		if(newList) {
+			var newStyles = listToStyles(newList);
+			addStylesToDom(newStyles, options);
+		}
+		for(var i = 0; i < mayRemove.length; i++) {
+			var domStyle = mayRemove[i];
+			if(domStyle.refs === 0) {
+				for(var j = 0; j < domStyle.parts.length; j++)
+					domStyle.parts[j]();
+				delete stylesInDom[domStyle.id];
+			}
+		}
+	};
+}
+
+function addStylesToDom(styles, options) {
+	for(var i = 0; i < styles.length; i++) {
+		var item = styles[i];
+		var domStyle = stylesInDom[item.id];
+		if(domStyle) {
+			domStyle.refs++;
+			for(var j = 0; j < domStyle.parts.length; j++) {
+				domStyle.parts[j](item.parts[j]);
+			}
+			for(; j < item.parts.length; j++) {
+				domStyle.parts.push(addStyle(item.parts[j], options));
+			}
+		} else {
+			var parts = [];
+			for(var j = 0; j < item.parts.length; j++) {
+				parts.push(addStyle(item.parts[j], options));
+			}
+			stylesInDom[item.id] = {id: item.id, refs: 1, parts: parts};
+		}
+	}
+}
+
+function listToStyles(list) {
+	var styles = [];
+	var newStyles = {};
+	for(var i = 0; i < list.length; i++) {
+		var item = list[i];
+		var id = item[0];
+		var css = item[1];
+		var media = item[2];
+		var sourceMap = item[3];
+		var part = {css: css, media: media, sourceMap: sourceMap};
+		if(!newStyles[id])
+			styles.push(newStyles[id] = {id: id, parts: [part]});
+		else
+			newStyles[id].parts.push(part);
+	}
+	return styles;
+}
+
+function insertStyleElement(options, styleElement) {
+	var head = getHeadElement();
+	var lastStyleElementInsertedAtTop = styleElementsInsertedAtTop[styleElementsInsertedAtTop.length - 1];
+	if (options.insertAt === "top") {
+		if(!lastStyleElementInsertedAtTop) {
+			head.insertBefore(styleElement, head.firstChild);
+		} else if(lastStyleElementInsertedAtTop.nextSibling) {
+			head.insertBefore(styleElement, lastStyleElementInsertedAtTop.nextSibling);
+		} else {
+			head.appendChild(styleElement);
+		}
+		styleElementsInsertedAtTop.push(styleElement);
+	} else if (options.insertAt === "bottom") {
+		head.appendChild(styleElement);
+	} else {
+		throw new Error("Invalid value for parameter 'insertAt'. Must be 'top' or 'bottom'.");
+	}
+}
+
+function removeStyleElement(styleElement) {
+	styleElement.parentNode.removeChild(styleElement);
+	var idx = styleElementsInsertedAtTop.indexOf(styleElement);
+	if(idx >= 0) {
+		styleElementsInsertedAtTop.splice(idx, 1);
+	}
+}
+
+function createStyleElement(options) {
+	var styleElement = document.createElement("style");
+	styleElement.type = "text/css";
+	insertStyleElement(options, styleElement);
+	return styleElement;
+}
+
+function createLinkElement(options) {
+	var linkElement = document.createElement("link");
+	linkElement.rel = "stylesheet";
+	insertStyleElement(options, linkElement);
+	return linkElement;
+}
+
+function addStyle(obj, options) {
+	var styleElement, update, remove;
+
+	if (options.singleton) {
+		var styleIndex = singletonCounter++;
+		styleElement = singletonElement || (singletonElement = createStyleElement(options));
+		update = applyToSingletonTag.bind(null, styleElement, styleIndex, false);
+		remove = applyToSingletonTag.bind(null, styleElement, styleIndex, true);
+	} else if(obj.sourceMap &&
+		typeof URL === "function" &&
+		typeof URL.createObjectURL === "function" &&
+		typeof URL.revokeObjectURL === "function" &&
+		typeof Blob === "function" &&
+		typeof btoa === "function") {
+		styleElement = createLinkElement(options);
+		update = updateLink.bind(null, styleElement);
+		remove = function() {
+			removeStyleElement(styleElement);
+			if(styleElement.href)
+				URL.revokeObjectURL(styleElement.href);
+		};
+	} else {
+		styleElement = createStyleElement(options);
+		update = applyToTag.bind(null, styleElement);
+		remove = function() {
+			removeStyleElement(styleElement);
+		};
+	}
+
+	update(obj);
+
+	return function updateStyle(newObj) {
+		if(newObj) {
+			if(newObj.css === obj.css && newObj.media === obj.media && newObj.sourceMap === obj.sourceMap)
+				return;
+			update(obj = newObj);
+		} else {
+			remove();
+		}
+	};
+}
+
+var replaceText = (function () {
+	var textStore = [];
+
+	return function (index, replacement) {
+		textStore[index] = replacement;
+		return textStore.filter(Boolean).join('\n');
+	};
+})();
+
+function applyToSingletonTag(styleElement, index, remove, obj) {
+	var css = remove ? "" : obj.css;
+
+	if (styleElement.styleSheet) {
+		styleElement.styleSheet.cssText = replaceText(index, css);
+	} else {
+		var cssNode = document.createTextNode(css);
+		var childNodes = styleElement.childNodes;
+		if (childNodes[index]) styleElement.removeChild(childNodes[index]);
+		if (childNodes.length) {
+			styleElement.insertBefore(cssNode, childNodes[index]);
+		} else {
+			styleElement.appendChild(cssNode);
+		}
+	}
+}
+
+function applyToTag(styleElement, obj) {
+	var css = obj.css;
+	var media = obj.media;
+
+	if(media) {
+		styleElement.setAttribute("media", media)
+	}
+
+	if(styleElement.styleSheet) {
+		styleElement.styleSheet.cssText = css;
+	} else {
+		while(styleElement.firstChild) {
+			styleElement.removeChild(styleElement.firstChild);
+		}
+		styleElement.appendChild(document.createTextNode(css));
+	}
+}
+
+function updateLink(linkElement, obj) {
+	var css = obj.css;
+	var sourceMap = obj.sourceMap;
+
+	if(sourceMap) {
+		// http://stackoverflow.com/a/26603875
+		css += "\n/*# sourceMappingURL=data:application/json;base64," + btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap)))) + " */";
+	}
+
+	var blob = new Blob([css], { type: "text/css" });
+
+	var oldSrc = linkElement.href;
+
+	linkElement.href = URL.createObjectURL(blob);
+
+	if(oldSrc)
+		URL.revokeObjectURL(oldSrc);
+}
+
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(3);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// add the styles to the DOM
+var update = __webpack_require__(5)(content, {});
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/sass-loader/lib/loader.js!./link.scss", function() {
+			var newContent = require("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/sass-loader/lib/loader.js!./link.scss");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
 "use strict";
 
 
@@ -782,6 +1130,10 @@ Object.defineProperty(exports, "__esModule", {
 exports.merge = merge;
 
 var _ajax_fun = __webpack_require__(0);
+
+var _file = __webpack_require__(8);
+
+var f = _interopRequireWildcard(_file);
 
 var _inputs = __webpack_require__(1);
 
@@ -798,10 +1150,9 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 //require('./fields.scss')
 
-//import * as f from './file.js'
 //import * as ck from './ckeditor.js'
 //import * as multi from './multi_sel.js'
-(0, _ajax_fun.hook_ajax_msg)();
+
 /*
  >->mobile/fields.rst>
  =========
@@ -850,7 +1201,7 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 //import {use_color} from '../dosome/color.js'
 //import {load_js,load_css} from '../dosome/pkg.js'
-
+(0, _ajax_fun.hook_ajax_msg)();
 (0, _ajax_fun.hook_ajax_csrf)();
 
 var field_base = {
@@ -1230,275 +1581,505 @@ window.hide_upload = _ajax_fun.hide_upload;
 window.merge = merge;
 
 /***/ }),
-/* 4 */
-/***/ (function(module, exports) {
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
 
 /*
-	MIT License http://www.opensource.org/licenses/mit-license.php
-	Author Tobias Koppers @sokra
+>>>front/file.rst>
+===========
+文件上传
+===========
+
+主要内容
+========
+fl
+    包含可以操作file对象的函数，例如上传upload,批量上传uploads.
+
+file-input
+    该组件用户收集用户输入。只能返回file list 。所以，如果使用upload上传文件，必须取 [0] 第一个file对象。
+
+img-uploador
+    图片选择，自动上传。
+
+多个文件上传步骤
+==============
+
+1. Vue.data设置::
+
+    data:{
+    files:[],
+    },
+
+2. 在html中插入Vue组件::
+
+    <file-input id='jjyy' v-model='files' multiple></file-input>
+
+3. 在Methods中上传::
+
+    fl.uploads(files,url,function(resp){  // url 可以忽略，默认url为 /face/upload
+        resp ....
+    })
+
+单个文件
+=======
+1.Vue.data设置::
+
+    data:{
+        files:[],
+    },
+
+2. 在html中插入Vue组件::
+
+    <file-input id='jjyy' v-model='files'></file-input>
+
+3. 在Methods中上传::
+
+     fl.uploads(this.files[0],url,function(resp){
+        resp ....
+     })
+
+.. Note:: 默认上传url是/face/upload ，该接口返回的是 file_url_list。
+
+上传进度
+=========
+进度只是上传进度，判断文件是否被后端接收成功，需要判断是否success回调被调用::
+
+     fl.upload(this.file2[0],'/face/upload',function(url_list){
+
+     },function(progress){
+        console.log(progress)
+     })
+
+预览图片
+=========
+从file-input读出数据，然后赋予图片的src ::
+
+    f1.read(this.files[0],function (data) {
+            $('#haha')[0].src = data
+    }
+
+
+上传图片
+==========
+::
+
+    <img-uploador v-model='xxx_url_variable'></img-uploador>   //默认上传，使用的是 fl.upload默认地址 /face/upload
+    <img-uploador v-model='xxx_url_variable' up_url='xxx'></img-uploador>
+
+具备裁剪性质::
+
+    <img-uploader v-model='xxx' :config='{crop:true,aspectRatio: 8 / 10}'></img-uploader>
+
+
+样式技巧
+========
+1. 自定义样式
+
+    <file-inpu>不支持直接自定义样式。但是可以通过其他方式自定义。最简单的方式是：
+
+    * 隐藏<file-input> ，
+    * 然后触发其click事件('.file-input').click()
+<<<<
 */
-var stylesInDom = {},
-	memoize = function(fn) {
-		var memo;
-		return function () {
-			if (typeof memo === "undefined") memo = fn.apply(this, arguments);
-			return memo;
-		};
-	},
-	isOldIE = memoize(function() {
-		return /msie [6-9]\b/.test(window.navigator.userAgent.toLowerCase());
-	}),
-	getHeadElement = memoize(function () {
-		return document.head || document.getElementsByTagName("head")[0];
-	}),
-	singletonElement = null,
-	singletonCounter = 0,
-	styleElementsInsertedAtTop = [];
 
-module.exports = function(list, options) {
-	if(typeof DEBUG !== "undefined" && DEBUG) {
-		if(typeof document !== "object") throw new Error("The style-loader cannot be used in a non-browser environment");
-	}
+__webpack_require__(10);
 
-	options = options || {};
-	// Force single-tag solution on IE6-9, which has a hard limit on the # of <style>
-	// tags it will allow on a page
-	if (typeof options.singleton === "undefined") options.singleton = isOldIE();
+var fl = {
+    read: function read(file, callback) {
+        // 读完文件后，调用callback
+        var reader = new FileReader();
+        reader.onloadend = function () {
+            // 图片的 base64 格式, 可以直接当成 img 的 src 属性值
+            var dataURL = reader.result;
+            //var img = new Image();
+            //img.src = dataURL;
+            // 插入到 DOM 中预览
+            //$('#haha')[0].src=dataURL
+            callback(dataURL);
+        };
+        reader.readAsDataURL(file); // 读出 base64
+    },
+    upload: function upload(file, url, success, progress) {
+        if (ex.is_fun(url)) {
+            var progress = success;
+            var success = url;
+            var url = '/face/upload';
+        } else {
+            var url = url || '/face/upload';
+        }
 
-	// By default, add <style> tags to the bottom of <head>.
-	if (typeof options.insertAt === "undefined") options.insertAt = "bottom";
+        var fd = new FormData();
+        fd.append('file', file);
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: fd,
+            contentType: false,
+            success: success,
+            //success:function (data) {
+            //    success(data)
+            //},
+            processData: false,
+            xhr: function xhr() {
+                var xhr = new window.XMLHttpRequest();
+                xhr.upload.addEventListener("progress", function (evt) {
+                    if (progress && evt.lengthComputable) {
+                        var percentComplete = evt.loaded / evt.total;
+                        progress(percentComplete);
+                        //console.log('进度', percentComplete);
+                    }
+                }, false);
 
-	var styles = listToStyles(list);
-	addStylesToDom(styles, options);
+                return xhr;
+            }
+        });
+    },
+    uploads: function uploads(files, url, success, progress) {
+        if (ex.is_fun(url)) {
+            var progress = success;
+            var success = url;
+            var url = '/face/upload';
+        } else {
+            var url = url || '/face/upload';
+        }
 
-	return function update(newList) {
-		var mayRemove = [];
-		for(var i = 0; i < styles.length; i++) {
-			var item = styles[i];
-			var domStyle = stylesInDom[item.id];
-			domStyle.refs--;
-			mayRemove.push(domStyle);
-		}
-		if(newList) {
-			var newStyles = listToStyles(newList);
-			addStylesToDom(newStyles, options);
-		}
-		for(var i = 0; i < mayRemove.length; i++) {
-			var domStyle = mayRemove[i];
-			if(domStyle.refs === 0) {
-				for(var j = 0; j < domStyle.parts.length; j++)
-					domStyle.parts[j]();
-				delete stylesInDom[domStyle.id];
-			}
-		}
-	};
+        var fd = new FormData();
+        for (var x = 0; x < files.length; x++) {
+            var file = files[x];
+            fd.append(file.name, file);
+        }
+        $.ajax({
+            url: url,
+            type: 'post',
+            data: fd,
+            contentType: false,
+            success: success,
+            processData: false,
+            xhr: function xhr() {
+                var xhr = new window.XMLHttpRequest();
+                xhr.upload.addEventListener("progress", function (evt) {
+                    if (progress && evt.lengthComputable) {
+                        var percentComplete = evt.loaded / evt.total;
+                        progress(percentComplete);
+                        //console.log('进度', percentComplete);
+                    }
+                }, false);
+
+                return xhr;
+            }
+        });
+    }
+};
+
+var file_input = {
+    template: "<input class='file-input' type='file' @change='on_change($event)'>",
+    props: ['value'],
+    data: function data() {
+        return {
+            files: []
+        };
+    },
+    watch: {
+        value: function value(v) {
+            // when input clear selected file, Component file-input need clear too.
+            // Brower prohebit to set to Un-none string
+            if (v == '') {
+                this.$el.value = v;
+            }
+        }
+
+    },
+    methods: {
+        on_change: function on_change(event) {
+            this.files = event.target.files;
+            this.$emit('input', this.files);
+        }
+    }
+};
+
+Vue.component('file-input', file_input);
+
+/*
+<img-uploader v-model='xxx'></img-uploader>
+ <img-uploader v-model='xxx' :config='{crop:true,aspectRatio: 8 / 10}'></img-uploader>
+*/
+
+var img_uploader = {
+    props: ['value', 'up_url', 'config'],
+    data: function data() {
+        return {
+            img_files: '',
+            url: this.value
+        };
+    },
+    computed: {
+        is_crop: function is_crop() {
+            return this.config && this.config.crop;
+        },
+        crop_config: function crop_config() {
+            if (this.config && this.config.crop) {
+                var temp_config = ex.copy(this.config);
+                delete temp_config.crop;
+                return temp_config;
+            } else {
+                return {};
+            }
+        }
+    },
+    template: '\n          <div class=\'up_wrap logo-input img-uploader\'>\n            <file-input v-if="!is_crop"\n                accept=\'image/gif,image/jpeg,image/png\'\n                v-model= \'img_files\'>\n            </file-input>\n            <img-crop class=\'input\' v-if=\'is_crop\' v-model=\'img_files\' :config="crop_config">\n            </img-crop>\n            <div style="padding: 40px" @click="select()">\n                <a class=\'choose\'>Choose</a>\n            </div>\n            <div v-if=\'url\' class="closeDiv">\n            <div class="close" @click=\'clear()\'>X</div>\n            <img :src="url" alt="" class="logoImg">\n            </div>\n            </div>\n        ',
+    watch: {
+        img_files: function img_files(v) {
+            var self = this;
+            fl.upload(v[0], this.up_url, function (url_list) {
+                self.url = url_list[0];
+                self.$emit('input', self.url);
+            });
+        }
+    },
+    methods: {
+        clear: function clear() {
+            this.img_files = '';
+            this.url = '';
+            this.$emit('input', '');
+            //$(this.$el).find('input[type=file]').val('')
+            //$('#'+this.id).val('')
+        },
+        select: function select() {
+            $(this.$el).find('input[type=file]').click();
+        }
+    }
+};
+
+Vue.component('img-uploador', img_uploader);
+
+/*
+具备裁剪功能
+==============
+
+*  <img-crop v-model='xxx' :config='{aspectRatio: 8 / 10}'></img-crop>
+*
+*  上传:
+*  ======
+*  fl.upload(xxx[0],function(urls){
+*         ...
+*  ))
+* */
+
+var img_crop = {
+    template: '<div class="img-crop">\n    <input type=\'file\' @change=\'on_change($event)\'\n            accept=\'image/gif,image/jpeg,image/png\'>\n    <modal v-show=\'cropping\' >\n        <div class="total-wrap flex-v" style="width:80vw;height: 80vh;background-color: white;">\n            <div class="crop-wrap flex-grow">\n                <img class="crop-img" :src="org_img" >\n            </div>\n            <div style="padding: 5px;">\n            <div class="btn-group" role="group">\n                <button class="btn btn-primary" @click="rotato_90()"><i class="fa fa-repeat" aria-hidden="true"></i></button>\n                <button class="btn btn-primary" @click="zoom_in()"><span class="glyphicon glyphicon-zoom-in" aria-hidden="true"></span></button>\n                <button class="btn btn-primary" @click="zoom_out()"><span class="glyphicon glyphicon-zoom-out" aria-hidden="true"></span></button>\n            </div>\n            <div class="btn-group" role="group">\n                <button class="btn btn-primary" @click="make_sure()"><i class="fa fa-check" aria-hidden="true"></i></button>\n                <button class="btn btn-primary" @click="cancel()"><i class="fa fa-times" aria-hidden="true"></i></button>\n            </div>\n\n\n            </div>\n\n\n        </div>\n    </modal>\n    </div>',
+    props: ['value', 'config'],
+    data: function data() {
+        var inn_config = {
+            size: {}
+        };
+        ex.assign(inn_config, this.config);
+
+        return {
+            files: [],
+            org_img: '',
+            cropping: false,
+            inn_config: inn_config
+        };
+    },
+    mounted: function mounted() {
+        ex.load_css('https://cdn.bootcss.com/cropper/2.3.4/cropper.min.css');
+        ex.load_js('https://cdn.bootcss.com/cropper/2.3.4/cropper.min.js');
+    },
+    watch: {
+        value: function value(v) {
+            // when input clear selected file, Component file-input need clear too.
+            // Brower prohebit to set to Un-none string
+            if (v == '') {
+                this.$el.value = v;
+            }
+        }
+
+    },
+
+    methods: {
+        cancel: function cancel() {
+            $(this.$el).find('input[type=file]').val('');
+            this.cropping = false;
+        },
+        zoom_in: function zoom_in() {
+            $(this.$el).find('.crop-img').cropper('zoom', 0.1);
+        },
+        zoom_out: function zoom_out() {
+            $(this.$el).find('.crop-img').cropper('zoom', -0.1);
+        },
+        rotato_90: function rotato_90() {
+            $(this.$el).find('.crop-img').cropper('rotate', 90);
+        },
+        move_img: function move_img() {
+            $(this.$el).find('.crop-img').cropper('setDragMode', 'move');
+        },
+        move_crop: function move_crop() {
+            $(this.$el).find('.crop-img').cropper('setDragMode', 'crop');
+        },
+        on_change: function on_change(event) {
+            if ($(this.$el).find('input[type=file]').val() == '') {
+                return;
+            }
+            var self = this;
+            this.cropping = true;
+            var img_file = event.target.files[0];
+            //fl.read(img_file)
+            //this.$emit('input', this.files)
+            fl.read(img_file, function (data) {
+                self.org_img = data;
+                Vue.nextTick(function () {
+                    self.init_crop();
+                });
+            });
+        },
+        init_crop: function init_crop() {
+            //$(this.$el).find('.crop-img').cropper({
+            //    aspectRatio: 8 / 10,
+            //});
+            if (this.inn_config.aspectRatio) {
+                $(this.$el).find('.crop-img').cropper({ aspectRatio: this.inn_config.aspectRatio });
+            }
+
+            $(this.$el).find('.crop-img').cropper('replace', this.org_img);
+            $(this.$el).find('.crop-img').cropper('setDragMode', 'move');
+        },
+        make_sure: function make_sure() {
+            var self = this;
+            // Upload cropped image to server if the browser supports `HTMLCanvasElement.toBlob`
+
+            //$(this.$el).find('.crop-img').cropper('getCroppedCanvas',this.inn_config.size).toBlob(function (blob) {
+            //    //var formData = new FormData();
+            //    self.$emit('input',[blob])
+            //    self.cropping=false
+            //
+            //});
+            var data_url = $(this.$el).find('.crop-img').cropper('getCroppedCanvas', this.inn_config.size).toDataURL('image/jpeg');
+            var blob = dataURLtoBlob(data_url);
+            self.$emit('input', [blob]);
+            self.cropping = false;
+        }
+    }
+
+};
+
+function dataURLtoBlob(dataurl) {
+    var arr = dataurl.split(','),
+        mime = arr[0].match(/:(.*?);/)[1],
+        bstr = atob(arr[1]),
+        n = bstr.length,
+        u8arr = new Uint8Array(n);
+    while (n--) {
+        u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new Blob([u8arr], { type: mime });
 }
 
-function addStylesToDom(styles, options) {
-	for(var i = 0; i < styles.length; i++) {
-		var item = styles[i];
-		var domStyle = stylesInDom[item.id];
-		if(domStyle) {
-			domStyle.refs++;
-			for(var j = 0; j < domStyle.parts.length; j++) {
-				domStyle.parts[j](item.parts[j]);
-			}
-			for(; j < item.parts.length; j++) {
-				domStyle.parts.push(addStyle(item.parts[j], options));
-			}
-		} else {
-			var parts = [];
-			for(var j = 0; j < item.parts.length; j++) {
-				parts.push(addStyle(item.parts[j], options));
-			}
-			stylesInDom[item.id] = {id: item.id, refs: 1, parts: parts};
-		}
-	}
-}
+Vue.component('img-crop', img_crop);
 
-function listToStyles(list) {
-	var styles = [];
-	var newStyles = {};
-	for(var i = 0; i < list.length; i++) {
-		var item = list[i];
-		var id = item[0];
-		var css = item[1];
-		var media = item[2];
-		var sourceMap = item[3];
-		var part = {css: css, media: media, sourceMap: sourceMap};
-		if(!newStyles[id])
-			styles.push(newStyles[id] = {id: id, parts: [part]});
-		else
-			newStyles[id].parts.push(part);
-	}
-	return styles;
-}
+/*
+* 下面是为了老代码的兼容性，以后不会用了。
+*
+*/
 
-function insertStyleElement(options, styleElement) {
-	var head = getHeadElement();
-	var lastStyleElementInsertedAtTop = styleElementsInsertedAtTop[styleElementsInsertedAtTop.length - 1];
-	if (options.insertAt === "top") {
-		if(!lastStyleElementInsertedAtTop) {
-			head.insertBefore(styleElement, head.firstChild);
-		} else if(lastStyleElementInsertedAtTop.nextSibling) {
-			head.insertBefore(styleElement, lastStyleElementInsertedAtTop.nextSibling);
-		} else {
-			head.appendChild(styleElement);
-		}
-		styleElementsInsertedAtTop.push(styleElement);
-	} else if (options.insertAt === "bottom") {
-		head.appendChild(styleElement);
-	} else {
-		throw new Error("Invalid value for parameter 'insertAt'. Must be 'top' or 'bottom'.");
-	}
-}
+Vue.component('file-obj', {
+    template: "<input model='filebody' type='file' @change='changed'>",
+    props: {
+        up_url: {
+            type: String,
+            required: true
+        },
+        //url:{
+        //    type: String,
+        //    twoWay:true
+        //},
+        ready: {}
+    },
+    methods: {
+        changed: function changed(changeEvent) {
+            var file = changeEvent.target.files[0];
+            if (!file) return;
+            this.fd = new FormData();
+            this.fd.append('file', file);
+            this.ready = true;
+            this.upload();
+        },
+        upload: function upload() {
+            var self = this;
+            $.ajax({
+                url: this.up_url,
+                type: 'post',
+                data: this.fd,
+                contentType: false,
+                cache: false,
+                success: function success(data) {
+                    if (data.url) {
+                        self.$dispatch('rt_url', data.url);
+                    }
 
-function removeStyleElement(styleElement) {
-	styleElement.parentNode.removeChild(styleElement);
-	var idx = styleElementsInsertedAtTop.indexOf(styleElement);
-	if(idx >= 0) {
-		styleElementsInsertedAtTop.splice(idx, 1);
-	}
-}
+                    //alert(data);
+                    //self.url=data.url;
+                    //self.$emit('url.changed',data.url)
+                },
+                //error:function (data) {
+                //	alert(data.responseText)
+                //},
+                processData: false
+            });
+        }
+    }
+});
 
-function createStyleElement(options) {
-	var styleElement = document.createElement("style");
-	styleElement.type = "text/css";
-	insertStyleElement(options, styleElement);
-	return styleElement;
-}
+Vue.component('logo-input', {
+    props: ['up_url', 'web_url', 'id'],
+    template: '\n          <div class=\'up_wrap logo-input\'>\n            <file-obj :id=\'id\'\n                accept=\'image/gif,image/jpeg,image/png\'\n                :up_url=\'up_url\'\n                @rt_url= \'get_web_url\'>\n            </file-obj>\n            <div style="padding: 40px">\n                <a class=\'choose\'>Choose</a>\n            </div>\n            <div v-if=\'web_url\' class="closeDiv">\n            <div class="close" @click=\'clear()\'>X</div>\n            <img :src="web_url" alt="" class="logoImg">\n            </div>\n            </div>\n        ',
+    methods: {
+        get_web_url: function get_web_url(e) {
+            this.web_url = e;
+        },
+        clear: function clear() {
+            this.web_url = '';
+            $('#' + this.id).val('');
+        }
+    }
+});
 
-function createLinkElement(options) {
-	var linkElement = document.createElement("link");
-	linkElement.rel = "stylesheet";
-	insertStyleElement(options, linkElement);
-	return linkElement;
-}
+window.fl = fl;
 
-function addStyle(obj, options) {
-	var styleElement, update, remove;
+/***/ }),
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
 
-	if (options.singleton) {
-		var styleIndex = singletonCounter++;
-		styleElement = singletonElement || (singletonElement = createStyleElement(options));
-		update = applyToSingletonTag.bind(null, styleElement, styleIndex, false);
-		remove = applyToSingletonTag.bind(null, styleElement, styleIndex, true);
-	} else if(obj.sourceMap &&
-		typeof URL === "function" &&
-		typeof URL.createObjectURL === "function" &&
-		typeof URL.revokeObjectURL === "function" &&
-		typeof Blob === "function" &&
-		typeof btoa === "function") {
-		styleElement = createLinkElement(options);
-		update = updateLink.bind(null, styleElement);
-		remove = function() {
-			removeStyleElement(styleElement);
-			if(styleElement.href)
-				URL.revokeObjectURL(styleElement.href);
-		};
-	} else {
-		styleElement = createStyleElement(options);
-		update = applyToTag.bind(null, styleElement);
-		remove = function() {
-			removeStyleElement(styleElement);
-		};
-	}
+exports = module.exports = __webpack_require__(4)();
+// imports
 
-	update(obj);
 
-	return function updateStyle(newObj) {
-		if(newObj) {
-			if(newObj.css === obj.css && newObj.media === obj.media && newObj.sourceMap === obj.sourceMap)
-				return;
-			update(obj = newObj);
-		} else {
-			remove();
-		}
-	};
-}
+// module
+exports.push([module.i, ".img-uploader input {\n  display: none; }\n\n.up_wrap {\n  position: relative;\n  text-align: center;\n  border: 2px dashed #ccc;\n  background: #FDFDFD;\n  width: 300px; }\n\n.closeDiv {\n  width: 100%;\n  height: 100%;\n  position: absolute;\n  top: 0;\n  left: 0;\n  background-color: #ffffff; }\n\n.choose {\n  display: inline-block;\n  text-decoration: none;\n  padding: 5px;\n  border: 1px solid #0092F2;\n  border-radius: 4px;\n  font-size: 14px;\n  color: #0092F2;\n  cursor: pointer; }\n\n.choose:hover, .choose:active {\n  text-decoration: none;\n  color: #0092F2; }\n\n.close {\n  position: absolute;\n  top: 5px;\n  right: 10px;\n  cursor: pointer;\n  font-size: 14px;\n  color: #242424; }\n\n.logoImg {\n  max-height: 100px !important;\n  vertical-align: middle;\n  margin-top: 5px; }\n\n.img-crop .total-wrap {\n  padding: 30px; }\n\n.img-crop .crop-wrap {\n  max-width: 100%;\n  max-height: 90%;\n  overflow: hidden; }\n\n.img-crop .crop-img {\n  max-width: 100%;\n  max-height: 100%; }\n", ""]);
 
-var replaceText = (function () {
-	var textStore = [];
-
-	return function (index, replacement) {
-		textStore[index] = replacement;
-		return textStore.filter(Boolean).join('\n');
-	};
-})();
-
-function applyToSingletonTag(styleElement, index, remove, obj) {
-	var css = remove ? "" : obj.css;
-
-	if (styleElement.styleSheet) {
-		styleElement.styleSheet.cssText = replaceText(index, css);
-	} else {
-		var cssNode = document.createTextNode(css);
-		var childNodes = styleElement.childNodes;
-		if (childNodes[index]) styleElement.removeChild(childNodes[index]);
-		if (childNodes.length) {
-			styleElement.insertBefore(cssNode, childNodes[index]);
-		} else {
-			styleElement.appendChild(cssNode);
-		}
-	}
-}
-
-function applyToTag(styleElement, obj) {
-	var css = obj.css;
-	var media = obj.media;
-
-	if(media) {
-		styleElement.setAttribute("media", media)
-	}
-
-	if(styleElement.styleSheet) {
-		styleElement.styleSheet.cssText = css;
-	} else {
-		while(styleElement.firstChild) {
-			styleElement.removeChild(styleElement.firstChild);
-		}
-		styleElement.appendChild(document.createTextNode(css));
-	}
-}
-
-function updateLink(linkElement, obj) {
-	var css = obj.css;
-	var sourceMap = obj.sourceMap;
-
-	if(sourceMap) {
-		// http://stackoverflow.com/a/26603875
-		css += "\n/*# sourceMappingURL=data:application/json;base64," + btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap)))) + " */";
-	}
-
-	var blob = new Blob([css], { type: "text/css" });
-
-	var oldSrc = linkElement.href;
-
-	linkElement.href = URL.createObjectURL(blob);
-
-	if(oldSrc)
-		URL.revokeObjectURL(oldSrc);
-}
+// exports
 
 
 /***/ }),
-/* 5 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(6);
+var content = __webpack_require__(9);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(4)(content, {});
+var update = __webpack_require__(5)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
 	// When the styles change, update the <style> tags
 	if(!content.locals) {
-		module.hot.accept("!!./../../../node_modules/.0.26.1@css-loader/index.js!./../../../node_modules/.6.0.0@sass-loader/lib/loader.js!./link.scss", function() {
-			var newContent = require("!!./../../../node_modules/.0.26.1@css-loader/index.js!./../../../node_modules/.6.0.0@sass-loader/lib/loader.js!./link.scss");
+		module.hot.accept("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/sass-loader/lib/loader.js!./file.scss", function() {
+			var newContent = require("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/sass-loader/lib/loader.js!./file.scss");
 			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 			update(newContent);
 		});
@@ -1506,76 +2087,6 @@ if(false) {
 	// When the module is disposed, remove the <style> tags
 	module.hot.dispose(function() { update(); });
 }
-
-/***/ }),
-/* 6 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(7)();
-// imports
-
-
-// module
-exports.push([module.i, "@charset \"UTF-8\";\n#_load_frame_wrap {\n  position: fixed;\n  top: 0;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  display: none;\n  z-index: 1000;\n  background: rgba(88, 88, 88, 0.2); }\n\n.imiddle {\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n  -ms-transform: translate(-50%, -50%);\n  /* IE 9 */\n  -moz-transform: translate(-50%, -50%);\n  /* Firefox */\n  -webkit-transform: translate(-50%, -50%);\n  /* Safari 和 Chrome */\n  -o-transform: translate(-50%, -50%);\n  text-align: center;\n  /*display: table;*/\n  z-index: 10000; }\n\n.popframe {\n  width: 500px;\n  height: 400px; }\n", ""]);
-
-// exports
-
-
-/***/ }),
-/* 7 */
-/***/ (function(module, exports) {
-
-/*
-	MIT License http://www.opensource.org/licenses/mit-license.php
-	Author Tobias Koppers @sokra
-*/
-// css base code, injected by the css-loader
-module.exports = function() {
-	var list = [];
-
-	// return the list of modules as css string
-	list.toString = function toString() {
-		var result = [];
-		for(var i = 0; i < this.length; i++) {
-			var item = this[i];
-			if(item[2]) {
-				result.push("@media " + item[2] + "{" + item[1] + "}");
-			} else {
-				result.push(item[1]);
-			}
-		}
-		return result.join("");
-	};
-
-	// import a list of modules into the list
-	list.i = function(modules, mediaQuery) {
-		if(typeof modules === "string")
-			modules = [[null, modules, ""]];
-		var alreadyImportedModules = {};
-		for(var i = 0; i < this.length; i++) {
-			var id = this[i][0];
-			if(typeof id === "number")
-				alreadyImportedModules[id] = true;
-		}
-		for(i = 0; i < modules.length; i++) {
-			var item = modules[i];
-			// skip already imported module
-			// this implementation is not 100% perfect for weird media query combinations
-			//  when a module is imported multiple times with different media queries.
-			//  I hope this will never occur (Hey this way we have smaller bundles)
-			if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
-				if(mediaQuery && !item[2]) {
-					item[2] = mediaQuery;
-				} else if(mediaQuery) {
-					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
-				}
-				list.push(item);
-			}
-		}
-	};
-	return list;
-};
-
 
 /***/ })
 /******/ ]);

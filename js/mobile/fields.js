@@ -48,7 +48,7 @@
 //import {use_color} from '../dosome/color.js'
 //import {load_js,load_css} from '../dosome/pkg.js'
 import {hook_ajax_msg,hook_ajax_csrf,show_upload,hide_upload} from '../ajax_fun.js'
-//import * as f from './file.js'
+import * as f from '../vuejs/file.js'
 //import * as ck from './ckeditor.js'
 //import * as multi from './multi_sel.js'
 import * as inputs from './inputs.js'
