@@ -220,6 +220,8 @@ Vue.component('file-input',file_input)
 /*
 <img-uploader v-model='xxx'></img-uploader>
  <img-uploader v-model='xxx' :config='{crop:true,aspectRatio: 8 / 10}'></img-uploader>
+
+ accept='image/gif,image/jpeg,image/png'
 */
 
 var img_uploader={
@@ -244,10 +246,17 @@ var img_uploader={
             }
         }
     },
+    //mounted:function(){
+    //    var self=this
+    //  setInterval(function(){
+    //      console.log('img_files')
+    //      console.log(self.img_files)
+    //  },2000)
+    //},
     template:`
           <div class='up_wrap logo-input img-uploader'>
             <file-input v-if="!is_crop"
-                accept='image/gif,image/jpeg,image/png'
+                accept='image/*'
                 v-model= 'img_files'>
             </file-input>
             <img-crop class='input' v-if='is_crop' v-model='img_files' :config="crop_config">
@@ -256,7 +265,7 @@ var img_uploader={
                 <a class='choose'>Choose</a>
             </div>
             <div v-if='url' class="closeDiv">
-            <div class="close" @click='clear()'>X</div>
+            <div class="close" @click='clear()'><i class="fa fa-times" aria-hidden="true" style="padding: 5px;"></i></div>
             <img :src="url" alt="" class="logoImg">
             </div>
             </div>
@@ -264,6 +273,7 @@ var img_uploader={
     watch:{
         img_files:function(v){
             var self=this
+            console.log('start upload')
             fl.upload(v[0],this.up_url,function(url_list){
                 self.url=url_list[0]
                 self.$emit('input',self.url)
@@ -272,6 +282,7 @@ var img_uploader={
     },
     methods:{
         clear:function () {
+            console.log('clear image data')
             this.img_files=''
             this.url=''
             this.$emit('input','')
@@ -279,7 +290,9 @@ var img_uploader={
             //$('#'+this.id).val('')
         },
         select:function(){
+            console.log('before select')
             $(this.$el).find('input[type=file]').click()
+            console.log('after select')
         }
     }
 }
@@ -290,6 +303,7 @@ Vue.component('img-uploador',img_uploader)
 /*
 具备裁剪功能
 ==============
+ img_crop是一种input
 
 *  <img-crop v-model='xxx' :config='{aspectRatio: 8 / 10}'></img-crop>
 *
@@ -303,7 +317,7 @@ Vue.component('img-uploador',img_uploader)
 var img_crop={
     template: `<div class="img-crop">
     <input type='file' @change='on_change($event)'
-            accept='image/gif,image/jpeg,image/png'>
+            accept='image/*'>
     <modal v-show='cropping' >
         <div class="total-wrap flex-v" style="width:80vw;height: 80vh;background-color: white;">
             <div class="crop-wrap flex-grow">
@@ -312,8 +326,8 @@ var img_crop={
             <div style="padding: 5px;">
             <div class="btn-group" role="group">
                 <button class="btn btn-primary" @click="rotato_90()"><i class="fa fa-repeat" aria-hidden="true"></i></button>
-                <button class="btn btn-primary" @click="zoom_in()"><span class="glyphicon glyphicon-zoom-in" aria-hidden="true"></span></button>
-                <button class="btn btn-primary" @click="zoom_out()"><span class="glyphicon glyphicon-zoom-out" aria-hidden="true"></span></button>
+                <button class="btn btn-primary" @click="zoom_in()"><i class="fa fa-search-plus" aria-hidden="true"></i></button>
+                <button class="btn btn-primary" @click="zoom_out()"><i class="fa fa-search-minus" aria-hidden="true"></i></button>
             </div>
             <div class="btn-group" role="group">
                 <button class="btn btn-primary" @click="make_sure()"><i class="fa fa-check" aria-hidden="true"></i></button>
