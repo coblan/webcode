@@ -256,6 +256,11 @@ var field_base={
 
 var field={
     mixins:[field_base],
+    created:function(){
+        if(!this.head.placeholder){
+            this.head.placeholder='请输入'+this.head.label
+        }
+    },
     methods:{
       show_label:function(head){
           if(ex.isin(head.type,['blocktext']) || head.no_auto_label){
