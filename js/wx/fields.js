@@ -104,15 +104,15 @@ var field_base={
             props:['name','row','kw'],
             template:`<div>
             			<span v-if='kw.readonly' v-text='row[name]'></span>
-            			<el-input v-else v-model="row[name]" :id="'id_'+name"
-            			    :placeholder="kw.placeholder" :autofocus="kw.autofocus" :maxlength='kw.maxlength'></el-input>
+            			<input v-else type="text" class="weui-input" v-model="row[name]" :id="'id_'+name"
+                        	:placeholder="kw.placeholder" :autofocus="kw.autofocus" :maxlength='kw.maxlength'>
                        </div>`,
         },
         number: {
             props:['name','row','kw'],
 
             template: `<div><span v-if='kw.readonly' v-text='row[name]'></span>
-            		<input v-else type="number"  v-model="row[name]" :id="'id_'+name"
+            		<input v-else type="number" class="weui-input" v-model="row[name]" :id="'id_'+name"
                         :placeholder="kw.placeholder" :autofocus="kw.autofocus"></div>`
         },
         password: {
@@ -123,7 +123,7 @@ var field_base={
             props:['name','row','kw'],
             template: `<div>
             <span v-if='kw.readonly' v-text='row[name]'></span>
-            <el-input type="textarea" v-else  :autosize="{minRows: 2}" :id="'id_'+name" v-model="row[name]" :placeholder="kw.placeholder"></el-input>
+            <textarea v-else class="weui-textarea" rows="3" :id="'id_'+name" v-model="row[name]" :placeholder="kw.placeholder" :readonly='kw.readonly'></textarea>
             </div>`
         },
         color:{
@@ -184,9 +184,9 @@ var field_base={
             },
             template:` <div>
             <span v-if='kw.readonly' v-text='get_label(kw.options,row[name])'></span>
-            <el-select v-else v-model='row[name]'  :id="'id_'+name"  placeholder="kw.placeholder">
-                <el-option v-for='opt in kw.options' :value='opt.value' :label='opt.label'></el-option>
-            </el-select>
+            <select v-else v-model='row[name]'  :id="'id_'+name"  class="weui-select">
+            	<option v-for='opt in kw.options' :value='opt.value' v-text='opt.label'></option>
+            </select>
             </div>`,
             mounted:function(){
                 if(this.kw.default && !this.row[this.name]){
@@ -262,16 +262,34 @@ var field={
         }
     },
     methods:{
-
+      show_label:function(head){
+          if(ex.isin(head.type,['blocktext']) || head.no_auto_label){
+              return false
+          }else{
+              return true
+          }
+      },
+        show_title:function(head){
+            return (ex.isin(head.type,['blocktext']))
+        }
     },
-    template:`<div v-if="head" :class='["field",{"error":error_data(head.name)}]'>
-        <el-form-item :label="head.label" >
-            <component :is='head.type'
+    template:`<div class="flex-v"  v-if="head">
+        <span></span>
+        <!--<div v-if="show_title(head)" class="weui-cells__title block-title weui-cell" v-text="head.label"></div>-->
+        <div :class='["weui-cell","field",{"error":error_data(name),"weui-cell_select weui-cell_select-after":head.type=="sim_select"&&!head.readonly}]'>
+            <div class="weui-cell__hd" >
+                <label  class="weui-label" :for="'id_'+name">
+                    <span v-text="head.label"></span>
+                </label>
+            </div>
+            <div class="weui-cell__bd field_input">
+                <component :is='head.type'
                     :row='row'
                     :name='name'
                     :kw='head'>
-             </component>
-        </el-form-item>
+                </component>
+             </div>
+        </div>
         <div v-for='error in error_data(name)' v-text='error' class='error'></div>
     </div>`,
 
