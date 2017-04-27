@@ -304,7 +304,7 @@ var table_fun = {
             can_add: can_add,
             can_del: can_del,
             show_menu: false,
-            search_args: ex.parseSearch(),
+            search_args: search_args,
             ex: ex
         };
     },
