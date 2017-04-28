@@ -74,6 +74,62 @@
 	MIT License http://www.opensource.org/licenses/mit-license.php
 	Author Tobias Koppers @sokra
 */
+// css base code, injected by the css-loader
+module.exports = function() {
+	var list = [];
+
+	// return the list of modules as css string
+	list.toString = function toString() {
+		var result = [];
+		for(var i = 0; i < this.length; i++) {
+			var item = this[i];
+			if(item[2]) {
+				result.push("@media " + item[2] + "{" + item[1] + "}");
+			} else {
+				result.push(item[1]);
+			}
+		}
+		return result.join("");
+	};
+
+	// import a list of modules into the list
+	list.i = function(modules, mediaQuery) {
+		if(typeof modules === "string")
+			modules = [[null, modules, ""]];
+		var alreadyImportedModules = {};
+		for(var i = 0; i < this.length; i++) {
+			var id = this[i][0];
+			if(typeof id === "number")
+				alreadyImportedModules[id] = true;
+		}
+		for(i = 0; i < modules.length; i++) {
+			var item = modules[i];
+			// skip already imported module
+			// this implementation is not 100% perfect for weird media query combinations
+			//  when a module is imported multiple times with different media queries.
+			//  I hope this will never occur (Hey this way we have smaller bundles)
+			if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
+				if(mediaQuery && !item[2]) {
+					item[2] = mediaQuery;
+				} else if(mediaQuery) {
+					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
+				}
+				list.push(item);
+			}
+		}
+	};
+	return list;
+};
+
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports) {
+
+/*
+	MIT License http://www.opensource.org/licenses/mit-license.php
+	Author Tobias Koppers @sokra
+*/
 var stylesInDom = {},
 	memoize = function(fn) {
 		var memo;
@@ -316,62 +372,6 @@ function updateLink(linkElement, obj) {
 	if(oldSrc)
 		URL.revokeObjectURL(oldSrc);
 }
-
-
-/***/ }),
-/* 1 */
-/***/ (function(module, exports) {
-
-/*
-	MIT License http://www.opensource.org/licenses/mit-license.php
-	Author Tobias Koppers @sokra
-*/
-// css base code, injected by the css-loader
-module.exports = function() {
-	var list = [];
-
-	// return the list of modules as css string
-	list.toString = function toString() {
-		var result = [];
-		for(var i = 0; i < this.length; i++) {
-			var item = this[i];
-			if(item[2]) {
-				result.push("@media " + item[2] + "{" + item[1] + "}");
-			} else {
-				result.push(item[1]);
-			}
-		}
-		return result.join("");
-	};
-
-	// import a list of modules into the list
-	list.i = function(modules, mediaQuery) {
-		if(typeof modules === "string")
-			modules = [[null, modules, ""]];
-		var alreadyImportedModules = {};
-		for(var i = 0; i < this.length; i++) {
-			var id = this[i][0];
-			if(typeof id === "number")
-				alreadyImportedModules[id] = true;
-		}
-		for(i = 0; i < modules.length; i++) {
-			var item = modules[i];
-			// skip already imported module
-			// this implementation is not 100% perfect for weird media query combinations
-			//  when a module is imported multiple times with different media queries.
-			//  I hope this will never occur (Hey this way we have smaller bundles)
-			if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
-				if(mediaQuery && !item[2]) {
-					item[2] = mediaQuery;
-				} else if(mediaQuery) {
-					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
-				}
-				list.push(item);
-			}
-		}
-	};
-	return list;
-};
 
 
 /***/ }),
@@ -902,7 +902,7 @@ img-uploador
 <<<<
 */
 
-__webpack_require__(6);
+__webpack_require__(8);
 
 var fl = {
     read: function read(file, callback) {
@@ -1358,7 +1358,7 @@ popUrlListen:
 <-<
  */
 
-__webpack_require__(7);
+__webpack_require__(9);
 
 var ln = {
     history_handle: function history_handle(obj) {
@@ -1563,59 +1563,7 @@ window.ln = ln;
 /* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(8);
-if(typeof content === 'string') content = [[module.i, content, '']];
-// add the styles to the DOM
-var update = __webpack_require__(0)(content, {});
-if(content.locals) module.exports = content.locals;
-// Hot Module Replacement
-if(false) {
-	// When the styles change, update the <style> tags
-	if(!content.locals) {
-		module.hot.accept("!!./../../../node_modules/.0.26.1@css-loader/index.js!./../../../node_modules/.6.0.0@sass-loader/lib/loader.js!./file.scss", function() {
-			var newContent = require("!!./../../../node_modules/.0.26.1@css-loader/index.js!./../../../node_modules/.6.0.0@sass-loader/lib/loader.js!./file.scss");
-			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-			update(newContent);
-		});
-	}
-	// When the module is disposed, remove the <style> tags
-	module.hot.dispose(function() { update(); });
-}
-
-/***/ }),
-/* 7 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(9);
-if(typeof content === 'string') content = [[module.i, content, '']];
-// add the styles to the DOM
-var update = __webpack_require__(0)(content, {});
-if(content.locals) module.exports = content.locals;
-// Hot Module Replacement
-if(false) {
-	// When the styles change, update the <style> tags
-	if(!content.locals) {
-		module.hot.accept("!!./../../../node_modules/.0.26.1@css-loader/index.js!./../../../node_modules/.6.0.0@sass-loader/lib/loader.js!./link.scss", function() {
-			var newContent = require("!!./../../../node_modules/.0.26.1@css-loader/index.js!./../../../node_modules/.6.0.0@sass-loader/lib/loader.js!./link.scss");
-			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-			update(newContent);
-		});
-	}
-	// When the module is disposed, remove the <style> tags
-	module.hot.dispose(function() { update(); });
-}
-
-/***/ }),
-/* 8 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(1)();
+exports = module.exports = __webpack_require__(0)();
 // imports
 
 
@@ -1626,10 +1574,10 @@ exports.push([module.i, ".img-uploader input {\n  display: none; }\n\n.up_wrap {
 
 
 /***/ }),
-/* 9 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(1)();
+exports = module.exports = __webpack_require__(0)();
 // imports
 
 
@@ -1638,6 +1586,58 @@ exports.push([module.i, "@charset \"UTF-8\";\n#_load_frame_wrap {\n  position: f
 
 // exports
 
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(6);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// add the styles to the DOM
+var update = __webpack_require__(1)(content, {});
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/sass-loader/lib/loader.js!./file.scss", function() {
+			var newContent = require("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/sass-loader/lib/loader.js!./file.scss");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(7);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// add the styles to the DOM
+var update = __webpack_require__(1)(content, {});
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/sass-loader/lib/loader.js!./link.scss", function() {
+			var newContent = require("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/sass-loader/lib/loader.js!./link.scss");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
 
 /***/ }),
 /* 10 */
@@ -1669,8 +1669,6 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 //import * as js from './adapt.js'
 
-
-//require('./fields.scss')
 
 //import * as ck from './ckeditor.js'
 //import * as multi from './multi_sel.js'
@@ -1723,6 +1721,8 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 //import {use_color} from '../dosome/color.js'
 //import {load_js,load_css} from '../dosome/pkg.js'
+__webpack_require__(11);
+
 (0, _ajax_fun.hook_ajax_msg)();
 (0, _ajax_fun.hook_ajax_csrf)();
 
@@ -1767,7 +1767,7 @@ var field_base = {
     components: {
         linetext: {
             props: ['name', 'row', 'kw'],
-            template: '<div>\n            \t\t\t<span v-if=\'kw.readonly\' v-text=\'row[name]\'></span>\n            \t\t\t<el-input v-else v-model="row[name]" :id="\'id_\'+name"\n            \t\t\t    :placeholder="kw.placeholder" :autofocus="kw.autofocus" :maxlength=\'kw.maxlength\'></el-input>\n                       </div>'
+            template: '<div>\n            \t\t\t<span v-if=\'kw.readonly\' v-text=\'row[name]\'></span>\n            \t\t\t<el-input v-else v-model="row[name]" :id="\'id_\'+name" :name="\'id_\'+name"\n            \t\t\t    :placeholder="kw.placeholder" :autofocus="kw.autofocus" :maxlength=\'kw.maxlength\'></el-input>\n                       </div>'
         },
         number: {
             props: ['name', 'row', 'kw'],
@@ -1837,7 +1837,7 @@ var field_base = {
                     model: this.row[this.name]
                 };
             },
-            template: ' <div>\n            <span v-if=\'kw.readonly\' v-text=\'get_label(kw.options,row[name])\'></span>\n            <el-select v-else v-model=\'row[name]\'  :id="\'id_\'+name"  placeholder="kw.placeholder">\n                <el-option v-for=\'opt in kw.options\' :value=\'opt.value\' :label=\'opt.label\'></el-option>\n            </el-select>\n            </div>',
+            template: ' <div>\n            <span v-if=\'kw.readonly\' v-text=\'get_label(kw.options,row[name])\'></span>\n            <el-select v-else v-model=\'row[name]\'  :id="\'id_\'+name"  :placeholder="kw.placeholder">\n                <el-option v-for=\'opt in kw.options\' :value=\'opt.value\' :label=\'opt.label\'></el-option>\n            </el-select>\n            </div>',
             mounted: function mounted() {
                 if (this.kw.default && !this.row[this.name]) {
                     Vue.set(this.row, this.name, this.kw.default);
@@ -1888,6 +1888,8 @@ var field_base = {
 
 };
 
+//  <el-form-item :label="head.label" > </el-form-item>
+
 var field = {
     mixins: [field_base],
     created: function created() {
@@ -1896,7 +1898,7 @@ var field = {
         }
     },
     methods: {},
-    template: '<div v-if="head" :class=\'["field",{"error":error_data(head.name)}]\'>\n        <el-form-item :label="head.label" >\n            <component :is=\'head.type\'\n                    :row=\'row\'\n                    :name=\'name\'\n                    :kw=\'head\'>\n             </component>\n        </el-form-item>\n        <div v-for=\'error in error_data(name)\' v-text=\'error\' class=\'error\'></div>\n    </div>'
+    template: '<div v-if="head" :class=\'["field",{"error":error_data(head.name)}]\'>\n        <label :for="\'id_\'+name" v-text=\'head.label\'></label>\n        <div class="bd">\n            <component :is=\'head.type\'\n                    :row=\'row\'\n                    :name=\'name\'\n                    :kw=\'head\'>\n             </component>\n            <div v-for=\'error in error_data(name)\' v-text=\'error\' class=\'error\'></div>\n        </div>\n\n    </div>'
 
 };
 
@@ -2095,6 +2097,46 @@ window.update_vue_obj = update_vue_obj;
 window.show_upload = _ajax_fun.show_upload;
 window.hide_upload = _ajax_fun.hide_upload;
 window.merge = merge;
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(12);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// add the styles to the DOM
+var update = __webpack_require__(1)(content, {});
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/sass-loader/lib/loader.js!./fields.scss", function() {
+			var newContent = require("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/sass-loader/lib/loader.js!./fields.scss");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 12 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(0)();
+// imports
+
+
+// module
+exports.push([module.i, ".form-pad {\n  background-color: white;\n  padding: 2em 1em; }\n  .form-pad .field {\n    display: flex;\n    margin-top: 1em; }\n  .form-pad .field label {\n    width: 80px; }\n  .form-pad .field .bd {\n    flex-grow: 1; }\n", ""]);
+
+// exports
+
 
 /***/ })
 /******/ ]);

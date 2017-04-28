@@ -56,7 +56,7 @@ import * as ln from '../vuejs/link.js'
 //import * as js from './adapt.js'
 
 
-//require('./fields.scss')
+require('./css/fields.scss')
 
 hook_ajax_msg()
 hook_ajax_csrf()
@@ -104,7 +104,7 @@ var field_base={
             props:['name','row','kw'],
             template:`<div>
             			<span v-if='kw.readonly' v-text='row[name]'></span>
-            			<el-input v-else v-model="row[name]" :id="'id_'+name"
+            			<el-input v-else v-model="row[name]" :id="'id_'+name" :name="'id_'+name"
             			    :placeholder="kw.placeholder" :autofocus="kw.autofocus" :maxlength='kw.maxlength'></el-input>
                        </div>`,
         },
@@ -184,7 +184,7 @@ var field_base={
             },
             template:` <div>
             <span v-if='kw.readonly' v-text='get_label(kw.options,row[name])'></span>
-            <el-select v-else v-model='row[name]'  :id="'id_'+name"  placeholder="kw.placeholder">
+            <el-select v-else v-model='row[name]'  :id="'id_'+name"  :placeholder="kw.placeholder">
                 <el-option v-for='opt in kw.options' :value='opt.value' :label='opt.label'></el-option>
             </el-select>
             </div>`,
@@ -252,7 +252,7 @@ var field_base={
 
 }
 
-
+//  <el-form-item :label="head.label" > </el-form-item>
 
 var field={
     mixins:[field_base],
@@ -265,14 +265,16 @@ var field={
 
     },
     template:`<div v-if="head" :class='["field",{"error":error_data(head.name)}]'>
-        <el-form-item :label="head.label" >
+        <label :for="'id_'+name" v-text='head.label'></label>
+        <div class="bd">
             <component :is='head.type'
                     :row='row'
                     :name='name'
                     :kw='head'>
              </component>
-        </el-form-item>
-        <div v-for='error in error_data(name)' v-text='error' class='error'></div>
+            <div v-for='error in error_data(name)' v-text='error' class='error'></div>
+        </div>
+
     </div>`,
 
 }

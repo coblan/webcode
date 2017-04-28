@@ -1,0 +1,17 @@
+.form-pad{
+    background-color: white;
+    padding: 2em 1em;
+
+  .field{
+    display: flex;
+    margin-top: 1em;
+
+  }
+
+  .field label{
+    width: 80px;
+  }
+  .field .bd{
+    flex-grow: 1;
+  }
+}
