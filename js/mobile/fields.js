@@ -99,6 +99,7 @@ var field_base={
             }
         }
     },
+    //<input v-else type="number"  v-model="row[name]" :id="'id_'+name" :placeholder="kw.placeholder" :autofocus="kw.autofocus">
     components: {
         linetext: {
             props:['name','row','kw'],
@@ -112,8 +113,9 @@ var field_base={
             props:['name','row','kw'],
 
             template: `<div><span v-if='kw.readonly' v-text='row[name]'></span>
-            		<input v-else type="number"  v-model="row[name]" :id="'id_'+name"
-                        :placeholder="kw.placeholder" :autofocus="kw.autofocus"></div>`
+                    <el-input-number  v-else type="number"  v-model="row[name]" :id="'id_'+name"
+                        :placeholder="kw.placeholder" :autofocus="kw.autofocus"></el-input-number>
+            		</div>`
         },
         password: {
             props:['name','row','kw'],
