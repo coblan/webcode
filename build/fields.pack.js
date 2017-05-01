@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 12);
+/******/ 	return __webpack_require__(__webpack_require__.s = 15);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -457,13 +457,16 @@ exports.hide_upload = hide_upload;
 //        }
 //}
 
+var lib = window.lib || {};
+
 function def_proc_error(jqxhr) {
 	if (!window.iclosed) {
 		if (jqxhr.status != 0) {
-			alert('server has error, error code is ' + jqxhr.status);
+			alert(jqxhr.statusText + ':code is;' + jqxhr.status + jqxhr.responseText);
 		} else {
 			alert('maybe server offline,error code is ' + jqxhr.status);
 		}
+		hide_upload();
 	}
 }
 
@@ -540,7 +543,7 @@ function hide_upload(second) {
 	}
 }
 
-ex.load_css('//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css');
+ex.load_css(lib['font_awesome'] || 'https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css');
 //if(!window.__font_awesome){
 //	window.__font_awesome=true
 //	document.write(`<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">`)
@@ -719,6 +722,13 @@ var edit_level = {
 "use strict";
 
 
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
 /*
 >>>front/file.rst>
 ===========
@@ -817,7 +827,7 @@ img-uploador
 <<<<
 */
 
-__webpack_require__(11);
+__webpack_require__(13);
 
 var fl = {
     read: function read(file, callback) {
@@ -937,6 +947,8 @@ Vue.component('file-input', file_input);
 /*
 <img-uploader v-model='xxx'></img-uploader>
  <img-uploader v-model='xxx' :config='{crop:true,aspectRatio: 8 / 10}'></img-uploader>
+
+ accept='image/gif,image/jpeg,image/png'
 */
 
 var img_uploader = {
@@ -961,10 +973,18 @@ var img_uploader = {
             }
         }
     },
-    template: '\n          <div class=\'up_wrap logo-input img-uploader\'>\n            <file-input v-if="!is_crop"\n                accept=\'image/gif,image/jpeg,image/png\'\n                v-model= \'img_files\'>\n            </file-input>\n            <img-crop class=\'input\' v-if=\'is_crop\' v-model=\'img_files\' :config="crop_config">\n            </img-crop>\n            <div style="padding: 40px" @click="select()">\n                <a class=\'choose\'>Choose</a>\n            </div>\n            <div v-if=\'url\' class="closeDiv">\n            <div class="close" @click=\'clear()\'>X</div>\n            <img :src="url" alt="" class="logoImg">\n            </div>\n            </div>\n        ',
+    //mounted:function(){
+    //    var self=this
+    //  setInterval(function(){
+    //      console.log('img_files')
+    //      console.log(self.img_files)
+    //  },2000)
+    //},
+    template: '\n          <div class=\'up_wrap logo-input img-uploader\'>\n            <file-input v-if="!is_crop"\n                accept=\'image/*\'\n                v-model= \'img_files\'>\n            </file-input>\n            <img-crop class=\'input\' v-if=\'is_crop\' v-model=\'img_files\' :config="crop_config">\n            </img-crop>\n            <div style="padding: 40px" @click="select()">\n                <a class=\'choose\'>Choose</a>\n            </div>\n            <div v-if=\'url\' class="closeDiv">\n            <div class="close" @click=\'clear()\'><i class="fa fa-times" aria-hidden="true" style="padding: 5px;"></i></div>\n            <img :src="url" alt="" class="logoImg">\n            </div>\n            </div>\n        ',
     watch: {
         img_files: function img_files(v) {
             var self = this;
+            console.log('start upload');
             fl.upload(v[0], this.up_url, function (url_list) {
                 self.url = url_list[0];
                 self.$emit('input', self.url);
@@ -973,6 +993,7 @@ var img_uploader = {
     },
     methods: {
         clear: function clear() {
+            console.log('clear image data');
             this.img_files = '';
             this.url = '';
             this.$emit('input', '');
@@ -980,7 +1001,9 @@ var img_uploader = {
             //$('#'+this.id).val('')
         },
         select: function select() {
+            console.log('before select');
             $(this.$el).find('input[type=file]').click();
+            console.log('after select');
         }
     }
 };
@@ -990,8 +1013,9 @@ Vue.component('img-uploador', img_uploader);
 /*
 具备裁剪功能
 ==============
+ img_crop是一种input
 
-*  <img-crop v-model='xxx' :config='{aspectRatio: 8 / 10}'></img-crop>
+    <img-crop v-model='xxx' :config='{aspectRatio: 8 / 10}'></img-crop>
 *
 *  上传:
 *  ======
@@ -1001,7 +1025,7 @@ Vue.component('img-uploador', img_uploader);
 * */
 
 var img_crop = {
-    template: '<div class="img-crop">\n    <input type=\'file\' @change=\'on_change($event)\'\n            accept=\'image/gif,image/jpeg,image/png\'>\n    <modal v-show=\'cropping\' >\n        <div class="total-wrap flex-v" style="width:80vw;height: 80vh;background-color: white;">\n            <div class="crop-wrap flex-grow">\n                <img class="crop-img" :src="org_img" >\n            </div>\n            <div style="padding: 5px;">\n            <div class="btn-group" role="group">\n                <button class="btn btn-primary" @click="rotato_90()"><i class="fa fa-repeat" aria-hidden="true"></i></button>\n                <button class="btn btn-primary" @click="zoom_in()"><span class="glyphicon glyphicon-zoom-in" aria-hidden="true"></span></button>\n                <button class="btn btn-primary" @click="zoom_out()"><span class="glyphicon glyphicon-zoom-out" aria-hidden="true"></span></button>\n            </div>\n            <div class="btn-group" role="group">\n                <button class="btn btn-primary" @click="make_sure()"><i class="fa fa-check" aria-hidden="true"></i></button>\n                <button class="btn btn-primary" @click="cancel()"><i class="fa fa-times" aria-hidden="true"></i></button>\n            </div>\n\n\n            </div>\n\n\n        </div>\n    </modal>\n    </div>',
+    template: '<div class="img-crop">\n    <input type=\'file\' @change=\'on_change($event)\'\n            accept=\'image/*\'>\n    <modal v-show=\'cropping\' >\n        <div class="total-wrap flex-v" style="width:80vw;height: 80vh;background-color: white;">\n            <div class="crop-wrap flex-grow">\n                <img class="crop-img" :src="org_img" >\n            </div>\n            <div style="padding: 5px;">\n            <div class="btn-group" role="group">\n                <button class="btn btn-primary" @click="rotato_90()"><i class="fa fa-repeat" aria-hidden="true"></i></button>\n                <button class="btn btn-primary" @click="zoom_in()"><i class="fa fa-search-plus" aria-hidden="true"></i></button>\n                <button class="btn btn-primary" @click="zoom_out()"><i class="fa fa-search-minus" aria-hidden="true"></i></button>\n            </div>\n            <div class="btn-group" role="group">\n                <button class="btn btn-primary" @click="make_sure()"><i class="fa fa-check" aria-hidden="true"></i></button>\n                <button class="btn btn-primary" @click="cancel()"><i class="fa fa-times" aria-hidden="true"></i></button>\n            </div>\n            </div>\n        </div>\n    </modal>\n    </div>',
     props: ['value', 'config'],
     data: function data() {
         var inn_config = {
@@ -1181,7 +1205,7 @@ Vue.component('logo-input', {
 window.fl = fl;
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1242,8 +1266,8 @@ var date_config_set = {
 
 Vue.component('date', {
     //template:'<input type="text" class="form-control">',
-    template: "<span class=\"datetime-picker\">\n                <span class=\"cross\" @click=\"$emit('input','')\">X</span>\n                <input type=\"text\" readonly class=\"form-control\"/>\n                </span>",
-    props: ['value', 'set', 'config'],
+    template: "<span class=\"datetime-picker\">\n                <span class=\"cross\" @click=\"$emit('input','')\">X</span>\n                <input type=\"text\" readonly class=\"form-control\" :placeholder=\"placeholder\"/>\n                </span>",
+    props: ['value', 'set', 'config', 'placeholder'],
     mounted: function mounted() {
         var self = this;
         if (!this.set) {
@@ -1371,7 +1395,7 @@ Vue.component('color', color);
 ex.append_css("<style type=\"text/css\" media=\"screen\">\n    .datetime-picker{\n        position: relative;\n        display: inline-block;\n    }\n    .datetime-picker input[readonly]{\n        background-color: white;\n    }\n\t.datetime-picker .cross{\n\t    display: none;\n\t}\n\t.datetime-picker:hover .cross{\n\t    display: inline-block;\n\t    position: absolute;\n\t    right: 8px;\n\t    top:3px;\n\t    cursor: pointer;\n\t    /*z-index: 10;*/\n\t}\n</style>\n ");
 
 var forignEdit = {
-    template: "<div class=\"forign-key-panel\">\n        <button v-if=\"has_pk()\" @click=\"jump_edit(kw.row[name])\" title=\"{% trans 'edit' %}\">\n            <i class=\"fa fa-pencil-square-o\" aria-hidden=\"true\"></i></button>\n        <button @click=\"jump_edit()\" title=\"{% trans 'new' %}\"><i class=\"fa fa-plus\" aria-hidden=\"true\"></i></button>\n    </div>",
+    template: "<div class=\"forign-key-panel\">\n        <button v-if=\"has_pk()\" @click=\"jump_edit(kw.row[name])\" title=\"edit\">\n            <i class=\"fa fa-pencil-square-o\" aria-hidden=\"true\"></i></button>\n        <button @click=\"jump_edit()\" title=\"create new\"><i class=\"fa fa-plus\" aria-hidden=\"true\"></i></button>\n    </div>",
     props: ['kw', 'name', 'page_name'],
     methods: {
         jump_edit: function jump_edit(pk) {
@@ -1420,7 +1444,7 @@ ex.append_css("\n<style type=\"text/css\">\n    .forign-key-panel{\n        padd
 Vue.component('forign-edit', forignEdit);
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1431,6 +1455,29 @@ Vue.component('forign-edit', forignEdit);
 =========
 link
 =========
+
+利用SessionStorage跳转页面
+===========================
+基本思想：将对象保存在sessionStorage中，切换到其他页面，当完成选择等任务后，再利用history.back()切换回原来的页面。这时将保存的信息恢复回来。
+::
+
+    // origin.html页面
+    // 以window为访问root，将对象的path保存下来。
+    var save_list=['row']
+    url=ex.template('{engine_url}/home.wx',{engine_url:engine_url,})
+    ln.getFromTab(url,save_list)
+
+    //在页面的初始阶段调用:
+    ln.readCache()  // 读取对应自身url的cache，如果有cache则恢复对应window属性。
+                   // 在页面加载后2秒，自动删除 cache 和_rt　值
+
+    // select.html页面
+    // 判断是否是 _pop=1，返回row对象。
+    ln.rt(row)  // 该函数是将结果存在sessionStorage中，以key=_rt存储。
+
+
+以前的SessionStorage
+=========================
 示例::
 
      var director = '{% url 'director' %}'
@@ -1475,42 +1522,125 @@ popUrlListen:
 <-<
  */
 
-var ln = {
+__webpack_require__(14);
 
-    readCache: function readCache(root_obj) {
-        var root_obj = root_obj || window;
-        //if(ex.parseSearch().cache){
-        var cache_obj_str = sessionStorage.getItem(location.href);
-        sessionStorage.removeItem(location.href);
+var ln = {
+    history_handle: function history_handle(obj) {
+        this._his_handler = obj.handler;
+        window.addEventListener('popstate', function (e) {
+            if (e.state) {
+                obj.handler(e.state);
+            } else {
+                history.back();
+            }
+        }, false);
+
+        if (obj.init && !history.state) {
+            history.pushState(obj.init, '');
+        }
+    },
+    pushState: function pushState(state, url) {
+        url = url || '';
+        history.pushState(state, '', url);
+        this._his_handler(state);
+    },
+
+    getFromTab: function getFromTab(url, cache_name_list, rt_obj_path) {
+
+        cache_name_list = cache_name_list || [];
+        var cache_obj = {
+            _scroll: { x: scrollX, y: scrollY },
+            name_list: cache_name_list,
+            obj_list: [],
+            rt_obj_path: rt_obj_path
+        };
+        ex.each(cache_name_list, function (name) {
+            cache_obj.obj_list.push(ex.access(window, name));
+        });
+
+        sessionStorage.setItem('_stack_' + location.href, JSON.stringify(cache_obj));
+        location = ex.appendSearch(url, { _pop: 1 });
+    },
+    try_rt: function try_rt(value) {
+        var search_args = ex.parseSearch();
+        if (search_args._pop) {
+            if (search_args._frame) {
+                if (parent.__fram_back) {
+                    parent.__fram_back(value);
+                }
+            } else if (window.opener) {
+                this.rtWin(value);
+            } else {
+                sessionStorage.setItem('_rt', JSON.stringify(value));
+                history.back();
+            }
+            return true;
+        } else {
+            return false;
+        }
+    },
+
+    readCache: function readCache() {
+        var cache_obj_str = sessionStorage.getItem('_stack_' + location.href);
+
         if (cache_obj_str) {
             var cache_obj = JSON.parse(cache_obj_str);
-            for (var key in cache_obj.window) {
-                ex.set(root_obj, key, cache_obj.window[key]);
+
+            var name_list = cache_obj.name_list;
+            var obj_list = cache_obj.obj_list;
+            for (var i = 0; i < name_list.length; i++) {
+                ex.set(window, name_list[i], obj_list[i]);
             }
 
-            var cache_meta = cache_obj.cache_meta;
-            if (cache_meta && cache_meta.rt_key) {
-                for (var key in cache_meta.rt_key) {
-                    var value = sessionStorage.getItem(key);
-                    if (value) {
-                        var targ_key = cache_meta.rt_key[key];
-                        sessionStorage.removeItem(key);
-                        ex.set(root_obj, targ_key, value);
-                    }
+            // 将返回值赋予对应的window对象
+            var rt_value = sessionStorage.getItem('_rt');
+
+            if (rt_value) {
+                if (cache_obj.rt_obj_path) {
+                    ex.set(window, cache_obj.rt_obj_path, JSON.parse(rt_value));
                 }
             }
-            onload = function onload() {
-                setTimeout(function () {
-                    console.log(cache_obj._scroll.y);
-                    window.scrollTo(cache_obj._scroll.x, cache_obj._scroll.y);
-                }, 10);
-            };
-            $(function () {
-                //setTimeout(function(){
-                //    console.log(cache_obj._scroll.y)
-                //    window.scrollTo(cache_obj._scroll.x,cache_obj._scroll.y)
-                //},3000)
 
+            //var cache_meta=cache_obj.cache_meta
+            //if(cache_meta && cache_meta.rt_key){
+            //    for(var key in cache_meta.rt_key){
+            //        var value = sessionStorage.getItem(key)
+            //        if(value){
+            //            var targ_key=cache_meta.rt_key[key]
+            //            sessionStorage.removeItem(key)
+            //            ex.set(root_obj,targ_key,value)
+            //        }
+            //
+            //    }
+            //}
+
+            // 尝试滚动到原来的位置
+            if (cache_obj._scroll) {
+                $(function () {
+                    setTimeout(function () {
+                        window.scrollTo(cache_obj._scroll.x, cache_obj._scroll.y);
+                    }, 10);
+                });
+            }
+            //onload=function(){
+            //    setTimeout(function(){
+            //        console.log(cache_obj._scroll.y)
+            //        window.scrollTo(cache_obj._scroll.x,cache_obj._scroll.y)
+            //    },10)
+            //}
+            //$(function(){
+            //setTimeout(function(){
+            //    console.log(cache_obj._scroll.y)
+            //    window.scrollTo(cache_obj._scroll.x,cache_obj._scroll.y)
+            //},3000)
+
+            //})
+
+            $(function () {
+                setTimeout(function () {
+                    sessionStorage.removeItem('_stack_' + location.href);
+                    sessionStorage.removeItem('_rt');
+                }, 2000);
             });
         }
         //}
@@ -1561,6 +1691,32 @@ var ln = {
                 //e.state就是pushState中保存的Data，我们只需要将相应的数据读取下来即可
             }
         });
+    },
+    openFrame: function openFrame(url, callback, css) {
+        var self = this;
+        if (!window.__load_frame) {
+            $('body').append('<div id="_load_frame_wrap"><div class="imiddle popframe"><iframe id="_load_frame" frameborder="0" width="100%" height="100%"></iframe></div></div>');
+            window.__load_frame = true;
+        }
+        var url = ex.appendSearch(url, { _pop: 1, _frame: 1 });
+        $('#_load_frame').attr('src', url);
+        if (!callback) {
+            window.__fram_back = null;
+        } else {
+            window.__fram_back = function (v) {
+                callback(v);
+                self.closeFrame();
+            };
+        }
+
+        if (css) {
+            $('.popframe').css(css);
+        }
+        $('#_load_frame_wrap').show();
+    },
+    closeFrame: function closeFrame() {
+        $('#_load_frame').attr('src', '');
+        $('#_load_frame_wrap').hide();
     }
 
 };
@@ -1568,7 +1724,7 @@ var ln = {
 window.ln = ln;
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1663,13 +1819,13 @@ Vue.component('tow-col-sel', {
 });
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(10);
+var content = __webpack_require__(12);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(1)(content, {});
@@ -1689,7 +1845,7 @@ if(false) {
 }
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(0)();
@@ -1697,13 +1853,27 @@ exports = module.exports = __webpack_require__(0)();
 
 
 // module
-exports.push([module.i, ".img-uploader input {\n  display: none; }\n\n.up_wrap {\n  position: relative;\n  text-align: center;\n  border: 2px dashed #ccc;\n  background: #FDFDFD;\n  width: 300px; }\n\n.closeDiv {\n  width: 100%;\n  height: 100%;\n  position: absolute;\n  top: 0;\n  left: 0;\n  background-color: #ffffff; }\n\n.choose {\n  display: inline-block;\n  text-decoration: none;\n  padding: 5px;\n  border: 1px solid #0092F2;\n  border-radius: 4px;\n  font-size: 14px;\n  color: #0092F2;\n  cursor: pointer; }\n\n.choose:hover, .choose:active {\n  text-decoration: none;\n  color: #0092F2; }\n\n.close {\n  position: absolute;\n  top: 5px;\n  right: 10px;\n  cursor: pointer;\n  font-size: 14px;\n  color: #242424; }\n\n.logoImg {\n  max-height: 100px !important;\n  vertical-align: middle;\n  margin-top: 5px; }\n\n.img-crop .total-wrap {\n  padding: 30px; }\n\n.img-crop .crop-wrap {\n  max-width: 100%;\n  max-height: 90%;\n  overflow: hidden; }\n\n.img-crop .crop-img {\n  max-width: 100%;\n  max-height: 100%; }\n", ""]);
+exports.push([module.i, ".img-uploader input {\n  display: none; }\n\n.up_wrap {\n  position: relative;\n  text-align: center;\n  border: 2px dashed #ccc;\n  background: #FDFDFD;\n  width: 200px; }\n\n.closeDiv {\n  width: 100%;\n  height: 100%;\n  position: absolute;\n  top: 0;\n  left: 0;\n  background-color: #ffffff; }\n\n.choose {\n  display: inline-block;\n  text-decoration: none;\n  padding: 5px;\n  border: 1px solid #0092F2;\n  border-radius: 4px;\n  font-size: 14px;\n  color: #0092F2;\n  cursor: pointer; }\n\n.choose:hover, .choose:active {\n  text-decoration: none;\n  color: #0092F2; }\n\n.close {\n  position: absolute;\n  top: 5px;\n  right: 10px;\n  cursor: pointer;\n  font-size: 14px;\n  color: #242424; }\n\n.logoImg {\n  max-height: 100px !important;\n  vertical-align: middle;\n  margin-top: 5px; }\n\n.img-crop .total-wrap {\n  padding: 30px; }\n\n.img-crop .crop-wrap {\n  max-width: 100%;\n  max-height: 90%;\n  overflow: hidden; }\n\n.img-crop .crop-img {\n  max-width: 100%;\n  max-height: 100%; }\n", ""]);
 
 // exports
 
 
 /***/ }),
-/* 10 */
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(0)();
+// imports
+
+
+// module
+exports.push([module.i, "@charset \"UTF-8\";\n#_load_frame_wrap {\n  position: fixed;\n  top: 0;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  display: none;\n  z-index: 1000;\n  background: rgba(88, 88, 88, 0.2); }\n\n.imiddle {\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n  -ms-transform: translate(-50%, -50%);\n  /* IE 9 */\n  -moz-transform: translate(-50%, -50%);\n  /* Firefox */\n  -webkit-transform: translate(-50%, -50%);\n  /* Safari 和 Chrome */\n  -o-transform: translate(-50%, -50%);\n  text-align: center;\n  /*display: table;*/\n  z-index: 10000; }\n\n.popframe {\n  width: 500px;\n  height: 400px; }\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(0)();
@@ -1717,13 +1887,13 @@ exports.push([module.i, ".error {\n  color: red; }\n\n.field-panel {\n  backgrou
 
 
 /***/ }),
-/* 11 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(9);
+var content = __webpack_require__(10);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(1)(content, {});
@@ -1743,7 +1913,33 @@ if(false) {
 }
 
 /***/ }),
-/* 12 */
+/* 14 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(11);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// add the styles to the DOM
+var update = __webpack_require__(1)(content, {});
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/sass-loader/lib/loader.js!./link.scss", function() {
+			var newContent = require("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/sass-loader/lib/loader.js!./link.scss");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1756,7 +1952,7 @@ exports.merge = merge;
 
 var _ajax_fun = __webpack_require__(2);
 
-var _file = __webpack_require__(4);
+var _file = __webpack_require__(5);
 
 var f = _interopRequireWildcard(_file);
 
@@ -1764,23 +1960,28 @@ var _ckeditor = __webpack_require__(3);
 
 var ck = _interopRequireWildcard(_ckeditor);
 
-var _multi_sel = __webpack_require__(7);
+var _multi_sel = __webpack_require__(8);
 
 var multi = _interopRequireWildcard(_multi_sel);
 
-var _inputs = __webpack_require__(5);
+var _inputs = __webpack_require__(6);
 
 var inputs = _interopRequireWildcard(_inputs);
 
-var _link = __webpack_require__(6);
+var _link = __webpack_require__(7);
 
 var ln = _interopRequireWildcard(_link);
+
+var _field_base = __webpack_require__(4);
+
+var fb = _interopRequireWildcard(_field_base);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 //import * as js from './adapt.js'
 
 
+__webpack_require__(9);
 /*
 >->front/fields.rst>
 =========
@@ -1829,7 +2030,7 @@ $.post('',JSON.stringify(post_data),function (data) {
 
 //import {use_color} from '../dosome/color.js'
 //import {load_js,load_css} from '../dosome/pkg.js'
-__webpack_require__(8);
+
 
 (0, _ajax_fun.hook_ajax_msg)();
 (0, _ajax_fun.hook_ajax_csrf)();
@@ -2059,29 +2260,32 @@ var field_fun = {
 				errors: {}
 			},
 			menu: menu,
-
+			search_args: ex.parseSearch(),
 			can_add: can_add,
 			can_del: can_del,
-			can_log: can_log
+			can_log: can_log,
+			can_edit: can_edit
 		};
 	},
 	methods: {
+		after_sub: function after_sub() {
+			location = document.referrer;
+		},
 		submit: function submit() {
 			var self = this;
 			(0, _ajax_fun.show_upload)();
-			var search = ex.parseSearch(); //parseSearch(location.search)
+			var search = ex.parseSearch();
 			var post_data = [{ fun: 'save', row: this.kw.row }];
 			ex.post('', JSON.stringify(post_data), function (resp) {
+				(0, _ajax_fun.hide_upload)(500);
 				if (resp.save.errors) {
 					self.kw.errors = resp.save.errors;
-					(0, _ajax_fun.hide_upload)();
 				} else if (search._pop == 1) {
-					window.ln.rtWin({ row: resp.save.row });
+					window.ln.try_rt({ row: resp.save.row });
 				} else if (search.next) {
-
 					location = decodeURIComponent(search.next);
 				} else {
-					(0, _ajax_fun.hide_upload)(1000);
+					self.after_sub();
 				}
 			});
 		},
@@ -2140,7 +2344,7 @@ var fieldset_fun = {
 			fieldset: fieldset,
 			namelist: namelist,
 			menu: menu,
-
+			search_args: ex.parseSearch(),
 			can_add: can_add,
 			can_del: can_del,
 			can_log: can_log

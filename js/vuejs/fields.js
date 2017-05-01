@@ -399,6 +399,7 @@ var field_fun={
 			can_add:can_add,
 			can_del:can_del,
 			can_log:can_log,
+			can_edit:can_edit,
 		}
 	},
 	methods:{

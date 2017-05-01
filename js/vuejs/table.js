@@ -323,6 +323,7 @@ var table_fun={
 
               can_add:can_add,
               can_del:can_del,
+          can_edit:can_edit,
 
               search_args:ex.parseSearch(),
               ex:ex,

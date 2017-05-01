@@ -18,9 +18,10 @@ Vue.component('com-filter',{
     template:ex.template(`
     <form class='com-filter' autocomplete="on" v-if='search_tip || heads.length>0'>
             <input v-if='search_tip' type="text" name="_q" v-model='search._q' :placeholder='search_tip' class='form-control'/>
-            <select v-if="filter.options"  v-for='filter in heads' v-model='search[filter.name]' class='form-control'>
+            <select v-if="filter.options"  v-for='filter in heads'
+                v-model='search[filter.name]' class='form-control'>
                 <option :value="undefined" v-text='filter.label'></option>
-                <option value="">----</option>
+                <option value="">-------</option>
                 <option v-for='option in filter.options' :value="option.value" v-text='option.label'></option>
             </select>
             <div  v-for='filter in heads' v-if="['time','date','month'].indexOf(filter.type)!=-1" class="date-filter flex">

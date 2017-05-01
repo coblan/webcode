@@ -74,6 +74,62 @@
 	MIT License http://www.opensource.org/licenses/mit-license.php
 	Author Tobias Koppers @sokra
 */
+// css base code, injected by the css-loader
+module.exports = function() {
+	var list = [];
+
+	// return the list of modules as css string
+	list.toString = function toString() {
+		var result = [];
+		for(var i = 0; i < this.length; i++) {
+			var item = this[i];
+			if(item[2]) {
+				result.push("@media " + item[2] + "{" + item[1] + "}");
+			} else {
+				result.push(item[1]);
+			}
+		}
+		return result.join("");
+	};
+
+	// import a list of modules into the list
+	list.i = function(modules, mediaQuery) {
+		if(typeof modules === "string")
+			modules = [[null, modules, ""]];
+		var alreadyImportedModules = {};
+		for(var i = 0; i < this.length; i++) {
+			var id = this[i][0];
+			if(typeof id === "number")
+				alreadyImportedModules[id] = true;
+		}
+		for(i = 0; i < modules.length; i++) {
+			var item = modules[i];
+			// skip already imported module
+			// this implementation is not 100% perfect for weird media query combinations
+			//  when a module is imported multiple times with different media queries.
+			//  I hope this will never occur (Hey this way we have smaller bundles)
+			if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
+				if(mediaQuery && !item[2]) {
+					item[2] = mediaQuery;
+				} else if(mediaQuery) {
+					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
+				}
+				list.push(item);
+			}
+		}
+	};
+	return list;
+};
+
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports) {
+
+/*
+	MIT License http://www.opensource.org/licenses/mit-license.php
+	Author Tobias Koppers @sokra
+*/
 var stylesInDom = {},
 	memoize = function(fn) {
 		var memo;
@@ -319,89 +375,7 @@ function updateLink(linkElement, obj) {
 
 
 /***/ }),
-/* 1 */
-/***/ (function(module, exports) {
-
-/*
-	MIT License http://www.opensource.org/licenses/mit-license.php
-	Author Tobias Koppers @sokra
-*/
-// css base code, injected by the css-loader
-module.exports = function() {
-	var list = [];
-
-	// return the list of modules as css string
-	list.toString = function toString() {
-		var result = [];
-		for(var i = 0; i < this.length; i++) {
-			var item = this[i];
-			if(item[2]) {
-				result.push("@media " + item[2] + "{" + item[1] + "}");
-			} else {
-				result.push(item[1]);
-			}
-		}
-		return result.join("");
-	};
-
-	// import a list of modules into the list
-	list.i = function(modules, mediaQuery) {
-		if(typeof modules === "string")
-			modules = [[null, modules, ""]];
-		var alreadyImportedModules = {};
-		for(var i = 0; i < this.length; i++) {
-			var id = this[i][0];
-			if(typeof id === "number")
-				alreadyImportedModules[id] = true;
-		}
-		for(i = 0; i < modules.length; i++) {
-			var item = modules[i];
-			// skip already imported module
-			// this implementation is not 100% perfect for weird media query combinations
-			//  when a module is imported multiple times with different media queries.
-			//  I hope this will never occur (Hey this way we have smaller bundles)
-			if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
-				if(mediaQuery && !item[2]) {
-					item[2] = mediaQuery;
-				} else if(mediaQuery) {
-					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
-				}
-				list.push(item);
-			}
-		}
-	};
-	return list;
-};
-
-
-/***/ }),
 /* 2 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(9);
-if(typeof content === 'string') content = [[module.i, content, '']];
-// add the styles to the DOM
-var update = __webpack_require__(0)(content, {});
-if(content.locals) module.exports = content.locals;
-// Hot Module Replacement
-if(false) {
-	// When the styles change, update the <style> tags
-	if(!content.locals) {
-		module.hot.accept("!!./../../../node_modules/.0.26.1@css-loader/index.js!./../../../node_modules/.6.0.0@sass-loader/lib/loader.js!./fields.scss", function() {
-			var newContent = require("!!./../../../node_modules/.0.26.1@css-loader/index.js!./../../../node_modules/.6.0.0@sass-loader/lib/loader.js!./fields.scss");
-			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-			update(newContent);
-		});
-	}
-	// When the module is disposed, remove the <style> tags
-	module.hot.dispose(function() { update(); });
-}
-
-/***/ }),
-/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -488,10 +462,11 @@ var lib = window.lib || {};
 function def_proc_error(jqxhr) {
 	if (!window.iclosed) {
 		if (jqxhr.status != 0) {
-			alert('server has error, error code is ' + jqxhr.status);
+			alert(jqxhr.statusText + ':code is;' + jqxhr.status + jqxhr.responseText);
 		} else {
 			alert('maybe server offline,error code is ' + jqxhr.status);
 		}
+		hide_upload();
 	}
 }
 
@@ -583,248 +558,8 @@ if (!window.__uploading_mark) {
 }
 
 /***/ }),
+/* 3 */,
 /* 4 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-/**
- * Created by heyulin on 2017/1/24.
- *
- >->front/input.rst>
- =======
- inputs
- =======
-
- date
- ========
- ::
-
- <date v-model='variable'></date>  // 选择默认set=date ,即选择日期
-
- <date v-model='variable' set='month'></date> // 选择 set=month ,即选择月份
-
- <date v-model='variable' set='month' :config='{}'></date>  //  config 是自定义的配置对象，具体需要参加帮助文件
-
- datetime
- ===========
- ::
-
- <datetime v-model='variable' :config='{}'></datetime> // 选择日期和时间
-
- color
- ======
-
- forign-edit
- ============
- 示例::
-
- <forign-edit :kw="person.emp_info" name="user" page_name="user" ></forign-edit>
-
- <-<
- */
-
-var date_config_set = {
-    date: {
-        language: "zh-CN",
-        format: "yyyy-mm-dd",
-        autoclose: true,
-        todayHighlight: true
-    },
-    month: {
-        language: "zh-CN",
-        format: "yyyy-mm",
-        startView: "months",
-        minViewMode: "months",
-        autoclose: true
-
-    }
-};
-
-var com_data = {
-    //template:'<input type="text" class="form-control">',
-    template: "<span class=\"datetime-picker\">\n                <input type=\"text\"  class=\"weui-input\" placeholder=\"\u70B9\u51FB\u8F93\u5165\u65E5\u671F\" readonly/>\n                </span>",
-    props: ['value', 'set', 'config'],
-    mounted: function mounted() {
-        var self = this;
-        if (!this.set) {
-            var def_conf = date_config_set.date;
-        } else {
-            var def_conf = date_config_set[this.set];
-        }
-        if (this.config) {
-            ex.assign(def_conf, this.config);
-        }
-        self.input = $(this.$el).find('input');
-
-        ex.load_css('//cdn.bootcss.com/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker.min.css');
-
-        ex.load_js('//cdn.bootcss.com/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.min.js', function () {
-            ex.load_js('//cdn.bootcss.com/bootstrap-datepicker/1.6.4/locales/bootstrap-datepicker.zh-CN.min.js', function () {
-                self.input.datepicker(def_conf).on('changeDate', function (e) {
-                    self.$emit('input', self.input.val());
-                });
-                // if has init value,then init it
-                if (self.value) {
-                    self.input.datepicker('update', self.value);
-                    self.input.val(self.value);
-                }
-            });
-        });
-    },
-    methods: {
-        click_input: function click_input() {
-            this.input.focus();
-        }
-    },
-    watch: {
-        value: function value(n) {
-            this.input.datepicker('update', n);
-            this.input.val(n);
-        }
-    }
-};
-
-Vue.component('date', com_data);
-
-Vue.component('datetime', {
-    //data:function(){
-    //    return {
-    //        input_value:'',
-    //    }
-    //},
-    //template:'<input type="text" class="form-control">',
-    template: "<span class=\"datetime-picker\">\n                <span class=\"cross\" @click=\"$emit('input','')\">X</span>\n                <input type=\"text\" readonly/>\n                </span>",
-    props: ['value', 'config'],
-    mounted: function mounted() {
-        var self = this;
-        var def_conf = {
-            language: "zh-CN",
-            format: "yyyy-mm-dd hh:ii",
-            autoclose: true,
-            todayHighlight: true
-        };
-        if (self.config) {
-            ex.assign(def_conf, this.config);
-        }
-        self.input = $(this.$el).find('input');
-
-        ex.load_css('https://cdn.bootcss.com/smalot-bootstrap-datetimepicker/2.4.3/css/bootstrap-datetimepicker.min.css');
-        ex.load_js('https://cdn.bootcss.com/moment.js/2.17.1/moment.min.js');
-        ex.load_js('https://cdn.bootcss.com/smalot-bootstrap-datetimepicker/2.4.3/js/bootstrap-datetimepicker.min.js', function () {
-
-            self.input.datetimepicker(def_conf).on('changeDate', function (e) {
-                self.$emit('input', self.input.val());
-            });
-
-            // if has init value,then init it
-            if (self.value) {
-                self.input.datepicker('update', self.value);
-                self.input.val(self.value);
-            }
-        });
-    },
-
-    watch: {
-        value: function value(n) {
-            this.input.val(n);
-            this.input.val(n);
-        }
-    }
-});
-
-var color = {
-    props: ['value'],
-    template: "<input type=\"text\">",
-    methods: {
-        init_and_listen: function init_and_listen() {
-            var self = this;
-            Vue.nextTick(function () {
-                $(self.$el).spectrum({
-                    color: self.value,
-                    showInitial: true,
-                    showInput: true,
-                    preferredFormat: "name",
-                    change: function change(color) {
-                        self.src_color = color.toHexString();
-                        self.$emit('input', self.src_color);
-                    }
-                });
-            });
-        }
-    },
-    watch: {
-        value: function value(_value) {
-            if (this.src_color != _value) {
-                this.init_and_listen();
-            }
-        }
-    },
-    mounted: function mounted() {
-        var self = this;
-        ex.load_css('https://cdn.bootcss.com/spectrum/1.8.0/spectrum.min.css');
-        ex.load_js('https://cdn.bootcss.com/spectrum/1.8.0/spectrum.min.js', function () {
-            self.init_and_listen();
-        });
-    }
-};
-
-Vue.component('color', color);
-
-ex.append_css("<style type=\"text/css\" media=\"screen\">\n    .datetime-picker{\n        position: relative;\n        display: inline-block;\n    }\n    .datetime-picker input[readonly]{\n        background-color: white;\n    }\n\t.datetime-picker .cross{\n\t    display: none;\n\t}\n\t.datetime-picker:hover .cross{\n\t    display: inline-block;\n\t    position: absolute;\n\t    right: 8px;\n\t    top:3px;\n\t    cursor: pointer;\n\t    /*z-index: 10;*/\n\t}\n</style>\n ");
-
-var forignEdit = {
-    template: "<div class=\"forign-key-panel\">\n        <span  @click=\"jump_edit(kw.row[name])\" style=\"width: 3em;height: 1.5em;\">\n            <i class=\"fa fa-pencil-square-o\" aria-hidden=\"true\"></i></span>\n        <!--<button @click=\"jump_edit()\" title=\"{% trans 'new' %}\"><i class=\"fa fa-plus\" aria-hidden=\"true\"></i></button>-->\n    </div>",
-    props: ['kw', 'name', 'page_name'],
-    methods: {
-        jump_edit: function jump_edit(pk) {
-            var name = this.name;
-            var kw = this.kw;
-            var page_name = this.page_name || this.name;
-            var options = ex.findone(kw.heads, { name: name }).options;
-            var row = kw.row;
-            var pk = pk || '';
-
-            var url = ex.template('{engine_url}/{page_name}.edit?pk={pk}', {
-                engine_url: engine_url,
-                page_name: page_name,
-                pk: pk
-            });
-            ln.openFrame(url, function (resp) {
-                if (resp.del_rows) {
-                    ex.remove(options, function (option) {
-                        return ex.isin(option, resp.del_rows, function (op, del_row) {
-                            return op.value == del_row.pk;
-                        });
-                    });
-                } else if (resp.row) {
-                    if (pk) {
-                        var option = ex.findone(options, { value: pk });
-                        option.label = resp.row._label;
-                    } else {
-                        options.push({ label: resp.row._label, value: resp.row.pk });
-                        row[name] = resp.row.pk;
-                    }
-                }
-            }, { width: '100vw', height: '100vh' });
-        },
-        has_pk: function has_pk() {
-            if (this.kw.row[this.name]) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-    }
-};
-
-ex.append_css("\n<style type=\"text/css\">\n    .forign-key-panel{\n        padding: 6px;\n    }\n</style>");
-
-Vue.component('forign-edit', forignEdit);
-
-/***/ }),
-/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -928,7 +663,7 @@ img-uploador
 <<<<
 */
 
-__webpack_require__(7);
+__webpack_require__(10);
 
 var fl = {
     read: function read(file, callback) {
@@ -1116,7 +851,7 @@ Vue.component('img-uploador', img_uploader);
 ==============
  img_crop是一种input
 
-*  <img-crop v-model='xxx' :config='{aspectRatio: 8 / 10}'></img-crop>
+    <img-crop v-model='xxx' :config='{aspectRatio: 8 / 10}'></img-crop>
 *
 *  上传:
 *  ======
@@ -1126,7 +861,7 @@ Vue.component('img-uploador', img_uploader);
 * */
 
 var img_crop = {
-    template: '<div class="img-crop">\n    <input type=\'file\' @change=\'on_change($event)\'\n            accept=\'image/*\'>\n    <modal v-show=\'cropping\' >\n        <div class="total-wrap flex-v" style="width:80vw;height: 80vh;background-color: white;">\n            <div class="crop-wrap flex-grow">\n                <img class="crop-img" :src="org_img" >\n            </div>\n            <div style="padding: 5px;">\n            <div class="btn-group" role="group">\n                <button class="btn btn-primary" @click="rotato_90()"><i class="fa fa-repeat" aria-hidden="true"></i></button>\n                <button class="btn btn-primary" @click="zoom_in()"><i class="fa fa-search-plus" aria-hidden="true"></i></button>\n                <button class="btn btn-primary" @click="zoom_out()"><i class="fa fa-search-minus" aria-hidden="true"></i></button>\n            </div>\n            <div class="btn-group" role="group">\n                <button class="btn btn-primary" @click="make_sure()"><i class="fa fa-check" aria-hidden="true"></i></button>\n                <button class="btn btn-primary" @click="cancel()"><i class="fa fa-times" aria-hidden="true"></i></button>\n            </div>\n\n\n            </div>\n\n\n        </div>\n    </modal>\n    </div>',
+    template: '<div class="img-crop">\n    <input type=\'file\' @change=\'on_change($event)\'\n            accept=\'image/*\'>\n    <modal v-show=\'cropping\' >\n        <div class="total-wrap flex-v" style="width:80vw;height: 80vh;background-color: white;">\n            <div class="crop-wrap flex-grow">\n                <img class="crop-img" :src="org_img" >\n            </div>\n            <div style="padding: 5px;">\n            <div class="btn-group" role="group">\n                <button class="btn btn-primary" @click="rotato_90()"><i class="fa fa-repeat" aria-hidden="true"></i></button>\n                <button class="btn btn-primary" @click="zoom_in()"><i class="fa fa-search-plus" aria-hidden="true"></i></button>\n                <button class="btn btn-primary" @click="zoom_out()"><i class="fa fa-search-minus" aria-hidden="true"></i></button>\n            </div>\n            <div class="btn-group" role="group">\n                <button class="btn btn-primary" @click="make_sure()"><i class="fa fa-check" aria-hidden="true"></i></button>\n                <button class="btn btn-primary" @click="cancel()"><i class="fa fa-times" aria-hidden="true"></i></button>\n            </div>\n            </div>\n        </div>\n    </modal>\n    </div>',
     props: ['value', 'config'],
     data: function data() {
         var inn_config = {
@@ -1306,7 +1041,7 @@ Vue.component('logo-input', {
 window.fl = fl;
 
 /***/ }),
-/* 6 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1384,7 +1119,7 @@ popUrlListen:
 <-<
  */
 
-__webpack_require__(8);
+__webpack_require__(11);
 
 var ln = {
     history_handle: function history_handle(obj) {
@@ -1586,76 +1321,50 @@ var ln = {
 window.ln = ln;
 
 /***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(7);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// add the styles to the DOM
+var update = __webpack_require__(1)(content, {});
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/sass-loader/lib/loader.js!./fields.scss", function() {
+			var newContent = require("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/sass-loader/lib/loader.js!./fields.scss");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
 /* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(10);
-if(typeof content === 'string') content = [[module.i, content, '']];
-// add the styles to the DOM
-var update = __webpack_require__(0)(content, {});
-if(content.locals) module.exports = content.locals;
-// Hot Module Replacement
-if(false) {
-	// When the styles change, update the <style> tags
-	if(!content.locals) {
-		module.hot.accept("!!./../../../node_modules/.0.26.1@css-loader/index.js!./../../../node_modules/.6.0.0@sass-loader/lib/loader.js!./file.scss", function() {
-			var newContent = require("!!./../../../node_modules/.0.26.1@css-loader/index.js!./../../../node_modules/.6.0.0@sass-loader/lib/loader.js!./file.scss");
-			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-			update(newContent);
-		});
-	}
-	// When the module is disposed, remove the <style> tags
-	module.hot.dispose(function() { update(); });
-}
-
-/***/ }),
-/* 8 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(11);
-if(typeof content === 'string') content = [[module.i, content, '']];
-// add the styles to the DOM
-var update = __webpack_require__(0)(content, {});
-if(content.locals) module.exports = content.locals;
-// Hot Module Replacement
-if(false) {
-	// When the styles change, update the <style> tags
-	if(!content.locals) {
-		module.hot.accept("!!./../../../node_modules/.0.26.1@css-loader/index.js!./../../../node_modules/.6.0.0@sass-loader/lib/loader.js!./link.scss", function() {
-			var newContent = require("!!./../../../node_modules/.0.26.1@css-loader/index.js!./../../../node_modules/.6.0.0@sass-loader/lib/loader.js!./link.scss");
-			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-			update(newContent);
-		});
-	}
-	// When the module is disposed, remove the <style> tags
-	module.hot.dispose(function() { update(); });
-}
-
-/***/ }),
-/* 9 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(1)();
+exports = module.exports = __webpack_require__(0)();
 // imports
 
 
 // module
-exports.push([module.i, ".form-pad {\n  background-color: white;\n  padding: 2em 1em; }\n  .form-pad .field {\n    display: flex;\n    margin-top: 2em; }\n  .form-pad .field label {\n    width: 80px; }\n  .form-pad .field .bd {\n    flex-grow: 1; }\n", ""]);
+exports.push([module.i, ".form-pad {\n  background-color: white;\n  padding: 2em 1em; }\n  .form-pad .field {\n    display: flex;\n    margin-top: 2em; }\n  .form-pad .field label {\n    width: 80px; }\n  .form-pad .field .bd {\n    flex-grow: 1; }\n\n.help_text {\n  color: #a4a1a5;\n  font-style: italic;\n  font-size: 0.8em; }\n", ""]);
 
 // exports
 
 
 /***/ }),
-/* 10 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(1)();
+exports = module.exports = __webpack_require__(0)();
 // imports
 
 
@@ -1666,10 +1375,10 @@ exports.push([module.i, ".img-uploader input {\n  display: none; }\n\n.up_wrap {
 
 
 /***/ }),
-/* 11 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(1)();
+exports = module.exports = __webpack_require__(0)();
 // imports
 
 
@@ -1678,6 +1387,58 @@ exports.push([module.i, "@charset \"UTF-8\";\n#_load_frame_wrap {\n  position: f
 
 // exports
 
+
+/***/ }),
+/* 10 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(8);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// add the styles to the DOM
+var update = __webpack_require__(1)(content, {});
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/sass-loader/lib/loader.js!./file.scss", function() {
+			var newContent = require("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/sass-loader/lib/loader.js!./file.scss");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(9);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// add the styles to the DOM
+var update = __webpack_require__(1)(content, {});
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/sass-loader/lib/loader.js!./link.scss", function() {
+			var newContent = require("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/sass-loader/lib/loader.js!./link.scss");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
 
 /***/ }),
 /* 12 */
@@ -1691,17 +1452,17 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.merge = merge;
 
-var _ajax_fun = __webpack_require__(3);
+var _ajax_fun = __webpack_require__(2);
 
-var _file = __webpack_require__(5);
+var _file = __webpack_require__(4);
 
 var f = _interopRequireWildcard(_file);
 
-var _inputs = __webpack_require__(4);
+var _inputs = __webpack_require__(13);
 
 var inputs = _interopRequireWildcard(_inputs);
 
-var _link = __webpack_require__(6);
+var _link = __webpack_require__(5);
 
 var ln = _interopRequireWildcard(_link);
 
@@ -1761,7 +1522,7 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 //import {use_color} from '../dosome/color.js'
 //import {load_js,load_css} from '../dosome/pkg.js'
-__webpack_require__(2);
+__webpack_require__(6);
 
 (0, _ajax_fun.hook_ajax_msg)();
 (0, _ajax_fun.hook_ajax_csrf)();
@@ -1821,8 +1582,8 @@ var field_base = {
         },
         blocktext: {
             props: ['name', 'row', 'kw'],
-            template: '<div>\n            <span v-if=\'kw.readonly\' v-text=\'row[name]\'></span>\n            <el-input type="textarea" v-else  :autosize="{minRows: 2}" :id="\'id_\'+name" v-model="row[name]" :placeholder="kw.placeholder"></el-input>\n            </div>'
-        },
+            template: '<div>\n            <span v-if=\'kw.readonly\' v-text=\'row[name]\'></span>\n            <el-input type="textarea" v-else :autosize="{minRows: 2}"  :id="\'id_\'+name" v-model="row[name]" :placeholder="kw.placeholder"></el-input>\n            </div>'
+        }, //
         color: {
             props: ['name', 'row', 'kw'],
             template: '<input type="text" v-model="row[name]" :id="\'id_\'+name" :readonly=\'kw.readonly\'>',
@@ -1909,9 +1670,11 @@ var field_base = {
                 }
             }
         },
+        //<input type="checkbox" :id="'id_'+name" v-model='row[name]' :disabled="kw.readonly">
+        //<label :for="'id_'+name"><span v-text='kw.label'></span></label>
         bool: {
             props: ['name', 'row', 'kw'],
-            template: '<div class="checkbox">\n\t        <input type="checkbox" :id="\'id_\'+name" v-model=\'row[name]\' :disabled="kw.readonly">\n\t\t\t <label :for="\'id_\'+name"><span v-text=\'kw.label\'></span></label>\n\t\t\t\t\t  </div>'
+            template: '<div class="checkbox">\n            <el-switch :id="\'id_\'+name" v-model=\'row[name]\' :disabled="kw.readonly"\n            on-color="#13ce66"\n             off-color="#ff4949">\n                </el-switch>\n\t\t\t\t\t  </div>'
         },
         date: {
             props: ['name', 'row', 'kw'],
@@ -1939,7 +1702,7 @@ var field = {
         }
     },
     methods: {},
-    template: '<div v-if="head" :class=\'["field",{"error":error_data(head.name)}]\'>\n        <label :for="\'id_\'+name" v-text=\'head.label\'></label>\n        <div class="bd">\n            <component :is=\'head.type\'\n                    :row=\'row\'\n                    :name=\'name\'\n                    :kw=\'head\'>\n             </component>\n            <div v-for=\'error in error_data(name)\' v-text=\'error\' class=\'error\'></div>\n        </div>\n\n    </div>'
+    template: '<div v-if="head" :class=\'["field",{"error":error_data(head.name)}]\'>\n        <label :for="\'id_\'+name" >\n            <span v-text=\'head.label\'></span>\n            <span class="req_star" v-if=\'head.required\'>*</span>\n        </label>\n        <div class="bd">\n            <component :is=\'head.type\'\n                    :row=\'row\'\n                    :name=\'name\'\n                    :kw=\'head\'>\n             </component>\n             <div class="help_text" v-text=\'head.help_text\'></div>\n             <slot></slot>\n            <div v-for=\'error in error_data(name)\' v-text=\'error\' class=\'error\'></div>\n        </div>\n\n    </div>'
 
 };
 
@@ -1978,7 +1741,8 @@ var field_fun = {
             namelist: namelist,
             can_add: can_add,
             can_del: can_del,
-            can_log: can_log
+            can_log: can_log,
+            can_edit: can_edit
         };
     },
     created: function created() {
@@ -2138,6 +1902,245 @@ window.update_vue_obj = update_vue_obj;
 window.show_upload = _ajax_fun.show_upload;
 window.hide_upload = _ajax_fun.hide_upload;
 window.merge = merge;
+
+/***/ }),
+/* 13 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+/**
+ * Created by heyulin on 2017/1/24.
+ *
+>->front/input.rst>
+=======
+inputs
+=======
+
+date
+========
+::
+
+<date v-model='variable'></date>  // 选择默认set=date ,即选择日期
+
+<date v-model='variable' set='month'></date> // 选择 set=month ,即选择月份
+
+<date v-model='variable' set='month' :config='{}'></date>  //  config 是自定义的配置对象，具体需要参加帮助文件
+
+datetime
+===========
+::
+
+<datetime v-model='variable' :config='{}'></datetime> // 选择日期和时间
+
+color
+======
+
+forign-edit
+============
+示例::
+
+    <forign-edit :kw="person.emp_info" name="user" page_name="user" ></forign-edit>
+
+<-<
+ */
+
+var date_config_set = {
+    date: {
+        language: "zh-CN",
+        format: "yyyy-mm-dd",
+        autoclose: true,
+        todayHighlight: true
+    },
+    month: {
+        language: "zh-CN",
+        format: "yyyy-mm",
+        startView: "months",
+        minViewMode: "months",
+        autoclose: true
+
+    }
+};
+
+Vue.component('date', {
+    //template:'<input type="text" class="form-control">',
+    template: "<span class=\"datetime-picker\">\n                <span class=\"cross\" @click=\"$emit('input','')\">X</span>\n                <input type=\"text\" readonly class=\"form-control\" :placeholder=\"placeholder\"/>\n                </span>",
+    props: ['value', 'set', 'config', 'placeholder'],
+    mounted: function mounted() {
+        var self = this;
+        if (!this.set) {
+            var def_conf = date_config_set.date;
+        } else {
+            var def_conf = date_config_set[this.set];
+        }
+        if (this.config) {
+            ex.assign(def_conf, this.config);
+        }
+        self.input = $(this.$el).find('input');
+
+        ex.load_css('//cdn.bootcss.com/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker.min.css');
+
+        ex.load_js('//cdn.bootcss.com/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.min.js', function () {
+            ex.load_js('//cdn.bootcss.com/bootstrap-datepicker/1.6.4/locales/bootstrap-datepicker.zh-CN.min.js', function () {
+                self.input.datepicker(def_conf).on('changeDate', function (e) {
+                    self.$emit('input', self.input.val());
+                });
+                // if has init value,then init it
+                if (self.value) {
+                    self.input.datepicker('update', self.value);
+                    self.input.val(self.value);
+                }
+            });
+        });
+    },
+    methods: {
+        click_input: function click_input() {
+            this.input.focus();
+        }
+    },
+    watch: {
+        value: function value(n) {
+            this.input.datepicker('update', n);
+            this.input.val(n);
+        }
+    }
+});
+
+Vue.component('datetime', {
+    //data:function(){
+    //    return {
+    //        input_value:'',
+    //    }
+    //},
+    //template:'<input type="text" class="form-control">',
+    template: "<span class=\"datetime-picker\">\n                <span class=\"cross\" @click=\"$emit('input','')\">X</span>\n                <input type=\"text\" readonly/>\n                </span>",
+    props: ['value', 'config'],
+    mounted: function mounted() {
+        var self = this;
+        var def_conf = {
+            language: "zh-CN",
+            format: "yyyy-mm-dd hh:ii",
+            autoclose: true,
+            todayHighlight: true
+        };
+        if (self.config) {
+            ex.assign(def_conf, this.config);
+        }
+        self.input = $(this.$el).find('input');
+
+        ex.load_css('https://cdn.bootcss.com/smalot-bootstrap-datetimepicker/2.4.3/css/bootstrap-datetimepicker.min.css');
+        ex.load_js('https://cdn.bootcss.com/moment.js/2.17.1/moment.min.js');
+        ex.load_js('https://cdn.bootcss.com/smalot-bootstrap-datetimepicker/2.4.3/js/bootstrap-datetimepicker.min.js', function () {
+
+            self.input.datetimepicker(def_conf).on('changeDate', function (e) {
+                self.$emit('input', self.input.val());
+            });
+
+            // if has init value,then init it
+            if (self.value) {
+                self.input.datepicker('update', self.value);
+                self.input.val(self.value);
+            }
+        });
+    },
+
+    watch: {
+        value: function value(n) {
+            this.input.val(n);
+            this.input.val(n);
+        }
+    }
+});
+
+var color = {
+    props: ['value'],
+    template: "<input type=\"text\">",
+    methods: {
+        init_and_listen: function init_and_listen() {
+            var self = this;
+            Vue.nextTick(function () {
+                $(self.$el).spectrum({
+                    color: self.value,
+                    showInitial: true,
+                    showInput: true,
+                    preferredFormat: "name",
+                    change: function change(color) {
+                        self.src_color = color.toHexString();
+                        self.$emit('input', self.src_color);
+                    }
+                });
+            });
+        }
+    },
+    watch: {
+        value: function value(_value) {
+            if (this.src_color != _value) {
+                this.init_and_listen();
+            }
+        }
+    },
+    mounted: function mounted() {
+        var self = this;
+        ex.load_css('https://cdn.bootcss.com/spectrum/1.8.0/spectrum.min.css');
+        ex.load_js('https://cdn.bootcss.com/spectrum/1.8.0/spectrum.min.js', function () {
+            self.init_and_listen();
+        });
+    }
+};
+
+Vue.component('color', color);
+
+ex.append_css("<style type=\"text/css\" media=\"screen\">\n    .datetime-picker{\n        position: relative;\n        display: inline-block;\n    }\n    .datetime-picker input[readonly]{\n        background-color: white;\n    }\n\t.datetime-picker .cross{\n\t    display: none;\n\t}\n\t.datetime-picker:hover .cross{\n\t    display: inline-block;\n\t    position: absolute;\n\t    right: 8px;\n\t    top:3px;\n\t    cursor: pointer;\n\t    /*z-index: 10;*/\n\t}\n</style>\n ");
+
+var forignEdit = {
+    template: "<div class=\"forign-key-panel\">\n        <button v-if=\"has_pk()\" @click=\"jump_edit(kw.row[name])\" title=\"edit\">\n            <i class=\"fa fa-pencil-square-o\" aria-hidden=\"true\"></i></button>\n        <button @click=\"jump_edit()\" title=\"create new\"><i class=\"fa fa-plus\" aria-hidden=\"true\"></i></button>\n    </div>",
+    props: ['kw', 'name', 'page_name'],
+    methods: {
+        jump_edit: function jump_edit(pk) {
+            var name = this.name;
+            var kw = this.kw;
+            var page_name = this.page_name || this.name;
+            var options = ex.findone(kw.heads, { name: name }).options;
+            var row = kw.row;
+            var pk = pk || '';
+
+            var url = ex.template('{engine_url}/{page_name}.edit?pk={pk}', {
+                engine_url: engine_url,
+                page_name: page_name,
+                pk: pk
+            });
+            ln.openWin(url, function (resp) {
+                if (resp.del_rows) {
+                    ex.remove(options, function (option) {
+                        return ex.isin(option, resp.del_rows, function (op, del_row) {
+                            return op.value == del_row.pk;
+                        });
+                    });
+                } else if (resp.row) {
+                    if (pk) {
+                        var option = ex.findone(options, { value: pk });
+                        option.label = resp.row._label;
+                    } else {
+                        options.push({ label: resp.row._label, value: resp.row.pk });
+                        row[name] = resp.row.pk;
+                    }
+                }
+            });
+        },
+        has_pk: function has_pk() {
+            if (this.kw.row[this.name]) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+};
+
+ex.append_css("\n<style type=\"text/css\">\n    .forign-key-panel{\n        padding: 6px;\n    }\n</style>");
+
+Vue.component('forign-edit', forignEdit);
 
 /***/ })
 /******/ ]);

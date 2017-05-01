@@ -305,7 +305,7 @@ Vue.component('img-uploador',img_uploader)
 ==============
  img_crop是一种input
 
-*  <img-crop v-model='xxx' :config='{aspectRatio: 8 / 10}'></img-crop>
+    <img-crop v-model='xxx' :config='{aspectRatio: 8 / 10}'></img-crop>
 *
 *  上传:
 *  ======
@@ -333,11 +333,7 @@ var img_crop={
                 <button class="btn btn-primary" @click="make_sure()"><i class="fa fa-check" aria-hidden="true"></i></button>
                 <button class="btn btn-primary" @click="cancel()"><i class="fa fa-times" aria-hidden="true"></i></button>
             </div>
-
-
             </div>
-
-
         </div>
     </modal>
     </div>`,

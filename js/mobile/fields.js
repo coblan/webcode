@@ -51,7 +51,7 @@ import {hook_ajax_msg,hook_ajax_csrf,show_upload,hide_upload} from '../ajax_fun.
 import * as f from '../vuejs/file.js'
 //import * as ck from './ckeditor.js'
 //import * as multi from './multi_sel.js'
-import * as inputs from './inputs.js'
+import * as inputs from '../vuejs/inputs.js'
 import * as ln from '../vuejs/link.js'
 //import * as js from './adapt.js'
 
@@ -125,9 +125,9 @@ var field_base={
             props:['name','row','kw'],
             template: `<div>
             <span v-if='kw.readonly' v-text='row[name]'></span>
-            <el-input type="textarea" v-else  :autosize="{minRows: 2}" :id="'id_'+name" v-model="row[name]" :placeholder="kw.placeholder"></el-input>
+            <el-input type="textarea" v-else :autosize="{minRows: 2}"  :id="'id_'+name" v-model="row[name]" :placeholder="kw.placeholder"></el-input>
             </div>`
-        },
+        },//
         color:{
             props:['name','row','kw'],
             template: `<input type="text" v-model="row[name]" :id="'id_'+name" :readonly='kw.readonly'>`,
@@ -223,11 +223,15 @@ var field_base={
                 }
             }
         },
+    //<input type="checkbox" :id="'id_'+name" v-model='row[name]' :disabled="kw.readonly">
+    //<label :for="'id_'+name"><span v-text='kw.label'></span></label>
         bool:{
             props:['name','row','kw'],
             template:`<div class="checkbox">
-	        <input type="checkbox" :id="'id_'+name" v-model='row[name]' :disabled="kw.readonly">
-			 <label :for="'id_'+name"><span v-text='kw.label'></span></label>
+            <el-switch :id="'id_'+name" v-model='row[name]' :disabled="kw.readonly"
+            on-color="#13ce66"
+             off-color="#ff4949">
+                </el-switch>
 					  </div>`
         },
         date: {
@@ -267,13 +271,18 @@ var field={
 
     },
     template:`<div v-if="head" :class='["field",{"error":error_data(head.name)}]'>
-        <label :for="'id_'+name" v-text='head.label'></label>
+        <label :for="'id_'+name" >
+            <span v-text='head.label'></span>
+            <span class="req_star" v-if='head.required'>*</span>
+        </label>
         <div class="bd">
             <component :is='head.type'
                     :row='row'
                     :name='name'
                     :kw='head'>
              </component>
+             <div class="help_text" v-text='head.help_text'></div>
+             <slot></slot>
             <div v-for='error in error_data(name)' v-text='error' class='error'></div>
         </div>
 
@@ -318,6 +327,7 @@ var field_fun={
             can_add:can_add,
             can_del:can_del,
             can_log:can_log,
+            can_edit:can_edit,
         }
     },
     created:function(){

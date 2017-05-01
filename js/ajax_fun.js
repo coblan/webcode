@@ -73,11 +73,11 @@ var lib= window.lib || {}
 function def_proc_error(jqxhr) {
 	if(! window.iclosed){
 			if(jqxhr.status !=0){
-				alert('server has error, error code is '+jqxhr.status)
+				alert(jqxhr.statusText+':code is;'+jqxhr.status+jqxhr.responseText)
 			}else{
 				alert('maybe server offline,error code is '+jqxhr.status)
 			}
-
+		hide_upload()
 		}
 }
 

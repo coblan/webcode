@@ -55,9 +55,9 @@ Vue.component('date',{
     //template:'<input type="text" class="form-control">',
     template:`<span class="datetime-picker">
                 <span class="cross" @click="$emit('input','')">X</span>
-                <input type="text" readonly class="form-control"/>
+                <input type="text" readonly class="form-control" :placeholder="placeholder"/>
                 </span>`,
-    props:['value','set','config'],
+    props:['value','set','config','placeholder'],
     mounted:function () {
         var self=this
         if(!this.set){

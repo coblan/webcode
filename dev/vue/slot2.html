@@ -1,0 +1,58 @@
+<!doctype html>
+<html>
+<meta charset="utf-8">
+<title>Deposits and Withdrawals</title>
+<script type="text/javascript" src='./jquery.min.js'></script>
+
+<script src="./vue.js"></script>
+
+
+<script type="text/javascript">
+    Vue.config.devtools = true
+
+    $(function () {
+
+        new Vue({
+            el: '#hello',
+            data: {
+                wa: 'hello jj',
+                dog:'my nam is dog',
+                items:['a','b'],
+            },
+            methods: {
+                show_upload: function () {
+                    show_upload()
+                }
+            }
+        })
+    })
+
+    Vue.component('com-tb',{
+        props:['items'],
+        template:'<div><slot v-for="item in items" :item="item"></slot></div>'
+    })
+    Vue.component('com-inn',{
+        props:['hname'],
+        template:'<template scope="tb"><span v-text="tb.item"></span></template>'
+    })
+
+
+
+
+</script>
+</head>
+<body>
+
+<div id="hello">
+
+    <com-tb :items="items">
+        <com-inn :hname="dog"></com-inn>
+    </com-tb>
+
+</div>
+
+
+</body>
+
+
+</html>
