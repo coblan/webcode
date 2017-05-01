@@ -18,6 +18,26 @@
                 wa: 'hello jj',
                 dog:'my nam is dog',
                 items:['a','b'],
+                rows:[{name:'pig',age:'18'},
+                    {name:'dog',age:'20'}],
+
+                tableData: [{
+                    date: '2016-05-02',
+                    name: '王小虎',
+                    address: '上海市普陀区金沙江路 1518 弄'
+                }, {
+                    date: '2016-05-04',
+                    name: '王小虎',
+                    address: '上海市普陀区金沙江路 1517 弄'
+                }, {
+                    date: '2016-05-01',
+                    name: '王小虎',
+                    address: '上海市普陀区金沙江路 1519 弄'
+                }, {
+                    date: '2016-05-03',
+                    name: '王小虎',
+                    address: '上海市普陀区金沙江路 1516 弄'
+                }]
             },
             methods: {
                 show_upload: function () {
@@ -29,13 +49,17 @@
 
     Vue.component('com-tb',{
         props:['items'],
-        template:'<div><slot v-for="item in items" :item="item"></slot></div>'
+        template:'<div><slot :name="item" v-for="item in items" :item="item"><span>inn=</span><span v-text="item"></span></slot></div>'
     })
     Vue.component('com-inn',{
         props:['hname'],
         template:'<template scope="tb"><span v-text="tb.item"></span></template>'
     })
 
+    Vue.component('com-table',{
+        props:['rows'],
+        template:'<table><tr v-for="row in rows"><slot v-for="(col,key) in row" :name="key" :col_vlue="col"><td  v-text="col"></td></slot></tr></table>'
+    })
 
 
 
@@ -46,9 +70,44 @@
 <div id="hello">
 
     <com-tb :items="items">
-        <com-inn :hname="dog"></com-inn>
+        <template slot="b" scope="dog">
+
+                <span>out ==</span>
+                <span v-text="dog.item"></span>
+
+
+        </template>
+        <template slot="a" scope="pig">
+
+                <h1>hello a</h1>
+                <button v-text="pig.item"></button>
+
+        </template>
     </com-tb>
 
+    <com-table :rows="rows">
+        <template slot="name" scope="org">
+            <td>
+                <button v-text="org.col_vlue"></button>
+            </td>
+
+        </template>
+        <template slot="age" scope="org">
+            <td>
+                <h1 v-text="org.col_vlue"></h1>
+            </td>
+
+        </template>
+    </com-table>
+
+    <com-table :rows="tableData">
+        <template slot="name" scope="org">
+            <td style="width: 180px;">
+                 <a href="#" v-text="org.col_vlue"></a>
+            </td>
+
+        </template>
+    </com-table>
 </div>
 
 
