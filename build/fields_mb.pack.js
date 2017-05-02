@@ -558,8 +558,7 @@ if (!window.__uploading_mark) {
 }
 
 /***/ }),
-/* 3 */,
-/* 4 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1041,6 +1040,245 @@ Vue.component('logo-input', {
 window.fl = fl;
 
 /***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+/**
+ * Created by heyulin on 2017/1/24.
+ *
+>->front/input.rst>
+=======
+inputs
+=======
+
+date
+========
+::
+
+<date v-model='variable'></date>  // 选择默认set=date ,即选择日期
+
+<date v-model='variable' set='month'></date> // 选择 set=month ,即选择月份
+
+<date v-model='variable' set='month' :config='{}'></date>  //  config 是自定义的配置对象，具体需要参加帮助文件
+
+datetime
+===========
+::
+
+<datetime v-model='variable' :config='{}'></datetime> // 选择日期和时间
+
+color
+======
+
+forign-edit
+============
+示例::
+
+    <forign-edit :kw="person.emp_info" name="user" page_name="user" ></forign-edit>
+
+<-<
+ */
+
+var date_config_set = {
+    date: {
+        language: "zh-CN",
+        format: "yyyy-mm-dd",
+        autoclose: true,
+        todayHighlight: true
+    },
+    month: {
+        language: "zh-CN",
+        format: "yyyy-mm",
+        startView: "months",
+        minViewMode: "months",
+        autoclose: true
+
+    }
+};
+
+Vue.component('date', {
+    //template:'<input type="text" class="form-control">',
+    template: "<span class=\"datetime-picker\">\n                <span class=\"cross\" @click=\"$emit('input','')\">X</span>\n                <input type=\"text\" readonly class=\"form-control\" :placeholder=\"placeholder\"/>\n                </span>",
+    props: ['value', 'set', 'config', 'placeholder'],
+    mounted: function mounted() {
+        var self = this;
+        if (!this.set) {
+            var def_conf = date_config_set.date;
+        } else {
+            var def_conf = date_config_set[this.set];
+        }
+        if (this.config) {
+            ex.assign(def_conf, this.config);
+        }
+        self.input = $(this.$el).find('input');
+
+        ex.load_css('//cdn.bootcss.com/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker.min.css');
+
+        ex.load_js('//cdn.bootcss.com/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.min.js', function () {
+            ex.load_js('//cdn.bootcss.com/bootstrap-datepicker/1.6.4/locales/bootstrap-datepicker.zh-CN.min.js', function () {
+                self.input.datepicker(def_conf).on('changeDate', function (e) {
+                    self.$emit('input', self.input.val());
+                });
+                // if has init value,then init it
+                if (self.value) {
+                    self.input.datepicker('update', self.value);
+                    self.input.val(self.value);
+                }
+            });
+        });
+    },
+    methods: {
+        click_input: function click_input() {
+            this.input.focus();
+        }
+    },
+    watch: {
+        value: function value(n) {
+            this.input.datepicker('update', n);
+            this.input.val(n);
+        }
+    }
+});
+
+Vue.component('datetime', {
+    //data:function(){
+    //    return {
+    //        input_value:'',
+    //    }
+    //},
+    //template:'<input type="text" class="form-control">',
+    template: "<span class=\"datetime-picker\">\n                <span class=\"cross\" @click=\"$emit('input','')\">X</span>\n                <input type=\"text\" readonly/>\n                </span>",
+    props: ['value', 'config'],
+    mounted: function mounted() {
+        var self = this;
+        var def_conf = {
+            language: "zh-CN",
+            format: "yyyy-mm-dd hh:ii",
+            autoclose: true,
+            todayHighlight: true
+        };
+        if (self.config) {
+            ex.assign(def_conf, this.config);
+        }
+        self.input = $(this.$el).find('input');
+
+        ex.load_css('https://cdn.bootcss.com/smalot-bootstrap-datetimepicker/2.4.3/css/bootstrap-datetimepicker.min.css');
+        ex.load_js('https://cdn.bootcss.com/moment.js/2.17.1/moment.min.js');
+        ex.load_js('https://cdn.bootcss.com/smalot-bootstrap-datetimepicker/2.4.3/js/bootstrap-datetimepicker.min.js', function () {
+
+            self.input.datetimepicker(def_conf).on('changeDate', function (e) {
+                self.$emit('input', self.input.val());
+            });
+
+            // if has init value,then init it
+            if (self.value) {
+                self.input.datepicker('update', self.value);
+                self.input.val(self.value);
+            }
+        });
+    },
+
+    watch: {
+        value: function value(n) {
+            this.input.val(n);
+            this.input.val(n);
+        }
+    }
+});
+
+var color = {
+    props: ['value'],
+    template: "<input type=\"text\">",
+    methods: {
+        init_and_listen: function init_and_listen() {
+            var self = this;
+            Vue.nextTick(function () {
+                $(self.$el).spectrum({
+                    color: self.value,
+                    showInitial: true,
+                    showInput: true,
+                    preferredFormat: "name",
+                    change: function change(color) {
+                        self.src_color = color.toHexString();
+                        self.$emit('input', self.src_color);
+                    }
+                });
+            });
+        }
+    },
+    watch: {
+        value: function value(_value) {
+            if (this.src_color != _value) {
+                this.init_and_listen();
+            }
+        }
+    },
+    mounted: function mounted() {
+        var self = this;
+        ex.load_css('https://cdn.bootcss.com/spectrum/1.8.0/spectrum.min.css');
+        ex.load_js('https://cdn.bootcss.com/spectrum/1.8.0/spectrum.min.js', function () {
+            self.init_and_listen();
+        });
+    }
+};
+
+Vue.component('color', color);
+
+ex.append_css("<style type=\"text/css\" media=\"screen\">\n    .datetime-picker{\n        position: relative;\n        display: inline-block;\n    }\n    .datetime-picker input[readonly]{\n        background-color: white;\n    }\n\t.datetime-picker .cross{\n\t    display: none;\n\t}\n\t.datetime-picker:hover .cross{\n\t    display: inline-block;\n\t    position: absolute;\n\t    right: 8px;\n\t    top:3px;\n\t    cursor: pointer;\n\t    /*z-index: 10;*/\n\t}\n</style>\n ");
+
+var forignEdit = {
+    template: "<div class=\"forign-key-panel\">\n        <button v-if=\"has_pk()\" @click=\"jump_edit(kw.row[name])\" title=\"edit\">\n            <i class=\"fa fa-pencil-square-o\" aria-hidden=\"true\"></i></button>\n        <button @click=\"jump_edit()\" title=\"create new\"><i class=\"fa fa-plus\" aria-hidden=\"true\"></i></button>\n    </div>",
+    props: ['kw', 'name', 'page_name'],
+    methods: {
+        jump_edit: function jump_edit(pk) {
+            var name = this.name;
+            var kw = this.kw;
+            var page_name = this.page_name || this.name;
+            var options = ex.findone(kw.heads, { name: name }).options;
+            var row = kw.row;
+            var pk = pk || '';
+
+            var url = ex.template('{engine_url}/{page_name}.edit?pk={pk}', {
+                engine_url: engine_url,
+                page_name: page_name,
+                pk: pk
+            });
+            ln.openWin(url, function (resp) {
+                if (resp.del_rows) {
+                    ex.remove(options, function (option) {
+                        return ex.isin(option, resp.del_rows, function (op, del_row) {
+                            return op.value == del_row.pk;
+                        });
+                    });
+                } else if (resp.row) {
+                    if (pk) {
+                        var option = ex.findone(options, { value: pk });
+                        option.label = resp.row._label;
+                    } else {
+                        options.push({ label: resp.row._label, value: resp.row.pk });
+                        row[name] = resp.row.pk;
+                    }
+                }
+            });
+        },
+        has_pk: function has_pk() {
+            if (this.kw.row[this.name]) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+};
+
+ex.append_css("\n<style type=\"text/css\">\n    .forign-key-panel{\n        padding: 6px;\n    }\n</style>");
+
+Vue.component('forign-edit', forignEdit);
+
+/***/ }),
 /* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1355,7 +1593,7 @@ exports = module.exports = __webpack_require__(0)();
 
 
 // module
-exports.push([module.i, ".form-pad {\n  background-color: white;\n  padding: 2em 1em; }\n  .form-pad .field {\n    display: flex;\n    margin-top: 2em; }\n  .form-pad .field label {\n    width: 80px; }\n  .form-pad .field .bd {\n    flex-grow: 1; }\n\n.help_text {\n  color: #a4a1a5;\n  font-style: italic;\n  font-size: 0.8em; }\n", ""]);
+exports.push([module.i, ".form-pad {\n  background-color: white;\n  padding: 2em 1em; }\n  .form-pad .field {\n    display: flex;\n    margin-top: 2em; }\n  .form-pad .field label {\n    width: 80px; }\n  .form-pad .field .field_input {\n    flex-grow: 1;\n    max-width: 50em;\n    border-bottom: 1px solid #f7f7f7; }\n    .form-pad .field .field_input select {\n      width: auto; }\n    .form-pad .field .field_input input[type=number] {\n      width: auto; }\n\n.help_text {\n  color: #a4a1a5;\n  font-style: italic;\n  font-size: 0.8em; }\n", ""]);
 
 // exports
 
@@ -1454,11 +1692,11 @@ exports.merge = merge;
 
 var _ajax_fun = __webpack_require__(2);
 
-var _file = __webpack_require__(4);
+var _file = __webpack_require__(3);
 
 var f = _interopRequireWildcard(_file);
 
-var _inputs = __webpack_require__(13);
+var _inputs = __webpack_require__(4);
 
 var inputs = _interopRequireWildcard(_inputs);
 
@@ -1569,12 +1807,12 @@ var field_base = {
     components: {
         linetext: {
             props: ['name', 'row', 'kw'],
-            template: '<div>\n            \t\t\t<span v-if=\'kw.readonly\' v-text=\'row[name]\'></span>\n            \t\t\t<el-input v-else v-model="row[name]" :id="\'id_\'+name" :name="\'id_\'+name"\n            \t\t\t    :placeholder="kw.placeholder" :autofocus="kw.autofocus" :maxlength=\'kw.maxlength\'></el-input>\n                       </div>'
+            template: '<div>\n            \t\t\t<span v-if=\'kw.readonly\' v-text=\'row[name]\'></span>\n            \t\t\t<input v-else type="text" class="form-control" v-model="row[name]" :id="\'id_\'+name"\n                        \t:placeholder="kw.placeholder" :autofocus="kw.autofocus" :maxlength=\'kw.maxlength\'>\n                       </div>'
         },
         number: {
             props: ['name', 'row', 'kw'],
 
-            template: '<div><span v-if=\'kw.readonly\' v-text=\'row[name]\'></span>\n                    <el-input-number  v-else type="number"  v-model="row[name]" :id="\'id_\'+name"\n                        :placeholder="kw.placeholder" :autofocus="kw.autofocus"></el-input-number>\n            \t\t</div>'
+            template: '<div><span v-if=\'kw.readonly\' v-text=\'row[name]\'></span>\n            \t\t<input v-else type="number" class="form-control" v-model="row[name]" :id="\'id_\'+name"\n                        :placeholder="kw.placeholder" :autofocus="kw.autofocus"></div>'
         },
         password: {
             props: ['name', 'row', 'kw'],
@@ -1582,7 +1820,24 @@ var field_base = {
         },
         blocktext: {
             props: ['name', 'row', 'kw'],
-            template: '<div>\n            <span v-if=\'kw.readonly\' v-text=\'row[name]\'></span>\n            <el-input type="textarea" v-else :autosize="{minRows: 2}"  :id="\'id_\'+name" v-model="row[name]" :placeholder="kw.placeholder"></el-input>\n            </div>'
+            data: function data() {
+                return {
+                    org_height: 0
+                };
+            },
+            mounted: function mounted() {
+                this.on_input();
+            },
+            methods: {
+                on_input: function on_input() {
+                    var textarea = $(this.$el).find('textarea')[0];
+                    if (this.org_height != textarea.scrollHeight) {
+                        $(textarea).height(textarea.scrollHeight - 12);
+                        this.org_height = textarea.scrollHeight;
+                    }
+                }
+            },
+            template: '<div>\n            <span v-if=\'kw.readonly\' v-text=\'row[name]\'></span>\n            <textarea v-else class="form-control" rows="2" :id="\'id_\'+name" v-model="row[name]" :placeholder="kw.placeholder"\n               @input="on_input()" :readonly=\'kw.readonly\'></textarea>\n            </div>'
         }, //
         color: {
             props: ['name', 'row', 'kw'],
@@ -1639,7 +1894,7 @@ var field_base = {
                     model: this.row[this.name]
                 };
             },
-            template: ' <div>\n            <span v-if=\'kw.readonly\' v-text=\'get_label(kw.options,row[name])\'></span>\n            <el-select v-else v-model=\'row[name]\'  :id="\'id_\'+name"  :placeholder="kw.placeholder">\n                <el-option v-for=\'opt in kw.options\' :value=\'opt.value\' :label=\'opt.label\'></el-option>\n            </el-select>\n            </div>',
+            template: '<div>\n            <span v-if=\'kw.readonly\' v-text=\'get_label(kw.options,row[name])\'></span>\n            <select v-else v-model=\'row[name]\'  :id="\'id_\'+name"  class="form-control">\n            \t<option v-for=\'opt in kw.options\' :value=\'opt.value\' v-text=\'opt.label\'></option>\n            </select>\n            </div>',
             mounted: function mounted() {
                 if (this.kw.default && !this.row[this.name]) {
                     Vue.set(this.row, this.name, this.kw.default);
@@ -1702,7 +1957,7 @@ var field = {
         }
     },
     methods: {},
-    template: '<div v-if="head" :class=\'["field",{"error":error_data(head.name)}]\'>\n        <label :for="\'id_\'+name" >\n            <span v-text=\'head.label\'></span>\n            <span class="req_star" v-if=\'head.required\'>*</span>\n        </label>\n        <div class="bd">\n            <component :is=\'head.type\'\n                    :row=\'row\'\n                    :name=\'name\'\n                    :kw=\'head\'>\n             </component>\n             <div class="help_text" v-text=\'head.help_text\'></div>\n             <slot></slot>\n            <div v-for=\'error in error_data(name)\' v-text=\'error\' class=\'error\'></div>\n        </div>\n\n    </div>'
+    template: '\n\t\t<div for=\'field\' class="form-group field" :class=\'{"error":error_data(name)}\' v-if="head">\n\t\t<label :for="\'id_\'+name"  class="control-label" v-if=\'!head.no_auto_label\'>\n\t\t\t<span v-text="head.label"></span><span class="req_star" v-if=\'head.required\'>*</span>\n\t\t</label>\n\n\t\t<div class="field_input">\n\t\t\t<component :is=\'head.type\'\n\t\t\t\t:row=\'row\'\n\t\t\t\t:name=\'name\'\n\t\t\t\t:kw=\'head\'>\n\t\t\t</component>\n\t\t\t<div class="help_text"><span v-text="head.help_text"></span></div>\n\t\t    <slot></slot>\n\t\t    <div v-for=\'error in error_data(name)\' v-text=\'error\' class=\'error\'></div>\n\t\t</div>\n\n\t\t</div>\n\t'
 
 };
 
@@ -1902,245 +2157,6 @@ window.update_vue_obj = update_vue_obj;
 window.show_upload = _ajax_fun.show_upload;
 window.hide_upload = _ajax_fun.hide_upload;
 window.merge = merge;
-
-/***/ }),
-/* 13 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-/**
- * Created by heyulin on 2017/1/24.
- *
->->front/input.rst>
-=======
-inputs
-=======
-
-date
-========
-::
-
-<date v-model='variable'></date>  // 选择默认set=date ,即选择日期
-
-<date v-model='variable' set='month'></date> // 选择 set=month ,即选择月份
-
-<date v-model='variable' set='month' :config='{}'></date>  //  config 是自定义的配置对象，具体需要参加帮助文件
-
-datetime
-===========
-::
-
-<datetime v-model='variable' :config='{}'></datetime> // 选择日期和时间
-
-color
-======
-
-forign-edit
-============
-示例::
-
-    <forign-edit :kw="person.emp_info" name="user" page_name="user" ></forign-edit>
-
-<-<
- */
-
-var date_config_set = {
-    date: {
-        language: "zh-CN",
-        format: "yyyy-mm-dd",
-        autoclose: true,
-        todayHighlight: true
-    },
-    month: {
-        language: "zh-CN",
-        format: "yyyy-mm",
-        startView: "months",
-        minViewMode: "months",
-        autoclose: true
-
-    }
-};
-
-Vue.component('date', {
-    //template:'<input type="text" class="form-control">',
-    template: "<span class=\"datetime-picker\">\n                <span class=\"cross\" @click=\"$emit('input','')\">X</span>\n                <input type=\"text\" readonly class=\"form-control\" :placeholder=\"placeholder\"/>\n                </span>",
-    props: ['value', 'set', 'config', 'placeholder'],
-    mounted: function mounted() {
-        var self = this;
-        if (!this.set) {
-            var def_conf = date_config_set.date;
-        } else {
-            var def_conf = date_config_set[this.set];
-        }
-        if (this.config) {
-            ex.assign(def_conf, this.config);
-        }
-        self.input = $(this.$el).find('input');
-
-        ex.load_css('//cdn.bootcss.com/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker.min.css');
-
-        ex.load_js('//cdn.bootcss.com/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.min.js', function () {
-            ex.load_js('//cdn.bootcss.com/bootstrap-datepicker/1.6.4/locales/bootstrap-datepicker.zh-CN.min.js', function () {
-                self.input.datepicker(def_conf).on('changeDate', function (e) {
-                    self.$emit('input', self.input.val());
-                });
-                // if has init value,then init it
-                if (self.value) {
-                    self.input.datepicker('update', self.value);
-                    self.input.val(self.value);
-                }
-            });
-        });
-    },
-    methods: {
-        click_input: function click_input() {
-            this.input.focus();
-        }
-    },
-    watch: {
-        value: function value(n) {
-            this.input.datepicker('update', n);
-            this.input.val(n);
-        }
-    }
-});
-
-Vue.component('datetime', {
-    //data:function(){
-    //    return {
-    //        input_value:'',
-    //    }
-    //},
-    //template:'<input type="text" class="form-control">',
-    template: "<span class=\"datetime-picker\">\n                <span class=\"cross\" @click=\"$emit('input','')\">X</span>\n                <input type=\"text\" readonly/>\n                </span>",
-    props: ['value', 'config'],
-    mounted: function mounted() {
-        var self = this;
-        var def_conf = {
-            language: "zh-CN",
-            format: "yyyy-mm-dd hh:ii",
-            autoclose: true,
-            todayHighlight: true
-        };
-        if (self.config) {
-            ex.assign(def_conf, this.config);
-        }
-        self.input = $(this.$el).find('input');
-
-        ex.load_css('https://cdn.bootcss.com/smalot-bootstrap-datetimepicker/2.4.3/css/bootstrap-datetimepicker.min.css');
-        ex.load_js('https://cdn.bootcss.com/moment.js/2.17.1/moment.min.js');
-        ex.load_js('https://cdn.bootcss.com/smalot-bootstrap-datetimepicker/2.4.3/js/bootstrap-datetimepicker.min.js', function () {
-
-            self.input.datetimepicker(def_conf).on('changeDate', function (e) {
-                self.$emit('input', self.input.val());
-            });
-
-            // if has init value,then init it
-            if (self.value) {
-                self.input.datepicker('update', self.value);
-                self.input.val(self.value);
-            }
-        });
-    },
-
-    watch: {
-        value: function value(n) {
-            this.input.val(n);
-            this.input.val(n);
-        }
-    }
-});
-
-var color = {
-    props: ['value'],
-    template: "<input type=\"text\">",
-    methods: {
-        init_and_listen: function init_and_listen() {
-            var self = this;
-            Vue.nextTick(function () {
-                $(self.$el).spectrum({
-                    color: self.value,
-                    showInitial: true,
-                    showInput: true,
-                    preferredFormat: "name",
-                    change: function change(color) {
-                        self.src_color = color.toHexString();
-                        self.$emit('input', self.src_color);
-                    }
-                });
-            });
-        }
-    },
-    watch: {
-        value: function value(_value) {
-            if (this.src_color != _value) {
-                this.init_and_listen();
-            }
-        }
-    },
-    mounted: function mounted() {
-        var self = this;
-        ex.load_css('https://cdn.bootcss.com/spectrum/1.8.0/spectrum.min.css');
-        ex.load_js('https://cdn.bootcss.com/spectrum/1.8.0/spectrum.min.js', function () {
-            self.init_and_listen();
-        });
-    }
-};
-
-Vue.component('color', color);
-
-ex.append_css("<style type=\"text/css\" media=\"screen\">\n    .datetime-picker{\n        position: relative;\n        display: inline-block;\n    }\n    .datetime-picker input[readonly]{\n        background-color: white;\n    }\n\t.datetime-picker .cross{\n\t    display: none;\n\t}\n\t.datetime-picker:hover .cross{\n\t    display: inline-block;\n\t    position: absolute;\n\t    right: 8px;\n\t    top:3px;\n\t    cursor: pointer;\n\t    /*z-index: 10;*/\n\t}\n</style>\n ");
-
-var forignEdit = {
-    template: "<div class=\"forign-key-panel\">\n        <button v-if=\"has_pk()\" @click=\"jump_edit(kw.row[name])\" title=\"edit\">\n            <i class=\"fa fa-pencil-square-o\" aria-hidden=\"true\"></i></button>\n        <button @click=\"jump_edit()\" title=\"create new\"><i class=\"fa fa-plus\" aria-hidden=\"true\"></i></button>\n    </div>",
-    props: ['kw', 'name', 'page_name'],
-    methods: {
-        jump_edit: function jump_edit(pk) {
-            var name = this.name;
-            var kw = this.kw;
-            var page_name = this.page_name || this.name;
-            var options = ex.findone(kw.heads, { name: name }).options;
-            var row = kw.row;
-            var pk = pk || '';
-
-            var url = ex.template('{engine_url}/{page_name}.edit?pk={pk}', {
-                engine_url: engine_url,
-                page_name: page_name,
-                pk: pk
-            });
-            ln.openWin(url, function (resp) {
-                if (resp.del_rows) {
-                    ex.remove(options, function (option) {
-                        return ex.isin(option, resp.del_rows, function (op, del_row) {
-                            return op.value == del_row.pk;
-                        });
-                    });
-                } else if (resp.row) {
-                    if (pk) {
-                        var option = ex.findone(options, { value: pk });
-                        option.label = resp.row._label;
-                    } else {
-                        options.push({ label: resp.row._label, value: resp.row.pk });
-                        row[name] = resp.row.pk;
-                    }
-                }
-            });
-        },
-        has_pk: function has_pk() {
-            if (this.kw.row[this.name]) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-    }
-};
-
-ex.append_css("\n<style type=\"text/css\">\n    .forign-key-panel{\n        padding: 6px;\n    }\n</style>");
-
-Vue.component('forign-edit', forignEdit);
 
 /***/ })
 /******/ ]);

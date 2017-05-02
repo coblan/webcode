@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh-CN" ng-app="share">
+ 
+    <head>
+        <meta charset='utf-8' />
+        <script src="http://cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+        <script src="http://cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
+ 
+       <script src="https://cdn.bootcss.com/vue/2.2.6/vue.js"></script>
+ 
+    <script type="text/javascript">
+       $(function () {
+			
+	       
+       		new Vue({
+	       		el:'#there',
+	       		data:{
+		       		//hello:'hello dog'
+	       		},
+	       		mixins:[mydata],
+	       		methods:{
+		       		cor_get:function () {
+		       			$.ajax({
+						   url: 'http://api.uacar.cn/user/info?openid=oIvmdwv0KYpK5Uc3zu6W6BkKbMEE',
+						   xhrFields: {
+						      withCredentials: true
+						   },
+						   
+						});
+		       		}
+	       		}
+       		})
+       })
+
+
+
+		$.get('http://api.uacar.cn/user/info?openid=oIvmdwv0KYpK5Uc3zu6W6BkKbMEE',function (resp) {
+			console.log(resp)
+		})
+		
+       var mydata={
+	       //data:{
+		      // hello:'hello world'
+	       //},
+	       data:function () {
+	       	return {
+		       	hello:'hello world'
+	       	}
+	       },
+	       methods:{
+		       say:function () {
+		       	return 'ss world'
+		       }
+	       }
+       }
+       Vue.component('com-me',{
+	       template:'#mytemp',
+	       mixins:[mydata],
+	       data:function () {
+	       	return {
+		       	hash:'this is hash'
+	       	}
+	       }
+       })
+    </script>
+ 
+
+    </head>
+    <body>
+       
+ 	<div id="there" class="test">
+ 		<span v-text='hello'></span><br />
+ 		<span v-text='say()'></span>
+ 		<com-me></com-me>
+
+ 		<button @click='cor_get()'>Button Text</button>
+ 	</div>
+
+         <template id='mytemp'>
+	         <div id="test" class="test">
+	         	hello <span v-text="hello"></span>
+	         	<span v-text='hash'></span>
+	         </div>
+         </template>
+    </body>
+     
+</html>

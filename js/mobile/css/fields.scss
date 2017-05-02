@@ -11,9 +11,21 @@
   .field label{
     width: 80px;
   }
-  .field .bd{
+  .field .field_input{
     flex-grow: 1;
+    max-width: 50em;
+    border-bottom: 1px solid #f7f7f7;
+
+    select{
+      width: auto;
+    }
+    input[type=number]{
+      width: auto;
+
+    }
+
   }
+
 }
 .help_text{
   color: #a4a1a5;

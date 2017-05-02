@@ -105,16 +105,17 @@ var field_base={
             props:['name','row','kw'],
             template:`<div>
             			<span v-if='kw.readonly' v-text='row[name]'></span>
-            			<input v-else type="text" class="form-control" v-model="row[name]" :id="'id_'+name"
-                        	:placeholder="kw.placeholder" :autofocus="kw.autofocus" :maxlength='kw.maxlength'>
+            			<el-input v-else v-model="row[name]" :id="'id_'+name" :name="'id_'+name"
+            			    :placeholder="kw.placeholder" :autofocus="kw.autofocus" :maxlength='kw.maxlength'></el-input>
                        </div>`,
         },
         number: {
             props:['name','row','kw'],
 
             template: `<div><span v-if='kw.readonly' v-text='row[name]'></span>
-            		<input v-else type="number" class="form-control" v-model="row[name]" :id="'id_'+name"
-                        :placeholder="kw.placeholder" :autofocus="kw.autofocus"></div>`
+                    <el-input-number  v-else type="number"  v-model="row[name]" :id="'id_'+name"
+                        :placeholder="kw.placeholder" :autofocus="kw.autofocus"></el-input-number>
+            		</div>`
         },
         password: {
             props:['name','row','kw'],
@@ -122,27 +123,9 @@ var field_base={
         },
         blocktext: {
             props:['name','row','kw'],
-            data:function(){
-                return {
-                    org_height:0,
-                }
-            },
-            mounted:function(){
-              this.on_input()
-            },
-            methods:{
-                on_input:function(){
-                    var textarea = $(this.$el).find('textarea')[0]
-                    if(this.org_height!=textarea.scrollHeight){
-                        $(textarea).height(textarea.scrollHeight-12)
-                        this.org_height=textarea.scrollHeight
-                    }
-                }
-            },
-            template:  `<div>
+            template: `<div>
             <span v-if='kw.readonly' v-text='row[name]'></span>
-            <textarea v-else class="form-control" rows="2" :id="'id_'+name" v-model="row[name]" :placeholder="kw.placeholder"
-               @input="on_input()" :readonly='kw.readonly'></textarea>
+            <el-input type="textarea" v-else :autosize="{minRows: 2}"  :id="'id_'+name" v-model="row[name]" :placeholder="kw.placeholder"></el-input>
             </div>`
         },//
         color:{
@@ -201,11 +184,11 @@ var field_base={
                     model:this.row[this.name]
                 }
             },
-            template:`<div>
+            template:` <div>
             <span v-if='kw.readonly' v-text='get_label(kw.options,row[name])'></span>
-            <select v-else v-model='row[name]'  :id="'id_'+name"  class="form-control">
-            	<option v-for='opt in kw.options' :value='opt.value' v-text='opt.label'></option>
-            </select>
+            <el-select v-else v-model='row[name]'  :id="'id_'+name"  :placeholder="kw.placeholder">
+                <el-option v-for='opt in kw.options' :value='opt.value' :label='opt.label'></el-option>
+            </el-select>
             </div>`,
             mounted:function(){
                 if(this.kw.default && !this.row[this.name]){
@@ -240,8 +223,8 @@ var field_base={
                 }
             }
         },
-    //<input type="checkbox" :id="'id_'+name" v-model='row[name]' :disabled="kw.readonly">
-    //<label :for="'id_'+name"><span v-text='kw.label'></span></label>
+        //<input type="checkbox" :id="'id_'+name" v-model='row[name]' :disabled="kw.readonly">
+        //<label :for="'id_'+name"><span v-text='kw.label'></span></label>
         bool:{
             props:['name','row','kw'],
             template:`<div class="checkbox">
@@ -287,25 +270,23 @@ var field={
     methods:{
 
     },
-    template:`
-		<div for='field' class="form-group field" :class='{"error":error_data(name)}' v-if="head">
-		<label :for="'id_'+name"  class="control-label" v-if='!head.no_auto_label'>
-			<span v-text="head.label"></span><span class="req_star" v-if='head.required'>*</span>
-		</label>
+    template:`<div v-if="head" :class='["field",{"error":error_data(head.name)}]'>
+        <label :for="'id_'+name" >
+            <span v-text='head.label'></span>
+            <span class="req_star" v-if='head.required'>*</span>
+        </label>
+        <div class="bd">
+            <component :is='head.type'
+                    :row='row'
+                    :name='name'
+                    :kw='head'>
+             </component>
+             <div class="help_text" v-text='head.help_text'></div>
+             <slot></slot>
+            <div v-for='error in error_data(name)' v-text='error' class='error'></div>
+        </div>
 
-		<div class="field_input">
-			<component :is='head.type'
-				:row='row'
-				:name='name'
-				:kw='head'>
-			</component>
-			<div class="help_text"><span v-text="head.help_text"></span></div>
-		    <slot></slot>
-		    <div v-for='error in error_data(name)' v-text='error' class='error'></div>
-		</div>
-
-		</div>
-	`,
+    </div>`,
 
 }
 
