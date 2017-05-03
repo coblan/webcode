@@ -119,21 +119,32 @@ var com_catalog={
         },
     },
     template:`<div>
-    <ol class="breadcrumb">
-        <li ><a href="javacript:;" @click="dir_data(root)">root</a></li>
-        <li v-for="dir in parents" ><a href="javacript:;" v-text="dir.name" @click="dir_data(dir);$emit('dirclick',dir)" ></a></li>
-    </ol>
+    <div class="flex">
+        <ol class="breadcrumb flex-grow">
+            <li ><a href="javacript:;" @click="dir_data(root)">root</a></li>
+            <li v-for="dir in parents" ><a href="javacript:;" v-text="dir.name" @click="dir_data(dir);$emit('dirclick',dir)" ></a></li>
+        </ol>
+        <slot name="head_end"></slot>
+    </div>
 
-    <div>
+
+
+    <div class="bd">
         <ul>
-        <li v-for="dir in dirs">
+        <li v-for="dir in dirs" class="dir">
             <input v-if="editable" type="checkbox" :value="dir" v-model="selected"/>
-            <i class="fa fa-folder" aria-hidden="true"></i>
+            <slot name="dir_icon">
+                <i class="fa fa-folder" aria-hidden="true"></i>
+            </slot>
+
             <span v-text="dir.name" class="clickable" @click="dir_data(dir);$emit('dirclick',dir)"></span>
-            </li>
-            <li v-for="item in items">
+        </li>
+        <li v-for="item in items" class="item">
             <input type="checkbox" :value="item" v-model="selected"/>
-            <i class="fa fa-file-o" aria-hidden="true"></i>
+            <slot name="item_icon">
+                <i class="fa fa-file-o" aria-hidden="true"></i>
+            </slot>
+
             <span v-text="item.name" class="clickable" @click="$emit('itemclick',item)"></span>
          </li>
         </ul>

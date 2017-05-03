@@ -85,7 +85,7 @@ var ln={
             }
         },false)
 
-        if(obj.init && !history.state){
+        if(obj.init){// && !history.state){
             history.pushState(obj.init,'')
         }
 
