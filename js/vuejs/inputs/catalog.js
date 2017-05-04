@@ -1,18 +1,36 @@
 /*
 
->5>extra_input.rst>
+>->comp/catalog.rst>
 
+=============
 catalog
+=============
+用于显示和编辑树状结构。该模块有对应的后端，用于编辑数据库。
+
+前端组件
 =========
-该模块有对应的后端
 
 使用示例::
 
      <com-catalog ref="catalog" url="/dir_mana" :root="{pk:null,name:'root'}" @dirclick="on_dirclick($event)"
      @itemclick="on_itemclick($event)" @state="set_state($event)" :editable="true"></com-catalog>
+
+url:
+    连接后端的地址
+
+root:
+    根元素，如果没有，就虚拟一个
+editable:
+    目前决定了catalog是否显示checkbox
+
+使用时，在外部捕捉dirclick,itemclick,state事件。其中state事件会传出com-catalog的各种状态，这些状态用于告诉parent，可以执行的命令。
+
+。。Note:: com-catalog自带create和delete功能，但是不具备修改save功能，（因为验证错误无处显示），所以client需要自己定义保存函数。
+
 <-<
 * */
 
+require('./css/catalog.scss')
 
 var com_catalog={
     props:['url','root','editable'],
@@ -118,7 +136,7 @@ var com_catalog={
             location=engine_url+'/del_rows?rows='+del_str+'&next='+encodeURIComponent(location.href)
         },
     },
-    template:`<div>
+    template:`<div class="com-catalog">
     <div class="flex">
         <ol class="breadcrumb flex-grow">
             <li ><a href="javacript:;" @click="dir_data(root)">root</a></li>
@@ -126,8 +144,6 @@ var com_catalog={
         </ol>
         <slot name="head_end"></slot>
     </div>
-
-
 
     <div class="bd">
         <ul>
@@ -137,15 +153,14 @@ var com_catalog={
                 <i class="fa fa-folder" aria-hidden="true"></i>
             </slot>
 
-            <span v-text="dir.name" class="clickable" @click="dir_data(dir);$emit('dirclick',dir)"></span>
+            <span v-text="dir.name" class="clickable name" @click="dir_data(dir);$emit('dirclick',dir)"></span>
         </li>
         <li v-for="item in items" class="item">
-            <input type="checkbox" :value="item" v-model="selected"/>
+            <input v-if="editable" type="checkbox" :value="item" v-model="selected"/>
             <slot name="item_icon">
                 <i class="fa fa-file-o" aria-hidden="true"></i>
             </slot>
-
-            <span v-text="item.name" class="clickable" @click="$emit('itemclick',item)"></span>
+            <span v-text="item.name" class="clickable name" @click="$emit('itemclick',item)"></span>
          </li>
         </ul>
     </div>

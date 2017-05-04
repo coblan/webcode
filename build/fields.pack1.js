@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 12);
+/******/ 	return __webpack_require__(__webpack_require__.s = 15);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -565,6 +565,171 @@ if (!window.__uploading_mark) {
 
 
 /*
+>>>front/ckedit.rst>
+==========
+ckeditor
+==========
+源文件:vuejs/ckeditor.js
+
+使用时，引入fields.pack.js即可。
+
+使用示例
+=========
+::
+
+	bus=new Vue()  //因为ckeditor的数据不是时时同步的，所以提交时，需要触发数据同步
+	// 提交时:
+	bus.$emit('sync_data')
+
+	<ckeditor set='complex' config='{}'></ckeditor>
+
+set
+======
+
+set是指预先定义好的一套设置。可以在Vue component中定义映射。
+
+当前有的set有:
+
+=========   ========
+complex     完善
+edit        普通编辑
+=========   =========
+
+<<<<
+ */
+
+var ck_complex = {
+	// Define changes to default configuration here.
+	// For complete reference see:
+	// http://docs.ckeditor.com/#!/api/CKEDITOR.config
+
+	// The toolbar groups arrangement, optimized for two toolbar rows.
+	toolbarGroups: [{ name: 'clipboard', groups: ['clipboard', 'undo'] }, { name: 'editing', groups: ['find', 'selection', 'spellchecker'] }, { name: 'links' }, { name: 'insert' }, { name: 'forms' }, { name: 'tools' }, { name: 'document', groups: ['mode', 'document', 'doctools'] }, { name: 'others' }, '/', { name: 'basicstyles', groups: ['basicstyles', 'cleanup'] }, { name: 'paragraph', groups: ['list', 'indent', 'blocks', 'align', 'bidi'] }, { name: 'styles' }, { name: 'font' }, { name: 'colors' }, { name: 'about' }],
+
+	// Remove some buttons provided by the standard plugins, which are
+	// not needed in the Standard(s) toolbar.
+	removeButtons: 'Underline,Subscript,Superscript',
+
+	// Set the most common block elements.
+	format_tags: 'p;h1;h2;h3;pre',
+
+	// Simplify the dialog windows.
+	removeDialogTabs: 'image:advanced;link:advanced',
+	image_previewText: 'image preview',
+	imageUploadUrl: '/ckeditor/upload_image',
+	filebrowserImageUploadUrl: '/ckeditor/upload_image', // Will be replace by imageUploadUrl when upload_image
+	extraPlugins: 'justify,codesnippet,lineutils,mathjax,colorbutton,uploadimage,font,autogrow', //autogrow,
+	mathJaxLib: '//cdn.mathjax.org/mathjax/2.6-latest/MathJax.js?config=TeX-AMS_HTML',
+	extraAllowedContent: 'img[class]',
+	autoGrow_maxHeight: 600,
+	autoGrow_minHeight: 200,
+	autoGrow_onStartup: true,
+	autoGrow_bottomSpace: 50
+};
+
+Vue.component('ckeditor', {
+	template: '<div class=\'ckeditor\'>\n\t\t    \t<textarea class="form-control" name="ri" ></textarea>\n\t    \t</div>',
+	props: {
+		value: {},
+		config: {},
+		set: {
+			default: 'edit'
+		}
+	},
+	created: function created() {
+		var self = this;
+		bus.$on('sync_data', function () {
+			self.$emit('input', self.editor.getData());
+		});
+	},
+	mounted: function mounted() {
+		var self = this;
+		self.input = $(this.$el).find('textarea')[0];
+		var config_obj = {
+			//'complex':'//res.enjoyst.com/js/ck/config_complex.js',
+			'complex': ck_complex,
+			'edit': edit_level
+		};
+		var config = {};
+		ex.assign(config, config_obj[self.set]);
+		ex.assign(config, self.config);
+		// 4.5.10   4.6.2
+		ex.load_js('//cdn.bootcss.com/ckeditor/4.6.2/ckeditor.js', function () {
+			//CKEDITOR.timestamp='GABCDFDGff'
+			//self.input.value=self.value
+
+			var editor = CKEDITOR.replace(self.input, config);
+			editor.setData(self.value);
+			editor.checkDirty();
+			self.editor = editor;
+
+			//var is_changed=false
+			//editor.on( 'change', function( evt ) {
+			//	// getData() returns CKEditor's HTML content.
+			//	is_changed=true
+			//	//self.$emit('input',editor.getData())
+			//});
+			//
+			//setInterval(function(){
+			//	if(is_changed){
+			//		self.$emit('input',editor.getData())
+			//		is_changed=false
+			//	}
+			//},3000)
+		});
+	}
+});
+
+var edit_level = {
+	// Define changes to default configuration here.
+	// For complete reference see:
+	// http://docs.ckeditor.com/#!/api/CKEDITOR.config
+
+	// The toolbar groups arrangement, optimized for two toolbar rows.
+	toolbarGroups: [
+	//{ name: 'clipboard',   groups: [ 'clipboard', 'undo' ] },
+	//{ name: 'editing',     groups: [ 'find', 'selection', 'spellchecker' ] },
+	{ name: 'tools' },
+
+	//'/',
+	{ name: 'basicstyles', groups: ['basicstyles', 'cleanup'] }, { name: 'paragraph', groups: ['list', 'indent', 'blocks', 'align', 'bidi'] }, { name: 'styles' }, { name: 'font' }, { name: 'colors' }, { name: 'links' }, { name: 'insert' }, { name: 'forms' }, { name: 'others' }, { name: 'document', groups: ['mode', 'document', 'doctools'] }],
+
+	// Remove some buttons provided by the standard plugins, which are
+	// not needed in the Standard(s) toolbar.
+	removeButtons: 'Underline,Subscript,Superscript',
+
+	// Set the most common block elements.
+	format_tags: 'p;h1;h2;h3;pre',
+
+	// Simplify the dialog windows.
+	removeDialogTabs: 'image:advanced;link:advanced',
+	image_previewText: 'image preview',
+	imageUploadUrl: '/ckeditor/upload_image',
+	filebrowserImageUploadUrl: '/ckeditor/upload_image', // Will be replace by imageUploadUrl when upload_image
+	extraPlugins: 'justify,lineutils,colorbutton,uploadimage,font,autogrow', //,mathjax,codesnippet
+	//mathJaxLib : '//cdn.mathjax.org/mathjax/2.6-latest/MathJax.js?config=TeX-AMS_HTML',
+	extraAllowedContent: 'img[class]',
+	autoGrow_maxHeight: 600,
+	autoGrow_minHeight: 200,
+	autoGrow_onStartup: true,
+	autoGrow_bottomSpace: 50
+};
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+/*
 >>>front/file.rst>
 ===========
 文件上传
@@ -662,7 +827,7 @@ img-uploador
 <<<<
 */
 
-__webpack_require__(10);
+__webpack_require__(13);
 
 var fl = {
     read: function read(file, callback) {
@@ -1040,7 +1205,7 @@ Vue.component('logo-input', {
 window.fl = fl;
 
 /***/ }),
-/* 4 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1279,7 +1444,7 @@ ex.append_css("\n<style type=\"text/css\">\n    .forign-key-panel{\n        padd
 Vue.component('forign-edit', forignEdit);
 
 /***/ }),
-/* 5 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1357,7 +1522,7 @@ popUrlListen:
 <-<
  */
 
-__webpack_require__(11);
+__webpack_require__(14);
 
 var ln = {
     history_handle: function history_handle(obj) {
@@ -1370,8 +1535,7 @@ var ln = {
             }
         }, false);
 
-        if (obj.init) {
-            // && !history.state){
+        if (obj.init && !history.state) {
             history.pushState(obj.init, '');
         }
     },
@@ -1560,13 +1724,108 @@ var ln = {
 window.ln = ln;
 
 /***/ }),
-/* 6 */
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+if (!window.__multi_sel) {
+	document.write('\n\t\n<style type="text/css" media="screen" id="test">\n\n._tow-col-sel{\n\tdisplay: flex;\n\talign-items: stretch;\n\n}\n\n._tow-col-sel .sel{\n\tmin-width:250px;\n\tmax-width: 400px;\n\n\tdisplay: flex;\n\tflex-direction: column;\n\t/*display: inline-block;*/\n\t/*vertical-align: middle;*/\n}\n._tow-col-sel .sel select{\n\twidth: 100%;\n\n\tflex: 1;\n}\n._tow-col-sel .sel.right{\n\tborder-width:2px;\n}\n._tow-col-sel .arrow{\n\tdisplay: flex;\n\tflex-direction: column;\n\tjustify-content:center;\n\tpadding: 5px;\n}\n._tow-col-sel ._small_icon{\n\twidth:15px;\n}\n._tow-col-sel ._small_icon.deactive{\n\topacity: 0.5;\n\t-moz-opacity: 0.5;\n\tfilter:alpha(opacity=50);\n}\n</style>\n\n\t');
+}
+
+var temp_tow_col_sel = '\n<div class=\'_tow-col-sel\'>\n\t\t<div class="sel">\n\t\t\t<b>\u53EF\u9009\u9879</b>\n\t\t\t<select name="" id="" multiple="multiple" :size="size" class=\'left\' v-model=\'left_sel\' @dblclick=\'batch_add()\'>\n\t\t\t\t<option v-for=\'opt in orderBy(can_select,"label")\' :value="opt.value" v-text=\'opt.label\'  ></option>\n\t\t\t</select>\n\t\t</div>\n\n\t\t<div class="arrow">\n\t\t\t<img src="//res.enjoyst.com/image/right_02.png" alt=""\n\t\t\t\t:class=\'["_small_icon",{"deactive":left_sel.length==0}]\' @click=\'batch_add()\'>\n\t\t\t<br>\n\t\t\t<img src="//res.enjoyst.com/image/left_02.png" alt=""\n\t\t\t\t:class=\'["_small_icon",{"deactive":right_sel.length==0}]\' @click=\'batch_rm()\'>\n\t\t</div>\n\t\t<div class="sel">\n\t\t\t<b>\u9009\u4E2D\u9879</b>\n\t\t\t<select name="" id="" multiple="multiple" :size="size" class=\'right\' v-model=\'right_sel\' @dblclick=\'batch_rm()\'>\n\t\t\t\t<option v-for=\'opt in orderBy(selected,"label")\' :value="opt.value" v-text=\'opt.label\' ></option>\n\t\t\t</select>\n\t\t</div>\n\n</div>\n';
+
+Vue.component('tow-col-sel', {
+	template: temp_tow_col_sel,
+	props: {
+		choices: {},
+		value: {
+			default: function _default() {
+				return [];
+			}
+		},
+		size: {
+			default: 6
+		}
+	},
+	data: function data() {
+		var self = this;
+		if (!this.value) {
+			var norm_selected = [];
+		} else {
+			norm_selected = ex.filter(this.choices, function (choice) {
+				return ex.isin(choice.value, self.value);
+			});
+		}
+		return {
+			selected: norm_selected,
+			//can_select:JSON.parse(JSON.stringify(this.choices)),
+			left_sel: [],
+			right_sel: []
+		};
+	},
+	mounted: function mounted() {
+		//var self=this
+		//this.can_select=ex.filter(this.choices,function(choice){
+		//	return !ex.isin(choice,self.selected)
+		//})
+		//this.selected__ = ex.remove(this.can_select,function (item) {
+		//		return ex.isin(item.value,self.value)
+		//	})
+	},
+	watch: {
+		selected: function selected(v) {
+			this.$emit('input', ex.map(v, function (choice) {
+				return choice.value;
+			}));
+		}
+	},
+	computed: {
+		can_select: function can_select() {
+			var self = this;
+			return ex.filter(this.choices, function (choice) {
+				return !ex.isin(choice, self.selected);
+			});
+		}
+	},
+	methods: {
+		orderBy: function orderBy(array, key) {
+			return array.slice().sort(function (a, b) {
+				if (a[key] > b[key]) {
+					return 1;
+				} else if (a[key] < b[key]) {
+					return -1;
+				} else {
+					return 0;
+				}
+			});
+		},
+		batch_add: function batch_add() {
+			var self = this;
+			var added_choice = ex.remove(this.can_select, function (choice) {
+				return ex.isin(choice.value, self.left_sel);
+			});
+			ex.extend(this.selected, added_choice);
+		},
+		batch_rm: function batch_rm() {
+			var self = this;
+			var del_choice = ex.remove(this.selected, function (choice) {
+				return ex.isin(choice.value, self.right_sel);
+			});
+			//ex.extend(this.can_select,del_choice)
+		}
+	}
+});
+
+/***/ }),
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(7);
+var content = __webpack_require__(12);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(1)(content, {});
@@ -1575,8 +1834,8 @@ if(content.locals) module.exports = content.locals;
 if(false) {
 	// When the styles change, update the <style> tags
 	if(!content.locals) {
-		module.hot.accept("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/sass-loader/lib/loader.js!./fields.scss", function() {
-			var newContent = require("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/sass-loader/lib/loader.js!./fields.scss");
+		module.hot.accept("!!./../../node_modules/css-loader/index.js!./../../node_modules/sass-loader/lib/loader.js!./fields.scss", function() {
+			var newContent = require("!!./../../node_modules/css-loader/index.js!./../../node_modules/sass-loader/lib/loader.js!./fields.scss");
 			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 			update(newContent);
 		});
@@ -1586,21 +1845,7 @@ if(false) {
 }
 
 /***/ }),
-/* 7 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(0)();
-// imports
-
-
-// module
-exports.push([module.i, ".form-pad {\n  background-color: white;\n  padding: 2em 1em; }\n  .form-pad .field {\n    display: flex;\n    margin-top: 2em; }\n  .form-pad .field label {\n    width: 80px; }\n  .form-pad .field .field_input {\n    flex-grow: 1;\n    max-width: 50em;\n    border-bottom: 1px solid #f7f7f7; }\n    .form-pad .field .field_input select {\n      width: auto; }\n    .form-pad .field .field_input input[type=number] {\n      width: auto; }\n\n.help_text {\n  color: #a4a1a5;\n  font-style: italic;\n  font-size: 0.8em; }\n", ""]);
-
-// exports
-
-
-/***/ }),
-/* 8 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(0)();
@@ -1614,7 +1859,7 @@ exports.push([module.i, ".img-uploader input {\n  display: none; }\n\n.up_wrap {
 
 
 /***/ }),
-/* 9 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(0)();
@@ -1628,13 +1873,27 @@ exports.push([module.i, "@charset \"UTF-8\";\n#_load_frame_wrap {\n  position: f
 
 
 /***/ }),
-/* 10 */
+/* 12 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(0)();
+// imports
+
+
+// module
+exports.push([module.i, ".error {\n  color: red; }\n\n.field-panel {\n  background-color: #F5F5F5;\n  margin: 20px;\n  padding: 20px 30px;\n  position: relative;\n  border: 1px solid #D9D9D9;\n  overflow: auto; }\n  .field-panel:after {\n    content: '';\n    display: block;\n    position: absolute;\n    top: 0px;\n    left: 0px;\n    bottom: 0px;\n    width: 180px;\n    border-radius: 6px;\n    background-color: #fff;\n    z-index: 0; }\n  .field-panel .form-group.field {\n    display: flex;\n    align-items: flex-start; }\n    .field-panel .form-group.field .field_input {\n      flex-grow: 0;\n      padding: 5px 20px; }\n      .field-panel .form-group.field .field_input .ckeditor {\n        padding: 20px; }\n    .field-panel .form-group.field:first-child .control-label {\n      border-top: 5px solid #FFF; }\n    .field-panel .form-group.field .control-label {\n      width: 150px;\n      text-align: right;\n      padding: 5px 30px;\n      z-index: 100;\n      flex-shrink: 0;\n      border-top: 1px solid #EEE; }\n  .field-panel .form-group.field .field_input ._tow-col-sel {\n    /*width:750px;*/ }\n  .field-panel .form-group.field .help_text {\n    padding: 10px;\n    color: #999;\n    font-style: italic;\n    font-size: 0.9em; }\n  .field-panel .field.error .error {\n    display: inline-block;\n    vertical-align: top;\n    padding-top: 8px; }\n\n._tow-col-sel select {\n  min-height: 7em; }\n\nimg.img-uploador {\n  max-width: 100px;\n  max-height: 100px; }\n\n.req_star {\n  color: red; }\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(8);
+var content = __webpack_require__(10);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(1)(content, {});
@@ -1654,13 +1913,13 @@ if(false) {
 }
 
 /***/ }),
-/* 11 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(9);
+var content = __webpack_require__(11);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(1)(content, {});
@@ -1680,497 +1939,492 @@ if(false) {
 }
 
 /***/ }),
-/* 12 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+	value: true
 });
 exports.merge = merge;
 
 var _ajax_fun = __webpack_require__(2);
 
-var _file = __webpack_require__(3);
+var _file = __webpack_require__(5);
 
 var f = _interopRequireWildcard(_file);
 
-var _inputs = __webpack_require__(4);
+var _ckeditor = __webpack_require__(3);
+
+var ck = _interopRequireWildcard(_ckeditor);
+
+var _multi_sel = __webpack_require__(8);
+
+var multi = _interopRequireWildcard(_multi_sel);
+
+var _inputs = __webpack_require__(6);
 
 var inputs = _interopRequireWildcard(_inputs);
 
-var _link = __webpack_require__(5);
+var _link = __webpack_require__(7);
 
 var ln = _interopRequireWildcard(_link);
+
+var _field_base = __webpack_require__(4);
+
+var fb = _interopRequireWildcard(_field_base);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 //import * as js from './adapt.js'
 
 
-//import * as ck from './ckeditor.js'
-//import * as multi from './multi_sel.js'
-
+__webpack_require__(9);
 /*
- >->mobile/fields.rst>
- =========
- fields
- =========
+>->front/fields.rst>
+=========
+fields
+=========
 
- fields模块的目标是利用vuejs快速生成form表单。
+fields模块的目标是利用vuejs快速生成form表单。
 
- 主要结构
- ===========
- 1. field_base
- 基类，包括操作逻辑，专用input组件。如果需要修改整个field的外观，可以继承field_base，然后自定义wrap template
+主要结构
+===========
+1. field_base
+    基类，包括操作逻辑，专用input组件。如果需要修改整个field的外观，可以继承field_base，然后自定义wrap template
 
- 2. field
- wrap功能，在field_base外面套上了一层外观template，例如label，error,help_text等的显示。
+2. field
+    wrap功能，在field_base外面套上了一层外观template，例如label，error,help_text等的显示。
 
- 参数结构
- ==============
- field_base的参数都是采用的关键字参数，结构如下：
- 使用的 kw 结构
+参数结构
+==============
+field_base的参数都是采用的关键字参数，结构如下：
+使用的 kw 结构
  kw={
- errors:{},
- row:{
- username:'',
- password:'',
- pas2:'',
- },
- heads:[
- {name:'username',label:'用户名',type:'text',required:true,autofocus:true},
- ]
- }
+     errors:{},
+     row:{
+         username:'',
+         password:'',
+         pas2:'',
+    },
+     heads:[
+     	{name:'username',label:'用户名',type:'text',required:true,autofocus:true},
+     ]
+  }
  <field name='username' :kw='kw' ></field>
 
 
- <-<
- *配合jsonpost使用，效果最好
- */
+<-<
+*配合jsonpost使用，效果最好
+*/
 
 /*
- 自动处理form.errors
- $.post('',JSON.stringify(post_data),function (data) {
- is_valid(data.do_login,self.meta.errors,function () {
- location=next;
- })
- */
+自动处理form.errors
+$.post('',JSON.stringify(post_data),function (data) {
+	is_valid(data.do_login,self.meta.errors,function () {
+		location=next;
+})
+*/
 
 //import {use_color} from '../dosome/color.js'
 //import {load_js,load_css} from '../dosome/pkg.js'
-__webpack_require__(6);
+
 
 (0, _ajax_fun.hook_ajax_msg)();
 (0, _ajax_fun.hook_ajax_csrf)();
 
-var field_base = {
-    props: {
-        name: {
-            required: true
-        },
-        kw: {
-            required: true
-        }
-    },
-    computed: {
-        row: function row() {
-            return this.kw.row;
-        },
-        errors: function errors() {
-            if (!this.kw.errors) {
-                Vue.set(this.kw, 'errors', {});
-            }
-            return this.kw.errors;
-        },
-        head: function head() {
-            var heads = this.kw.heads;
-            for (var x = 0; x < heads.length; x++) {
-                var head = heads[x];
-                if (head.name == this.name) {
-                    return head;
-                }
-            }
-        }
-    },
-    methods: {
-        error_data: function error_data(name) {
-            if (this.errors[name]) {
-                return this.errors[name];
-            } else {
-                return '';
-            }
-        }
-    },
-    //<input v-else type="number"  v-model="row[name]" :id="'id_'+name" :placeholder="kw.placeholder" :autofocus="kw.autofocus">
-    components: {
-        linetext: {
-            props: ['name', 'row', 'kw'],
-            template: '<div>\n            \t\t\t<span v-if=\'kw.readonly\' v-text=\'row[name]\'></span>\n            \t\t\t<input v-else type="text" class="form-control" v-model="row[name]" :id="\'id_\'+name"\n                        \t:placeholder="kw.placeholder" :autofocus="kw.autofocus" :maxlength=\'kw.maxlength\'>\n                       </div>'
-        },
-        number: {
-            props: ['name', 'row', 'kw'],
+function is_valid(form_fun_rt, errors_obj, callback) {
+	if (form_fun_rt) {
+		if (form_fun_rt.errors) {
+			for (x in errors_obj) {
+				Vue.delete(errors_obj, x);
+			}
+			for (x in form_fun_rt.errors) {
+				Vue.set(errors_obj, x, form_fun_rt.errors[x]);
+			}
+		} else {
+			callback();
+		}
+	}
+}
 
-            template: '<div><span v-if=\'kw.readonly\' v-text=\'row[name]\'></span>\n            \t\t<input v-else type="number" class="form-control" v-model="row[name]" :id="\'id_\'+name"\n                        :placeholder="kw.placeholder" :autofocus="kw.autofocus"></div>'
-        },
-        password: {
-            props: ['name', 'row', 'kw'],
-            template: '<input type="password" :id="\'id_\'+name" class="form-control" v-model="row[name]" :placeholder="kw.placeholder" :readonly=\'kw.readonly\'>'
-        },
-        blocktext: {
-            props: ['name', 'row', 'kw'],
-            data: function data() {
-                return {
-                    org_height: 0
-                };
-            },
-            mounted: function mounted() {
-                var self = this;
-                Vue.nextTick(function () {
-                    self.on_input();
-                });
-            },
-            methods: {
-                on_input: function on_input() {
-                    var textarea = $(this.$el).find('textarea')[0];
-                    if (this.org_height != textarea.scrollHeight) {
-                        $(textarea).height(textarea.scrollHeight - 12);
-                        this.org_height = textarea.scrollHeight;
-                    }
-                }
-            },
-            computed: {
-                value: function value() {
-                    return this.row[this.name];
-                }
-            },
-            watch: {
-                value: function value(v) {
-                    var self = this;
-                    Vue.nextTick(function () {
-                        self.on_input();
-                    });
-                }
-            },
-            template: '<div>\n            <span v-if=\'kw.readonly\' v-text=\'row[name]\'></span>\n            <textarea v-else class="form-control" rows="2" :id="\'id_\'+name" v-model="row[name]" :placeholder="kw.placeholder"\n                :readonly=\'kw.readonly\'></textarea>\n            </div>'
-        }, //
-        color: {
-            props: ['name', 'row', 'kw'],
-            template: '<input type="text" v-model="row[name]" :id="\'id_\'+name" :readonly=\'kw.readonly\'>',
-            methods: {
-                init_and_listen: function init_and_listen() {
-                    var self = this;
-                    Vue.nextTick(function () {
-                        $(self.$el).spectrum({
-                            color: self.row[self.name],
-                            showInitial: true,
-                            showInput: true,
-                            preferredFormat: "name",
-                            change: function change(color) {
-                                self.src_color = color.toHexString();
-                                self.row[self.name] = color.toHexString();
-                            }
-                        });
-                    });
-                }
-            },
-            watch: {
-                input_value: function input_value(value) {
-                    if (this.src_color != value) {
-                        this.init_and_listen();
-                    }
-                }
-            },
-            computed: {
-                input_value: function input_value() {
-                    return this.row[this.name];
-                }
-            },
-            mounted: function mounted() {
-                var self = this;
-                ex.load_css('//cdn.bootcss.com/spectrum/1.8.0/spectrum.min.css');
-                ex.load_js('//cdn.bootcss.com/spectrum/1.8.0/spectrum.min.js', function () {
-                    self.init_and_listen();
-                });
-            }
-        },
-        logo: { // absolate
-            props: ['name', 'row', 'kw'],
-            template: '<logo-input :up_url="kw.up_url" :web_url.sync="row[name]" :id="\'id_\'+name"></logo-input>'
-        },
-        picture: {
-            props: ['name', 'row', 'kw'],
-            template: '<div><img class="img-uploador" v-if=\'kw.readonly\' :src=\'row[name]\'/>\n\t\t\t<img-uploador v-else :up_url="kw.up_url" v-model="row[name]" :id="\'id_\'+name" :config="kw.config"></img-uploador></div>'
-        },
-        sim_select: {
-            props: ['name', 'row', 'kw'],
-            data: function data() {
-                return {
-                    model: this.row[this.name]
-                };
-            },
-            template: '<div>\n            <span v-if=\'kw.readonly\' v-text=\'get_label(kw.options,row[name])\'></span>\n            <select v-else v-model=\'row[name]\'  :id="\'id_\'+name"  class="form-control">\n            \t<option v-for=\'opt in kw.options\' :value=\'opt.value\' v-text=\'opt.label\'></option>\n            </select>\n            </div>',
-            mounted: function mounted() {
-                if (this.kw.default && !this.row[this.name]) {
-                    Vue.set(this.row, this.name, this.kw.default);
-                    //this.row[this.name]=this.kw.default
-                }
-            },
-            methods: {
-                get_label: function get_label(options, value) {
-                    var option = ex.findone(options, { value: value });
-                    if (!option) {
-                        return '---';
-                    } else {
-                        return option.label;
-                    }
-                }
-            }
-        },
-        tow_col: {
-            props: ['name', 'row', 'kw'],
-            template: '<div>\n\t        \t<ul v-if=\'kw.readonly\'><li v-for=\'value in row[name]\' v-text=\'get_label(value)\'></li></ul>\n\t        \t<tow-col-sel v-else v-model=\'row[name]\' :id="\'id_\'+name" :choices=\'kw.options\' :size=\'kw.size\' ></tow-col-sel>\n\t        \t</div>',
-            methods: {
-                get_label: function get_label(value) {
-                    for (var i = 0; i < this.kw.options.length; i++) {
-                        if (this.kw.options[i].value == value) {
-                            return this.kw.options[i].label;
-                        }
-                    }
-                }
-            }
-        },
-        //<input type="checkbox" :id="'id_'+name" v-model='row[name]' :disabled="kw.readonly">
-        //<label :for="'id_'+name"><span v-text='kw.label'></span></label>
-        bool: {
-            props: ['name', 'row', 'kw'],
-            template: '<div class="checkbox">\n            <el-switch :id="\'id_\'+name" v-model=\'row[name]\' :disabled="kw.readonly"\n            on-color="#13ce66"\n             off-color="#ff4949">\n                </el-switch>\n\t\t\t\t\t  </div>'
-        },
-        date: {
-            props: ['name', 'row', 'kw'],
-            template: '<div><span v-if=\'kw.readonly\' v-text=\'row[name]\'></span>\n            \t\t\t<date class="form-control" v-model="row[name]" :id="\'id_\'+name"\n                        \t:placeholder="kw.placeholder"></date>\n                       </div>'
-        },
-        datetime: {
-            props: ['name', 'row', 'kw'],
-            template: '<div><span v-if=\'kw.readonly\' v-text=\'row[name]\'></span>\n            \t\t\t<datetime class="form-control" v-model="row[name]" :id="\'id_\'+name"\n                        \t:placeholder="kw.placeholder"></datetime>\n                       </div>'
-        },
-        richtext: {
-            props: ['name', 'row', 'kw'],
-            template: '<div><span v-if=\'kw.readonly\' v-text=\'row[name]\'></span>\n            \t\t\t<ckeditor  v-model="row[name]" :id="\'id_\'+name"></ckeditor>\n                       </div>'
-        }
-    }
+var field_base = {
+	props: {
+		name: {
+			required: true
+		},
+		kw: {
+			required: true
+		}
+	},
+	computed: {
+		row: function row() {
+			return this.kw.row;
+		},
+		errors: function errors() {
+			if (!this.kw.errors) {
+				Vue.set(this.kw, 'errors', {});
+			}
+			return this.kw.errors;
+		},
+		head: function head() {
+			var heads = this.kw.heads;
+			for (var x = 0; x < heads.length; x++) {
+				var head = heads[x];
+				if (head.name == this.name) {
+					return head;
+				}
+			}
+		}
+	},
+	methods: {
+		error_data: function error_data(name) {
+			if (this.errors[name]) {
+				return this.errors[name];
+			} else {
+				return '';
+			}
+		}
+	},
+	components: {
+		linetext: {
+			props: ['name', 'row', 'kw'],
+			template: '<div>\n            \t\t\t<span v-if=\'kw.readonly\' v-text=\'row[name]\'></span>\n            \t\t\t<input v-else type="text" class="form-control" v-model="row[name]" :id="\'id_\'+name"\n                        \t:placeholder="kw.placeholder" :autofocus="kw.autofocus" :maxlength=\'kw.maxlength\'>\n                       </div>'
+		},
+		number: {
+			props: ['name', 'row', 'kw'],
+
+			template: '<div><span v-if=\'kw.readonly\' v-text=\'row[name]\'></span>\n            \t\t<input v-else type="number" class="form-control" v-model="row[name]" :id="\'id_\'+name"\n                        :placeholder="kw.placeholder" :autofocus="kw.autofocus"></div>'
+		},
+		password: {
+			props: ['name', 'row', 'kw'],
+			template: '<input type="password" :id="\'id_\'+name" class="form-control" v-model="row[name]" :placeholder="kw.placeholder" :readonly=\'kw.readonly\'>'
+		},
+		blocktext: {
+			props: ['name', 'row', 'kw'],
+			template: '<div>\n            <span v-if=\'kw.readonly\' v-text=\'row[name]\'></span>\n            <textarea v-else class="form-control" rows="3" :id="\'id_\'+name" v-model="row[name]" :placeholder="kw.placeholder" :readonly=\'kw.readonly\'></textarea>\n            </div>'
+		},
+		color: {
+			props: ['name', 'row', 'kw'],
+			template: '<input type="text" v-model="row[name]" :id="\'id_\'+name" :readonly=\'kw.readonly\'>',
+			methods: {
+				init_and_listen: function init_and_listen() {
+					var self = this;
+					Vue.nextTick(function () {
+						$(self.$el).spectrum({
+							color: self.row[self.name],
+							showInitial: true,
+							showInput: true,
+							preferredFormat: "name",
+							change: function change(color) {
+								self.src_color = color.toHexString();
+								self.row[self.name] = color.toHexString();
+							}
+						});
+					});
+				}
+			},
+			watch: {
+				input_value: function input_value(value) {
+					if (this.src_color != value) {
+						this.init_and_listen();
+					}
+				}
+			},
+			computed: {
+				input_value: function input_value() {
+					return this.row[this.name];
+				}
+			},
+			mounted: function mounted() {
+				var self = this;
+				ex.load_css('//cdn.bootcss.com/spectrum/1.8.0/spectrum.min.css');
+				ex.load_js('//cdn.bootcss.com/spectrum/1.8.0/spectrum.min.js', function () {
+					self.init_and_listen();
+				});
+			}
+		},
+		logo: { // absolate
+			props: ['name', 'row', 'kw'],
+			template: '<logo-input :up_url="kw.up_url" :web_url.sync="row[name]" :id="\'id_\'+name"></logo-input>'
+		},
+		picture: {
+			props: ['name', 'row', 'kw'],
+			template: '<div><img class="img-uploador" v-if=\'kw.readonly\' :src=\'row[name]\'/>\n\t\t\t<img-uploador v-else :up_url="kw.up_url" v-model="row[name]" :id="\'id_\'+name" :config="kw.config"></img-uploador></div>'
+		},
+		sim_select: {
+			props: ['name', 'row', 'kw'],
+			data: function data() {
+				return {
+					model: this.row[this.name]
+				};
+			},
+			template: '<div>\n            <span v-if=\'kw.readonly\' v-text=\'get_label(kw.options,row[name])\'></span>\n            <select v-else v-model=\'row[name]\'  :id="\'id_\'+name"  class="form-control">\n            \t<option v-for=\'opt in kw.options\' :value=\'opt.value\' v-text=\'opt.label\'></option>\n            </select>\n            </div>',
+			// 添加，修改，删除的按钮代码，暂时不用。<option :value='null'>----</option>
+			//`<div><select v-model='model'  :id="'id_'+name" :readonly='kw.readonly'>
+			//	<option :value='null'>----</option>
+			//	<option v-for='opt in kw.options' :value='opt.value' v-text='opt.label'></option>
+			//</select>
+			//<span v-if='kw.add_url' @click='add()'><img src='http://res.enjoyst.com/image/add.png' /></span>
+			//<span v-if='kw.change_url' @click='edit()'><img src='http://res.enjoyst.com/image/edit.png' /></span>
+			//<span v-if='kw.del_url' @click='del_row()'><img src='http://res.enjoyst.com/image/delete.png' /></a>
+			//</div>`,
+			mounted: function mounted() {
+				if (this.kw.default && !this.row[this.name]) {
+					Vue.set(this.row, this.name, this.kw.default);
+					//this.row[this.name]=this.kw.default
+				}
+			},
+			methods: {
+				get_label: function get_label(options, value) {
+					var option = ex.findone(options, { value: value });
+					if (!option) {
+						return '---';
+					} else {
+						return option.label;
+					}
+				}
+			}
+		},
+		tow_col: {
+			props: ['name', 'row', 'kw'],
+			template: '<div>\n\t        \t<ul v-if=\'kw.readonly\'><li v-for=\'value in row[name]\' v-text=\'get_label(value)\'></li></ul>\n\t        \t<tow-col-sel v-else v-model=\'row[name]\' :id="\'id_\'+name" :choices=\'kw.options\' :size=\'kw.size\' ></tow-col-sel>\n\t        \t</div>',
+			methods: {
+				get_label: function get_label(value) {
+					for (var i = 0; i < this.kw.options.length; i++) {
+						if (this.kw.options[i].value == value) {
+							return this.kw.options[i].label;
+						}
+					}
+				}
+			}
+		},
+		bool: {
+			props: ['name', 'row', 'kw'],
+			template: '<div class="checkbox">\n\t        <input type="checkbox" :id="\'id_\'+name" v-model=\'row[name]\' :disabled="kw.readonly">\n\t\t\t <label :for="\'id_\'+name"><span v-text=\'kw.label\'></span></label>\n\t\t\t\t\t  </div>'
+		},
+		date: {
+			props: ['name', 'row', 'kw'],
+			template: '<div><span v-if=\'kw.readonly\' v-text=\'row[name]\'></span>\n            \t\t\t<date class="form-control" v-model="row[name]" :id="\'id_\'+name"\n                        \t:placeholder="kw.placeholder"></date>\n                       </div>'
+		},
+		datetime: {
+			props: ['name', 'row', 'kw'],
+			template: '<div><span v-if=\'kw.readonly\' v-text=\'row[name]\'></span>\n            \t\t\t<datetime class="form-control" v-model="row[name]" :id="\'id_\'+name"\n                        \t:placeholder="kw.placeholder"></datetime>\n                       </div>'
+		},
+		richtext: {
+			props: ['name', 'row', 'kw'],
+			template: '<div><span v-if=\'kw.readonly\' v-text=\'row[name]\'></span>\n            \t\t\t<ckeditor  v-model="row[name]" :id="\'id_\'+name"></ckeditor>\n                       </div>'
+		}
+	}
 
 };
-
-//  <el-form-item :label="head.label" > </el-form-item>
+//'set.label_cls'   set.input_cls
 
 var field = {
-    mixins: [field_base],
-    created: function created() {
-        if (!this.head.placeholder) {
-            this.head.placeholder = '请输入' + this.head.label;
-        }
-    },
-    methods: {},
-    template: '\n\t\t<div for=\'field\' class="form-group field" :class=\'{"error":error_data(name)}\' v-if="head">\n\t\t<label :for="\'id_\'+name"  class="control-label" v-if=\'!head.no_auto_label\'>\n\t\t\t<span v-text="head.label"></span><span class="req_star" v-if=\'head.required\'>*</span>\n\t\t</label>\n\n\t\t<div class="field_input">\n\t\t\t<component :is=\'head.type\'\n\t\t\t\t:row=\'row\'\n\t\t\t\t:name=\'name\'\n\t\t\t\t:kw=\'head\'>\n\t\t\t</component>\n\t\t\t<div class="help_text"><span v-text="head.help_text"></span></div>\n\t\t    <slot></slot>\n\t\t    <div v-for=\'error in error_data(name)\' v-text=\'error\' class=\'error\'></div>\n\t\t</div>\n\n\t\t</div>\n\t'
+	mixins: [field_base],
+	template: '\n\t\t<div for=\'field\' class="form-group field" :class=\'{"error":error_data(name)}\' v-if="head">\n\t\t<label :for="\'id_\'+name"  class="control-label" v-if=\'!head.no_auto_label\'>\n\t\t\t<span v-text="head.label"></span><span class="req_star" v-if=\'head.required\'>*</span>\n\t\t</label>\n\n\t\t<div class="field_input">\n\t\t\t<component :is=\'head.type\'\n\t\t\t\t:row=\'row\'\n\t\t\t\t:name=\'name\'\n\t\t\t\t:kw=\'head\'>\n\t\t\t</component>\n\t\t</div>\n\t\t<div class="help_text"><span v-text="head.help_text"></span></div>\n\t\t<slot> </slot>\n\t\t<div v-for=\'error in error_data(name)\' v-text=\'error\' class=\'error\'></div>\n\t\t</div>\n\t'
 
 };
 
 Vue.component('field', field);
 
 function update_vue_obj(vue_obj, obj) {
-    for (var x in vue_obj) {
-        Vue.delete(vue_obj, x);
-    }
-    for (var _x in obj) {
-        Vue.set(vue_obj, _x, obj[_x]);
-    }
+	for (var _x in vue_obj) {
+		Vue.delete(vue_obj, _x);
+	}
+	for (var _x2 in obj) {
+		Vue.set(vue_obj, _x2, obj[_x2]);
+	}
 }
 
 function merge(mains, subs) {
-    mains.each(function (first) {
-        subs.each(function (second) {
-            if (first.name == second.name) {
-                for (var x in second) {
-                    first[x] = second[x];
-                }
-            }
-        });
-    });
+	mains.each(function (first) {
+		subs.each(function (second) {
+			if (first.name == second.name) {
+				for (var x in second) {
+					first[x] = second[x];
+				}
+			}
+		});
+	});
 }
 
 var field_fun = {
-    data: function data() {
-        return {
-            kw: {
-                heads: heads,
-                row: row,
-                errors: {}
-            },
-            menu: menu,
-            namelist: namelist,
-            can_add: can_add,
-            can_del: can_del,
-            can_log: can_log,
-            can_edit: can_edit
-        };
-    },
-    created: function created() {
-        ex.each(this.kw.heads, function (head) {
-            if (!head.placeholder) {
-                head.placeholder = '请输入' + head.label;
-            }
-        });
-    },
-    methods: {
-        after_sub: function after_sub() {
-            location = document.referrer;
-        },
-        submit: function submit() {
-            var self = this;
-            (0, _ajax_fun.show_upload)();
-            var search = ex.parseSearch();
-            var post_data = [{ fun: 'save', row: this.kw.row }];
-            ex.post('', JSON.stringify(post_data), function (resp) {
-                (0, _ajax_fun.hide_upload)(500);
-                if (resp.save.errors) {
-                    self.kw.errors = resp.save.errors;
-                } else if (search._pop == 1) {
-                    window.ln.try_rt({ row: resp.save.row });
-                } else if (search.next) {
-                    location = decodeURIComponent(search.next);
-                } else {
-                    self.after_sub();
-                }
-            });
-        },
-        cancel: function cancel() {
-            var search = ex.parseSearch(); //parseSearch(location.search)
-            if (search._pop) {
-                window.close();
-            } else {
-                history.back();
-            }
-        },
-        del_row: function del_row(path) {
-            var search_args = ex.parseSearch();
-            location = ex.template('{engine_url}/del_rows?rows={class}:{pk}&next={next}&_pop={pop}', { class: this.kw.row._class,
-                engine_url: engine_url,
-                pk: this.kw.row.pk,
-                next: search_args.next,
-                pop: search_args._pop
+	data: function data() {
+		return {
+			kw: {
+				heads: heads,
+				row: row,
+				errors: {}
+			},
+			menu: menu,
+			search_args: ex.parseSearch(),
+			can_add: can_add,
+			can_del: can_del,
+			can_log: can_log,
+			can_edit: can_edit
+		};
+	},
+	methods: {
+		after_sub: function after_sub() {
+			location = document.referrer;
+		},
+		submit: function submit() {
+			var self = this;
+			(0, _ajax_fun.show_upload)();
+			var search = ex.parseSearch();
+			var post_data = [{ fun: 'save', row: this.kw.row }];
+			ex.post('', JSON.stringify(post_data), function (resp) {
+				(0, _ajax_fun.hide_upload)(500);
+				if (resp.save.errors) {
+					self.kw.errors = resp.save.errors;
+				} else if (search._pop == 1) {
+					window.ln.try_rt({ row: resp.save.row });
+				} else if (search.next) {
+					location = decodeURIComponent(search.next);
+				} else {
+					self.after_sub();
+				}
+			});
+		},
+		cancel: function cancel() {
+			var search = ex.parseSearch(); //parseSearch(location.search)
+			if (search._pop) {
+				window.close();
+			} else {
+				history.back();
+			}
+		},
+		del_row: function del_row(path) {
+			var search_args = ex.parseSearch();
+			if (this.kw.row.pk) {
+				return ex.template('{engine_url}/del_rows?rows={class}:{pk}&next={next}&_pop={pop}', { class: this.kw.row._class,
+					engine_url: engine_url,
+					pk: this.kw.row.pk,
+					next: search_args.next,
+					pop: search_args._pop
 
-            });
-        },
-        log_url: function log_url() {
-            var obj = {
-                pk: this.kw.row.pk,
-                _class: this.kw.row._class,
-                engine_url: engine_url,
-                page_name: page_name
-            };
-            return ex.template('{engine_url}/log?rows={_class}:{pk}', obj);
-        }
-    }
+				});
+			} else {
+				return null;
+			}
+		},
+		log_url: function log_url() {
+			var obj = {
+				pk: this.kw.row.pk,
+				_class: this.kw.row._class,
+				engine_url: engine_url,
+				page_name: page_name
+			};
+			return ex.template('{engine_url}/log?rows={_class}:{pk}', obj);
+		}
+	}
 };
 Vue.component('com-form-btn', {
-    data: function data() {
-        return {
-            can_add: can_add,
-            can_del: can_del
-        };
-    },
-    props: ['submit', 'del_row', 'cancel'],
-    template: '<div style=\'overflow: hidden;\'>\n\t\t<div class="btn-group" style=\'float: right;\'>\n\t\t\t<button type="button" class="btn btn-default" @click=\'submit()\' v-if=\'can_add\'>Save</button>\n\t\t\t<button type="button" class="btn btn-default" v-if=\'can_del\' @click=\'del_row()\'>\u5220\u9664</button>\n\t\t\t<button type="button" class="btn btn-default" @click=\'cancel()\' >Cancel</button>\n\t\t</div>\n\t</div>'
+	data: function data() {
+		return {
+			can_add: can_add,
+			can_del: can_del
+		};
+	},
+	props: ['submit', 'del_row', 'cancel'],
+	computed: {
+		del_link: function del_link() {
+			return this.del_row();
+		}
+	},
+	template: '<div style=\'overflow: hidden;\'>\n\t\t<div class="btn-group" style=\'float: right;\'>\n\t\t\t<button type="button" class="btn btn-default" @click=\'submit()\' v-if=\'can_add\'>Save</button>\n\t\t\t<a type="button" class="btn btn-default" v-if=\'can_del &&del_link\' :href=\'del_link\'>\u5220\u9664</a>\n\t\t\t<button type="button" class="btn btn-default" @click=\'cancel()\' >Cancel</button>\n\t\t</div>\n\t</div>'
 });
 
 var fieldset_fun = {
-    data: function data() {
-        return {
-            fieldset: fieldset,
-            namelist: namelist,
-            menu: menu,
+	data: function data() {
+		return {
+			fieldset: fieldset,
+			namelist: namelist,
+			menu: menu,
+			search_args: ex.parseSearch(),
+			can_add: can_add,
+			can_del: can_del,
+			can_log: can_log
+		};
+	},
 
-            can_add: can_add,
-            can_del: can_del,
-            can_log: can_log
-        };
-    },
+	methods: {
+		submit: function submit() {
+			var self = this;
+			(0, _ajax_fun.show_upload)();
+			var search = ex.parseSearch();
+			var fieldset_row = {};
+			for (var k in this.fieldset) {
+				fieldset_row[k] = this.fieldset[k].row;
+			}
 
-    methods: {
-        submit: function submit() {
-            var self = this;
-            (0, _ajax_fun.show_upload)();
-            var search = ex.parseSearch();
-            var fieldset_row = {};
-            for (var k in this.fieldset) {
-                fieldset_row[k] = this.fieldset[k].row;
-            }
-            var post_data = [{ fun: 'save_fieldset', fieldset: fieldset_row, save_step: save_step }];
-            ex.post('', JSON.stringify(post_data), function (resp) {
-                if (resp.save_fieldset.errors) {
-                    var error_path = resp.save_fieldset.path;
-                    ex.set(self.fieldset, error_path, resp.save_fieldset.errors);
-                    (0, _ajax_fun.hide_upload)(200);
-                } else if (search._pop == 1) {
-                    window.ln.rtWin({ row: resp.save_fieldset.fieldset });
-                } else if (search.next) {
-                    location = decodeURIComponent(search.next);
-                } else {
-                    if (document.referrer) {
-                        location = document.referrer;
-                    }
-                    (0, _ajax_fun.hide_upload)(200);
-                }
-            });
-        },
-        cancel: function cancel() {
-            var search = ex.parseSearch(); //parseSearch(location.search)
-            if (search._pop) {
-                window.close();
-            } else {
-                history.back();
-            }
-        },
-        del_row: function del_row(path) {
-            var self = this;
-            var search_args = ex.parseSearch();
-            var rows = [];
-            ex.each(delset, function (name) {
-                var row = self.fieldset[name].row;
-                if (row.pk) {
-                    rows.push(row._class + ':' + row.pk);
-                }
-            });
-            if (rows.length > 1) {
-                return ex.template('{engine_url}/del_rows?rows={rows}&next={next}&_pop={pop}', { engine_url: engine_url,
-                    rows: rows,
-                    next: search_args.next,
-                    pop: search_args._pop
-                });
-            } else {
-                return null;
-            }
-        },
-        log_url: function log_url() {
-            var obj = {
-                pk: this.kw.row.pk,
-                _class: this.kw.row._class,
-                engine_url: engine_url,
-                page_name: page_name
-            };
-            return ex.template('{engine_url}/log?rows={_class}:{pk}', obj);
-        }
-    }
+			var post_data = [{ fun: 'save_fieldset', fieldset: fieldset_row, save_step: save_step }];
+			ex.post('', JSON.stringify(post_data), function (resp) {
+				if (resp.save_fieldset.errors) {
+					var error_path = resp.save_fieldset.path;
+					ex.set(self.fieldset, error_path, resp.save_fieldset.errors);
+					(0, _ajax_fun.hide_upload)(200);
+				} else if (search._pop == 1) {
+					window.ln.rtWin({ row: resp.save_fieldset.fieldset });
+				} else if (search.next) {
+
+					location = decodeURIComponent(search.next);
+				} else {
+					(0, _ajax_fun.hide_upload)(200);
+				}
+			});
+		},
+		cancel: function cancel() {
+			var search = ex.parseSearch(); //parseSearch(location.search)
+			if (search._pop) {
+				window.close();
+			} else {
+				history.back();
+			}
+		},
+		del_row: function del_row(path) {
+			var self = this;
+			var search_args = ex.parseSearch();
+			var rows = [];
+			ex.each(delset, function (name) {
+				var row = self.fieldset[name].row;
+				if (row.pk) {
+					rows.push(row._class + ':' + row.pk);
+				}
+			});
+			if (rows.length > 1) {
+				return ex.template('{engine_url}/del_rows?rows={rows}&next={next}&_pop={pop}', { engine_url: engine_url,
+					rows: rows,
+					next: search_args.next,
+					pop: search_args._pop
+				});
+			} else {
+				return null;
+			}
+		},
+		log_url: function log_url() {
+			var rows = [];
+			for (var k in this.fieldset) {
+				var kw = this.fieldset[k];
+				rows.push(kw.row._class + ':' + kw.row.pk);
+			}
+			var obj = {
+				rows: rows.join(','),
+				engine_url: engine_url
+			};
+			return ex.template('{engine_url}/log?rows={rows}', obj);
+		}
+	}
 };
 window.fieldset_fun = fieldset_fun;
-window.field_fun = field_fun;
 
+window.field_fun = field_fun;
 window.hook_ajax_msg = _ajax_fun.hook_ajax_msg;
 window.update_vue_obj = update_vue_obj;
-//window.use_ckeditor= ck.use_ckeditor
+window.use_ckeditor = ck.use_ckeditor;
 window.show_upload = _ajax_fun.show_upload;
 window.hide_upload = _ajax_fun.hide_upload;
 window.merge = merge;

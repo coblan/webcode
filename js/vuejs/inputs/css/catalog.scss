@@ -1,0 +1,60 @@
+.com-catalog.mobile {
+  .dir {
+
+
+    .name {
+      flex-grow: 1;
+    }
+  }
+
+  .breadcrumb {
+    font-size: 1.5em;
+  }
+
+  .bd {
+    background-color: white;
+
+    li {
+      display: flex;
+      align-items: center;
+
+      padding: 10px 15px;
+      position: relative;
+      font-size: 1.3em;
+
+      .fa{
+        padding: 0 0.5em;
+      }
+    }
+    li:before {
+      content: ' ';
+      border-bottom: 1px solid #f3f0ed;
+      position: absolute;
+      left: 15px;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      /*color: red;*/
+      height: 1px;
+    }
+    li.dir:after {
+      content: " ";
+      display: inline-block;
+      height: 6px;
+      width: 6px;
+      border-width: 2px 2px 0 0;
+      border-color: #c8c8cd;
+      border-style: solid;
+      -webkit-transform: matrix(.71, .71, -.71, .71, 0, 0);
+      transform: matrix(.71, .71, -.71, .71, 0, 0);
+      position: relative;
+      top: -2px;
+      position: absolute;
+      top: 50%;
+      margin-top: -4px;
+      right: 6px;
+    }
+  }
+}
+
+

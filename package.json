@@ -19,6 +19,8 @@
     "precss": "^1.4.0",
     "sass-loader": "^6.0.0",
     "style-loader": "^0.13.1",
+    "uglify-js": "^2.8.22",
+    "uglifyjs-webpack-plugin": "^0.4.3",
     "webpack": "^2.2.1"
   },
   "scripts": {

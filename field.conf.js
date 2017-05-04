@@ -1,4 +1,5 @@
 var path = require( 'path' );
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 //var ExtractTextPlugin = require("extract-text-webpack-plugin");
 module.exports = 
 {
@@ -57,6 +58,16 @@ module.exports =
 			}, {
 				loader: "css-loader" // translates CSS into CommonJS
 			}, {
+				loader: "postcss-loader", // translates CSS into CommonJS
+				options: {
+					plugins: function () {
+						return [
+							//require('precss'),
+							require('autoprefixer')
+						];
+					}
+				}
+			},{
 				loader: "sass-loader" // compiles Sass to CSS
 			}]
 		  }
@@ -72,7 +83,10 @@ module.exports =
 		//	}]
 		//}]
 	
-	}
+	},
+	//plugins: [
+	//	new UglifyJSPlugin()
+	//]
 }
 
 

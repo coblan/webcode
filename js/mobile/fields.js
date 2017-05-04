@@ -128,7 +128,11 @@ var field_base={
                 }
             },
             mounted:function(){
-              this.on_input()
+                var self=this
+                Vue.nextTick(function(){
+                    self.on_input()
+                })
+
             },
             methods:{
                 on_input:function(){
@@ -139,10 +143,23 @@ var field_base={
                     }
                 }
             },
+            computed:{
+                value:function(){
+                    return this.row[this.name]
+                }
+            },
+            watch:{
+                value:function(v){
+                    var self=this
+                    Vue.nextTick(function(){
+                        self.on_input()
+                    })
+                }
+            },
             template:  `<div>
             <span v-if='kw.readonly' v-text='row[name]'></span>
             <textarea v-else class="form-control" rows="2" :id="'id_'+name" v-model="row[name]" :placeholder="kw.placeholder"
-               @input="on_input()" :readonly='kw.readonly'></textarea>
+                :readonly='kw.readonly'></textarea>
             </div>`
         },//
         color:{
