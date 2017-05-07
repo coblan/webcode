@@ -1,0 +1,29 @@
+.mb-btn {
+  input[type=checkbox]{
+    display: none;
+  }
+  .fa-check-circle{
+    color: green;
+  }
+}
+
+.two-col{
+  .selected{
+    background-color: green;
+    color: white;
+  }
+  .pop-wrap{
+    width:80vw;
+    max-height: 50vh;
+    min-height: 30vh;
+    padding: 15px 8px;
+  }
+  .sel-item{
+    padding-top: 4px;
+  }
+  .fa-pencil-square-o{
+    font-size: 1.5em;
+    float: right;
+    padding-right: 10px;
+  }
+}

@@ -57,6 +57,7 @@ import * as ln from '../vuejs/link.js'
 
 
 require('./css/fields.scss')
+require('./css/input.scss')
 
 hook_ajax_msg()
 hook_ajax_csrf()
@@ -243,9 +244,22 @@ var field_base={
         },
         tow_col:{
             props:['name','row','kw'],
-            template:`<div>
-	        	<ul v-if='kw.readonly'><li v-for='value in row[name]' v-text='get_label(value)'></li></ul>
-	        	<tow-col-sel v-else v-model='row[name]' :id="'id_'+name" :choices='kw.options' :size='kw.size' ></tow-col-sel>
+            data:function(){
+                return {
+                    view:'main'
+                }
+            },
+            template:`<div class="two-col">
+                <i v-if='!kw.readonly' @click="view='sel'" class="fa fa-pencil-square-o" aria-hidden="true"></i>
+	        	<ul><li v-for='value in row[name]' v-text='get_label(value)'></li></ul>
+	        	<!--<tow-col-sel v-model='row[name]' :id="'id_'+name" :choices='kw.options' :size='kw.size' ></tow-col-sel>-->
+
+	        	<modal v-show="view=='sel'" @click.native='view="main"'>
+                    <div @click.stop="" class="pop-wrap">
+                        <div class="sel-item" v-for="choice in kw.options" v-text=choice.label :class='{"selected":is_selected(choice.value)}'
+                            @click="toggle(choice.value)"></div>
+                    </div>
+	        	</modal>
 	        	</div>`,
             methods:{
                 get_label:function (value) {
@@ -254,6 +268,18 @@ var field_base={
                             return this.kw.options[i].label
                         }
                     }
+                },
+                is_selected:function(v){
+                    return  ex.isin(v,this.row[this.name])
+                },
+                toggle:function(v){
+                    if(ex.isin(v,this.row[this.name])){
+                        ex.remove(this.row[this.name],function(item){
+                            return item==v
+                        })
+                    }else{
+                        this.row[this.name].push(v)
+                    }
                 }
             }
         },
@@ -261,11 +287,13 @@ var field_base={
     //<label :for="'id_'+name"><span v-text='kw.label'></span></label>
         bool:{
             props:['name','row','kw'],
-            template:`<div class="checkbox">
-            <el-switch :id="'id_'+name" v-model='row[name]' :disabled="kw.readonly"
-            on-color="#13ce66"
-             off-color="#ff4949">
-                </el-switch>
+            template:`<div class="mb-btn">
+              <input type="checkbox" name="checkbox1" :id="'id_'+name" :disabled="kw.readonly" v-model='row[name]'/>
+              <span @click='row[name]= !row[name]' style="font-size: 1.5em;">
+                  <i class="fa fa-check-circle" aria-hidden="true" v-if='row[name]'></i>
+                  <i class="fa fa-circle-thin" aria-hidden="true" v-else></i>
+              </span>
+              <span :for="'id_'+name" @click='row[name]= !row[name]'><span v-text='kw.label'></span></span>
 					  </div>`
         },
         date: {
