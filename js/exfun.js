@@ -1,4 +1,8 @@
 
+function para_encode(para_str){
+	return encodeURI(para_str).replace('+','%2B')
+}
+
 ex={
 	parseSearch:function (queryString) {
 		var queryString = queryString || location.search
@@ -28,11 +32,11 @@ ex={
 			}
 		}
 		if(outstr.endsWith('&')){
-			return outstr.slice(0,-1)
+			return para_encode(outstr.slice(0,-1))
 		}else if(outstr==pre){
 			return ''
 		}else{
-			return outstr
+			return para_encode(outstr)
 		}
 	},
 	appendSearch:function(url,obj){
