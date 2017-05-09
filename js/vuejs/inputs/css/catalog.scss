@@ -1,9 +1,13 @@
 .com-catalog.mobile {
   .dir {
 
-
     .name {
       flex-grow: 1;
+    }
+  }
+  .item{
+    .name{
+      flex-grow:1;
     }
   }
 
@@ -37,7 +41,7 @@
       /*color: red;*/
       height: 1px;
     }
-    li.dir:after {
+    li.dir:after {  // right arrow
       content: " ";
       display: inline-block;
       height: 6px;

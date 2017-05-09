@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 1);
+/******/ 	return __webpack_require__(__webpack_require__.s = 5);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -105,7 +105,7 @@ editable:
 <-<
 * */
 
-__webpack_require__(5);
+__webpack_require__(2);
 
 var com_catalog = {
     props: ['url', 'root', 'editable'],
@@ -209,9 +209,13 @@ var com_catalog = {
                 del_str += k + ':' + obj[k] + ',';
             }
             location = engine_url + '/del_rows?rows=' + del_str + '&next=' + encodeURIComponent(location.href);
+        },
+
+        set_sel: function set_sel(v) {
+            this.selected = v;
         }
     },
-    template: '<div class="com-catalog">\n    <div class="flex">\n        <ol class="breadcrumb flex-grow">\n            <li ><a href="javacript:;" @click="dir_data(root)">root</a></li>\n            <li v-for="dir in parents" ><a href="javacript:;" v-text="dir.name" @click="dir_data(dir);$emit(\'dirclick\',dir)" ></a></li>\n        </ol>\n        <slot name="head_end"></slot>\n    </div>\n\n    <div class="bd">\n        <ul>\n        <li v-for="dir in dirs" class="dir">\n            <input v-if="editable" type="checkbox" :value="dir" v-model="selected"/>\n            <slot name="dir_icon">\n                <i class="fa fa-folder" aria-hidden="true"></i>\n            </slot>\n\n            <span v-text="dir.name" class="clickable name" @click="dir_data(dir);$emit(\'dirclick\',dir)"></span>\n        </li>\n        <li v-for="item in items" class="item">\n            <input v-if="editable" type="checkbox" :value="item" v-model="selected"/>\n            <slot name="item_icon">\n                <i class="fa fa-file-o" aria-hidden="true"></i>\n            </slot>\n            <span v-text="item.name" class="clickable name" @click="$emit(\'itemclick\',item)"></span>\n         </li>\n        </ul>\n    </div>\n    </div>'
+    template: '<div class="com-catalog">\n    <div class="flex">\n        <ol class="breadcrumb flex-grow">\n            <li ><a href="javacript:;" @click="dir_data(root)">root</a></li>\n            <li v-for="dir in parents" ><a href="javacript:;" v-text="dir.name" @click="dir_data(dir);$emit(\'dirclick\',dir)" ></a></li>\n        </ol>\n        <slot name="head_end"></slot>\n    </div>\n\n    <div class="bd">\n        <ul>\n        <li v-for="dir in dirs" class="dir">\n            <slot name="check_sel" :value="dir" :selected="selected" :set_sel="set_sel">\n                <input v-if="editable" type="checkbox" :value="dir" v-model="selected"/>\n            </slot>\n\n            <slot dir_icon>\n                <i class="fa fa-folder" aria-hidden="true"></i>\n            </slot>\n\n            <span v-text="dir.name" class="clickable name" @click="dir_data(dir);$emit(\'dirclick\',dir)"></span>\n            <slot name="btn-panel" :selected="selected" :item="dir"></slot>\n        </li>\n        <li v-for="item in items" class="item">\n            <slot name="check_sel" :value="item" :selected="selected" :set_sel="set_sel">\n                <input v-if="editable" type="checkbox" :value="item" v-model="selected"/>\n            </slot>\n            <slot name="item_icon">\n                <i class="fa fa-file-o" aria-hidden="true"></i>\n            </slot>\n            <span v-text="item.name" class="clickable name" @click="$emit(\'itemclick\',item)"></span>\n            <slot name="btn-panel" :selected="selected" :item="item"></slot>\n         </li>\n        </ul>\n    </div>\n    </div>'
 
 };
 
@@ -219,89 +223,6 @@ Vue.component('com-catalog', com_catalog);
 
 /***/ }),
 /* 1 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _catalog = __webpack_require__(0);
-
-var catalog = _interopRequireWildcard(_catalog);
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
-/***/ }),
-/* 2 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(3)();
-// imports
-
-
-// module
-exports.push([module.i, ".com-catalog.mobile .dir .name {\n  -webkit-box-flex: 1;\n      -ms-flex-positive: 1;\n          flex-grow: 1; }\n\n.com-catalog.mobile .breadcrumb {\n  font-size: 1.5em; }\n\n.com-catalog.mobile .bd {\n  background-color: white; }\n  .com-catalog.mobile .bd li {\n    display: -webkit-box;\n    display: -ms-flexbox;\n    display: flex;\n    -webkit-box-align: center;\n        -ms-flex-align: center;\n            align-items: center;\n    padding: 10px 15px;\n    position: relative;\n    font-size: 1.3em; }\n    .com-catalog.mobile .bd li .fa {\n      padding: 0 0.5em; }\n  .com-catalog.mobile .bd li:before {\n    content: ' ';\n    border-bottom: 1px solid #f3f0ed;\n    position: absolute;\n    left: 15px;\n    top: 0;\n    right: 0;\n    bottom: 0;\n    /*color: red;*/\n    height: 1px; }\n  .com-catalog.mobile .bd li.dir:after {\n    content: \" \";\n    display: inline-block;\n    height: 6px;\n    width: 6px;\n    border-width: 2px 2px 0 0;\n    border-color: #c8c8cd;\n    border-style: solid;\n    -webkit-transform: matrix(0.71, 0.71, -0.71, 0.71, 0, 0);\n    transform: matrix(0.71, 0.71, -0.71, 0.71, 0, 0);\n    position: relative;\n    top: -2px;\n    position: absolute;\n    top: 50%;\n    margin-top: -4px;\n    right: 6px; }\n", ""]);
-
-// exports
-
-
-/***/ }),
-/* 3 */
-/***/ (function(module, exports) {
-
-/*
-	MIT License http://www.opensource.org/licenses/mit-license.php
-	Author Tobias Koppers @sokra
-*/
-// css base code, injected by the css-loader
-module.exports = function() {
-	var list = [];
-
-	// return the list of modules as css string
-	list.toString = function toString() {
-		var result = [];
-		for(var i = 0; i < this.length; i++) {
-			var item = this[i];
-			if(item[2]) {
-				result.push("@media " + item[2] + "{" + item[1] + "}");
-			} else {
-				result.push(item[1]);
-			}
-		}
-		return result.join("");
-	};
-
-	// import a list of modules into the list
-	list.i = function(modules, mediaQuery) {
-		if(typeof modules === "string")
-			modules = [[null, modules, ""]];
-		var alreadyImportedModules = {};
-		for(var i = 0; i < this.length; i++) {
-			var id = this[i][0];
-			if(typeof id === "number")
-				alreadyImportedModules[id] = true;
-		}
-		for(i = 0; i < modules.length; i++) {
-			var item = modules[i];
-			// skip already imported module
-			// this implementation is not 100% perfect for weird media query combinations
-			//  when a module is imported multiple times with different media queries.
-			//  I hope this will never occur (Hey this way we have smaller bundles)
-			if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
-				if(mediaQuery && !item[2]) {
-					item[2] = mediaQuery;
-				} else if(mediaQuery) {
-					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
-				}
-				list.push(item);
-			}
-		}
-	};
-	return list;
-};
-
-
-/***/ }),
-/* 4 */
 /***/ (function(module, exports) {
 
 /*
@@ -553,23 +474,23 @@ function updateLink(linkElement, obj) {
 
 
 /***/ }),
-/* 5 */
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(2);
+var content = __webpack_require__(3);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(4)(content, {});
+var update = __webpack_require__(1)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
 	// When the styles change, update the <style> tags
 	if(!content.locals) {
-		module.hot.accept("!!./../../../../node_modules/css-loader/index.js!./../../../../node_modules/postcss-loader/index.js??ref--1-2!./../../../../node_modules/sass-loader/lib/loader.js!./catalog.scss", function() {
-			var newContent = require("!!./../../../../node_modules/css-loader/index.js!./../../../../node_modules/postcss-loader/index.js??ref--1-2!./../../../../node_modules/sass-loader/lib/loader.js!./catalog.scss");
+		module.hot.accept("!!./../../../../node_modules/.0.26.1@css-loader/index.js!./../../../../node_modules/.1.3.3@postcss-loader/index.js??ref--1-2!./../../../../node_modules/.6.0.0@sass-loader/lib/loader.js!./catalog.scss", function() {
+			var newContent = require("!!./../../../../node_modules/.0.26.1@css-loader/index.js!./../../../../node_modules/.1.3.3@postcss-loader/index.js??ref--1-2!./../../../../node_modules/.6.0.0@sass-loader/lib/loader.js!./catalog.scss");
 			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 			update(newContent);
 		});
@@ -577,6 +498,89 @@ if(false) {
 	// When the module is disposed, remove the <style> tags
 	module.hot.dispose(function() { update(); });
 }
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(4)();
+// imports
+
+
+// module
+exports.push([module.i, ".com-catalog.mobile .dir .name {\n  -webkit-box-flex: 1;\n      -ms-flex-positive: 1;\n          flex-grow: 1; }\n\n.com-catalog.mobile .item .name {\n  -webkit-box-flex: 1;\n      -ms-flex-positive: 1;\n          flex-grow: 1; }\n\n.com-catalog.mobile .breadcrumb {\n  font-size: 1.5em; }\n\n.com-catalog.mobile .bd {\n  background-color: white; }\n  .com-catalog.mobile .bd li {\n    display: -webkit-box;\n    display: -ms-flexbox;\n    display: flex;\n    -webkit-box-align: center;\n        -ms-flex-align: center;\n            align-items: center;\n    padding: 10px 15px;\n    position: relative;\n    font-size: 1.3em; }\n    .com-catalog.mobile .bd li .fa {\n      padding: 0 0.5em; }\n  .com-catalog.mobile .bd li:before {\n    content: ' ';\n    border-bottom: 1px solid #f3f0ed;\n    position: absolute;\n    left: 15px;\n    top: 0;\n    right: 0;\n    bottom: 0;\n    /*color: red;*/\n    height: 1px; }\n  .com-catalog.mobile .bd li.dir:after {\n    content: \" \";\n    display: inline-block;\n    height: 6px;\n    width: 6px;\n    border-width: 2px 2px 0 0;\n    border-color: #c8c8cd;\n    border-style: solid;\n    -webkit-transform: matrix(0.71, 0.71, -0.71, 0.71, 0, 0);\n    transform: matrix(0.71, 0.71, -0.71, 0.71, 0, 0);\n    position: relative;\n    top: -2px;\n    position: absolute;\n    top: 50%;\n    margin-top: -4px;\n    right: 6px; }\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports) {
+
+/*
+	MIT License http://www.opensource.org/licenses/mit-license.php
+	Author Tobias Koppers @sokra
+*/
+// css base code, injected by the css-loader
+module.exports = function() {
+	var list = [];
+
+	// return the list of modules as css string
+	list.toString = function toString() {
+		var result = [];
+		for(var i = 0; i < this.length; i++) {
+			var item = this[i];
+			if(item[2]) {
+				result.push("@media " + item[2] + "{" + item[1] + "}");
+			} else {
+				result.push(item[1]);
+			}
+		}
+		return result.join("");
+	};
+
+	// import a list of modules into the list
+	list.i = function(modules, mediaQuery) {
+		if(typeof modules === "string")
+			modules = [[null, modules, ""]];
+		var alreadyImportedModules = {};
+		for(var i = 0; i < this.length; i++) {
+			var id = this[i][0];
+			if(typeof id === "number")
+				alreadyImportedModules[id] = true;
+		}
+		for(i = 0; i < modules.length; i++) {
+			var item = modules[i];
+			// skip already imported module
+			// this implementation is not 100% perfect for weird media query combinations
+			//  when a module is imported multiple times with different media queries.
+			//  I hope this will never occur (Hey this way we have smaller bundles)
+			if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
+				if(mediaQuery && !item[2]) {
+					item[2] = mediaQuery;
+				} else if(mediaQuery) {
+					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
+				}
+				list.push(item);
+			}
+		}
+	};
+	return list;
+};
+
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _catalog = __webpack_require__(0);
+
+var catalog = _interopRequireWildcard(_catalog);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 /***/ })
 /******/ ]);

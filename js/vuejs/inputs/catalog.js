@@ -135,6 +135,10 @@ var com_catalog={
             }
             location=engine_url+'/del_rows?rows='+del_str+'&next='+encodeURIComponent(location.href)
         },
+
+        set_sel:function(v){
+            this.selected=v
+        },
     },
     template:`<div class="com-catalog">
     <div class="flex">
@@ -148,19 +152,26 @@ var com_catalog={
     <div class="bd">
         <ul>
         <li v-for="dir in dirs" class="dir">
-            <input v-if="editable" type="checkbox" :value="dir" v-model="selected"/>
-            <slot name="dir_icon">
+            <slot name="check_sel" :value="dir" :selected="selected" :set_sel="set_sel">
+                <input v-if="editable" type="checkbox" :value="dir" v-model="selected"/>
+            </slot>
+
+            <slot dir_icon>
                 <i class="fa fa-folder" aria-hidden="true"></i>
             </slot>
 
             <span v-text="dir.name" class="clickable name" @click="dir_data(dir);$emit('dirclick',dir)"></span>
+            <slot name="btn-panel" :selected="selected" :item="dir"></slot>
         </li>
         <li v-for="item in items" class="item">
-            <input v-if="editable" type="checkbox" :value="item" v-model="selected"/>
+            <slot name="check_sel" :value="item" :selected="selected" :set_sel="set_sel">
+                <input v-if="editable" type="checkbox" :value="item" v-model="selected"/>
+            </slot>
             <slot name="item_icon">
                 <i class="fa fa-file-o" aria-hidden="true"></i>
             </slot>
             <span v-text="item.name" class="clickable name" @click="$emit('itemclick',item)"></span>
+            <slot name="btn-panel" :selected="selected" :item="item"></slot>
          </li>
         </ul>
     </div>
