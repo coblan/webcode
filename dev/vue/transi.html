@@ -1,0 +1,82 @@
+<!doctype html>
+<html>
+<meta charset="utf-8">
+<title>Deposits and Withdrawals</title>
+<script type="text/javascript" src='./jquery.min.js'></script>
+
+<script src="./vue.js"></script>
+
+
+<script type="text/javascript">
+    Vue.config.devtools = true
+
+    $(function () {
+
+    new Vue({
+        el: '#hello',
+        data: {
+            show:true,
+        },
+        methods: {
+
+        }
+    })
+    })
+
+
+
+
+</script>
+</head>
+<body>
+
+<div id="hello">
+    <button v-on:click="show = !show">
+        Toggle
+    </button>
+
+    <div class="pig">
+        <transition name="fade">
+            <p v-if="show">hello</p>
+        </transition>
+    </div>
+
+    <transition name="slide">
+        <div v-if="show" class="red">
+        </div>
+    </transition>
+
+</div>
+
+
+</body>
+
+<style>
+    .pig p{
+        transform-origin: top;
+    }
+    .fade-enter-active, .fade-leave-active {
+        transition: transform 0.5s ease;
+    }
+    .fade-enter,.fade-leave-to /* .fade-leave-active in <2.1.8 */ {
+        transform: scaleY(0);
+
+    }
+    .red{
+        background-color: red;
+        width: 100px;
+        height: 100px;
+        position: relative;
+        left: 0;
+    }
+    .slide-enter-active, .slide-leave-active {
+        /*transition: left 0.5s ease;*/
+        transition: all .3s ease;
+    }
+    .slide-enter,.slide-leave-to {
+        left: 100px;
+        opacity: 0;
+    }
+
+</style>
+</html>

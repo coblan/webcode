@@ -273,3 +273,30 @@ ex.append_css(`
 
 Vue.component('forign-edit',forignEdit)
 
+//var check_box=
+Vue.component('com-check-box',{
+    model: {
+        prop: 'checked',
+        event: 'change',
+    },
+    props:['value'],
+    methods:{
+        on_click:function(){
+            //$(this.$el).find('input').click()
+        },
+    },
+    computed:{
+        is_checked:function(){
+            if(this.value){
+                return this.checked.indexOf(this.value)!=-1
+            }else{
+                return this.checked
+            }
+        }
+    },
+    template:` <span style="font-size: 1.5em;" @click="on_click()">
+                <!--<input type="checkbox" :value="value" v-model='checked' style="display: none"/>-->
+                  <i class="fa fa-check-circle" aria-hidden="true" v-if='is_checked'></i>
+                  <i class="fa fa-circle-thin" aria-hidden="true" v-else></i>
+              </span>`
+})

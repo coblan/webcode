@@ -1,0 +1,25 @@
+// slide left to right in mobile phone
+.slide-win{
+  position: fixed;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  top:0;
+  background-color: white;
+
+}
+.slide-enter-active, .slide-leave-active {
+  transition: all .3s ease;
+}
+.slide-enter,.slide-leave-to {
+  left: 100vw;
+  opacity: 0;
+}
+// fade
+.fade-enter-active, .fade-leave-active {
+  transition: all .3s ease;
+}
+.fade-enter,.fade-leave-to{
+  /*top: 100px;*/
+  opacity: 0;
+}

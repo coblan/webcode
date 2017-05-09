@@ -274,3 +274,4 @@ ex.append_css(`
 
 Vue.component('forign-edit',forignEdit)
 
+
