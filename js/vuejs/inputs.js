@@ -40,6 +40,7 @@ var date_config_set={
         format: "yyyy-mm-dd",
         autoclose: true,
         todayHighlight: true,
+
     },
     month:{
         language: "zh-CN",
@@ -48,15 +49,18 @@ var date_config_set={
         minViewMode: "months",
         autoclose: true,
 
+
     },
 }
 
 Vue.component('date',{
     //template:'<input type="text" class="form-control">',
-    template:`<span class="datetime-picker">
-                <span class="cross" @click="$emit('input','')">X</span>
-                <input type="text" readonly class="form-control" :placeholder="placeholder"/>
-                </span>`,
+    template:` <div class="input-group datetime-picker">
+                <input type="text" class="form-control" readonly :placeholder="placeholder"/>
+                <div class="input-group-addon" @click="$emit('input','')">
+                    <i class="fa fa-calendar-times-o" aria-hidden="true"></i>
+                </div>
+                </div>`,
     props:['value','set','config','placeholder'],
     mounted:function () {
         var self=this
@@ -193,24 +197,24 @@ Vue.component('color',color)
 
 ex.append_css(
     `<style type="text/css" media="screen">
-    .datetime-picker{
-        position: relative;
-        display: inline-block;
-    }
+    /*.datetime-picker{*/
+        /*position: relative;*/
+        /*display: inline-block;*/
+    /*}*/
     .datetime-picker input[readonly]{
         background-color: white;
     }
-	.datetime-picker .cross{
-	    display: none;
-	}
-	.datetime-picker:hover .cross{
-	    display: inline-block;
-	    position: absolute;
-	    right: 8px;
-	    top:3px;
-	    cursor: pointer;
-	    /*z-index: 10;*/
-	}
+	/*.datetime-picker .cross{*/
+	    /*display: none;*/
+	/*}*/
+	/*.datetime-picker:hover .cross{*/
+	    /*display: inline-block;*/
+	    /*position: absolute;*/
+	    /*right: 8px;*/
+	    /*top:3px;*/
+	    /*cursor: pointer;*/
+
+	/*}*/
 </style>
  `
 )
@@ -273,8 +277,7 @@ ex.append_css(`
 
 Vue.component('forign-edit',forignEdit)
 
-//var check_box=
-Vue.component('com-check-box',{
+var check_box={
     model: {
         prop: 'checked',
         event: 'change',
@@ -287,20 +290,19 @@ Vue.component('com-check-box',{
         },
     },
     data:function(){
-      return {
-          inn_checked:this.checked,
-      }
+        return {
+            inn_checked:this.checked,
+        }
     },
     watch:{
-      inn_checked:function(v){
-          this.$emit('change',v)
-      },
+        inn_checked:function(v){
+            this.$emit('change',v)
+        },
         checked:function(v){
             this.inn_checked=v
         }
     },
     computed:{
-
         is_checked:function(){
             if(this.value){
                 return this.inn_checked.indexOf(this.value)!=-1
@@ -309,9 +311,10 @@ Vue.component('com-check-box',{
             }
         }
     },
-    template:` <span style="font-size: 1.5em;" @click="on_click()">
+    template:` <span class="com-checkbox" @click="on_click()">
                 <input type="checkbox" :value="value" v-model='inn_checked' style="display: none"/>
                   <i class="fa fa-check-circle" aria-hidden="true" v-if='is_checked' style="color: #009926"></i>
                   <i class="fa fa-circle-thin" aria-hidden="true" v-else></i>
               </span>`
-})
+}
+Vue.component('com-check-box',check_box)

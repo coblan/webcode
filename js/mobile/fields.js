@@ -299,14 +299,14 @@ var field_base={
         date: {
             props:['name','row','kw'],
             template:`<div><span v-if='kw.readonly' v-text='row[name]'></span>
-            			<date class="form-control" v-model="row[name]" :id="'id_'+name"
+            			<date v-model="row[name]" :id="'id_'+name"
                         	:placeholder="kw.placeholder"></date>
                        </div>`,
         },
         datetime:{
             props:['name','row','kw'],
             template:`<div><span v-if='kw.readonly' v-text='row[name]'></span>
-            			<datetime class="form-control" v-model="row[name]" :id="'id_'+name"
+            			<datetime v-model="row[name]" :id="'id_'+name"
                         	:placeholder="kw.placeholder"></datetime>
                        </div>`,
         },

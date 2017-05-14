@@ -1140,6 +1140,7 @@ var date_config_set = {
         format: "yyyy-mm-dd",
         autoclose: true,
         todayHighlight: true
+
     },
     month: {
         language: "zh-CN",
@@ -1153,7 +1154,7 @@ var date_config_set = {
 
 Vue.component('date', {
     //template:'<input type="text" class="form-control">',
-    template: "<span class=\"datetime-picker\">\n                <span class=\"cross\" @click=\"$emit('input','')\">X</span>\n                <input type=\"text\" readonly class=\"form-control\" :placeholder=\"placeholder\"/>\n                </span>",
+    template: " <div class=\"input-group datetime-picker\">\n                <input type=\"text\" class=\"form-control\" readonly :placeholder=\"placeholder\"/>\n                <div class=\"input-group-addon\" @click=\"$emit('input','')\">\n                    <i class=\"fa fa-calendar-times-o\" aria-hidden=\"true\"></i>\n                </div>\n                </div>",
     props: ['value', 'set', 'config', 'placeholder'],
     mounted: function mounted() {
         var self = this;
@@ -1279,7 +1280,7 @@ var color = {
 
 Vue.component('color', color);
 
-ex.append_css("<style type=\"text/css\" media=\"screen\">\n    .datetime-picker{\n        position: relative;\n        display: inline-block;\n    }\n    .datetime-picker input[readonly]{\n        background-color: white;\n    }\n\t.datetime-picker .cross{\n\t    display: none;\n\t}\n\t.datetime-picker:hover .cross{\n\t    display: inline-block;\n\t    position: absolute;\n\t    right: 8px;\n\t    top:3px;\n\t    cursor: pointer;\n\t    /*z-index: 10;*/\n\t}\n</style>\n ");
+ex.append_css("<style type=\"text/css\" media=\"screen\">\n    /*.datetime-picker{*/\n        /*position: relative;*/\n        /*display: inline-block;*/\n    /*}*/\n    .datetime-picker input[readonly]{\n        background-color: white;\n    }\n\t/*.datetime-picker .cross{*/\n\t    /*display: none;*/\n\t/*}*/\n\t/*.datetime-picker:hover .cross{*/\n\t    /*display: inline-block;*/\n\t    /*position: absolute;*/\n\t    /*right: 8px;*/\n\t    /*top:3px;*/\n\t    /*cursor: pointer;*/\n\n\t/*}*/\n</style>\n ");
 
 var forignEdit = {
     template: "<div class=\"forign-key-panel\">\n        <button v-if=\"has_pk()\" @click=\"jump_edit(kw.row[name])\" title=\"edit\">\n            <i class=\"fa fa-pencil-square-o\" aria-hidden=\"true\"></i></button>\n        <button @click=\"jump_edit()\" title=\"create new\"><i class=\"fa fa-plus\" aria-hidden=\"true\"></i></button>\n    </div>",
@@ -1330,8 +1331,7 @@ ex.append_css("\n<style type=\"text/css\">\n    .forign-key-panel{\n        padd
 
 Vue.component('forign-edit', forignEdit);
 
-//var check_box=
-Vue.component('com-check-box', {
+var check_box = {
     model: {
         prop: 'checked',
         event: 'change'
@@ -1357,7 +1357,6 @@ Vue.component('com-check-box', {
         }
     },
     computed: {
-
         is_checked: function is_checked() {
             if (this.value) {
                 return this.inn_checked.indexOf(this.value) != -1;
@@ -1366,8 +1365,9 @@ Vue.component('com-check-box', {
             }
         }
     },
-    template: " <span style=\"font-size: 1.5em;\" @click=\"on_click()\">\n                <input type=\"checkbox\" :value=\"value\" v-model='inn_checked' style=\"display: none\"/>\n                  <i class=\"fa fa-check-circle\" aria-hidden=\"true\" v-if='is_checked' style=\"color: #009926\"></i>\n                  <i class=\"fa fa-circle-thin\" aria-hidden=\"true\" v-else></i>\n              </span>"
-});
+    template: " <span class=\"com-checkbox\" @click=\"on_click()\">\n                <input type=\"checkbox\" :value=\"value\" v-model='inn_checked' style=\"display: none\"/>\n                  <i class=\"fa fa-check-circle\" aria-hidden=\"true\" v-if='is_checked' style=\"color: #009926\"></i>\n                  <i class=\"fa fa-circle-thin\" aria-hidden=\"true\" v-else></i>\n              </span>"
+};
+Vue.component('com-check-box', check_box);
 
 /***/ }),
 /* 7 */
@@ -1711,7 +1711,7 @@ exports = module.exports = __webpack_require__(1)();
 
 
 // module
-exports.push([module.i, ".form-pad {\n  background-color: white;\n  padding: 2em 1em; }\n  .form-pad .field {\n    display: flex;\n    margin-top: 2em; }\n  .form-pad .field label {\n    width: 80px; }\n  .form-pad .field .field_input {\n    flex-grow: 1;\n    max-width: 50em;\n    border-bottom: 1px solid #f7f7f7; }\n    .form-pad .field .field_input select {\n      width: auto; }\n    .form-pad .field .field_input input[type=number] {\n      width: auto; }\n\n.help_text {\n  color: #a4a1a5;\n  font-style: italic;\n  font-size: 0.8em; }\n", ""]);
+exports.push([module.i, ".form-pad {\n  background-color: white;\n  padding: 2em 1em; }\n  .form-pad .field {\n    display: flex;\n    margin-top: 2em; }\n  .form-pad .field label {\n    width: 80px;\n    flex-shrink: 0; }\n  .form-pad .field .field_input {\n    flex-grow: 1;\n    max-width: 50em;\n    border-bottom: 1px solid #f7f7f7; }\n    .form-pad .field .field_input select {\n      width: auto; }\n    .form-pad .field .field_input input[type=number] {\n      width: auto; }\n\n.help_text {\n  color: #a4a1a5;\n  font-style: italic;\n  font-size: 0.8em; }\n", ""]);
 
 // exports
 
@@ -2047,11 +2047,11 @@ var field_base = {
         },
         date: {
             props: ['name', 'row', 'kw'],
-            template: '<div><span v-if=\'kw.readonly\' v-text=\'row[name]\'></span>\n            \t\t\t<date class="form-control" v-model="row[name]" :id="\'id_\'+name"\n                        \t:placeholder="kw.placeholder"></date>\n                       </div>'
+            template: '<div><span v-if=\'kw.readonly\' v-text=\'row[name]\'></span>\n            \t\t\t<date v-model="row[name]" :id="\'id_\'+name"\n                        \t:placeholder="kw.placeholder"></date>\n                       </div>'
         },
         datetime: {
             props: ['name', 'row', 'kw'],
-            template: '<div><span v-if=\'kw.readonly\' v-text=\'row[name]\'></span>\n            \t\t\t<datetime class="form-control" v-model="row[name]" :id="\'id_\'+name"\n                        \t:placeholder="kw.placeholder"></datetime>\n                       </div>'
+            template: '<div><span v-if=\'kw.readonly\' v-text=\'row[name]\'></span>\n            \t\t\t<datetime v-model="row[name]" :id="\'id_\'+name"\n                        \t:placeholder="kw.placeholder"></datetime>\n                       </div>'
         },
         richtext: {
             props: ['name', 'row', 'kw'],

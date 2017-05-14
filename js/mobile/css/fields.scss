@@ -10,6 +10,7 @@
 
   .field label{
     width: 80px;
+    flex-shrink: 0;
   }
   .field .field_input{
     flex-grow: 1;
