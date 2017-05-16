@@ -1,0 +1,26 @@
+.scroll-wrapper{
+  position: absolute;
+  width: 100vw;
+  overflow: hidden;
+  bottom: 5em;
+  top:6em;
+
+  .scroller{
+    width:100%;
+    position:absolute;
+    min-height: 101%;
+  }
+  ._up_text{
+    position: absolute;
+    top:-2em;
+    text-align: center;
+    width: 100%;;
+  }
+  ._down_text{
+    position: relative;
+    bottom:-1.2em;
+    text-align: center;
+    width: 100%;;
+  }
+
+}
