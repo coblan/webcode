@@ -411,7 +411,7 @@ var field_fun={
 			show_upload()
 			var search =ex.parseSearch()
 			var post_data=[{fun:'save',row:this.kw.row}]
-			ex.post('',JSON.stringify(post_data),function (resp) {
+			ex.post('/ajax',JSON.stringify(post_data),function (resp) {
 				hide_upload(500)
 				if( resp.save.errors){
 					self.kw.errors = resp.save.errors
