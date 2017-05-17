@@ -63,35 +63,11 @@
 /******/ 	__webpack_require__.p = "";
 
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ 	return __webpack_require__(__webpack_require__.s = 12);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _modal = __webpack_require__(4);
-
-var a = _interopRequireWildcard(_modal);
-
-var _scroll = __webpack_require__(3);
-
-var scroll = _interopRequireWildcard(_scroll);
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
-__webpack_require__(7);
-__webpack_require__(6);
-
-__webpack_require__(5);
-
-__webpack_require__(11);
-
-/***/ }),
-/* 1 */
 /***/ (function(module, exports) {
 
 /*
@@ -147,7 +123,7 @@ module.exports = function() {
 
 
 /***/ }),
-/* 2 */
+/* 1 */
 /***/ (function(module, exports) {
 
 /*
@@ -399,7 +375,7 @@ function updateLink(linkElement, obj) {
 
 
 /***/ }),
-/* 3 */
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -421,41 +397,69 @@ var scrop_wraper = {
     },
     mounted: function mounted() {
         var self = this;
-        this.scroll = new IScroll(this.$el, {
-            probeType: 1,
-            click: true
-        });
-        this.scroll.on('scrollStart', function () {});
-        this.scroll.on('scrollEnd', function () {
-            if (self.up_out_border) {
-                self.$emit('up_out_border');
-            } else if (self.down_out_border) {
-                self.$emit('down_out_border');
-            }
-            self.up_out_border = false;
-            self.down_out_border = false;
-        });
-        this.scroll.on('scroll', function () {
-            self.up_out_border = false;
-            self.down_out_border = false;
+        ex.load_js('/static/lib/iscroll_probe.js', function () {
+            self.scroll = new IScroll(self.$el, {
+                probeType: 1,
+                click: true
+            });
+            self.scroll.on('scrollStart', function () {});
+            self.scroll.on('scrollEnd', function () {
+                if (self.up_out_border) {
+                    self.$emit('up_out_border');
+                } else if (self.down_out_border) {
+                    self.$emit('down_out_border');
+                }
+                self.up_out_border = false;
+                self.down_out_border = false;
+            });
+            self.scroll.on('scroll', function () {
+                self.up_out_border = false;
+                self.down_out_border = false;
 
-            if (this.maxScrollY - 30 > this.y) {
-                self.down_out_border = true;
-            } else if (this.y > 30) {
-                self.up_out_border = true;
+                if (this.maxScrollY - 30 > this.y) {
+                    self.down_out_border = true;
+                } else if (this.y > 30) {
+                    self.up_out_border = true;
+                }
+            });
+            if (self._need_refresh) {
+                self.scroll.refresh();
             }
         });
     },
     methods: {
         refresh: function refresh() {
-            this.scroll.refresh();
+            if (this.scroll) {
+                this.scroll.refresh();
+            } else {
+                this._need_refresh = true;
+            }
         }
     }
 };
 Vue.component('scroll-wraper', scrop_wraper);
 
+function isPassive() {
+    var supportsPassiveOption = false;
+    try {
+        addEventListener("test", null, Object.defineProperty({}, 'passive', {
+            get: function get() {
+                supportsPassiveOption = true;
+            }
+        }));
+    } catch (e) {}
+    return supportsPassiveOption;
+}
+
+document.addEventListener('touchmove', function (e) {
+    e.preventDefault();
+}, isPassive() ? {
+    capture: false,
+    passive: false
+} : false);
+
 /***/ }),
-/* 4 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -472,7 +476,7 @@ Vue.component('modal', {
 });
 
 /***/ }),
-/* 5 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
@@ -481,7 +485,7 @@ Vue.component('modal', {
 var content = __webpack_require__(8);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(2)(content, {});
+var update = __webpack_require__(1)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -498,7 +502,7 @@ if(false) {
 }
 
 /***/ }),
-/* 6 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
@@ -507,7 +511,33 @@ if(false) {
 var content = __webpack_require__(9);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(2)(content, {});
+var update = __webpack_require__(1)(content, {});
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/postcss-loader/index.js??ref--1-2!./../../../node_modules/sass-loader/lib/loader.js!./scroll.scss", function() {
+			var newContent = require("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/postcss-loader/index.js??ref--1-2!./../../../node_modules/sass-loader/lib/loader.js!./scroll.scss");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(10);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// add the styles to the DOM
+var update = __webpack_require__(1)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -530,10 +560,10 @@ if(false) {
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(10);
+var content = __webpack_require__(11);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(2)(content, {});
+var update = __webpack_require__(1)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -553,7 +583,7 @@ if(false) {
 /* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(1)();
+exports = module.exports = __webpack_require__(0)();
 // imports
 
 
@@ -567,7 +597,21 @@ exports.push([module.i, ".slide-win {\n  position: fixed;\n  left: 0;\n  width: 
 /* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(1)();
+exports = module.exports = __webpack_require__(0)();
+// imports
+
+
+// module
+exports.push([module.i, ".scroll-wrapper {\n  position: absolute;\n  width: 100vw;\n  overflow: hidden;\n  bottom: 5em;\n  top: 6em; }\n  .scroll-wrapper .scroller {\n    width: 100%;\n    position: absolute;\n    min-height: 101%; }\n  .scroll-wrapper ._up_text {\n    position: absolute;\n    top: -2em;\n    text-align: center;\n    width: 100%; }\n  .scroll-wrapper ._down_text {\n    position: relative;\n    bottom: -1.2em;\n    text-align: center;\n    width: 100%; }\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 10 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(0)();
 // imports
 
 
@@ -578,10 +622,10 @@ exports.push([module.i, "template {\n  display: none; }\n", ""]);
 
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(1)();
+exports = module.exports = __webpack_require__(0)();
 // imports
 
 
@@ -592,44 +636,28 @@ exports.push([module.i, ".flex {\n  display: -webkit-box;\n  display: -ms-flexbo
 
 
 /***/ }),
-/* 11 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(12);
-if(typeof content === 'string') content = [[module.i, content, '']];
-// add the styles to the DOM
-var update = __webpack_require__(2)(content, {});
-if(content.locals) module.exports = content.locals;
-// Hot Module Replacement
-if(false) {
-	// When the styles change, update the <style> tags
-	if(!content.locals) {
-		module.hot.accept("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/postcss-loader/index.js??ref--1-2!./../../../node_modules/sass-loader/lib/loader.js!./scroll.scss", function() {
-			var newContent = require("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/postcss-loader/index.js??ref--1-2!./../../../node_modules/sass-loader/lib/loader.js!./scroll.scss");
-			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-			update(newContent);
-		});
-	}
-	// When the module is disposed, remove the <style> tags
-	module.hot.dispose(function() { update(); });
-}
-
-/***/ }),
 /* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(1)();
-// imports
+"use strict";
 
 
-// module
-exports.push([module.i, ".scroll-wrapper {\n  position: absolute;\n  width: 100vw;\n  overflow: hidden;\n  bottom: 5em;\n  top: 6em; }\n  .scroll-wrapper .scroller {\n    width: 100%;\n    position: absolute;\n    min-height: 101%; }\n  .scroll-wrapper ._up_text {\n    position: absolute;\n    top: -2em;\n    text-align: center;\n    width: 100%; }\n  .scroll-wrapper ._down_text {\n    position: relative;\n    bottom: -1.2em;\n    text-align: center;\n    width: 100%; }\n", ""]);
+var _modal = __webpack_require__(3);
 
-// exports
+var a = _interopRequireWildcard(_modal);
 
+var _scroll = __webpack_require__(2);
+
+var scroll = _interopRequireWildcard(_scroll);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+__webpack_require__(7);
+__webpack_require__(6);
+
+__webpack_require__(4);
+
+__webpack_require__(5);
 
 /***/ })
 /******/ ]);
