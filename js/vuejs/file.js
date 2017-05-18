@@ -230,6 +230,7 @@ var img_uploader={
         return {
             img_files:'',
             url:this.value,
+            disable:false,
         }
     },
     computed:{
@@ -246,15 +247,9 @@ var img_uploader={
             }
         }
     },
-    //mounted:function(){
-    //    var self=this
-    //  setInterval(function(){
-    //      console.log('img_files')
-    //      console.log(self.img_files)
-    //  },2000)
-    //},
+
     template:`
-          <div class='up_wrap logo-input img-uploader'>
+          <div :class='["up_wrap logo-input img-uploader",{"disable":disable}]'>
             <file-input v-if="!is_crop"
                 accept='image/*'
                 v-model= 'img_files'>
@@ -271,6 +266,9 @@ var img_uploader={
             </div>
         `,
     watch:{
+        value:function(v){
+          this.url=v
+        },
         img_files:function(v){
             var self=this
             console.log('start upload')
@@ -286,12 +284,19 @@ var img_uploader={
             this.img_files=''
             this.url=''
             this.$emit('input','')
-            //$(this.$el).find('input[type=file]').val('')
-            //$('#'+this.id).val('')
         },
         select:function(){
             console.log('before select')
-            $(this.$el).find('input[type=file]').click()
+            var self=this
+            if(! this.disable){
+                $(this.$el).find('input[type=file]').click()
+                this.disable=true
+                setTimeout(function(){
+                    self.disable=false
+                },3000)
+
+            }
+
             console.log('after select')
         }
     }

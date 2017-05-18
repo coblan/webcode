@@ -1,6 +1,9 @@
 .img-uploader input{
   display: none;
 }
+.img-uploader.disable{
+  background-color: #e3e2e1;
+}
 
 .up_wrap{
   position: relative;

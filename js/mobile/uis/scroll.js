@@ -21,6 +21,9 @@ var  scrop_wraper={
     mounted:function(){
         var self=this
         ex.load_js('/static/lib/iscroll_probe.js',function(){
+
+            on_load_scroll()
+
             self.scroll = new IScroll(self.$el,{
                 probeType:1,
                 click:true,
@@ -42,7 +45,7 @@ var  scrop_wraper={
                 self.up_out_border=false
                 self.down_out_border=false
 
-                if(this.maxScrollY-30>this.y){
+                if(this.maxScrollY-10>this.y){  // 上拉触发更新，更加平常些，所以这里值设置小点。
                     self.down_out_border=true
                 }else if(this.y>30){
                     self.up_out_border=true
@@ -79,7 +82,9 @@ function isPassive() {
     return supportsPassiveOption;
 }
 
-document.addEventListener('touchmove', function (e) { e.preventDefault(); }, isPassive() ? {
-    capture: false,
-    passive: false
-} : false);
+function on_load_scroll(){
+    document.addEventListener('touchmove', function (e) { e.preventDefault(); }, isPassive() ? {
+        capture: false,
+        passive: false
+    } : false);
+}

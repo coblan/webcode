@@ -137,6 +137,7 @@ var field_base={
             },
             methods:{
                 on_input:function(){
+                    if(this.kw.readonly) return
                     var textarea = $(this.$el).find('textarea')[0]
                     if(this.org_height!=textarea.scrollHeight){
                         $(textarea).height(textarea.scrollHeight-12)
@@ -159,8 +160,7 @@ var field_base={
             },
             template:  `<div>
             <span v-if='kw.readonly' v-text='row[name]'></span>
-            <textarea v-else class="form-control" rows="2" :id="'id_'+name" v-model="row[name]" :placeholder="kw.placeholder"
-                :readonly='kw.readonly'></textarea>
+            <textarea v-else class="form-control" rows="2" :id="'id_'+name" v-model="row[name]" :placeholder="kw.placeholder"></textarea>
             </div>`
         },//
         color:{
@@ -299,7 +299,7 @@ var field_base={
         date: {
             props:['name','row','kw'],
             template:`<div><span v-if='kw.readonly' v-text='row[name]'></span>
-            			<date v-model="row[name]" :id="'id_'+name"
+            			<date v-else v-model="row[name]" :id="'id_'+name"
                         	:placeholder="kw.placeholder"></date>
                        </div>`,
         },
@@ -410,7 +410,7 @@ var field_fun={
             show_upload()
             var search =ex.parseSearch()
             var post_data=[{fun:'save',row:this.kw.row}]
-            ex.post('',JSON.stringify(post_data),function (resp) {
+            ex.post('/_ajax',JSON.stringify(post_data),function (resp) {
                 hide_upload(500)
                 if( resp.save.errors){
                     self.kw.errors = resp.save.errors

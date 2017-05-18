@@ -982,7 +982,8 @@ var img_uploader = {
     data: function data() {
         return {
             img_files: '',
-            url: this.value
+            url: this.value,
+            disable: false
         };
     },
     computed: {
@@ -999,15 +1000,12 @@ var img_uploader = {
             }
         }
     },
-    //mounted:function(){
-    //    var self=this
-    //  setInterval(function(){
-    //      console.log('img_files')
-    //      console.log(self.img_files)
-    //  },2000)
-    //},
-    template: '\n          <div class=\'up_wrap logo-input img-uploader\'>\n            <file-input v-if="!is_crop"\n                accept=\'image/*\'\n                v-model= \'img_files\'>\n            </file-input>\n            <img-crop class=\'input\' v-if=\'is_crop\' v-model=\'img_files\' :config="crop_config">\n            </img-crop>\n            <div style="padding: 40px" @click="select()">\n                <a class=\'choose\'>Choose</a>\n            </div>\n            <div v-if=\'url\' class="closeDiv">\n            <div class="close" @click=\'clear()\'><i class="fa fa-times" aria-hidden="true" style="padding: 5px;"></i></div>\n            <img :src="url" alt="" class="logoImg">\n            </div>\n            </div>\n        ',
+
+    template: '\n          <div :class=\'["up_wrap logo-input img-uploader",{"disable":disable}]\'>\n            <file-input v-if="!is_crop"\n                accept=\'image/*\'\n                v-model= \'img_files\'>\n            </file-input>\n            <img-crop class=\'input\' v-if=\'is_crop\' v-model=\'img_files\' :config="crop_config">\n            </img-crop>\n            <div style="padding: 40px" @click="select()">\n                <a class=\'choose\'>Choose</a>\n            </div>\n            <div v-if=\'url\' class="closeDiv">\n            <div class="close" @click=\'clear()\'><i class="fa fa-times" aria-hidden="true" style="padding: 5px;"></i></div>\n            <img :src="url" alt="" class="logoImg">\n            </div>\n            </div>\n        ',
     watch: {
+        value: function value(v) {
+            this.url = v;
+        },
         img_files: function img_files(v) {
             var self = this;
             console.log('start upload');
@@ -1023,12 +1021,18 @@ var img_uploader = {
             this.img_files = '';
             this.url = '';
             this.$emit('input', '');
-            //$(this.$el).find('input[type=file]').val('')
-            //$('#'+this.id).val('')
         },
         select: function select() {
             console.log('before select');
-            $(this.$el).find('input[type=file]').click();
+            var self = this;
+            if (!this.disable) {
+                $(this.$el).find('input[type=file]').click();
+                this.disable = true;
+                setTimeout(function () {
+                    self.disable = false;
+                }, 3000);
+            }
+
             console.log('after select');
         }
     }
@@ -1945,7 +1949,7 @@ exports = module.exports = __webpack_require__(1)();
 
 
 // module
-exports.push([module.i, ".img-uploader input {\n  display: none; }\n\n.up_wrap {\n  position: relative;\n  text-align: center;\n  border: 2px dashed #ccc;\n  background: #FDFDFD;\n  width: 200px; }\n\n.closeDiv {\n  width: 100%;\n  height: 100%;\n  position: absolute;\n  top: 0;\n  left: 0;\n  background-color: #ffffff; }\n\n.choose {\n  display: inline-block;\n  text-decoration: none;\n  padding: 5px;\n  border: 1px solid #0092F2;\n  border-radius: 4px;\n  font-size: 14px;\n  color: #0092F2;\n  cursor: pointer; }\n\n.choose:hover, .choose:active {\n  text-decoration: none;\n  color: #0092F2; }\n\n.close {\n  position: absolute;\n  top: 5px;\n  right: 10px;\n  cursor: pointer;\n  font-size: 14px;\n  color: #242424; }\n\n.logoImg {\n  max-height: 100px !important;\n  vertical-align: middle;\n  margin-top: 5px; }\n\n.img-crop .total-wrap {\n  padding: 30px; }\n\n.img-crop .crop-wrap {\n  max-width: 100%;\n  max-height: 90%;\n  overflow: hidden; }\n\n.img-crop .crop-img {\n  max-width: 100%;\n  max-height: 100%; }\n", ""]);
+exports.push([module.i, ".img-uploader input {\n  display: none; }\n\n.img-uploader.disable {\n  background-color: #e3e2e1; }\n\n.up_wrap {\n  position: relative;\n  text-align: center;\n  border: 2px dashed #ccc;\n  background: #FDFDFD;\n  width: 200px; }\n\n.closeDiv {\n  width: 100%;\n  height: 100%;\n  position: absolute;\n  top: 0;\n  left: 0;\n  background-color: #ffffff; }\n\n.choose {\n  display: inline-block;\n  text-decoration: none;\n  padding: 5px;\n  border: 1px solid #0092F2;\n  border-radius: 4px;\n  font-size: 14px;\n  color: #0092F2;\n  cursor: pointer; }\n\n.choose:hover, .choose:active {\n  text-decoration: none;\n  color: #0092F2; }\n\n.close {\n  position: absolute;\n  top: 5px;\n  right: 10px;\n  cursor: pointer;\n  font-size: 14px;\n  color: #242424; }\n\n.logoImg {\n  max-height: 100px !important;\n  vertical-align: middle;\n  margin-top: 5px; }\n\n.img-crop .total-wrap {\n  padding: 30px; }\n\n.img-crop .crop-wrap {\n  max-width: 100%;\n  max-height: 90%;\n  overflow: hidden; }\n\n.img-crop .crop-img {\n  max-width: 100%;\n  max-height: 100%; }\n", ""]);
 
 // exports
 
@@ -2316,7 +2320,7 @@ var field_fun = {
 			(0, _ajax_fun.show_upload)();
 			var search = ex.parseSearch();
 			var post_data = [{ fun: 'save', row: this.kw.row }];
-			ex.post('/ajax', JSON.stringify(post_data), function (resp) {
+			ex.post('/_ajax', JSON.stringify(post_data), function (resp) {
 				(0, _ajax_fun.hide_upload)(500);
 				if (resp.save.errors) {
 					self.kw.errors = resp.save.errors;

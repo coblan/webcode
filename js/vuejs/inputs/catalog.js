@@ -163,7 +163,7 @@ var com_catalog={
             <span v-text="dir.name" class="clickable name" @click="dir_data(dir);$emit('dirclick',dir)"></span>
             <slot name="btn-panel" :selected="selected" :item="dir"></slot>
         </li>
-        <li v-for="item in items" class="item">
+        <li v-for="item in items" :key="item.pk" class="item">
             <slot name="check_sel" :value="item" :selected="selected" :set_sel="set_sel">
                 <input v-if="editable" type="checkbox" :value="item" v-model="selected"/>
             </slot>
