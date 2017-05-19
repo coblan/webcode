@@ -13,7 +13,7 @@ catalog
 使用示例::
 
      <com-catalog ref="catalog" url="/dir_mana" :root="{pk:null,name:'root'}" @dirclick="on_dirclick($event)"
-     @itemclick="on_itemclick($event)" @state="set_state($event)" :editable="true"></com-catalog>
+     @itemclick="on_itemclick($event)" @state_change="set_state($event)" :editable="true"></com-catalog>
 
 url:
     连接后端的地址
@@ -23,7 +23,7 @@ root:
 editable:
     目前决定了catalog是否显示checkbox
 
-使用时，在外部捕捉dirclick,itemclick,state事件。其中state事件会传出com-catalog的各种状态，这些状态用于告诉parent，可以执行的命令。
+使用时，在外部捕捉dirclick,itemclick,state_change。其中state事件会传出com-catalog的各种状态，这些状态用于告诉parent，可以执行的命令。
 
 。。Note:: com-catalog自带create和delete功能，但是不具备修改save功能，（因为验证错误无处显示），所以client需要自己定义保存函数。
 
@@ -75,7 +75,7 @@ var com_catalog={
     },
     watch:{
         state:function(v){
-            this.$emit('state',v)
+            this.$emit('state_change',v)
         }
     },
     methods:{

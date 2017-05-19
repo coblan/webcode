@@ -4,12 +4,14 @@
  * down_out_border
  * */
 var  scrop_wraper={
-    template:`<div class="scroll-wrapper">
+    template:`<div style="position: relative;">
+    <div class="scroll-wrapper">
         <div class="scroller">
             <div v-if="up_out_border" v-text="up_text" class="_up_text"></div>
             <slot class="content"></slot>
             <div v-if="down_out_border" v-text="down_text" class="_down_text"></div>
         </div>
+    </div>
     </div>`,
     props:['up_text','down_text'],
     data:function(){
@@ -24,7 +26,7 @@ var  scrop_wraper={
 
             on_load_scroll()
 
-            self.scroll = new IScroll(self.$el,{
+            self.scroll = new IScroll($(self.$el).find('.scroll-wrapper')[0],{
                 probeType:1,
                 click:true,
             });
@@ -45,7 +47,7 @@ var  scrop_wraper={
                 self.up_out_border=false
                 self.down_out_border=false
 
-                if(this.maxScrollY-10>this.y){  // ÉÏÀ­´¥·¢¸üÐÂ£¬¸ü¼ÓÆ½³£Ð©£¬ËùÒÔÕâÀïÖµÉèÖÃÐ¡µã¡£
+                if(this.maxScrollY-10>this.y){  // ä¸Šæ‹‰è§¦å‘æ›´æ–°ï¼Œæ›´åŠ å¹³å¸¸äº›ï¼Œæ‰€ä»¥è¿™é‡Œå€¼è®¾ç½®å°ç‚¹ã€‚
                     self.down_out_border=true
                 }else if(this.y>30){
                     self.up_out_border=true
