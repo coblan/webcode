@@ -22,7 +22,7 @@ var  scrop_wraper={
     },
     mounted:function(){
         var self=this
-        ex.load_js('/static/lib/iscroll_probe.js',function(){
+        ex.load_js('/static/lib/iscroll_probe5.2.0.js',function(){
 
             on_load_scroll()
 

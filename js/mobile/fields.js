@@ -55,6 +55,8 @@ import * as inputs from '../vuejs/inputs.js'
 import * as ln from '../vuejs/link.js'
 //import * as js from './adapt.js'
 
+import  {field_base} from  '../vuejs/fields/base.js'
+import  {field_fun} from '../vuejs/fields/field_page.js'
 
 require('./css/fields.scss')
 require('./css/input.scss')
@@ -64,63 +66,10 @@ hook_ajax_csrf()
 
 
 
-var field_base={
-    props: {
-        name:{
-            required:true
-        },
-        kw:{
-            required:true
-        },
-    },
-    computed:{
-        row:function(){return this.kw.row},
-        errors:function() {
-            if(!this.kw.errors){
-                Vue.set(this.kw,'errors',{})
-            }
-            return this.kw.errors
-        },
-        head:function(){
-            var heads = this.kw.heads
-            for (var x=0;x<heads.length;x++) {
-                var head = heads[x]
-                if (head.name == this.name) {
-                    return head
-                }
-            }
-        }
-    },
-    methods: {
-        error_data: function (name) {
-            if (this.errors[name]) {
-                return this.errors[name]
-            } else {
-                return ''
-            }
-        }
-    },
-    //<input v-else type="number"  v-model="row[name]" :id="'id_'+name" :placeholder="kw.placeholder" :autofocus="kw.autofocus">
-    components: {
-        linetext: {
-            props:['name','row','kw'],
-            template:`<div>
-            			<span v-if='kw.readonly' v-text='row[name]'></span>
-            			<input v-else type="text" class="form-control" v-model="row[name]" :id="'id_'+name"
-                        	:placeholder="kw.placeholder" :autofocus="kw.autofocus" :maxlength='kw.maxlength'>
-                       </div>`,
-        },
-        number: {
-            props:['name','row','kw'],
+var mobile_field_base={
 
-            template: `<div><span v-if='kw.readonly' v-text='row[name]'></span>
-            		<input v-else type="number" class="form-control" v-model="row[name]" :id="'id_'+name"
-                        :placeholder="kw.placeholder" :autofocus="kw.autofocus"></div>`
-        },
-        password: {
-            props:['name','row','kw'],
-            template: `<input type="password" :id="'id_'+name" class="form-control" v-model="row[name]" :placeholder="kw.placeholder" :readonly='kw.readonly'>`
-        },
+    components: {
+
         blocktext: {
             props:['name','row','kw'],
             data:function(){
@@ -163,84 +112,16 @@ var field_base={
             <textarea v-else class="form-control" rows="2" :id="'id_'+name" v-model="row[name]" :placeholder="kw.placeholder"></textarea>
             </div>`
         },//
-        color:{
+
+
+        radio:{
             props:['name','row','kw'],
-            template: `<input type="text" v-model="row[name]" :id="'id_'+name" :readonly='kw.readonly'>`,
-            methods:{
-                init_and_listen:function(){
-                    var self = this
-                    Vue.nextTick(function(){
-                        $(self.$el).spectrum({
-                            color: self.row[self.name],
-                            showInitial: true,
-                            showInput: true,
-                            preferredFormat: "name",
-                            change: function(color) {
-                                self.src_color=color.toHexString()
-                                self.row[self.name] = color.toHexString();
-                            }
-                        });
-                    })
-                }
-            },
-            watch:{
-                input_value:function (value) {
-                    if(this.src_color !=value){
-                        this.init_and_listen()
-                    }
-                }
-            },
-            computed:{
-                input_value:function () {
-                    return this.row[this.name]
-                }
-            },
-            mounted:function(){
-                var self=this;
-                ex.load_css('//cdn.bootcss.com/spectrum/1.8.0/spectrum.min.css')
-                ex.load_js('//cdn.bootcss.com/spectrum/1.8.0/spectrum.min.js',function () {
-                    self.init_and_listen()
-                })
-            },
-        },
-        logo:{// absolate
-            props:['name','row','kw'],
-            template:`<logo-input :up_url="kw.up_url" :web_url.sync="row[name]" :id="'id_'+name"></logo-input>`
-        },
-        picture:{
-            props:['name','row','kw'],
-            template:`<div><img class="img-uploador" v-if='kw.readonly' :src='row[name]'/>
-			<img-uploador v-else :up_url="kw.up_url" v-model="row[name]" :id="'id_'+name" :config="kw.config"></img-uploador></div>`
-        },
-        sim_select:{
-            props:['name','row','kw'],
-            data:function(){
-                return {
-                    model:this.row[this.name]
-                }
-            },
-            template:`<div>
-            <span v-if='kw.readonly' v-text='get_label(kw.options,row[name])'></span>
-            <select v-else v-model='row[name]'  :id="'id_'+name"  class="form-control">
-            	<option v-for='opt in kw.options' :value='opt.value' v-text='opt.label'></option>
-            </select>
-            </div>`,
-            mounted:function(){
-                if(this.kw.default && !this.row[this.name]){
-                    Vue.set(this.row,this.name,this.kw.default)
-                    //this.row[this.name]=this.kw.default
-                }
-            },
-            methods:{
-                get_label:function(options,value){
-                    var option = ex.findone(options,{value:value})
-                    if(!option){
-                        return '---'
-                    }else{
-                        return option.label
-                    }
-                },
-            }
+            template:`<div ><span v-if='kw.readonly' v-text='row[name]'></span>
+                        <div class="radio radio-info radio-inline" v-for='opt in kw.options'>
+                            <input type="radio" :id="'id_'+name" :value="opt.value" name="radioInline" v-model="row[name]">
+                            <label :for="'id_'+name" v-text="opt.label"></label>
+                        </div>
+                      </div>`,
         },
         tow_col:{
             props:['name','row','kw'],
@@ -296,34 +177,15 @@ var field_base={
               <span :for="'id_'+name" @click='row[name]= !row[name]'><span v-text='kw.label'></span></span>
 					  </div>`
         },
-        date: {
-            props:['name','row','kw'],
-            template:`<div><span v-if='kw.readonly' v-text='row[name]'></span>
-            			<date v-else v-model="row[name]" :id="'id_'+name"
-                        	:placeholder="kw.placeholder"></date>
-                       </div>`,
-        },
-        datetime:{
-            props:['name','row','kw'],
-            template:`<div><span v-if='kw.readonly' v-text='row[name]'></span>
-            			<datetime v-model="row[name]" :id="'id_'+name"
-                        	:placeholder="kw.placeholder"></datetime>
-                       </div>`,
-        },
-        richtext:{
-            props:['name','row','kw'],
-            template:`<div><span v-if='kw.readonly' v-text='row[name]'></span>
-            			<ckeditor  v-model="row[name]" :id="'id_'+name"></ckeditor>
-                       </div>`,
-        },
+
+
     }
 
 }
 
-//  <el-form-item :label="head.label" > </el-form-item>
 
 var field={
-    mixins:[field_base],
+    mixins:[field_base,mobile_field_base],
     created:function(){
         if(!this.head.placeholder){
             this.head.placeholder='请输入'+this.head.label
@@ -378,80 +240,7 @@ export function merge(mains,subs) {
     })
 }
 
-var field_fun={
-    data:function(){
-        return {
-            kw:{
-                heads:heads,
-                row:row,
-                errors:{},
-            },
-            menu:menu,
-            namelist:namelist,
-            can_add:can_add,
-            can_del:can_del,
-            can_log:can_log,
-            can_edit:can_edit,
-        }
-    },
-    created:function(){
-        ex.each(this.kw.heads,function(head){
-            if(!head.placeholder){
-                head.placeholder='请输入'+head.label
-            }
-        })
-    },
-    methods:{
-        after_sub:function(){
-            location=document.referrer
-        },
-        submit:function () {
-            var self =this;
-            show_upload()
-            var search =ex.parseSearch()
-            var post_data=[{fun:'save',row:this.kw.row}]
-            ex.post('/_ajax',JSON.stringify(post_data),function (resp) {
-                hide_upload(500)
-                if( resp.save.errors){
-                    self.kw.errors = resp.save.errors
-                }else if(search._pop==1){
-                    window.ln.try_rt({row:resp.save.row})
-                }else if(search.next){
-                    location=decodeURIComponent(search.next)
-                }else{
-                    self.after_sub()
-                }
-            })
-        },
-        cancel:function () {
-            var search =ex.parseSearch() //parseSearch(location.search)
-            if(search._pop){
-                window.close()
-            }else{
-                history.back()
-            }
-        },
-        del_row:function (path) {
-            var search_args=ex.parseSearch()
-            location=ex.template('{engine_url}/del_rows?rows={class}:{pk}&next={next}&_pop={pop}',{class:this.kw.row._class,
-                engine_url:engine_url,
-                pk:this.kw.row.pk,
-                next:search_args.next,
-                pop:search_args._pop,
 
-            })
-        },
-        log_url:function(){
-            var obj={
-                pk:this.kw.row.pk,
-                _class:this.kw.row._class,
-                engine_url:engine_url,
-                page_name:page_name,
-            }
-            return ex.template('{engine_url}/log?rows={_class}:{pk}',obj)
-        },
-    }
-}
 Vue.component('com-form-btn',{
     data:function(){
         return {
@@ -549,6 +338,7 @@ var fieldset_fun={
         },
     }
 }
+
 window.fieldset_fun=fieldset_fun
 window.field_fun=field_fun
 

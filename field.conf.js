@@ -9,7 +9,7 @@ module.exports =
         //file:'./js/vuejs/file.js'
         },
     output: {
-        path:'./build',
+        path:path.resolve(__dirname, './build'),
         filename: '[name].pack.js'
     },
     

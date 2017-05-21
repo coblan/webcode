@@ -8,3 +8,4 @@ require('./css/ui.scss')
 import * as scroll from './uis/scroll.js'
 import * as scroll_load from './uis/scroll_load.js'
 require('./uis/scroll.scss')
+require('./uis/btn.scss')

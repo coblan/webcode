@@ -120,9 +120,9 @@ var fl={
             if(ex.is_fun(url)){
                 var progress = success
                 var success = url
-                var url='/face/upload'
+                var url='/_face/upload'
             }else{
-                var url=url||'/face/upload'
+                var url=url||'/_face/upload'
             }
 
             var fd = new FormData();
@@ -357,8 +357,8 @@ var img_crop={
         }
     },
     mounted:function(){
-        ex.load_css('https://cdn.bootcss.com/cropper/2.3.4/cropper.min.css')
-        ex.load_js('https://cdn.bootcss.com/cropper/2.3.4/cropper.min.js')
+        ex.load_css('/static/lib/cropper2.3.4.min.css')
+        ex.load_js('/static/lib/cropper2.3.4.min.js')
     },
     watch: {
         value: function (v) {

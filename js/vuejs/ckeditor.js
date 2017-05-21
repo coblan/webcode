@@ -1,5 +1,5 @@
 /*
->>>front/ckedit.rst>
+>->front/ckedit.rst>
 ==========
 ckeditor
 ==========
@@ -68,10 +68,10 @@ var ck_complex = {
 	// Simplify the dialog windows.
 	removeDialogTabs : 'image:advanced;link:advanced',
 	image_previewText:'image preview',
-	imageUploadUrl:'/ckeditor/upload_image',
-	filebrowserImageUploadUrl: '/ckeditor/upload_image', // Will be replace by imageUploadUrl when upload_image
+	imageUploadUrl:'/_face/ckeditor_upload_image',
+	filebrowserImageUploadUrl: '/_face/ckeditor_upload_image', // Will be replace by imageUploadUrl when upload_image
 	extraPlugins : 'justify,codesnippet,lineutils,mathjax,colorbutton,uploadimage,font,autogrow', //autogrow,
-	mathJaxLib : '//cdn.mathjax.org/mathjax/2.6-latest/MathJax.js?config=TeX-AMS_HTML',
+	mathJaxLib : 'https://cdn.mathjax.org/mathjax/2.6-latest/MathJax.js?config=TeX-AMS_HTML',
 	extraAllowedContent :'img[class]',
 	autoGrow_maxHeight : 600,
 	autoGrow_minHeight:200,
@@ -94,6 +94,9 @@ Vue.component('ckeditor',{
 	},
 	created:function(){
 		var self=this
+		if(!window.bus){
+			window.bus=new Vue()
+		}
 		bus.$on('sync_data',function(){
 			self.$emit('input',self.editor.getData())
 		})
@@ -109,8 +112,9 @@ Vue.component('ckeditor',{
 		var config={}
 		ex.assign(config,config_obj[self.set]) 
 		ex.assign(config,self.config)
-		// 4.5.10   4.6.2
-		ex.load_js('//cdn.bootcss.com/ckeditor/4.6.2/ckeditor.js',function(){
+		// 4.5.10   4.6.2   ///static/lib/ckeditor4.6.2.js
+		//
+		ex.load_js('https://cdn.bootcss.com/ckeditor/4.6.2/ckeditor.js',function(){
 			//CKEDITOR.timestamp='GABCDFDGff'
 			//self.input.value=self.value
 
@@ -183,8 +187,8 @@ var edit_level = {
 	// Simplify the dialog windows.
 	removeDialogTabs : 'image:advanced;link:advanced',
 	image_previewText:'image preview',
-	imageUploadUrl:'/ckeditor/upload_image',
-	filebrowserImageUploadUrl: '/ckeditor/upload_image', // Will be replace by imageUploadUrl when upload_image
+	imageUploadUrl:'/_face/ckeditor_upload_image',
+	filebrowserImageUploadUrl: '/_face/ckeditor_upload_image', // Will be replace by imageUploadUrl when upload_image
 	extraPlugins : 'justify,lineutils,colorbutton,uploadimage,font,autogrow', //,mathjax,codesnippet
 	//mathJaxLib : '//cdn.mathjax.org/mathjax/2.6-latest/MathJax.js?config=TeX-AMS_HTML',
 	extraAllowedContent :'img[class]',

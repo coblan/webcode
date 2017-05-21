@@ -74,10 +74,10 @@ Vue.component('date',{
         }
         self.input=$(this.$el).find('input')
 
-        ex.load_css('//cdn.bootcss.com/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker.min.css')
+        ex.load_css('/static/lib/bootstrap-datepicker1.6.4.min.css')
 
-        ex.load_js('//cdn.bootcss.com/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.min.js',function(){
-            ex.load_js('//cdn.bootcss.com/bootstrap-datepicker/1.6.4/locales/bootstrap-datepicker.zh-CN.min.js',function(){
+        ex.load_js('/static/lib/bootstrap-datepicker1.6.4.min.js',function(){
+            ex.load_js('/static/lib/bootstrap-datepicker1.6.4.zh-CN.min.js',function(){
                 self.input.datepicker(def_conf).on('changeDate', function(e) {
                     self.$emit('input',self.input.val())
                 })
@@ -129,9 +129,9 @@ Vue.component('datetime',{
         }
         self.input=$(this.$el).find('input')
 
-        ex.load_css('https://cdn.bootcss.com/smalot-bootstrap-datetimepicker/2.4.3/css/bootstrap-datetimepicker.min.css')
-        ex.load_js('https://cdn.bootcss.com/moment.js/2.17.1/moment.min.js')
-        ex.load_js('https://cdn.bootcss.com/smalot-bootstrap-datetimepicker/2.4.3/js/bootstrap-datetimepicker.min.js',function(){
+        ex.load_css('/static/lib/smalot-bootstrap-datetimepicker2.4.3.min.css')
+        ex.load_js('/static/lib/moment2.17.1.min.js')
+        ex.load_js('/static/lib/smalot-bootstrap-datetimepicker2.4.3.min.js',function(){
 
                 self.input.datetimepicker(def_conf).on('changeDate', function(e) {
                     self.$emit('input',self.input.val())
@@ -186,8 +186,8 @@ var color={
     },
     mounted:function(){
         var self=this;
-        ex.load_css('https://cdn.bootcss.com/spectrum/1.8.0/spectrum.min.css')
-        ex.load_js('https://cdn.bootcss.com/spectrum/1.8.0/spectrum.min.js',function () {
+        ex.load_css('/static/lib/spectrum1.8.0.min.css')
+        ex.load_js('/static/lib/spectrum1.8.0.min.js',function () {
             self.init_and_listen()
         })
     },

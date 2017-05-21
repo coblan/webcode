@@ -8,7 +8,7 @@
 
   }
 
-  .field label{
+  .field>label{
     width: 80px;
     flex-shrink: 0;
   }
@@ -32,4 +32,12 @@
   color: #a4a1a5;
   font-style: italic;
   font-size: 0.8em;
+}
+
+.field{
+  .radio input[type="radio"]:focus + label::before {
+    /* outline: thin dotted; */
+    outline: none;
+    /* outline-offset: -2px; */
+  }
 }

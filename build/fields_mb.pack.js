@@ -6,9 +6,9 @@
 /******/ 	function __webpack_require__(moduleId) {
 
 /******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
+/******/ 		if(installedModules[moduleId]) {
 /******/ 			return installedModules[moduleId].exports;
-
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
@@ -447,69 +447,6 @@ exports.hide_upload = hide_upload;
 /*
 新增一个wrap函数，用户封装调用函数
 */
-//function proc_msg(func) {
-//	function _inn(data) {
-//		if(data.status && data.status!='success'){
-//			if(data.msg){
-//				alert(data.msg)
-//			}
-//		}else{
-//			func(data)
-//		}
-//	}
-//	return _inn
-//}
-
-//function has_error(data) {
-//	if(data.status && data.status!='success'){
-//		if(data.msg){
-//			alert(data.msg)
-//		}
-//		return true
-//	}else{
-//		return false
-//	}
-//}
-
-
-//var org_get=$.get
-//$.get=function (url,callback) {
-//	var wrap_callback=function (resp) {
-//		if(resp.msg){
-//			alert(resp.msg)
-//		}
-//		if(resp.status && resp.status!='success'){
-//			return
-//		}else{
-//			callback(resp)
-//		}
-//	}
-//	org_get(url,wrap_callback)
-//}
-//var org_post=$.post
-//$.post=function (url,data,callback) {
-//	var wrap_callback=function (resp) {
-//		if(resp.msg){
-//			alert(resp.msg)
-//		}
-//		if(resp.status && resp.status!='success'){
-//			return
-//		}else{
-//			callback(resp)
-//		}
-//	}
-//	org_post(url,data,wrap_callback) 
-//}
-
-
-//function def_proc_port_msg(data,event) {
-//	var rt = data.responseJSON
-//        if(rt && rt.msg){
-//            alert(rt.msg)
-//        }
-//}
-
-var lib = window.lib || {};
 
 function def_proc_error(jqxhr) {
 	if (!window.iclosed) {
@@ -595,7 +532,7 @@ function hide_upload(second) {
 	}
 }
 
-ex.load_css(lib['font_awesome'] || 'https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css');
+ex.load_css('/static/lib/font-awesome4.7/font-awesome4.7.min.css');
 //if(!window.__font_awesome){
 //	window.__font_awesome=true
 //	document.write(`<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">`)
@@ -735,9 +672,9 @@ var fl = {
         if (ex.is_fun(url)) {
             var progress = success;
             var success = url;
-            var url = '/face/upload';
+            var url = '/_face/upload';
         } else {
-            var url = url || '/face/upload';
+            var url = url || '/_face/upload';
         }
 
         var fd = new FormData();
@@ -932,8 +869,8 @@ var img_crop = {
         };
     },
     mounted: function mounted() {
-        ex.load_css('https://cdn.bootcss.com/cropper/2.3.4/cropper.min.css');
-        ex.load_js('https://cdn.bootcss.com/cropper/2.3.4/cropper.min.js');
+        ex.load_css('/static/lib/cropper2.3.4.min.css');
+        ex.load_js('/static/lib/cropper2.3.4.min.js');
     },
     watch: {
         value: function value(v) {
@@ -1172,10 +1109,10 @@ Vue.component('date', {
         }
         self.input = $(this.$el).find('input');
 
-        ex.load_css('//cdn.bootcss.com/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker.min.css');
+        ex.load_css('/static/lib/bootstrap-datepicker1.6.4.min.css');
 
-        ex.load_js('//cdn.bootcss.com/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.min.js', function () {
-            ex.load_js('//cdn.bootcss.com/bootstrap-datepicker/1.6.4/locales/bootstrap-datepicker.zh-CN.min.js', function () {
+        ex.load_js('/static/lib/bootstrap-datepicker1.6.4.min.js', function () {
+            ex.load_js('/static/lib/bootstrap-datepicker1.6.4.zh-CN.min.js', function () {
                 self.input.datepicker(def_conf).on('changeDate', function (e) {
                     self.$emit('input', self.input.val());
                 });
@@ -1222,9 +1159,9 @@ Vue.component('datetime', {
         }
         self.input = $(this.$el).find('input');
 
-        ex.load_css('https://cdn.bootcss.com/smalot-bootstrap-datetimepicker/2.4.3/css/bootstrap-datetimepicker.min.css');
-        ex.load_js('https://cdn.bootcss.com/moment.js/2.17.1/moment.min.js');
-        ex.load_js('https://cdn.bootcss.com/smalot-bootstrap-datetimepicker/2.4.3/js/bootstrap-datetimepicker.min.js', function () {
+        ex.load_css('/static/lib/smalot-bootstrap-datetimepicker2.4.3.min.css');
+        ex.load_js('/static/lib/moment2.17.1.min.js');
+        ex.load_js('/static/lib/smalot-bootstrap-datetimepicker2.4.3.min.js', function () {
 
             self.input.datetimepicker(def_conf).on('changeDate', function (e) {
                 self.$emit('input', self.input.val());
@@ -1275,8 +1212,8 @@ var color = {
     },
     mounted: function mounted() {
         var self = this;
-        ex.load_css('https://cdn.bootcss.com/spectrum/1.8.0/spectrum.min.css');
-        ex.load_js('https://cdn.bootcss.com/spectrum/1.8.0/spectrum.min.js', function () {
+        ex.load_css('/static/lib/spectrum1.8.0.min.css');
+        ex.load_js('/static/lib/spectrum1.8.0.min.js', function () {
             self.init_and_listen();
         });
     }
@@ -1715,7 +1652,7 @@ exports = module.exports = __webpack_require__(1)();
 
 
 // module
-exports.push([module.i, ".form-pad {\n  background-color: white;\n  padding: 2em 1em; }\n  .form-pad .field {\n    display: flex;\n    margin-top: 2em; }\n  .form-pad .field label {\n    width: 80px;\n    flex-shrink: 0; }\n  .form-pad .field .field_input {\n    flex-grow: 1;\n    max-width: 50em;\n    border-bottom: 1px solid #f7f7f7; }\n    .form-pad .field .field_input select {\n      width: auto; }\n    .form-pad .field .field_input input[type=number] {\n      width: auto; }\n\n.help_text {\n  color: #a4a1a5;\n  font-style: italic;\n  font-size: 0.8em; }\n", ""]);
+exports.push([module.i, ".form-pad {\n  background-color: white;\n  padding: 2em 1em; }\n  .form-pad .field {\n    display: flex;\n    margin-top: 2em; }\n  .form-pad .field > label {\n    width: 80px;\n    flex-shrink: 0; }\n  .form-pad .field .field_input {\n    flex-grow: 1;\n    max-width: 50em;\n    border-bottom: 1px solid #f7f7f7; }\n    .form-pad .field .field_input select {\n      width: auto; }\n    .form-pad .field .field_input input[type=number] {\n      width: auto; }\n\n.help_text {\n  color: #a4a1a5;\n  font-style: italic;\n  font-size: 0.8em; }\n\n.field .radio input[type=\"radio\"]:focus + label::before {\n  /* outline: thin dotted; */\n  outline: none;\n  /* outline-offset: -2px; */ }\n", ""]);
 
 // exports
 
@@ -1788,10 +1725,13 @@ var _link = __webpack_require__(7);
 
 var ln = _interopRequireWildcard(_link);
 
+var _base = __webpack_require__(15);
+
+var _field_page = __webpack_require__(16);
+
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 //import * as js from './adapt.js'
-
 
 //import * as ck from './ckeditor.js'
 //import * as multi from './multi_sel.js'
@@ -1850,59 +1790,10 @@ __webpack_require__(3);
 (0, _ajax_fun.hook_ajax_msg)();
 (0, _ajax_fun.hook_ajax_csrf)();
 
-var field_base = {
-    props: {
-        name: {
-            required: true
-        },
-        kw: {
-            required: true
-        }
-    },
-    computed: {
-        row: function row() {
-            return this.kw.row;
-        },
-        errors: function errors() {
-            if (!this.kw.errors) {
-                Vue.set(this.kw, 'errors', {});
-            }
-            return this.kw.errors;
-        },
-        head: function head() {
-            var heads = this.kw.heads;
-            for (var x = 0; x < heads.length; x++) {
-                var head = heads[x];
-                if (head.name == this.name) {
-                    return head;
-                }
-            }
-        }
-    },
-    methods: {
-        error_data: function error_data(name) {
-            if (this.errors[name]) {
-                return this.errors[name];
-            } else {
-                return '';
-            }
-        }
-    },
-    //<input v-else type="number"  v-model="row[name]" :id="'id_'+name" :placeholder="kw.placeholder" :autofocus="kw.autofocus">
-    components: {
-        linetext: {
-            props: ['name', 'row', 'kw'],
-            template: '<div>\n            \t\t\t<span v-if=\'kw.readonly\' v-text=\'row[name]\'></span>\n            \t\t\t<input v-else type="text" class="form-control" v-model="row[name]" :id="\'id_\'+name"\n                        \t:placeholder="kw.placeholder" :autofocus="kw.autofocus" :maxlength=\'kw.maxlength\'>\n                       </div>'
-        },
-        number: {
-            props: ['name', 'row', 'kw'],
+var mobile_field_base = {
 
-            template: '<div><span v-if=\'kw.readonly\' v-text=\'row[name]\'></span>\n            \t\t<input v-else type="number" class="form-control" v-model="row[name]" :id="\'id_\'+name"\n                        :placeholder="kw.placeholder" :autofocus="kw.autofocus"></div>'
-        },
-        password: {
-            props: ['name', 'row', 'kw'],
-            template: '<input type="password" :id="\'id_\'+name" class="form-control" v-model="row[name]" :placeholder="kw.placeholder" :readonly=\'kw.readonly\'>'
-        },
+    components: {
+
         blocktext: {
             props: ['name', 'row', 'kw'],
             data: function data() {
@@ -1941,78 +1832,11 @@ var field_base = {
             },
             template: '<div>\n            <span v-if=\'kw.readonly\' v-text=\'row[name]\'></span>\n            <textarea v-else class="form-control" rows="2" :id="\'id_\'+name" v-model="row[name]" :placeholder="kw.placeholder"></textarea>\n            </div>'
         }, //
-        color: {
+
+
+        radio: {
             props: ['name', 'row', 'kw'],
-            template: '<input type="text" v-model="row[name]" :id="\'id_\'+name" :readonly=\'kw.readonly\'>',
-            methods: {
-                init_and_listen: function init_and_listen() {
-                    var self = this;
-                    Vue.nextTick(function () {
-                        $(self.$el).spectrum({
-                            color: self.row[self.name],
-                            showInitial: true,
-                            showInput: true,
-                            preferredFormat: "name",
-                            change: function change(color) {
-                                self.src_color = color.toHexString();
-                                self.row[self.name] = color.toHexString();
-                            }
-                        });
-                    });
-                }
-            },
-            watch: {
-                input_value: function input_value(value) {
-                    if (this.src_color != value) {
-                        this.init_and_listen();
-                    }
-                }
-            },
-            computed: {
-                input_value: function input_value() {
-                    return this.row[this.name];
-                }
-            },
-            mounted: function mounted() {
-                var self = this;
-                ex.load_css('//cdn.bootcss.com/spectrum/1.8.0/spectrum.min.css');
-                ex.load_js('//cdn.bootcss.com/spectrum/1.8.0/spectrum.min.js', function () {
-                    self.init_and_listen();
-                });
-            }
-        },
-        logo: { // absolate
-            props: ['name', 'row', 'kw'],
-            template: '<logo-input :up_url="kw.up_url" :web_url.sync="row[name]" :id="\'id_\'+name"></logo-input>'
-        },
-        picture: {
-            props: ['name', 'row', 'kw'],
-            template: '<div><img class="img-uploador" v-if=\'kw.readonly\' :src=\'row[name]\'/>\n\t\t\t<img-uploador v-else :up_url="kw.up_url" v-model="row[name]" :id="\'id_\'+name" :config="kw.config"></img-uploador></div>'
-        },
-        sim_select: {
-            props: ['name', 'row', 'kw'],
-            data: function data() {
-                return {
-                    model: this.row[this.name]
-                };
-            },
-            template: '<div>\n            <span v-if=\'kw.readonly\' v-text=\'get_label(kw.options,row[name])\'></span>\n            <select v-else v-model=\'row[name]\'  :id="\'id_\'+name"  class="form-control">\n            \t<option v-for=\'opt in kw.options\' :value=\'opt.value\' v-text=\'opt.label\'></option>\n            </select>\n            </div>',
-            mounted: function mounted() {
-                if (this.kw.default && !this.row[this.name]) {
-                    Vue.set(this.row, this.name, this.kw.default);
-                    //this.row[this.name]=this.kw.default
-                }
-            },
-            methods: {
-                get_label: function get_label(options, value) {
-                    var option = ex.findone(options, { value: value });
-                    if (!option) {
-                        return '---';
-                    } else {
-                        return option.label;
-                    }
-                }
-            }
+            template: '<div ><span v-if=\'kw.readonly\' v-text=\'row[name]\'></span>\n                        <div class="radio radio-info radio-inline" v-for=\'opt in kw.options\'>\n                            <input type="radio" :id="\'id_\'+name" :value="opt.value" name="radioInline" v-model="row[name]">\n                            <label :for="\'id_\'+name" v-text="opt.label"></label>\n                        </div>\n                      </div>'
         },
         tow_col: {
             props: ['name', 'row', 'kw'],
@@ -2049,27 +1873,14 @@ var field_base = {
         bool: {
             props: ['name', 'row', 'kw'],
             template: '<div class="mb-btn">\n              <input type="checkbox" name="checkbox1" :id="\'id_\'+name" :disabled="kw.readonly" v-model=\'row[name]\'/>\n              <span @click=\'row[name]= !row[name]\' style="font-size: 1.5em;">\n                  <i class="fa fa-check-circle" aria-hidden="true" v-if=\'row[name]\'></i>\n                  <i class="fa fa-circle-thin" aria-hidden="true" v-else></i>\n              </span>\n              <span :for="\'id_\'+name" @click=\'row[name]= !row[name]\'><span v-text=\'kw.label\'></span></span>\n\t\t\t\t\t  </div>'
-        },
-        date: {
-            props: ['name', 'row', 'kw'],
-            template: '<div><span v-if=\'kw.readonly\' v-text=\'row[name]\'></span>\n            \t\t\t<date v-else v-model="row[name]" :id="\'id_\'+name"\n                        \t:placeholder="kw.placeholder"></date>\n                       </div>'
-        },
-        datetime: {
-            props: ['name', 'row', 'kw'],
-            template: '<div><span v-if=\'kw.readonly\' v-text=\'row[name]\'></span>\n            \t\t\t<datetime v-model="row[name]" :id="\'id_\'+name"\n                        \t:placeholder="kw.placeholder"></datetime>\n                       </div>'
-        },
-        richtext: {
-            props: ['name', 'row', 'kw'],
-            template: '<div><span v-if=\'kw.readonly\' v-text=\'row[name]\'></span>\n            \t\t\t<ckeditor  v-model="row[name]" :id="\'id_\'+name"></ckeditor>\n                       </div>'
         }
+
     }
 
 };
 
-//  <el-form-item :label="head.label" > </el-form-item>
-
 var field = {
-    mixins: [field_base],
+    mixins: [_base.field_base, mobile_field_base],
     created: function created() {
         if (!this.head.placeholder) {
             this.head.placeholder = '请输入' + this.head.label;
@@ -2103,80 +1914,6 @@ function merge(mains, subs) {
     });
 }
 
-var field_fun = {
-    data: function data() {
-        return {
-            kw: {
-                heads: heads,
-                row: row,
-                errors: {}
-            },
-            menu: menu,
-            namelist: namelist,
-            can_add: can_add,
-            can_del: can_del,
-            can_log: can_log,
-            can_edit: can_edit
-        };
-    },
-    created: function created() {
-        ex.each(this.kw.heads, function (head) {
-            if (!head.placeholder) {
-                head.placeholder = '请输入' + head.label;
-            }
-        });
-    },
-    methods: {
-        after_sub: function after_sub() {
-            location = document.referrer;
-        },
-        submit: function submit() {
-            var self = this;
-            (0, _ajax_fun.show_upload)();
-            var search = ex.parseSearch();
-            var post_data = [{ fun: 'save', row: this.kw.row }];
-            ex.post('/_ajax', JSON.stringify(post_data), function (resp) {
-                (0, _ajax_fun.hide_upload)(500);
-                if (resp.save.errors) {
-                    self.kw.errors = resp.save.errors;
-                } else if (search._pop == 1) {
-                    window.ln.try_rt({ row: resp.save.row });
-                } else if (search.next) {
-                    location = decodeURIComponent(search.next);
-                } else {
-                    self.after_sub();
-                }
-            });
-        },
-        cancel: function cancel() {
-            var search = ex.parseSearch(); //parseSearch(location.search)
-            if (search._pop) {
-                window.close();
-            } else {
-                history.back();
-            }
-        },
-        del_row: function del_row(path) {
-            var search_args = ex.parseSearch();
-            location = ex.template('{engine_url}/del_rows?rows={class}:{pk}&next={next}&_pop={pop}', { class: this.kw.row._class,
-                engine_url: engine_url,
-                pk: this.kw.row.pk,
-                next: search_args.next,
-                pop: search_args._pop
-
-            });
-        },
-        log_url: function log_url() {
-            var obj = {
-                pk: this.kw.row.pk,
-                _class: this.kw.row._class,
-                engine_url: engine_url,
-                page_name: page_name
-            };
-            return ex.template('{engine_url}/log?rows={_class}:{pk}', obj);
-        }
-    }
-};
 Vue.component('com-form-btn', {
     data: function data() {
         return {
@@ -2267,8 +2004,9 @@ var fieldset_fun = {
         }
     }
 };
+
 window.fieldset_fun = fieldset_fun;
-window.field_fun = field_fun;
+window.field_fun = _field_page.field_fun;
 
 window.hook_ajax_msg = _ajax_fun.hook_ajax_msg;
 window.update_vue_obj = update_vue_obj;
@@ -2276,6 +2014,275 @@ window.update_vue_obj = update_vue_obj;
 window.show_upload = _ajax_fun.show_upload;
 window.hide_upload = _ajax_fun.hide_upload;
 window.merge = merge;
+
+/***/ }),
+/* 15 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+var field_base = exports.field_base = {
+    props: {
+        name: {
+            required: true
+        },
+        kw: {
+            required: true
+        }
+    },
+    computed: {
+        row: function row() {
+            return this.kw.row;
+        },
+        errors: function errors() {
+            if (!this.kw.errors) {
+                Vue.set(this.kw, 'errors', {});
+            }
+            return this.kw.errors;
+        },
+        head: function head() {
+            var heads = this.kw.heads;
+            for (var x = 0; x < heads.length; x++) {
+                var head = heads[x];
+                if (head.name == this.name) {
+                    return head;
+                }
+            }
+        }
+    },
+    methods: {
+        error_data: function error_data(name) {
+            if (this.errors[name]) {
+                return this.errors[name];
+            } else {
+                return '';
+            }
+        }
+    },
+    components: {
+        linetext: {
+            props: ['name', 'row', 'kw'],
+            template: '<div>\n            \t\t\t<span v-if=\'kw.readonly\' v-text=\'row[name]\'></span>\n            \t\t\t<input v-else type="text" class="form-control" v-model="row[name]" :id="\'id_\'+name"\n                        \t:placeholder="kw.placeholder" :autofocus="kw.autofocus" :maxlength=\'kw.maxlength\'>\n                       </div>'
+        },
+        number: {
+            props: ['name', 'row', 'kw'],
+
+            template: '<div><span v-if=\'kw.readonly\' v-text=\'row[name]\'></span>\n            \t\t<input v-else type="number" class="form-control" v-model="row[name]" :id="\'id_\'+name"\n                        :placeholder="kw.placeholder" :autofocus="kw.autofocus"></div>'
+        },
+        password: {
+            props: ['name', 'row', 'kw'],
+            template: '<input type="password" :id="\'id_\'+name" class="form-control" v-model="row[name]" :placeholder="kw.placeholder" :readonly=\'kw.readonly\'>'
+        },
+        blocktext: {
+            props: ['name', 'row', 'kw'],
+            template: '<div>\n            <span v-if=\'kw.readonly\' v-text=\'row[name]\'></span>\n            <textarea v-else class="form-control" rows="3" :id="\'id_\'+name" v-model="row[name]" :placeholder="kw.placeholder" :readonly=\'kw.readonly\'></textarea>\n            </div>'
+        },
+        color: {
+            props: ['name', 'row', 'kw'],
+            template: '<input type="text" v-model="row[name]" :id="\'id_\'+name" :readonly=\'kw.readonly\'>',
+            methods: {
+                init_and_listen: function init_and_listen() {
+                    var self = this;
+                    Vue.nextTick(function () {
+                        $(self.$el).spectrum({
+                            color: self.row[self.name],
+                            showInitial: true,
+                            showInput: true,
+                            preferredFormat: "name",
+                            change: function change(color) {
+                                self.src_color = color.toHexString();
+                                self.row[self.name] = color.toHexString();
+                            }
+                        });
+                    });
+                }
+            },
+            watch: {
+                input_value: function input_value(value) {
+                    if (this.src_color != value) {
+                        this.init_and_listen();
+                    }
+                }
+            },
+            computed: {
+                input_value: function input_value() {
+                    return this.row[this.name];
+                }
+            },
+            mounted: function mounted() {
+                var self = this;
+                ex.load_css('/static/lib/spectrum1.8.0.min.css');
+                ex.load_js('/static/lib/spectrum1.8.0.min.js', function () {
+                    self.init_and_listen();
+                });
+            }
+        },
+        logo: { // absolate
+            props: ['name', 'row', 'kw'],
+            template: '<logo-input :up_url="kw.up_url" :web_url.sync="row[name]" :id="\'id_\'+name"></logo-input>'
+        },
+        picture: {
+            props: ['name', 'row', 'kw'],
+            template: '<div><img class="img-uploador" v-if=\'kw.readonly\' :src=\'row[name]\'/>\n\t\t\t<img-uploador v-else :up_url="kw.up_url" v-model="row[name]" :id="\'id_\'+name" :config="kw.config"></img-uploador></div>'
+        },
+        sim_select: {
+            props: ['name', 'row', 'kw'],
+            data: function data() {
+                return {
+                    model: this.row[this.name]
+                };
+            },
+            template: '<div>\n            <span v-if=\'kw.readonly\' v-text=\'get_label(kw.options,row[name])\'></span>\n            <select v-else v-model=\'row[name]\'  :id="\'id_\'+name"  class="form-control">\n            \t<option v-for=\'opt in kw.options\' :value=\'opt.value\' v-text=\'opt.label\'></option>\n            </select>\n            </div>',
+            // 添加，修改，删除的按钮代码，暂时不用。<option :value='null'>----</option>
+            //`<div><select v-model='model'  :id="'id_'+name" :readonly='kw.readonly'>
+            //	<option :value='null'>----</option>
+            //	<option v-for='opt in kw.options' :value='opt.value' v-text='opt.label'></option>
+            //</select>
+            //<span v-if='kw.add_url' @click='add()'><img src='http://res.enjoyst.com/image/add.png' /></span>
+            //<span v-if='kw.change_url' @click='edit()'><img src='http://res.enjoyst.com/image/edit.png' /></span>
+            //<span v-if='kw.del_url' @click='del_row()'><img src='http://res.enjoyst.com/image/delete.png' /></a>
+            //</div>`,
+            mounted: function mounted() {
+                if (this.kw.default && !this.row[this.name]) {
+                    Vue.set(this.row, this.name, this.kw.default);
+                    //this.row[this.name]=this.kw.default
+                }
+            },
+            methods: {
+                get_label: function get_label(options, value) {
+                    var option = ex.findone(options, { value: value });
+                    if (!option) {
+                        return '---';
+                    } else {
+                        return option.label;
+                    }
+                }
+            }
+        },
+        tow_col: {
+            props: ['name', 'row', 'kw'],
+            template: '<div>\n\t        \t<ul v-if=\'kw.readonly\'><li v-for=\'value in row[name]\' v-text=\'get_label(value)\'></li></ul>\n\t        \t<tow-col-sel v-else v-model=\'row[name]\' :id="\'id_\'+name" :choices=\'kw.options\' :size=\'kw.size\' ></tow-col-sel>\n\t        \t</div>',
+            methods: {
+                get_label: function get_label(value) {
+                    for (var i = 0; i < this.kw.options.length; i++) {
+                        if (this.kw.options[i].value == value) {
+                            return this.kw.options[i].label;
+                        }
+                    }
+                }
+            }
+        },
+        bool: {
+            props: ['name', 'row', 'kw'],
+            template: '<div class="checkbox">\n\t        <input type="checkbox" :id="\'id_\'+name" v-model=\'row[name]\' :disabled="kw.readonly">\n\t\t\t <label :for="\'id_\'+name"><span v-text=\'kw.label\'></span></label>\n\t\t\t\t\t  </div>'
+        },
+        date: {
+            props: ['name', 'row', 'kw'],
+            template: '<div><span v-if=\'kw.readonly\' v-text=\'row[name]\'></span>\n            \t\t\t<date  v-model="row[name]" :id="\'id_\'+name"\n                        \t:placeholder="kw.placeholder"></date>\n                       </div>'
+        },
+        datetime: {
+            props: ['name', 'row', 'kw'],
+            template: '<div><span v-if=\'kw.readonly\' v-text=\'row[name]\'></span>\n            \t\t\t<datetime  v-model="row[name]" :id="\'id_\'+name"\n                        \t:placeholder="kw.placeholder"></datetime>\n                       </div>'
+        },
+        richtext: {
+            props: ['name', 'row', 'kw'],
+            template: '<div><span v-if=\'kw.readonly\' v-text=\'row[name]\'></span>\n            \t\t\t<ckeditor  v-model="row[name]" :id="\'id_\'+name"></ckeditor>\n                       </div>'
+        }
+    }
+
+};
+
+/***/ }),
+/* 16 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+var field_fun = exports.field_fun = {
+    data: function data() {
+        return {
+            kw: {
+                heads: heads,
+                row: row,
+                errors: {}
+            },
+            menu: menu,
+            search_args: search_args,
+
+            can_add: can_add,
+            can_del: can_del,
+            can_log: can_log,
+            can_edit: can_edit,
+
+            page_label: page_label
+        };
+    },
+    methods: {
+        after_sub: function after_sub() {
+            location = document.referrer;
+        },
+        submit: function submit() {
+            var self = this;
+            if (window.bus) {
+                window.bus.$emit('sync_data');
+            }
+            show_upload();
+            var search = ex.parseSearch();
+            var post_data = [{ fun: 'save', row: this.kw.row }];
+            ex.post('/_ajax', JSON.stringify(post_data), function (resp) {
+                hide_upload(500);
+                if (resp.save.errors) {
+                    self.kw.errors = resp.save.errors;
+                } else if (search._pop == 1) {
+                    window.ln.try_rt({ row: resp.save.row });
+                } else if (search.next) {
+                    location = decodeURIComponent(search.next);
+                } else {
+                    self.after_sub();
+                }
+            });
+        },
+        cancel: function cancel() {
+            var search = ex.parseSearch(); //parseSearch(location.search)
+            if (search._pop) {
+                window.close();
+            } else {
+                history.back();
+            }
+        },
+        del_row: function del_row(path) {
+            var search_args = ex.parseSearch();
+            if (this.kw.row.pk) {
+                return ex.template('{engine_url}/del_rows?rows={class}:{pk}&next={next}&_pop={pop}', { class: this.kw.row._class,
+                    engine_url: engine_url,
+                    pk: this.kw.row.pk,
+                    next: search_args.next,
+                    pop: search_args._pop
+
+                });
+            } else {
+                return null;
+            }
+        },
+        log_url: function log_url() {
+            var obj = {
+                pk: this.kw.row.pk,
+                _class: this.kw.row._class,
+                engine_url: engine_url,
+                page_name: page_name
+            };
+            return ex.template('{engine_url}/log?rows={_class}:{pk}', obj);
+        }
+    }
+};
 
 /***/ })
 /******/ ]);

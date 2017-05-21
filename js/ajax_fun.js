@@ -5,70 +5,7 @@
 /*
 新增一个wrap函数，用户封装调用函数
 */
-//function proc_msg(func) {
-//	function _inn(data) {
-//		if(data.status && data.status!='success'){
-//			if(data.msg){
-//				alert(data.msg)
-//			}
-//		}else{
-//			func(data)
-//		}
-//	}
-//	return _inn
-//}
 
-//function has_error(data) {
-//	if(data.status && data.status!='success'){
-//		if(data.msg){
-//			alert(data.msg)
-//		}
-//		return true
-//	}else{
-//		return false
-//	}
-//}
-
-
-
-//var org_get=$.get
-//$.get=function (url,callback) {
-//	var wrap_callback=function (resp) {
-//		if(resp.msg){
-//			alert(resp.msg)
-//		}
-//		if(resp.status && resp.status!='success'){
-//			return
-//		}else{
-//			callback(resp)
-//		}
-//	}
-//	org_get(url,wrap_callback)
-//}
-//var org_post=$.post
-//$.post=function (url,data,callback) {
-//	var wrap_callback=function (resp) {
-//		if(resp.msg){
-//			alert(resp.msg)
-//		}
-//		if(resp.status && resp.status!='success'){
-//			return
-//		}else{
-//			callback(resp)
-//		}
-//	}
-//	org_post(url,data,wrap_callback) 
-//}
-
-
-//function def_proc_port_msg(data,event) {
-//	var rt = data.responseJSON
-//        if(rt && rt.msg){
-//            alert(rt.msg)
-//        }
-//}
-
-var lib= window.lib || {}
 
 function def_proc_error(jqxhr) {
 	if(! window.iclosed){
@@ -151,7 +88,7 @@ export function hide_upload(second){
 	}
 }
 
-ex.load_css(lib['font_awesome'] || 'https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css')
+ex.load_css( '/static/lib/font-awesome4.7/font-awesome4.7.min.css')
 //if(!window.__font_awesome){
 //	window.__font_awesome=true
 //	document.write(`<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">`)
