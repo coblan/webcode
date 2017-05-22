@@ -86,7 +86,12 @@ var ln={
         },false)
 
         if(obj.init){// && !history.state){
-            history.pushState(obj.init,'')
+            //if(!history.state){
+                history.pushState(obj.init,'')
+            //}else{
+            //    history.replaceState(obj.init,'')
+            //}
+
         }
 
     },

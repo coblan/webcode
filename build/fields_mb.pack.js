@@ -1673,7 +1673,11 @@ var ln = {
 
         if (obj.init) {
             // && !history.state){
+            //if(!history.state){
             history.pushState(obj.init, '');
+            //}else{
+            //    history.replaceState(obj.init,'')
+            //}
         }
     },
     pushState: function pushState(state, url) {
