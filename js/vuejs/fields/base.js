@@ -176,7 +176,7 @@ export var field_base={
         date: {
             props:['name','row','kw'],
             template:`<div><span v-if='kw.readonly' v-text='row[name]'></span>
-            			<date  v-model="row[name]" :id="'id_'+name"
+            			<date v-else v-model="row[name]" :id="'id_'+name"
                         	:placeholder="kw.placeholder"></date>
                        </div>`,
         },
