@@ -168,14 +168,19 @@ var mobile_field_base={
     //<label :for="'id_'+name"><span v-text='kw.label'></span></label>
         bool:{
             props:['name','row','kw'],
-            template:`<div class="mb-btn">
-              <input type="checkbox" name="checkbox1" :id="'id_'+name" :disabled="kw.readonly" v-model='row[name]'/>
-              <span @click='row[name]= !row[name]' style="font-size: 1.5em;">
-                  <i class="fa fa-check-circle" aria-hidden="true" v-if='row[name]'></i>
-                  <i class="fa fa-circle-thin" aria-hidden="true" v-else></i>
-              </span>
-              <span :for="'id_'+name" @click='row[name]= !row[name]'><span v-text='kw.label'></span></span>
-					  </div>`
+            template:`<div class="checkbox checkbox-success checkbox-inline">
+                        <input type="checkbox" class="styled" :id="'id_'+name" :disabled="kw.readonly" v-model='row[name]'>
+                        <label :for="'id_'+name"><span v-text='kw.label'></span></label>
+		              </div>`,
+
+              //  `<div class="mb-btn">
+              //<input type="checkbox" name="checkbox1" :id="'id_'+name" :disabled="kw.readonly" v-model='row[name]'/>
+              //<span @click='row[name]= !row[name]' style="font-size: 1.5em;">
+              //    <i class="fa fa-check-circle" aria-hidden="true" v-if='row[name]'></i>
+              //    <i class="fa fa-circle-thin" aria-hidden="true" v-else></i>
+              //</span>
+              //<span :for="'id_'+name" @click='row[name]= !row[name]'><span v-text='kw.label'></span></span>
+				//	  </div>`
         },
 
 
