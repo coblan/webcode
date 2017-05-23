@@ -29,6 +29,7 @@ var  scrop_wraper={
             self.scroll = new IScroll($(self.$el).find('.scroll-wrapper')[0],{
                 probeType:1,
                 click:true,
+                tap:true,
             });
             self.scroll.on('scrollStart',function(){
 
