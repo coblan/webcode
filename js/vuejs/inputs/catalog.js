@@ -163,7 +163,7 @@ var com_catalog={
     <div class="bd">
         <ul>
         <li v-for="dir in dirs" class="dir">
-            <slot name="check_sel" :value="dir" :toggle_check="toggle_check" >
+            <slot name="check_sel" :value="dir" :toggle_check="toggle_check" :selected="selected">
                 <input v-if="editable" type="checkbox" :value="dir" v-model="selected"/>
             </slot>
 
@@ -175,7 +175,7 @@ var com_catalog={
             <slot name="btn-panel" :selected="selected" :item="dir"></slot>
         </li>
         <li v-for="item in items" :key="item.pk" class="item">
-            <slot name="check_sel" :value="item" :toggle_check="toggle_check">
+            <slot name="check_sel" :value="item" :toggle_check="toggle_check" :selected="selected">
                 <input v-if="editable" type="checkbox" :value="item" v-model="selected"/>
             </slot>
             <slot name="item_icon">
