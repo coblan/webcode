@@ -163,7 +163,7 @@ var com_catalog={
     <div class="bd">
         <ul>
         <li v-for="dir in dirs" class="dir">
-            <slot name="check_sel" :value="dir" :toggle_check="toggle_check" :selected="selected">
+            <slot  name="check_sel" :value="dir" :toggle_check="toggle_check" :selected="selected">
                 <input v-if="editable" type="checkbox" :value="dir" v-model="selected"/>
             </slot>
 

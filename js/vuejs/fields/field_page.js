@@ -50,7 +50,7 @@ export var field_fun={
                 history.back()
             }
         },
-        del_row:function (path) {
+        get_del_link:function(){
             var search_args=ex.parseSearch()
             if(this.kw.row.pk){
                 return ex.template('{engine_url}/del_rows?rows={class}:{pk}&next={next}&_pop={pop}',{class:this.kw.row._class,
@@ -63,6 +63,9 @@ export var field_fun={
             }else{
                 return null
             }
+        },
+        del_row:function () {
+           return this.get_del_link()
         },
         log_url:function(){
             var obj={

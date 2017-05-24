@@ -344,6 +344,46 @@ var fieldset_fun={
     }
 }
 
+var com_form_btn_group={
+    data:function(){
+        return {
+            can_add:can_add,
+            can_del:can_del,
+        }
+    },
+    props:['submit'],
+    methods:{
+        cancel:function(){
+            history.back()
+        }
+    },
+    template:`<div style="text-align: center;padding: 3em 0 8em 0;">
+                    <a type="button" class="btn btn-success btn-sm" href="javascript:"  @click="submit()" style="width: 16em;">确定</a>
+                    <a type="button" class="btn btn-default btn-sm" href="javascript:"  @click="cancel()" style="width: 16em;margin-top:2em;">取消</a>
+                </div>`
+}
+Vue.component('com-form-btn-group',com_form_btn_group)
+
+
+Vue.directive('btn-group', function (el, binding) {
+    $(el).css({'text-align':'center','padding':'3em 0 8em 0;'})
+    $(el).find('a').attr('type','button')
+    $(el).find('a').css({width:'16em','margin-top':'2em'})
+    $(el).find('a').each(function(){
+        var type = $(this).attr('state')
+        $(this).addClass('btn btn-'+type+' btn-sm')
+        if(!$(this).attr('href')){
+            $(this).attr('href','javascript:;')
+        }
+    })
+    if($(el).attr('binded')!=1){
+        $(el).attr('binded','1')
+        $(el).append('<a type="button" class="btn btn-default btn-sm" href="javascript:"  onclick="history.back()" style="width: 16em;margin-top:2em;">取消</a>')
+    }
+
+})
+
+
 window.fieldset_fun=fieldset_fun
 window.field_fun=field_fun
 
