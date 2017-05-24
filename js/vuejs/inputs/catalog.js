@@ -35,6 +35,7 @@ require('./css/catalog.scss')
 var com_catalog={
     props:['url','root','editable'],
     data:function(){
+
         return {
             dirs:[],
             items:[],
@@ -42,12 +43,18 @@ var com_catalog={
             crt_dir:this.root,
             selected:[],
             cut_list:[],
+
         }
     },
     mounted:function(){
         this.dir_data(this.root)
     },
     computed:{
+        agent:function(){
+            return {
+                selected:this.selected
+            }
+        },
         parents:function(){
             if(!this.root.pk){
                 return this.org_parents
@@ -136,8 +143,12 @@ var com_catalog={
             location=engine_url+'/del_rows?rows='+del_str+'&next='+encodeURIComponent(location.href)
         },
 
-        set_sel:function(v){
-            this.selected=v
+        toggle_check:function(v){
+            if(ex.isin(v,this.selected)){
+                ex.remove(this.selected,v)
+            }else{
+                this.selected.push(v)
+            }
         },
     },
     template:`<div class="com-catalog">
@@ -152,7 +163,7 @@ var com_catalog={
     <div class="bd">
         <ul>
         <li v-for="dir in dirs" class="dir">
-            <slot name="check_sel" :value="dir" :selected="selected" :set_sel="set_sel">
+            <slot name="check_sel" :value="dir" :toggle_check="toggle_check" >
                 <input v-if="editable" type="checkbox" :value="dir" v-model="selected"/>
             </slot>
 
@@ -164,7 +175,7 @@ var com_catalog={
             <slot name="btn-panel" :selected="selected" :item="dir"></slot>
         </li>
         <li v-for="item in items" :key="item.pk" class="item">
-            <slot name="check_sel" :value="item" :selected="selected" :set_sel="set_sel">
+            <slot name="check_sel" :value="item" :toggle_check="toggle_check">
                 <input v-if="editable" type="checkbox" :value="item" v-model="selected"/>
             </slot>
             <slot name="item_icon">

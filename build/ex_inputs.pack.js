@@ -110,6 +110,7 @@ __webpack_require__(4);
 var com_catalog = {
     props: ['url', 'root', 'editable'],
     data: function data() {
+
         return {
             dirs: [],
             items: [],
@@ -117,12 +118,18 @@ var com_catalog = {
             crt_dir: this.root,
             selected: [],
             cut_list: []
+
         };
     },
     mounted: function mounted() {
         this.dir_data(this.root);
     },
     computed: {
+        agent: function agent() {
+            return {
+                selected: this.selected
+            };
+        },
         parents: function parents() {
             if (!this.root.pk) {
                 return this.org_parents;
@@ -211,11 +218,15 @@ var com_catalog = {
             location = engine_url + '/del_rows?rows=' + del_str + '&next=' + encodeURIComponent(location.href);
         },
 
-        set_sel: function set_sel(v) {
-            this.selected = v;
+        toggle_check: function toggle_check(v) {
+            if (ex.isin(v, this.selected)) {
+                ex.remove(this.selected, v);
+            } else {
+                this.selected.push(v);
+            }
         }
     },
-    template: '<div class="com-catalog">\n    <div class="flex">\n        <ol class="breadcrumb flex-grow">\n            <li ><a href="javacript:;" @click="dir_data(root)">root</a></li>\n            <li v-for="dir in parents" ><a href="javacript:;" v-text="dir.name" @click="dir_data(dir);$emit(\'dirclick\',dir)" ></a></li>\n        </ol>\n        <slot name="head_end"></slot>\n    </div>\n\n    <div class="bd">\n        <ul>\n        <li v-for="dir in dirs" class="dir">\n            <slot name="check_sel" :value="dir" :selected="selected" :set_sel="set_sel">\n                <input v-if="editable" type="checkbox" :value="dir" v-model="selected"/>\n            </slot>\n\n            <slot dir_icon>\n                <i class="fa fa-folder" aria-hidden="true"></i>\n            </slot>\n\n            <span v-text="dir.name" class="clickable name" @click="dir_data(dir);$emit(\'dirclick\',dir)"></span>\n            <slot name="btn-panel" :selected="selected" :item="dir"></slot>\n        </li>\n        <li v-for="item in items" :key="item.pk" class="item">\n            <slot name="check_sel" :value="item" :selected="selected" :set_sel="set_sel">\n                <input v-if="editable" type="checkbox" :value="item" v-model="selected"/>\n            </slot>\n            <slot name="item_icon">\n                <i class="fa fa-file-o" aria-hidden="true"></i>\n            </slot>\n            <span v-text="item.name" class="clickable name" @click="$emit(\'itemclick\',item)"></span>\n            <slot name="btn-panel" :selected="selected" :item="item"></slot>\n         </li>\n        </ul>\n    </div>\n    </div>'
+    template: '<div class="com-catalog">\n    <div class="flex">\n        <ol class="breadcrumb flex-grow">\n            <li ><a href="javacript:;" @click="dir_data(root)">root</a></li>\n            <li v-for="dir in parents" ><a href="javacript:;" v-text="dir.name" @click="dir_data(dir);$emit(\'dirclick\',dir)" ></a></li>\n        </ol>\n        <slot name="head_end"></slot>\n    </div>\n\n    <div class="bd">\n        <ul>\n        <li v-for="dir in dirs" class="dir">\n            <slot name="check_sel" :value="dir" :toggle_check="toggle_check" >\n                <input v-if="editable" type="checkbox" :value="dir" v-model="selected"/>\n            </slot>\n\n            <slot dir_icon>\n                <i class="fa fa-folder" aria-hidden="true"></i>\n            </slot>\n\n            <span v-text="dir.name" class="clickable name" @click="dir_data(dir);$emit(\'dirclick\',dir)"></span>\n            <slot name="btn-panel" :selected="selected" :item="dir"></slot>\n        </li>\n        <li v-for="item in items" :key="item.pk" class="item">\n            <slot name="check_sel" :value="item" :toggle_check="toggle_check">\n                <input v-if="editable" type="checkbox" :value="item" v-model="selected"/>\n            </slot>\n            <slot name="item_icon">\n                <i class="fa fa-file-o" aria-hidden="true"></i>\n            </slot>\n            <span v-text="item.name" class="clickable name" @click="$emit(\'itemclick\',item)"></span>\n            <slot name="btn-panel" :selected="selected" :item="item"></slot>\n         </li>\n        </ul>\n    </div>\n    </div>'
 
 };
 

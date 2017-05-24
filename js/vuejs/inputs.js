@@ -290,8 +290,9 @@ var check_box={
         },
     },
     data:function(){
+        var checked = this.checked || []
         return {
-            inn_checked:this.checked,
+            inn_checked:checked,
         }
     },
     watch:{
