@@ -154,7 +154,7 @@ var com_catalog={
     template:`<div class="com-catalog">
     <div class="flex">
         <ol class="breadcrumb flex-grow">
-            <li ><a href="javacript:;" @click="dir_data(root)">root</a></li>
+            <li ><a href="javacript:;" @click="dir_data(root)" v-text="root.name">root</a></li>
             <li v-for="dir in parents" ><a href="javacript:;" v-text="dir.name" @click="dir_data(dir);$emit('dirclick',dir)" ></a></li>
         </ol>
         <slot name="head_end"></slot>
