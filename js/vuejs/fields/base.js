@@ -150,6 +150,31 @@ export var field_base={
                 },
             }
         },
+        check_select:{
+            props:['name','row','kw'],
+            computed:{
+              selected:{
+                  get:function(){
+                      var data=this.row[this.name]
+                      if(data){
+                          return data.split(',')
+                      }else{
+                          return []
+                      }
+
+                  },
+                  set:function(v){
+                      this.row[this.name]=v.join(',')
+                  }
+
+              }
+            },
+            template:`<div>
+                <ul>
+                <li v-for='option in kw.options' v-if="option.value"><input type="checkbox" :value="option.value" v-model="selected"/><span v-text="option.label"></span></li>
+                </ul>
+            </div>`,
+        },
         tow_col:{
             props:['name','row','kw'],
             template:`<div>
@@ -193,6 +218,7 @@ export var field_base={
             			<ckeditor  v-model="row[name]" :id="'id_'+name"></ckeditor>
                        </div>`,
         },
+
     }
 
 }
