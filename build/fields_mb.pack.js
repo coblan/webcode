@@ -642,6 +642,26 @@ var field_base = exports.field_base = {
                 }
             }
         },
+        check_select: {
+            props: ['name', 'row', 'kw'],
+            computed: {
+                selected: {
+                    get: function get() {
+                        var data = this.row[this.name];
+                        if (data) {
+                            return data.split(',');
+                        } else {
+                            return [];
+                        }
+                    },
+                    set: function set(v) {
+                        this.row[this.name] = v.join(',');
+                    }
+
+                }
+            },
+            template: '<div>\n                <ul>\n                <li v-for=\'option in kw.options\' v-if="option.value"><input type="checkbox" :value="option.value" v-model="selected"/><span v-text="option.label"></span></li>\n                </ul>\n            </div>'
+        },
         tow_col: {
             props: ['name', 'row', 'kw'],
             template: '<div>\n\t        \t<ul v-if=\'kw.readonly\'><li v-for=\'value in row[name]\' v-text=\'get_label(value)\'></li></ul>\n\t        \t<tow-col-sel v-else v-model=\'row[name]\' :id="\'id_\'+name" :choices=\'kw.options\' :size=\'kw.size\' ></tow-col-sel>\n\t        \t</div>',
@@ -671,6 +691,7 @@ var field_base = exports.field_base = {
             props: ['name', 'row', 'kw'],
             template: '<div><span v-if=\'kw.readonly\' v-text=\'row[name]\'></span>\n            \t\t\t<ckeditor  v-model="row[name]" :id="\'id_\'+name"></ckeditor>\n                       </div>'
         }
+
     }
 
 };
@@ -2303,7 +2324,7 @@ Vue.component('com-form-btn-group', com_form_btn_group);
 Vue.directive('btn-group', function (el, binding) {
     $(el).css({ 'text-align': 'center', 'padding': '3em 0 8em 0;' });
     $(el).find('a').attr('type', 'button');
-    $(el).find('a').css({ width: '16em', 'margin-top': '2em' });
+    $(el).find('a').css({ width: '60vw', 'margin-top': '2em' });
     $(el).find('a').each(function () {
         var type = $(this).attr('state');
         $(this).addClass('btn btn-' + type + ' btn-sm');
@@ -2313,7 +2334,7 @@ Vue.directive('btn-group', function (el, binding) {
     });
     if ($(el).attr('binded') != 1) {
         $(el).attr('binded', '1');
-        $(el).append('<a type="button" class="btn btn-default btn-sm" href="javascript:"  onclick="history.back()" style="width: 16em;margin-top:2em;">取消</a>');
+        $(el).append('<a type="button" class="btn btn-default btn-sm" href="javascript:"  onclick="history.back()" style="width: 60vw;margin-top:2em;">取消</a>');
     }
 });
 

@@ -368,7 +368,7 @@ Vue.component('com-form-btn-group',com_form_btn_group)
 Vue.directive('btn-group', function (el, binding) {
     $(el).css({'text-align':'center','padding':'3em 0 8em 0;'})
     $(el).find('a').attr('type','button')
-    $(el).find('a').css({width:'16em','margin-top':'2em'})
+    $(el).find('a').css({width:'60vw','margin-top':'2em'})
     $(el).find('a').each(function(){
         var type = $(this).attr('state')
         $(this).addClass('btn btn-'+type+' btn-sm')
@@ -378,7 +378,7 @@ Vue.directive('btn-group', function (el, binding) {
     })
     if($(el).attr('binded')!=1){
         $(el).attr('binded','1')
-        $(el).append('<a type="button" class="btn btn-default btn-sm" href="javascript:"  onclick="history.back()" style="width: 16em;margin-top:2em;">取消</a>')
+        $(el).append('<a type="button" class="btn btn-default btn-sm" href="javascript:"  onclick="history.back()" style="width: 60vw;margin-top:2em;">取消</a>')
     }
 
 })
