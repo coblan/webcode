@@ -320,7 +320,7 @@ Vue.component('img-uploador',img_uploader)
 * */
 
 var img_crop={
-    template: `<div class="img-crop">
+    template: `<div class="img-crop">sss
     <input type='file' @change='on_change($event)'
             accept='image/*'>
     <modal v-show='cropping' >
@@ -393,12 +393,14 @@ var img_crop={
             $(this.$el).find('.crop-img').cropper('setDragMode','crop')
         },
         on_change: function (event) {
+
             if($(this.$el).find('input[type=file]').val()==''){
                 return
             }
             var self=this
             this.cropping=true
             var img_file = event.target.files[0]
+
             //fl.read(img_file)
             //this.$emit('input', this.files)
             fl.read(img_file,function (data) {
