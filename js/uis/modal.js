@@ -1,3 +1,17 @@
+var transfer={}
+function disable_scroll(){
+	transfer.wsctop=$(window).scrollTop();  //记住滚动条的位置
+	$('body').addClass('modal-show')
+	$('body').css('top',-transfer.wsctop)
+//        $("body").css({position:'fixed',top:-transfer.wsctop});
+}
+function enable_scroll(){
+//        $("body").css({position:'static'});
+	$("body").removeClass('modal-show')
+	$(window).scrollTop(transfer.wsctop);//弹框关闭时，启动滚动条，并滚动到原来的位置
+}
+
+
 
 if(!window.__modal_mark){
 	window.__modal_mark=true
@@ -36,7 +50,7 @@ if(!window.__modal_mark){
 		</style>`)
 }
 Vue.component('modal',{
-	template:`<div class="_modal_popup " >
+	template:`<div class="_modal_popup " v-show="is_show">
 	<div class="flex flex-vh-center" style="width: 100%;height: 100%;">
 		<div class="_modal_inn" :style='inn_style'>
 			<span v-if="with_close_btn" @click="$emit('close')" style="position: absolute;right:5px;top:-2em; color: #ff9b11;">
@@ -48,10 +62,26 @@ Vue.component('modal',{
 
 		</div>
 	</div>
-
 	</div>`
 			,
-	props:['inn_style','with_close_btn'],
+	methods:function(){
+		//var self=this
+		//setTimeout(function(){
+		//	self.$refs.	editor_scroller.refresh()
+		//},500)
+
+	},
+	props:['inn_style','with_close_btn','show'],
+	computed:{
+		is_show:function(){
+			if(this.show){
+				disable_scroll()
+			}else{
+				enable_scroll()
+			}
+			return this.show
+		}
+	}
 	//methods:{
 	//	hide_me:function () {
 	//		this.$dispatch('sd_hide')

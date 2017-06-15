@@ -323,7 +323,7 @@ var img_crop={
     template: `<div class="img-crop">sss
     <input type='file' @change='on_change($event)'
             accept='image/*'>
-    <modal v-show='cropping' >
+    <modal :show='cropping' >
         <div class="total-wrap flex-v" style="width:80vw;height: 80vh;background-color: white;">
             <div class="crop-wrap flex-grow">
                 <img class="crop-img" :src="org_img" >

@@ -523,14 +523,49 @@ window.scroll_loader = scroll_loader;
 "use strict";
 
 
+var transfer = {};
+function disable_scroll() {
+	transfer.wsctop = $(window).scrollTop(); //记住滚动条的位置
+	$('body').addClass('modal-show');
+	$('body').css('top', -transfer.wsctop);
+	//        $("body").css({position:'fixed',top:-transfer.wsctop});
+}
+function enable_scroll() {
+	//        $("body").css({position:'static'});
+	$("body").removeClass('modal-show');
+	$(window).scrollTop(transfer.wsctop); //弹框关闭时，启动滚动条，并滚动到原来的位置
+}
+
 if (!window.__modal_mark) {
 	window.__modal_mark = true;
 	document.write('\n\t\t<style>\n\t\t._modal_popup{\n\t\t\tposition: fixed;\n\t\t\ttop: 0;\n\t\t\tleft: 0;\n\t\t\tright: 0;\n\t\t\tbottom: 0;\n\t\t\tbackground: rgba(0, 0, 0, 0.2);\n\t\t\tz-index:1000;\n\t\t}\n\t\t._modal_inn{\n\t\t\t/*background: rgba(88, 88, 88, 0.2);*/\n\t\t\tborder-radius: 5px;\n\t\t\tbackground:white;\n\t\t\tposition: relative;\n\n\t\n\t\t\t/*padding:30px 80px ;*/\n\t\t}\n\t\t._modal_popup>._modal_middle{\n\t\t    position: absolute;\n\t        top: 50%;\n\t        left: 50%;\n\t        transform: translate(-50%, -50%);\n\t        -ms-transform:translate(-50%, -50%); \t/* IE 9 */\n\t\t\t-moz-transform:translate(-50%, -50%); \t/* Firefox */\n\t\t\t-webkit-transform:translate(-50%, -50%); /* Safari \u548C Chrome */\n\t\t\t-o-transform:translate(-50%, -50%); \n\t        /*text-align: center;*/\n\t        /*z-index: 1000;*/\n    \t}\n\t\t</style>');
 }
 Vue.component('modal', {
-	template: '<div class="_modal_popup " >\n\t<div class="flex flex-vh-center" style="width: 100%;height: 100%;">\n\t\t<div class="_modal_inn" :style=\'inn_style\'>\n\t\t\t<span v-if="with_close_btn" @click="$emit(\'close\')" style="position: absolute;right:5px;top:-2em; color: #ff9b11;">\n\t\t\t\t<i class="fa fa-times fa-2x" aria-hidden="true"></i>\n\t\t\t</span>\n\t\t<div style="overflow:auto;">\n        \t<slot></slot>\n         </div>\n\n\t\t</div>\n\t</div>\n\n\t</div>',
+	template: '<div class="_modal_popup " v-show="is_show">\n\t<div class="flex flex-vh-center" style="width: 100%;height: 100%;">\n\t\t<div class="_modal_inn" :style=\'inn_style\'>\n\t\t\t<span v-if="with_close_btn" @click="$emit(\'close\')" style="position: absolute;right:5px;top:-2em; color: #ff9b11;">\n\t\t\t\t<i class="fa fa-times fa-2x" aria-hidden="true"></i>\n\t\t\t</span>\n\t\t<div style="overflow:auto;">\n        \t<slot></slot>\n         </div>\n\n\t\t</div>\n\t</div>\n\t</div>',
 
-	props: ['inn_style', 'with_close_btn']
+	methods: function methods() {
+		//var self=this
+		//setTimeout(function(){
+		//	self.$refs.	editor_scroller.refresh()
+		//},500)
+
+	},
+	props: ['inn_style', 'with_close_btn', 'show'],
+	computed: {
+		is_show: function is_show() {
+			if (this.show) {
+				disable_scroll();
+			} else {
+				enable_scroll();
+			}
+			return this.show;
+		}
+	}
+	//methods:{
+	//	hide_me:function () {
+	//		this.$dispatch('sd_hide')
+	//	}
+	//}@click='hide_me()'
 });
 
 /***/ }),
@@ -714,7 +749,7 @@ exports = module.exports = __webpack_require__(0)();
 
 
 // module
-exports.push([module.i, "template {\n  display: none; }\n", ""]);
+exports.push([module.i, "template {\n  display: none; }\n\nhtml, body {\n  height: 100%;\n  margin: 0;\n  padding: 0; }\n\nbody.modal-show {\n  position: fixed;\n  width: 100%;\n  height: 100%; }\n", ""]);
 
 // exports
 
