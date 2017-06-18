@@ -1,0 +1,155 @@
+<!doctype html>
+<html>
+<meta charset="utf-8">
+<title>Deposits and Withdrawals</title>
+<script type="text/javascript" src='http://apps.bdimg.com/libs/jquery/1.9.1/jquery.min.js'></script>
+<!--<script src="http://cdn.bootcss.com/vue/1.0.24/vue.js"></script>-->
+<!--<script src="http://cdn.bootcss.com/vue/2.0.5/vue.js"></script>-->
+<script src="https://cdn.bootcss.com/vue/2.0.5/vue.js"></script>
+<script src="https://cdn.bootcss.com/lodash.js/4.16.6/lodash.min.js"></script>
+<script src="https://cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<script src="../js/exfun.js"></script>
+<script src="../build/fields.pack.js"></script>
+<!--<script src="../build/file.pack.js"></script>-->
+
+<script type="text/javascript">
+    Vue.config.devtools = true
+    //use_color()
+    //			field ({name:'dog',template:field_str('horizon',l='col-md-1')})
+    //			field()
+    meta={
+        errors:{},
+        row:{
+            username:'',
+            password:'',
+            pas2:'',
+            hh:'',
+            jjyy:['2'],
+        },
+        heads:[
+            {name:'username',label:'用户名',type:'linetext',required:true,autofocus:true},
+            {name:'password',label:'mima',type:'linetext',required:true,autofocus:true},
+            {name:'hh',label:'ss',type:'color',},
+            {name:'hjk',label:'ff',type:'logo',up_url:"jj"},
+            {name:'hjkK',label:'fSSf',type:'picture',up_url:"jj"},
+            {name:'jjyy',label:'fufu',type:'tow_col',options:[{value:'1',label:'xxx'},{value:'2',label:'bbb'}]},
+            {name:'sub_date',label:'日期',type:'date',required:true},
+            {name:'sub_datetime',label:'日期',type:'datetime',required:true},
+
+        ]
+    }
+    //			sub=[{name:'username',type:'area'}]
+    //			merge(meta.heads,sub)
+    $(function () {
+
+        new Vue({
+            el:'#hello',
+            data:{
+                meta:meta,
+                test_list:[{value:1,label:'first'},
+                    {value:2,label:'second'}],
+                can_list:[{value:1,label:'first'},
+                    {value:2,label:'second'},
+                    {value:3,label:'three'}]
+            },
+            methods:{
+                show_upload:function(){
+                    show_upload()
+                },
+                add_one:function(){
+                    this.test_list.push({value:3,label:'three'})
+                }
+            }
+        })
+
+
+
+    })
+
+
+
+</script>
+</head>
+<body>
+<h1 id='tt'>Top 3 Transactions</h1>
+<div id='hello' class="container">
+    <com-tab-lite :value="1" label="hello"></com-tab-lite>
+
+    <com-tab-box :list="test_list"></com-tab-box>
+    <button @click="add_one()">ss</button>
+</div>
+
+
+
+<template id="tab-lite">
+    <div class="tab-lite">
+        <span v-text="label"></span>
+        <span v-if="!readonly" @click="$emit('close',value)" class="cross">X</span>
+    </div>
+</template>
+
+<template id="tab-box">
+    <div class="tab-box">
+        <com-tab-lite :class="{'selected':seleced_item==item}" v-for="item in list" :value="item.value" :label="item.label" :readonly="readonly" @close="on_tab_close_click($event)" @click.native="on_tab_click(item)"></com-tab-lite>
+    </div>
+</template>
+
+<script>
+    tab_lite={
+        // event: close(value)
+        template:'#tab-lite',
+        props:['value','label','readonly'],
+    }
+    Vue.component('com-tab-lite',tab_lite)
+    tab_box={
+        template:'#tab-box',
+        props:['list','readonly'],
+        data:function(){
+          return {
+              seleced_item:{},
+          }
+        },
+        methods:{
+            on_tab_close_click:function(tab_value){
+                ex.remove(this.list,{value:tab_value})
+            },
+            on_tab_click:function(item){
+                this.seleced_item=item
+                this.$emit('selected',item.value)
+            }
+        }
+    }
+    Vue.component('com-tab-box',tab_box)
+</script>
+
+<style>
+    .tab-lite{
+        display: inline-block;
+        padding: 0.2em 0.7em;
+        background-color: rgba(76, 173, 247, 0.3);
+
+        border: 1px solid #7cc9ff;
+        border-radius:0.2em ;
+        margin: 0.2em 0.3em;
+    }
+    .tab-lite.selected{
+        background-color: rgba(76, 173, 247, 0.6);
+        border: 1px solid #1a6aff;
+    }
+    .tab-lite .cross{
+        margin-left: 0.8em;
+    }
+    .tab-lite .cross:hover{
+        cursor: pointer;
+    }
+
+    .tab-box{
+        border: 1px solid #bab2bb;
+        padding: 0.2em 0.5em;
+    }
+</style>
+</body>
+
+
+</html>

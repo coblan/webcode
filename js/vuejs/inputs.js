@@ -34,6 +34,9 @@ forign-edit
 <-<
  */
 
+
+import * as tab from './inputs/tab_box.js'
+
 var date_config_set={
     date:{
         language: "zh-CN",

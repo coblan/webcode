@@ -495,7 +495,17 @@ ex={
 		})
 		return map_obj
 	},
-
+	unique: function(array){
+		var res = [];
+		var json = {};
+		for(var i = 0; i < array.length; i++){
+			if(!json[array[i]]){
+				res.push(array[i]);
+				json[array[i]] = 1;
+			}
+		}
+		return res;
+	}
 
 
 }

@@ -52,6 +52,7 @@ import * as f from '../vuejs/file.js'
 //import * as ck from './ckeditor.js'
 //import * as multi from './multi_sel.js'
 import * as inputs from '../vuejs/inputs.js'
+
 import * as ln from '../vuejs/link.js'
 //import * as js from './adapt.js'
 
@@ -132,6 +133,70 @@ var mobile_field_base={
             },
             template:`<div class="two-col">
                 <i v-if='!kw.readonly' @click="view='sel'" class="fa fa-pencil-square-o" aria-hidden="true"></i>
+
+                <com-tab-box v-model="list" :readonly="kw.readonly"></com-tab-box>
+
+	        	<!--<ul><li v-for='value in row[name]' v-text='get_label(value)'></li></ul>-->
+	        	<!--<tow-col-sel v-model='row[name]' :id="'id_'+name" :choices='kw.options' :size='kw.size' ></tow-col-sel>-->
+
+	        	<modal v-show="view=='sel'" @click.native='view="main"'>
+                    <div @click.stop="" class="pop-wrap">
+                        <div class="sel-item" v-for="choice in kw.options" v-text=choice.label :class='{"selected":is_selected(choice.value)}'
+                            @click="toggle(choice.value)"></div>
+                    </div>
+	        	</modal>
+	        	</div>`,
+            computed:{
+                list:{
+                    get:function(){
+                        var values = this.row[this.name]
+                        var selected=ex.filter(this.kw.options,function(option){
+                            return ex.isin(option.value,values)
+                        })
+                       return selected
+                    },
+                    set:function(items){
+                        var values=ex.map(items,function(item){
+                            return item.value
+                        })
+                        this.row[this.name]=values
+                    }
+                }
+            },
+            methods:{
+
+                get_label:function (value) {
+                    for(var i =0;i<this.kw.options.length;i++){
+                        if(this.kw.options[i].value==value){
+                            return this.kw.options[i].label
+                        }
+                    }
+                },
+                is_selected:function(v){
+                    return  ex.isin(v,this.row[this.name])
+                },
+                toggle:function(v){
+                    if(ex.isin(v,this.row[this.name])){
+                        ex.remove(this.row[this.name],function(item){
+                            return item==v
+                        })
+                    }else{
+                        this.row[this.name].push(v)
+                    }
+                }
+            }
+        },
+
+
+        tow_col_old:{
+            props:['name','row','kw'],
+            data:function(){
+                return {
+                    view:'main'
+                }
+            },
+            template:`<div class="two-col">
+                <i v-if='!kw.readonly' @click="view='sel'" class="fa fa-pencil-square-o" aria-hidden="true"></i>
 	        	<ul><li v-for='value in row[name]' v-text='get_label(value)'></li></ul>
 	        	<!--<tow-col-sel v-model='row[name]' :id="'id_'+name" :choices='kw.options' :size='kw.size' ></tow-col-sel>-->
 
@@ -164,8 +229,8 @@ var mobile_field_base={
                 }
             }
         },
-    //<input type="checkbox" :id="'id_'+name" v-model='row[name]' :disabled="kw.readonly">
-    //<label :for="'id_'+name"><span v-text='kw.label'></span></label>
+
+
         bool:{
             props:['name','row','kw'],
             template:`<div class="checkbox checkbox-success checkbox-inline">

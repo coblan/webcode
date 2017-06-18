@@ -320,7 +320,7 @@ Vue.component('img-uploador',img_uploader)
 * */
 
 var img_crop={
-    template: `<div class="img-crop">sss
+    template: `<div class="img-crop">
     <input type='file' @change='on_change($event)'
             accept='image/*'>
     <modal :show='cropping' >

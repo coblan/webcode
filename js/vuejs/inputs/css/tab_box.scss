@@ -1,0 +1,28 @@
+.tab-lite{
+  display: inline-block;
+  padding: 0.2em 0.7em;
+  background-color: rgba(76, 173, 247, 0.3);
+
+  border: 1px solid #7cc9ff;
+  border-radius:0.2em ;
+  margin: 0.2em 0.3em;
+}
+.tab-lite.selected{
+  background-color: rgba(76, 173, 247, 0.6);
+  border: 1px solid #1a6aff;
+}
+
+.tab-lite .cross{
+  margin-left: 0.8em;
+}
+.tab-lite .cross:hover{
+  cursor: pointer;
+}
+
+.tab-box{
+  border: 1px solid #f4efeb;
+  padding: 0.2em 0.5em;
+  min-height: 2em;
+  display: inline-block;
+  min-width: 10em;
+}
