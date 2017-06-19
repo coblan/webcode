@@ -6,9 +6,9 @@
 /******/ 	function __webpack_require__(moduleId) {
 
 /******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId]) {
+/******/ 		if(installedModules[moduleId])
 /******/ 			return installedModules[moduleId].exports;
-/******/ 		}
+
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
@@ -415,11 +415,11 @@ var table_fun = {
             this.search();
         },
         add_new: function add_new() {
-            location = ex.template('{engine_url}/{page}.edit/?next={next}', {
+            var url = ex.template('{engine_url}/{page}.edit', {
                 engine_url: engine_url,
-                page: page_name,
-                next: encodeURIComponent(location.href)
+                page: page_name
             });
+            location = ex.appendSearch(url, search_args);
         }
     }
 

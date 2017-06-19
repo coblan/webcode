@@ -456,11 +456,12 @@ var table_fun={
             this.search()
         },
         add_new:function () {
-            location= ex.template('{engine_url}/{page}.edit/?next={next}',{
+            var url =ex.template('{engine_url}/{page}.edit',{
                 engine_url:engine_url,
                 page:page_name,
-                next:encodeURIComponent(location.href)
+                //next:encodeURIComponent(location.href)
             })
+            location=ex.appendSearch(url,search_args)
         },
     },
 
