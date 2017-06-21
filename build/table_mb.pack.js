@@ -320,6 +320,10 @@ var table_fun = {
             } else {
                 return false;
             }
+        },
+        has_next_page: function has_next_page() {
+            var final = row_pages.options[row_pages.options.length - 1];
+            return row_pages.crt_page < parseInt(final);
         }
     },
     methods: {
@@ -327,9 +331,13 @@ var table_fun = {
             location = ex.template('{path}{search}', { path: location.pathname,
                 search: encodeURI(ex.searchfy(this.search_args, '?')) });
         },
-        //rt_win:function(row){
-        //    ln.rtWin(row)
-        //},
+        load_next_page: function load_next_page() {
+            var self = this;
+            ex.get(ex.appendSearch({ _page: row_pages.crt_page + 1 }), function (resp) {
+                ex.assign(row_pages, resp.row_pages);
+                self.rows = self.rows.concat(resp.rows);
+            });
+        },
         filter_minus: function filter_minus(array) {
             // 移到 com-table 中去了
             return ex.map(array, function (v) {
