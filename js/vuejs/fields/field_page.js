@@ -21,7 +21,11 @@ export var field_fun={
         after_sub:function(){
             location=document.referrer
         },
+        before_sub:function(){
+
+        },
         submit:function () {
+            this.before_sub()
             var self =this;
             if(window.bus){
                 window.bus.$emit('sync_data')
