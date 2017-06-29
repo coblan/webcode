@@ -15,9 +15,13 @@ export var field_fun={
             can_edit:can_edit,
 
             page_label:page_label,
+            help_url:help_url,
         }
     },
     methods:{
+        goto:function(url){
+            location=url
+        },
         after_sub:function(){
             location=document.referrer
         },

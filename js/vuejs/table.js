@@ -323,10 +323,11 @@ var table_fun={
 
               can_add:can_add,
               can_del:can_del,
-          can_edit:can_edit,
+                can_edit:can_edit,
 
               search_args:ex.parseSearch(),
               ex:ex,
+                help_url:help_url,
       }
     },
     watch:{
@@ -336,6 +337,9 @@ var table_fun={
         }
     },
 	methods:{
+        goto:function(url){
+          location=url
+        },
         search:function () {
             location =ex.template('{path}{search}',{path:location.pathname,
                 search: encodeURI(ex.searchfy(this.search_args,'?')) })
@@ -448,8 +452,10 @@ var com_table_btn={
     },
     props:['add_new','del_item'],
     template:`<div class='btn-group'>
+    <slot></slot>
 			<a type="button" class="btn btn-success btn-sm" :href='add_new()' v-if='can_add' role="button">创建</a>
 			<button type="button" class="btn btn-danger btn-sm" @click='del_item()' v-if='can_del'>删除</button>
+
 		</div>`
 }
 

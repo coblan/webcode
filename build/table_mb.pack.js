@@ -304,7 +304,9 @@ var table_fun = {
             can_add: can_add,
             can_del: can_del,
             search_args: search_args,
-            ex: ex
+            ex: ex,
+
+            help_url: help_url
         };
     },
     watch: {
@@ -327,6 +329,9 @@ var table_fun = {
         }
     },
     methods: {
+        goto: function goto(url) {
+            location = url;
+        },
         search: function search() {
             location = ex.template('{path}{search}', { path: location.pathname,
                 search: encodeURI(ex.searchfy(this.search_args, '?')) });
@@ -441,7 +446,7 @@ var com_table_btn = {
         };
     },
     props: ['add_new', 'del_item'],
-    template: '<div class=\'btn-group\' style=\'float: right;\'>\n\t\t\t<a type="button" class="btn btn-success btn-sm" :href=\'add_new()\' v-if=\'can_add\' role="button">\u521B\u5EFA</a>\n\t\t\t<button type="button" class="btn btn-danger btn-sm" @click=\'del_item()\' v-if=\'can_del\'>\u5220\u9664</button>\n\t\t</div>'
+    template: '<div class=\'btn-group\' style=\'float: right;\'>\n            <slot></slot>\n\t\t\t<a type="button" class="btn btn-success btn-sm" :href=\'add_new()\' v-if=\'can_add\' role="button">\u521B\u5EFA</a>\n\t\t\t<button type="button" class="btn btn-danger btn-sm" @click=\'del_item()\' v-if=\'can_del\'>\u5220\u9664</button>\n\t\t</div>'
 };
 
 Vue.component('com-table-btn', com_table_btn);
