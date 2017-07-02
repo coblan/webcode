@@ -469,12 +469,13 @@ var table_fun={
             this.search()
         },
         add_new:function () {
-            var url =ex.template('{engine_url}/{page}.edit',{
+            // 启用
+            var url =ex.template('{engine_url}/{page}.edit?next={next}',{
                 engine_url:engine_url,
                 page:page_name,
-                //next:encodeURIComponent(location.href)
+                next:encodeURIComponent(location.href)
             })
-            location=ex.appendSearch(url,search_args)
+            location= url //ex.appendSearch(url,search_args)
         },
     },
 
