@@ -1,0 +1,52 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+    <script type="text/javascript" src="../../front_lib/jquery3.2.1.min.js"></script>
+    <script type="text/javascript" src="../../front_lib/vue2.3.2.js"></script>
+    <script>
+        $(function(){
+            new Vue({
+                el:'#there',
+                data:{
+                    urls:[]
+                },
+                methods:{
+                    add_baidu:function(){
+                        this.urls.push('http://www.baidu.com')
+                    }
+                }
+            })
+        })
+
+    </script>
+</head>
+<body>
+
+<div id="there">
+    <div v-show="urls.length==0">
+        <button @click="add_baidu()">jj</button>
+    </div>
+
+
+    <div v-for="url in urls" class="view">
+        <iframe :src="url" frameborder="0" class="view-frame"></iframe>
+    </div>
+</div>
+
+<style>
+    .view{
+        position: relative;
+        width: 100vw;
+        height: 100vh;
+    }
+    .view-frame{
+        width: 100%;
+        height: 100%;
+    }
+</style>
+
+</body>
+</html>
