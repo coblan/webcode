@@ -98,7 +98,7 @@ if(!window.__uploading_mark){
 	window.__uploading_mark=true
 	document.write(`
 		<style>
-		.popup{
+		._popup{
 			position: fixed;
 			top: 0;
 			left: 0;
@@ -135,7 +135,7 @@ if(!window.__uploading_mark){
     	}
 		</style>`)
 	$(function(){
-		$('body').append(`<div class="popup" id="load_wrap"><div id='_upload_inn' class="imiddle">
+		$('body').append(`<div class="_popup" id="load_wrap"><div id='_upload_inn' class="imiddle">
 		<div  id="_upload_mark" class="imiddle"><i class="fa fa-spinner fa-spin fa-3x"></i></div></div></div>`)
 	})
 }
