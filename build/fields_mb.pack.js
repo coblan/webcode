@@ -1,41 +1,41 @@
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
-
+/******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
-
+/******/
 /******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
+/******/ 		if(installedModules[moduleId]) {
 /******/ 			return installedModules[moduleId].exports;
-
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
 /******/ 			l: false,
 /******/ 			exports: {}
 /******/ 		};
-
+/******/
 /******/ 		// Execute the module function
 /******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-
+/******/
 /******/ 		// Flag the module as loaded
 /******/ 		module.l = true;
-
+/******/
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-
-
+/******/
+/******/
 /******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	__webpack_require__.m = modules;
-
+/******/
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
-
+/******/
 /******/ 	// identity function for calling harmony imports with the correct context
 /******/ 	__webpack_require__.i = function(value) { return value; };
-
+/******/
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
 /******/ 		if(!__webpack_require__.o(exports, name)) {
@@ -46,7 +46,7 @@
 /******/ 			});
 /******/ 		}
 /******/ 	};
-
+/******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = function(module) {
 /******/ 		var getter = module && module.__esModule ?
@@ -55,15 +55,15 @@
 /******/ 		__webpack_require__.d(getter, 'a', getter);
 /******/ 		return getter;
 /******/ 	};
-
+/******/
 /******/ 	// Object.prototype.hasOwnProperty.call
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
-
+/******/
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "";
-
+/******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 19);
+/******/ 	return __webpack_require__(__webpack_require__.s = 10);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -139,7 +139,7 @@ var stylesInDom = {},
 		};
 	},
 	isOldIE = memoize(function() {
-		return /msie [6-9]\b/.test(window.navigator.userAgent.toLowerCase());
+		return /msie [6-9]\b/.test(self.navigator.userAgent.toLowerCase());
 	}),
 	getHeadElement = memoize(function () {
 		return document.head || document.getElementsByTagName("head")[0];
@@ -731,7 +731,7 @@ var field_fun = exports.field_fun = {
             location = url;
         },
         after_sub: function after_sub() {
-            location = document.referrer;
+            ff.back();
         },
         before_sub: function before_sub() {},
         submit: function submit() {
@@ -748,12 +748,8 @@ var field_fun = exports.field_fun = {
                 hide_upload(500);
                 if (resp.save.errors) {
                     self.kw.errors = resp.save.errors;
-                } else if (search._pop == 1) {
-                    window.ln.try_rt({ row: resp.save.row });
-                } else if (search.next) {
-                    location = decodeURIComponent(search.next);
                 } else {
-                    self.after_sub();
+                    self.after_sub(resp.save.row);
                 }
             });
         },
@@ -899,7 +895,7 @@ img-uploador
 <<<<
 */
 
-__webpack_require__(16);
+__webpack_require__(17);
 
 var fl = {
     read: function read(file, callback) {
@@ -1289,7 +1285,7 @@ window.fl = fl;
 "use strict";
 
 
-var _tab_box = __webpack_require__(10);
+var _tab_box = __webpack_require__(11);
 
 var tab = _interopRequireWildcard(_tab_box);
 
@@ -1434,6 +1430,9 @@ Vue.component('datetime', {
             this.input.val(n);
             this.input.val(n);
         }
+        //input_value:function(n){
+        //    this.$emit('input',n)
+        //}
     }
 });
 
@@ -1644,7 +1643,7 @@ popUrlListen:
 <-<
  */
 
-__webpack_require__(17);
+__webpack_require__(18);
 
 var ln = {
     history_handle: function history_handle(obj) {
@@ -1858,7 +1857,7 @@ window.ln = ln;
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(11);
+var content = __webpack_require__(12);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(1)(content, {});
@@ -1867,8 +1866,8 @@ if(content.locals) module.exports = content.locals;
 if(false) {
 	// When the styles change, update the <style> tags
 	if(!content.locals) {
-		module.hot.accept("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/sass-loader/lib/loader.js!./fields.scss", function() {
-			var newContent = require("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/sass-loader/lib/loader.js!./fields.scss");
+		module.hot.accept("!!../../../node_modules/css-loader/index.js!../../../node_modules/sass-loader/lib/loader.js!./fields.scss", function() {
+			var newContent = require("!!../../../node_modules/css-loader/index.js!../../../node_modules/sass-loader/lib/loader.js!./fields.scss");
 			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 			update(newContent);
 		});
@@ -1884,7 +1883,7 @@ if(false) {
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(12);
+var content = __webpack_require__(13);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(1)(content, {});
@@ -1893,8 +1892,8 @@ if(content.locals) module.exports = content.locals;
 if(false) {
 	// When the styles change, update the <style> tags
 	if(!content.locals) {
-		module.hot.accept("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/sass-loader/lib/loader.js!./input.scss", function() {
-			var newContent = require("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/sass-loader/lib/loader.js!./input.scss");
+		module.hot.accept("!!../../../node_modules/css-loader/index.js!../../../node_modules/sass-loader/lib/loader.js!./input.scss", function() {
+			var newContent = require("!!../../../node_modules/css-loader/index.js!../../../node_modules/sass-loader/lib/loader.js!./input.scss");
 			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 			update(newContent);
 		});
@@ -1905,191 +1904,6 @@ if(false) {
 
 /***/ }),
 /* 10 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-__webpack_require__(18);
-
-var tab_lite = {
-    // event: close(value)
-    template: '<div class="tab-lite">\n        <span v-text="label"></span>\n        <span v-if="!readonly" @click="$emit(\'close\',value)" class="cross">X</span>\n    </div>',
-    props: ['value', 'label', 'readonly']
-};
-Vue.component('com-tab-lite', tab_lite);
-
-var tab_box = {
-    template: '  <div class="tab-box">\n        <com-tab-lite :class="{\'selected\':seleced_item==item}" v-for="item in value" :value="item.value" :label="item.label" :readonly="readonly" @close="on_tab_close_click($event)" @click.native="on_tab_click(item)"></com-tab-lite>\n    </div>',
-    props: ['value', 'readonly'],
-    data: function data() {
-        return {
-            seleced_item: {}
-        };
-    },
-    methods: {
-        on_tab_close_click: function on_tab_close_click(tab_value) {
-            ex.remove(this.value, { value: tab_value });
-            this.$emit('input', this.value);
-        },
-        on_tab_click: function on_tab_click(item) {
-            this.seleced_item = item;
-            this.$emit('selected', item.value);
-        }
-    }
-};
-Vue.component('com-tab-box', tab_box);
-
-/***/ }),
-/* 11 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(0)();
-// imports
-
-
-// module
-exports.push([module.i, ".form-pad {\n  background-color: white;\n  padding: 2em 1em; }\n  .form-pad .field {\n    display: flex;\n    margin-top: 2em; }\n  .form-pad .field > label {\n    width: 80px;\n    flex-shrink: 0; }\n  .form-pad .field .field_input {\n    flex-grow: 1;\n    max-width: 50em;\n    border-bottom: 1px solid #f7f7f7; }\n    .form-pad .field .field_input select {\n      width: auto; }\n    .form-pad .field .field_input input[type=number] {\n      width: auto; }\n\n.help_text {\n  color: #a4a1a5;\n  font-style: italic;\n  font-size: 0.8em; }\n\n.field .radio input[type=\"radio\"]:focus + label::before {\n  /* outline: thin dotted; */\n  outline: none;\n  /* outline-offset: -2px; */ }\n", ""]);
-
-// exports
-
-
-/***/ }),
-/* 12 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(0)();
-// imports
-
-
-// module
-exports.push([module.i, ".mb-btn input[type=checkbox] {\n  display: none; }\n\n.mb-btn .fa-check-circle {\n  color: green; }\n\n.two-col .selected {\n  background-color: green;\n  color: white; }\n\n.two-col .pop-wrap {\n  width: 80vw;\n  max-height: 50vh;\n  min-height: 30vh;\n  padding: 15px 8px; }\n\n.two-col .sel-item {\n  padding-top: 4px; }\n\n.two-col .fa-pencil-square-o {\n  font-size: 1.5em;\n  float: right;\n  padding-right: 10px; }\n", ""]);
-
-// exports
-
-
-/***/ }),
-/* 13 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(0)();
-// imports
-
-
-// module
-exports.push([module.i, ".img-uploader input {\n  display: none; }\n\n.img-uploader.disable {\n  background-color: #e3e2e1; }\n\n.up_wrap {\n  position: relative;\n  text-align: center;\n  border: 2px dashed #ccc;\n  background: #FDFDFD;\n  width: 200px; }\n\n.closeDiv {\n  width: 100%;\n  height: 100%;\n  position: absolute;\n  top: 0;\n  left: 0;\n  background-color: #ffffff; }\n\n.choose {\n  display: inline-block;\n  text-decoration: none;\n  padding: 5px;\n  border: 1px solid #0092F2;\n  border-radius: 4px;\n  font-size: 14px;\n  color: #0092F2;\n  cursor: pointer; }\n\n.choose:hover, .choose:active {\n  text-decoration: none;\n  color: #0092F2; }\n\n.close {\n  position: absolute;\n  top: 5px;\n  right: 10px;\n  cursor: pointer;\n  font-size: 14px;\n  color: #242424; }\n\n.logoImg {\n  max-height: 100px !important;\n  vertical-align: middle;\n  margin-top: 5px; }\n\n.img-crop .total-wrap {\n  padding: 30px; }\n\n.img-crop .crop-wrap {\n  max-width: 100%;\n  max-height: 90%;\n  overflow: hidden; }\n\n.img-crop .crop-img {\n  max-width: 100%;\n  max-height: 100%; }\n", ""]);
-
-// exports
-
-
-/***/ }),
-/* 14 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(0)();
-// imports
-
-
-// module
-exports.push([module.i, "@charset \"UTF-8\";\n#_load_frame_wrap {\n  position: fixed;\n  top: 0;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  display: none;\n  z-index: 1000;\n  background: rgba(88, 88, 88, 0.2); }\n\n.imiddle {\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n  -ms-transform: translate(-50%, -50%);\n  /* IE 9 */\n  -moz-transform: translate(-50%, -50%);\n  /* Firefox */\n  -webkit-transform: translate(-50%, -50%);\n  /* Safari 和 Chrome */\n  -o-transform: translate(-50%, -50%);\n  text-align: center;\n  /*display: table;*/\n  z-index: 10000; }\n\n.popframe {\n  width: 500px;\n  height: 400px; }\n", ""]);
-
-// exports
-
-
-/***/ }),
-/* 15 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(0)();
-// imports
-
-
-// module
-exports.push([module.i, ".tab-lite {\n  display: inline-block;\n  padding: 0.2em 0.7em;\n  background-color: rgba(76, 173, 247, 0.3);\n  border: 1px solid #7cc9ff;\n  border-radius: 0.2em;\n  margin: 0.2em 0.3em; }\n\n.tab-lite.selected {\n  background-color: rgba(76, 173, 247, 0.6);\n  border: 1px solid #1a6aff; }\n\n.tab-lite .cross {\n  margin-left: 0.8em; }\n\n.tab-lite .cross:hover {\n  cursor: pointer; }\n\n.tab-box {\n  border: 1px solid #f4efeb;\n  padding: 0.2em 0.5em;\n  min-height: 2em;\n  display: inline-block;\n  min-width: 10em; }\n", ""]);
-
-// exports
-
-
-/***/ }),
-/* 16 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(13);
-if(typeof content === 'string') content = [[module.i, content, '']];
-// add the styles to the DOM
-var update = __webpack_require__(1)(content, {});
-if(content.locals) module.exports = content.locals;
-// Hot Module Replacement
-if(false) {
-	// When the styles change, update the <style> tags
-	if(!content.locals) {
-		module.hot.accept("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/sass-loader/lib/loader.js!./file.scss", function() {
-			var newContent = require("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/sass-loader/lib/loader.js!./file.scss");
-			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-			update(newContent);
-		});
-	}
-	// When the module is disposed, remove the <style> tags
-	module.hot.dispose(function() { update(); });
-}
-
-/***/ }),
-/* 17 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(14);
-if(typeof content === 'string') content = [[module.i, content, '']];
-// add the styles to the DOM
-var update = __webpack_require__(1)(content, {});
-if(content.locals) module.exports = content.locals;
-// Hot Module Replacement
-if(false) {
-	// When the styles change, update the <style> tags
-	if(!content.locals) {
-		module.hot.accept("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/sass-loader/lib/loader.js!./link.scss", function() {
-			var newContent = require("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/sass-loader/lib/loader.js!./link.scss");
-			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-			update(newContent);
-		});
-	}
-	// When the module is disposed, remove the <style> tags
-	module.hot.dispose(function() { update(); });
-}
-
-/***/ }),
-/* 18 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(15);
-if(typeof content === 'string') content = [[module.i, content, '']];
-// add the styles to the DOM
-var update = __webpack_require__(1)(content, {});
-if(content.locals) module.exports = content.locals;
-// Hot Module Replacement
-if(false) {
-	// When the styles change, update the <style> tags
-	if(!content.locals) {
-		module.hot.accept("!!./../../../../node_modules/css-loader/index.js!./../../../../node_modules/sass-loader/lib/loader.js!./tab_box.scss", function() {
-			var newContent = require("!!./../../../../node_modules/css-loader/index.js!./../../../../node_modules/sass-loader/lib/loader.js!./tab_box.scss");
-			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-			update(newContent);
-		});
-	}
-	// When the module is disposed, remove the <style> tags
-	module.hot.dispose(function() { update(); });
-}
-
-/***/ }),
-/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2311,6 +2125,14 @@ var mobile_field_base = {
             props: ['name', 'row', 'kw'],
             template: '<div class="checkbox checkbox-success checkbox-inline">\n                        <input type="checkbox" class="styled" :id="\'id_\'+name" :disabled="kw.readonly" v-model=\'row[name]\'>\n                        <label :for="\'id_\'+name"><span v-text=\'kw.label\'></span></label>\n\t\t              </div>'
 
+            //  `<div class="mb-btn">
+            //<input type="checkbox" name="checkbox1" :id="'id_'+name" :disabled="kw.readonly" v-model='row[name]'/>
+            //<span @click='row[name]= !row[name]' style="font-size: 1.5em;">
+            //    <i class="fa fa-check-circle" aria-hidden="true" v-if='row[name]'></i>
+            //    <i class="fa fa-circle-thin" aria-hidden="true" v-else></i>
+            //</span>
+            //<span :for="'id_'+name" @click='row[name]= !row[name]'><span v-text='kw.label'></span></span>
+            //	  </div>`
         }
 
     }
@@ -2486,6 +2308,191 @@ window.update_vue_obj = update_vue_obj;
 window.show_upload = _ajax_fun.show_upload;
 window.hide_upload = _ajax_fun.hide_upload;
 window.merge = merge;
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+__webpack_require__(19);
+
+var tab_lite = {
+    // event: close(value)
+    template: '<div class="tab-lite">\n        <span v-text="label"></span>\n        <span v-if="!readonly" @click="$emit(\'close\',value)" class="cross">X</span>\n    </div>',
+    props: ['value', 'label', 'readonly']
+};
+Vue.component('com-tab-lite', tab_lite);
+
+var tab_box = {
+    template: '  <div class="tab-box">\n        <com-tab-lite :class="{\'selected\':seleced_item==item}" v-for="item in value" :value="item.value" :label="item.label" :readonly="readonly" @close="on_tab_close_click($event)" @click.native="on_tab_click(item)"></com-tab-lite>\n    </div>',
+    props: ['value', 'readonly'],
+    data: function data() {
+        return {
+            seleced_item: {}
+        };
+    },
+    methods: {
+        on_tab_close_click: function on_tab_close_click(tab_value) {
+            ex.remove(this.value, { value: tab_value });
+            this.$emit('input', this.value);
+        },
+        on_tab_click: function on_tab_click(item) {
+            this.seleced_item = item;
+            this.$emit('selected', item.value);
+        }
+    }
+};
+Vue.component('com-tab-box', tab_box);
+
+/***/ }),
+/* 12 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(0)();
+// imports
+
+
+// module
+exports.push([module.i, ".form-pad {\n  background-color: white;\n  padding: 2em 1em; }\n  .form-pad .field {\n    display: flex;\n    margin-top: 2em; }\n  .form-pad .field > label {\n    width: 80px;\n    flex-shrink: 0; }\n  .form-pad .field .field_input {\n    flex-grow: 1;\n    max-width: 50em;\n    border-bottom: 1px solid #f7f7f7; }\n    .form-pad .field .field_input select {\n      width: auto; }\n    .form-pad .field .field_input input[type=number] {\n      width: auto; }\n\n.help_text {\n  color: #a4a1a5;\n  font-style: italic;\n  font-size: 0.8em; }\n\n.field .radio input[type=\"radio\"]:focus + label::before {\n  /* outline: thin dotted; */\n  outline: none;\n  /* outline-offset: -2px; */ }\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 13 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(0)();
+// imports
+
+
+// module
+exports.push([module.i, ".mb-btn input[type=checkbox] {\n  display: none; }\n\n.mb-btn .fa-check-circle {\n  color: green; }\n\n.two-col .selected {\n  background-color: green;\n  color: white; }\n\n.two-col .pop-wrap {\n  width: 80vw;\n  max-height: 50vh;\n  min-height: 30vh;\n  padding: 15px 8px; }\n\n.two-col .sel-item {\n  padding-top: 4px; }\n\n.two-col .fa-pencil-square-o {\n  font-size: 1.5em;\n  float: right;\n  padding-right: 10px; }\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 14 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(0)();
+// imports
+
+
+// module
+exports.push([module.i, ".img-uploader input {\n  display: none; }\n\n.img-uploader.disable {\n  background-color: #e3e2e1; }\n\n.up_wrap {\n  position: relative;\n  text-align: center;\n  border: 2px dashed #ccc;\n  background: #FDFDFD;\n  width: 200px; }\n\n.closeDiv {\n  width: 100%;\n  height: 100%;\n  position: absolute;\n  top: 0;\n  left: 0;\n  background-color: #ffffff; }\n\n.choose {\n  display: inline-block;\n  text-decoration: none;\n  padding: 5px;\n  border: 1px solid #0092F2;\n  border-radius: 4px;\n  font-size: 14px;\n  color: #0092F2;\n  cursor: pointer; }\n\n.choose:hover, .choose:active {\n  text-decoration: none;\n  color: #0092F2; }\n\n.close {\n  position: absolute;\n  top: 5px;\n  right: 10px;\n  cursor: pointer;\n  font-size: 14px;\n  color: #242424; }\n\n.logoImg {\n  max-height: 100px !important;\n  vertical-align: middle;\n  margin-top: 5px; }\n\n.img-crop .total-wrap {\n  padding: 30px; }\n\n.img-crop .crop-wrap {\n  max-width: 100%;\n  max-height: 90%;\n  overflow: hidden; }\n\n.img-crop .crop-img {\n  max-width: 100%;\n  max-height: 100%; }\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 15 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(0)();
+// imports
+
+
+// module
+exports.push([module.i, "@charset \"UTF-8\";\n#_load_frame_wrap {\n  position: fixed;\n  top: 0;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  display: none;\n  z-index: 1000;\n  background: rgba(88, 88, 88, 0.2); }\n\n.imiddle {\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n  -ms-transform: translate(-50%, -50%);\n  /* IE 9 */\n  -moz-transform: translate(-50%, -50%);\n  /* Firefox */\n  -webkit-transform: translate(-50%, -50%);\n  /* Safari 和 Chrome */\n  -o-transform: translate(-50%, -50%);\n  text-align: center;\n  /*display: table;*/\n  z-index: 10000; }\n\n.popframe {\n  width: 500px;\n  height: 400px; }\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 16 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(0)();
+// imports
+
+
+// module
+exports.push([module.i, ".tab-lite {\n  display: inline-block;\n  padding: 0.2em 0.7em;\n  background-color: rgba(76, 173, 247, 0.3);\n  border: 1px solid #7cc9ff;\n  border-radius: 0.2em;\n  margin: 0.2em 0.3em; }\n\n.tab-lite.selected {\n  background-color: rgba(76, 173, 247, 0.6);\n  border: 1px solid #1a6aff; }\n\n.tab-lite .cross {\n  margin-left: 0.8em; }\n\n.tab-lite .cross:hover {\n  cursor: pointer; }\n\n.tab-box {\n  border: 1px solid #f4efeb;\n  padding: 0.2em 0.5em;\n  min-height: 2em;\n  display: inline-block;\n  min-width: 10em; }\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 17 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(14);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// add the styles to the DOM
+var update = __webpack_require__(1)(content, {});
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!../../../node_modules/css-loader/index.js!../../../node_modules/sass-loader/lib/loader.js!./file.scss", function() {
+			var newContent = require("!!../../../node_modules/css-loader/index.js!../../../node_modules/sass-loader/lib/loader.js!./file.scss");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 18 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(15);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// add the styles to the DOM
+var update = __webpack_require__(1)(content, {});
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!../../../node_modules/css-loader/index.js!../../../node_modules/sass-loader/lib/loader.js!./link.scss", function() {
+			var newContent = require("!!../../../node_modules/css-loader/index.js!../../../node_modules/sass-loader/lib/loader.js!./link.scss");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 19 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(16);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// add the styles to the DOM
+var update = __webpack_require__(1)(content, {});
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/sass-loader/lib/loader.js!./tab_box.scss", function() {
+			var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/sass-loader/lib/loader.js!./tab_box.scss");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
 
 /***/ })
 /******/ ]);

@@ -23,7 +23,7 @@ export var field_fun={
             location=url
         },
         after_sub:function(){
-            location=document.referrer
+            ff.back()
         },
         before_sub:function(){
 
@@ -42,12 +42,8 @@ export var field_fun={
                 hide_upload(500)
                 if( resp.save.errors){
                     self.kw.errors = resp.save.errors
-                }else if(search._pop==1){
-                    window.ln.try_rt({row:resp.save.row})
-                }else if(search.next){
-                    location=decodeURIComponent(search.next)
                 }else{
-                    self.after_sub()
+                    self.after_sub(resp.save.row)
                 }
             })
         },
