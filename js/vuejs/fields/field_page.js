@@ -22,7 +22,7 @@ export var field_fun={
         goto:function(url){
             location=url
         },
-        after_sub:function(){
+        after_sub:function(new_row){
             ff.back()
         },
         before_sub:function(){
