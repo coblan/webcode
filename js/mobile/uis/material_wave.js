@@ -4,6 +4,7 @@ window.material_wave_init=function(){
     var centerX = 0
     var centerY = 0
     var color = ''
+    var speed= 30
     var containers = document.getElementsByClassName('material-wave')
     var context = {}
     var element = {}
@@ -36,6 +37,8 @@ window.material_wave_init=function(){
 
     var press = function (event) {
         color = event.toElement.parentElement.dataset.color || '#d4d4d0';
+        speed =  event.toElement.parentElement.dataset.speed || 30;
+        speed = parseInt(speed)
         element = event.toElement;
         context = element.getContext('2d');
         radius = 0;
@@ -50,7 +53,7 @@ window.material_wave_init=function(){
         context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
         context.fillStyle = color;
         context.fill();
-        radius += 30;
+        radius += speed;
         if (radius < element.width) {
             requestAnimFrame(draw);
         }else{

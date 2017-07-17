@@ -146,20 +146,30 @@ ex={
 	copy:function (obj) {
 		return JSON.parse(JSON.stringify(obj))
 	},
-	findone:function (collection,obj) {
+	findone:function (collection,obj_or_func) {
+
 		for(var i=0;i<collection.length;i++){
 			var now_obj=collection[i]
-			var match=true
-			for(var key in obj){
-				if (obj[key] !=now_obj[key]){
-					match =false
-					break
+			if(typeof(obj_or_func)=='function'){
+				var func=obj_or_func
+				var match=func(now_obj)
+			}else{
+				var obj=obj_or_func
+				var match=true
+				for(var key in obj){
+					if (obj[key] !=now_obj[key]){
+						match =false
+						break
+					}
 				}
 			}
+
 			if(match){
 				return now_obj
 			}
 		}
+
+
 		return null
 	},
 	find:function (collection,obj) {
@@ -203,7 +213,7 @@ ex={
 	isin:function (obj,array,func) {
 		if(func){
 			for(var i=0;i<array.length;i++){
-				if(func(obj,array[i])){
+				if(func(array[i])){
 					return true
 				}
 			}
@@ -505,6 +515,30 @@ ex={
 			}
 		}
 		return res;
+	},
+	group_add:function(old_array,new_array,callback){
+		var out_list=old_array.slice()
+		var last_key=null
+		var last_list= null
+		ex.each(new_array,function(item){
+			var key= callback(item)
+			if(key!=last_key){
+				var obj=ex.findone(out_list,function(old_item){
+					if(old_item.key==key){return true}
+					else {return false}
+				})
+
+				if(!obj){
+					last_list=  []
+					last_key=key
+					out_list.push({key:last_key,list:last_list})
+				}else{
+					last_list=obj.list
+				}
+			}
+			last_list.push(item)
+		})
+		return out_list
 	}
 
 
