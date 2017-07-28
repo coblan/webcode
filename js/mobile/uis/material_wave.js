@@ -1,3 +1,70 @@
+class Wave{
+    append_canvas(element){
+        var canvas = document.createElement('canvas');
+        element.appendChild(canvas);
+        canvas.style.width ='100%';
+        canvas.style.height='100%';
+        canvas.width  =  canvas.offsetWidth;
+        canvas.height = canvas.offsetHeight;
+    }
+    press(event){
+
+        this.element = event.currentTarget.getElementsByTagName('canvas')[0];
+        this.context = this.element.getContext('2d');
+        this.color = this.element.parentElement.dataset.color || '#d4d4d0';
+        var speed =  this.element.parentElement.dataset.speed || 20;
+        this.speed = parseInt(speed)
+
+        this.radius = 0;
+        //centerX = event.offsetX;
+        //centerY = event.offsetY;
+        var cx = event.clientX;
+        var cy = event.clientY;
+        //var cx =event.changedTouches[0].clientX
+        //var cy = event.changedTouches[0].clientY
+        var pos = map_from_client(this.element,cx,cy)
+        this.centerX=pos[0]
+        this.centerY=pos[1]
+
+        this.context.clearRect(0, 0, this.element.width, this.element.height);
+        this.draw()
+    }
+    draw(){
+        this.context.beginPath();
+        this.context.arc(this.centerX, this.centerY, this.radius, 0, 2 * Math.PI, false);
+        this.context.fillStyle = this.color;
+        this.context.fill();
+        this.radius += this.speed;
+        if (this.radius < this.element.width) {
+            var self=this
+            requestAnimFrame(function(){self.draw()});
+        }else{
+            this.context.clearRect(0, 0, this.element.width, this.element.height);
+        }
+    }
+}
+var requestAnimFrame = function () {
+    return (
+        window.requestAnimationFrame       ||
+        window.mozRequestAnimationFrame    ||
+        window.oRequestAnimationFrame      ||
+        window.msRequestAnimationFrame     ||
+        function (callback) {
+            window.setTimeout(callback, 1000 / 60);
+        }
+    );
+} ()
+
+
+$(document).on('click','.material-wave',function(e){
+    var wave=new Wave()
+    if($(e.currentTarget).find('canvas').length==0){
+        wave.append_canvas(e.currentTarget)
+    }
+    wave.press(e)
+
+})
+
 
 window.material_wave_init=function(){
     var canvas = {}
@@ -37,6 +104,14 @@ window.material_wave_init=function(){
             canvas.height = canvas.offsetHeight;
         }
     }
+    var append_canvas=function(element){
+        var canvas = document.createElement('canvas');
+        element.appendChild(canvas);
+        canvas.style.width ='100%';
+        canvas.style.height='100%';
+        canvas.width  =  canvas.offsetWidth;
+        canvas.height = canvas.offsetHeight;
+    }
 
     var press = function (event) {
         element = event.currentTarget.getElementsByTagName('canvas')[0];
@@ -47,8 +122,10 @@ window.material_wave_init=function(){
         radius = 0;
         //centerX = event.offsetX;
         //centerY = event.offsetY;
-        var cx =event.changedTouches[0].clientX
-        var cy = event.changedTouches[0].clientY
+        var cx = event.offsetX;
+        var cy = event.offsetY;
+        //var cx =event.changedTouches[0].clientX
+        //var cy = event.changedTouches[0].clientY
         var pos = map_from_client(element,cx,cy)
         centerX=pos[0]
         centerY=pos[1]
@@ -70,7 +147,8 @@ window.material_wave_init=function(){
         }
     };
 
-    init()
+
+    //init()
 }
 
 function map_from_client(canvas,cx,cy){
