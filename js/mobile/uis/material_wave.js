@@ -12,7 +12,7 @@ class Wave{
         this.element = event.currentTarget.getElementsByTagName('canvas')[0];
         this.context = this.element.getContext('2d');
         this.color = this.element.parentElement.dataset.color || '#d4d4d0';
-        var speed =  this.element.parentElement.dataset.speed || 20;
+        var speed =  this.element.parentElement.dataset.speed || 30;
         this.speed = parseInt(speed)
 
         this.radius = 0;
