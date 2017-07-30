@@ -20,6 +20,7 @@
     "sass-loader": "^6.0.0",
     "style-loader": "^0.13.1",
     "uglify-js": "^2.8.22",
+    "uglify-loader": "^2.0.0",
     "uglifyjs-webpack-plugin": "^0.4.3",
     "webpack": "^2.5.1"
   },
