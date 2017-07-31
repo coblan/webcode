@@ -22,7 +22,7 @@
     "uglify-js": "^2.8.22",
     "uglify-loader": "^2.0.0",
     "uglifyjs-webpack-plugin": "^0.4.3",
-    "webpack": "^2.5.1"
+    "webpack": "^2.7.0"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
