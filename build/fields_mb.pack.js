@@ -2077,8 +2077,11 @@ var _base = __webpack_require__(5);
 
 var _field_page = __webpack_require__(6);
 
+var _backend = __webpack_require__(20);
+
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
+__webpack_require__(2);
 //import * as js from './adapt.js'
 
 //import * as ck from './ckeditor.js'
@@ -2132,7 +2135,7 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 //import {use_color} from '../dosome/color.js'
 //import {load_js,load_css} from '../dosome/pkg.js'
-__webpack_require__(2);
+
 __webpack_require__(3);
 
 (0, _ajax_fun.hook_ajax_msg)();
@@ -2445,6 +2448,7 @@ window.update_vue_obj = update_vue_obj;
 window.show_upload = _ajax_fun.show_upload;
 window.hide_upload = _ajax_fun.hide_upload;
 window.merge = merge;
+window.BackOps = _backend.BackOps;
 
 /***/ }),
 /* 19 */
@@ -2482,6 +2486,74 @@ var tab_box = {
     }
 };
 Vue.component('com-tab-box', tab_box);
+
+/***/ }),
+/* 20 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/*
+* 直接将后端操作对象暴露到前端
+*
+*
+* bk_manager=new BackOps(myurl)
+* bk_manager.call_some_method(function(resp){
+*       do_something
+*   }
+* )
+* */
+
+var BackOps = exports.BackOps = function () {
+    function BackOps(url) {
+        _classCallCheck(this, BackOps);
+
+        this.url = url;
+        this.init_methods();
+    }
+
+    _createClass(BackOps, [{
+        key: 'init_methods',
+        value: function init_methods() {
+            var url = ex.appendSearch(this.url, { get_class: 1 });
+            var self = this;
+            ex.get(url, function (resp) {
+                for (var k in resp) {
+                    var name = resp[k];
+                    self[name] = function (kw, callback) {
+                        if (typeof kw == 'function') {
+                            callback = kw;
+                            kw = null;
+                        }
+                        self.rout_methods(name, kw, callback);
+                    };
+                }
+            });
+        }
+    }, {
+        key: 'rout_methods',
+        value: function rout_methods(name, kw, callback) {
+            var args = { fun: name };
+            if (kw) {
+                ex.assign(args, kw);
+            }
+            ex.post(this.url, JSON.stringify(args), function (resp) {
+                callback(resp);
+            });
+        }
+    }]);
+
+    return BackOps;
+}();
 
 /***/ })
 /******/ ]);

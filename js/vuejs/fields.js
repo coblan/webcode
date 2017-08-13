@@ -58,6 +58,7 @@ import * as ln from './link.js'
 //import * as js from './adapt.js'
 import  {field_base} from  './fields/base.js'
 import  {field_fun} from './fields/field_page.js'
+import  {BackOps} from './fields/backend.js'
 
 require('./fields.scss')
 
@@ -231,4 +232,5 @@ window.use_ckeditor= ck.use_ckeditor
 window.show_upload =show_upload
 window.hide_upload =hide_upload
 window.merge=merge;
+window.BackOps=BackOps
 
