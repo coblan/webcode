@@ -20,13 +20,18 @@ export class BackOps{
         ex.get(url,function(resp){
             for(var k in resp){
                 var name=resp[k]
-                self[name]=function(kw,callback){
-                    if(typeof (kw)=='function'){
-                        callback=kw
-                        kw=null
-                    }
-                    self.rout_methods(name,kw,callback)
+                if (typeof(name)=="string"){
+                    (function(name){
+                        self[name]=(kw,callback)=>{
+                            if(typeof (kw)=='function'){
+                                callback=kw
+                                kw=null
+                            }
+                            self.rout_methods(name,kw,callback)
+                        }
+                    })(name)
                 }
+
             }
         })
     }
@@ -35,8 +40,8 @@ export class BackOps{
         if(kw){
             ex.assign(args,kw)
         }
-        ex.post(this.url,JSON.stringify(args),function(resp){
-            callback(resp)
+        ex.post(this.url,JSON.stringify([args]),function(resp){
+            callback(resp[name])
         })
     }
 }

@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 18);
+/******/ 	return __webpack_require__(__webpack_require__.s = 19);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -381,7 +381,7 @@ module.exports = function() {
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(13);
+var content = __webpack_require__(14);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(0)(content, {});
@@ -407,7 +407,7 @@ if(false) {
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(14);
+var content = __webpack_require__(15);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(0)(content, {});
@@ -548,6 +548,78 @@ if (!window.__uploading_mark) {
 
 /***/ }),
 /* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/*
+* 直接将后端操作对象暴露到前端
+*
+*
+* bk_manager=new BackOps(myurl)
+* bk_manager.call_some_method(function(resp){
+*       do_something
+*   }
+* )
+* */
+
+var BackOps = exports.BackOps = function () {
+    function BackOps(url) {
+        _classCallCheck(this, BackOps);
+
+        this.url = url;
+        this.init_methods();
+    }
+
+    _createClass(BackOps, [{
+        key: "init_methods",
+        value: function init_methods() {
+            var url = ex.appendSearch(this.url, { get_class: 1 });
+            var self = this;
+            ex.get(url, function (resp) {
+                for (var k in resp) {
+                    var name = resp[k];
+                    if (typeof name == "string") {
+                        (function (name) {
+                            self[name] = function (kw, callback) {
+                                if (typeof kw == 'function') {
+                                    callback = kw;
+                                    kw = null;
+                                }
+                                self.rout_methods(name, kw, callback);
+                            };
+                        })(name);
+                    }
+                }
+            });
+        }
+    }, {
+        key: "rout_methods",
+        value: function rout_methods(name, kw, callback) {
+            var args = { fun: name };
+            if (kw) {
+                ex.assign(args, kw);
+            }
+            ex.post(this.url, JSON.stringify([args]), function (resp) {
+                callback(resp[name]);
+            });
+        }
+    }]);
+
+    return BackOps;
+}();
+
+/***/ }),
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -749,7 +821,7 @@ var field_base = exports.field_base = {
 };
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -843,7 +915,7 @@ var field_fun = exports.field_fun = {
 };
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -947,7 +1019,7 @@ img-uploador
 <<<<
 */
 
-__webpack_require__(10);
+__webpack_require__(11);
 
 var fl = {
     read: function read(file, callback) {
@@ -1331,13 +1403,13 @@ Vue.component('logo-input', {
 window.fl = fl;
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _tab_box = __webpack_require__(19);
+var _tab_box = __webpack_require__(20);
 
 var tab = _interopRequireWildcard(_tab_box);
 
@@ -1614,7 +1686,7 @@ var check_box = {
 Vue.component('com-check-box', check_box);
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1692,7 +1764,7 @@ popUrlListen:
 <-<
  */
 
-__webpack_require__(11);
+__webpack_require__(12);
 
 var ln = {
     history_handle: function history_handle(obj) {
@@ -1900,32 +1972,6 @@ var ln = {
 window.ln = ln;
 
 /***/ }),
-/* 10 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(15);
-if(typeof content === 'string') content = [[module.i, content, '']];
-// add the styles to the DOM
-var update = __webpack_require__(0)(content, {});
-if(content.locals) module.exports = content.locals;
-// Hot Module Replacement
-if(false) {
-	// When the styles change, update the <style> tags
-	if(!content.locals) {
-		module.hot.accept("!!./../../../node_modules/.0.26.1@css-loader/index.js!./../../../node_modules/.6.0.0@sass-loader/lib/loader.js!./file.scss", function() {
-			var newContent = require("!!./../../../node_modules/.0.26.1@css-loader/index.js!./../../../node_modules/.6.0.0@sass-loader/lib/loader.js!./file.scss");
-			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-			update(newContent);
-		});
-	}
-	// When the module is disposed, remove the <style> tags
-	module.hot.dispose(function() { update(); });
-}
-
-/***/ }),
 /* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1941,8 +1987,8 @@ if(content.locals) module.exports = content.locals;
 if(false) {
 	// When the styles change, update the <style> tags
 	if(!content.locals) {
-		module.hot.accept("!!./../../../node_modules/.0.26.1@css-loader/index.js!./../../../node_modules/.6.0.0@sass-loader/lib/loader.js!./link.scss", function() {
-			var newContent = require("!!./../../../node_modules/.0.26.1@css-loader/index.js!./../../../node_modules/.6.0.0@sass-loader/lib/loader.js!./link.scss");
+		module.hot.accept("!!./../../../node_modules/.0.26.1@css-loader/index.js!./../../../node_modules/.6.0.0@sass-loader/lib/loader.js!./file.scss", function() {
+			var newContent = require("!!./../../../node_modules/.0.26.1@css-loader/index.js!./../../../node_modules/.6.0.0@sass-loader/lib/loader.js!./file.scss");
 			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 			update(newContent);
 		});
@@ -1967,6 +2013,32 @@ if(content.locals) module.exports = content.locals;
 if(false) {
 	// When the styles change, update the <style> tags
 	if(!content.locals) {
+		module.hot.accept("!!./../../../node_modules/.0.26.1@css-loader/index.js!./../../../node_modules/.6.0.0@sass-loader/lib/loader.js!./link.scss", function() {
+			var newContent = require("!!./../../../node_modules/.0.26.1@css-loader/index.js!./../../../node_modules/.6.0.0@sass-loader/lib/loader.js!./link.scss");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 13 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(18);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// add the styles to the DOM
+var update = __webpack_require__(0)(content, {});
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
 		module.hot.accept("!!./../../../../node_modules/.0.26.1@css-loader/index.js!./../../../../node_modules/.6.0.0@sass-loader/lib/loader.js!./tab_box.scss", function() {
 			var newContent = require("!!./../../../../node_modules/.0.26.1@css-loader/index.js!./../../../../node_modules/.6.0.0@sass-loader/lib/loader.js!./tab_box.scss");
 			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
@@ -1978,7 +2050,7 @@ if(false) {
 }
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)();
@@ -1992,7 +2064,7 @@ exports.push([module.i, ".form-pad {\n  background-color: white;\n  padding: 2em
 
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)();
@@ -2006,7 +2078,7 @@ exports.push([module.i, ".mb-btn input[type=checkbox] {\n  display: none; }\n\n.
 
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)();
@@ -2020,7 +2092,7 @@ exports.push([module.i, ".img-uploader input {\n  display: none; }\n\n.img-uploa
 
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)();
@@ -2034,7 +2106,7 @@ exports.push([module.i, "@charset \"UTF-8\";\n#_load_frame_wrap {\n  position: f
 
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)();
@@ -2048,7 +2120,7 @@ exports.push([module.i, ".tab-lite {\n  display: inline-block;\n  padding: 0.2em
 
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2061,23 +2133,23 @@ exports.merge = merge;
 
 var _ajax_fun = __webpack_require__(4);
 
-var _file = __webpack_require__(7);
+var _file = __webpack_require__(8);
 
 var f = _interopRequireWildcard(_file);
 
-var _inputs = __webpack_require__(8);
+var _inputs = __webpack_require__(9);
 
 var inputs = _interopRequireWildcard(_inputs);
 
-var _link = __webpack_require__(9);
+var _link = __webpack_require__(10);
 
 var ln = _interopRequireWildcard(_link);
 
-var _base = __webpack_require__(5);
+var _base = __webpack_require__(6);
 
-var _field_page = __webpack_require__(6);
+var _field_page = __webpack_require__(7);
 
-var _backend = __webpack_require__(20);
+var _backend = __webpack_require__(5);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -2451,13 +2523,13 @@ window.merge = merge;
 window.BackOps = _backend.BackOps;
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-__webpack_require__(12);
+__webpack_require__(13);
 
 var tab_lite = {
     // event: close(value)
@@ -2486,74 +2558,6 @@ var tab_box = {
     }
 };
 Vue.component('com-tab-box', tab_box);
-
-/***/ }),
-/* 20 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-/*
-* 直接将后端操作对象暴露到前端
-*
-*
-* bk_manager=new BackOps(myurl)
-* bk_manager.call_some_method(function(resp){
-*       do_something
-*   }
-* )
-* */
-
-var BackOps = exports.BackOps = function () {
-    function BackOps(url) {
-        _classCallCheck(this, BackOps);
-
-        this.url = url;
-        this.init_methods();
-    }
-
-    _createClass(BackOps, [{
-        key: 'init_methods',
-        value: function init_methods() {
-            var url = ex.appendSearch(this.url, { get_class: 1 });
-            var self = this;
-            ex.get(url, function (resp) {
-                for (var k in resp) {
-                    var name = resp[k];
-                    self[name] = function (kw, callback) {
-                        if (typeof kw == 'function') {
-                            callback = kw;
-                            kw = null;
-                        }
-                        self.rout_methods(name, kw, callback);
-                    };
-                }
-            });
-        }
-    }, {
-        key: 'rout_methods',
-        value: function rout_methods(name, kw, callback) {
-            var args = { fun: name };
-            if (kw) {
-                ex.assign(args, kw);
-            }
-            ex.post(this.url, JSON.stringify(args), function (resp) {
-                callback(resp);
-            });
-        }
-    }]);
-
-    return BackOps;
-}();
 
 /***/ })
 /******/ ]);
