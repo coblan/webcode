@@ -45,3 +45,14 @@ export class BackOps{
         })
     }
 }
+
+export function back_ops(url){
+    var proc=function(kw_list,callback){
+        ex.post(url,JSON.stringify(kw_list),function(resp){
+            if(callback){
+                callback(resp)
+            }
+        })
+    }
+    return proc
+}

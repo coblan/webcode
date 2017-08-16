@@ -58,7 +58,7 @@ import * as ln from '../vuejs/link.js'
 
 import  {field_base} from  '../vuejs/fields/base.js'
 import  {field_fun} from '../vuejs/fields/field_page.js'
-import  {BackOps} from '../vuejs/fields/backend.js'
+import  {BackOps,back_ops} from '../vuejs/fields/backend.js'
 
 require('./css/fields.scss')
 require('./css/input.scss')
@@ -460,4 +460,5 @@ window.show_upload =show_upload
 window.hide_upload =hide_upload
 window.merge=merge;
 window.BackOps=BackOps
+window.back_ops=back_ops
 
