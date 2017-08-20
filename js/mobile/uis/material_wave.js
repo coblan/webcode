@@ -1,3 +1,21 @@
+/*
+*
+* 增加点击的水波纹效果。
+*
+* 示例：
+*
+* 1. html
+* <div class="material-wave">点击我</div>
+*
+*2. js初始化
+* <script>
+*     material_wave_init()
+* </script>
+*
+* */
+
+
+
 class Wave{
     append_canvas(element){
         var canvas = document.createElement('canvas');

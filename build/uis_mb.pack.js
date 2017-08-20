@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 21);
+/******/ 	return __webpack_require__(__webpack_require__.s = 22);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -381,7 +381,7 @@ module.exports = function() {
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(14);
+var content = __webpack_require__(15);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(0)(content, {});
@@ -407,7 +407,7 @@ if(false) {
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(15);
+var content = __webpack_require__(16);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(0)(content, {});
@@ -433,7 +433,7 @@ if(false) {
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(16);
+var content = __webpack_require__(17);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(0)(content, {});
@@ -459,7 +459,7 @@ if(false) {
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(17);
+var content = __webpack_require__(18);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(0)(content, {});
@@ -485,7 +485,7 @@ if(false) {
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(18);
+var content = __webpack_require__(19);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(0)(content, {});
@@ -511,7 +511,7 @@ if(false) {
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(19);
+var content = __webpack_require__(20);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(0)(content, {});
@@ -537,7 +537,7 @@ if(false) {
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(20);
+var content = __webpack_require__(21);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(0)(content, {});
@@ -614,9 +614,44 @@ window.scroll_loader = scroll_loader;
 "use strict";
 
 
+var tree_head = {
+    props: ['items'],
+    template: '<ul style="margin-top: 0.3em;font-size: 1.3em;">\n                <li v-for="par in items" @click="on_click(par)" style="display: inline-block;">\n                    <span v-text="par._label"></span>\n                    <span style="display: inline-block;padding-left: 0.3em;padding-right: 0.3em;">\n                        <i class="fa fa-angle-right" aria-hidden="true"></i>\n                    </span>\n                </li>\n            </ul>',
+    methods: {
+        on_click: function on_click(item) {
+            this.$emit('item_click', item);
+        }
+    }
+};
+
+Vue.component('lay-tree-head', tree_head);
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/*
+*
+* 增加点击的水波纹效果。
+*
+* 示例：
+*
+* 1. html
+* <div class="material-wave">点击我</div>
+*
+*2. js初始化
+* <script>
+*     material_wave_init()
+* </script>
+*
+* */
 
 var Wave = function () {
     function Wave() {
@@ -779,7 +814,7 @@ function map_from_client(canvas, cx, cy) {
 }
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -870,7 +905,7 @@ function on_load_scroll() {
 }
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -908,7 +943,7 @@ Vue.component('scroll-loader', (_Vue$component = {
 }), _Vue$component));
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -960,7 +995,7 @@ Vue.component('modal', {
 });
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)();
@@ -974,7 +1009,7 @@ exports.push([module.i, ".material-wave {\n  position: relative; }\n\n.material-
 
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)();
@@ -988,7 +1023,7 @@ exports.push([module.i, ".scroll-wraper {\n  position: absolute;\n  overflow: au
 
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)();
@@ -1002,7 +1037,7 @@ exports.push([module.i, ".slide-win {\n  position: fixed;\n  left: 0;\n  width: 
 
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)();
@@ -1016,7 +1051,7 @@ exports.push([module.i, ".checkbox {\n  padding-left: 20px; }\n\n.checkbox label
 
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)();
@@ -1030,7 +1065,7 @@ exports.push([module.i, ".scroll-wrapper {\n  position: absolute;\n  overflow: h
 
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)();
@@ -1044,7 +1079,7 @@ exports.push([module.i, "template {\n  display: none; }\n\nhtml, body {\n  heigh
 
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)();
@@ -1058,17 +1093,17 @@ exports.push([module.i, ".flex {\n  display: -webkit-box;\n  display: -ms-flexbo
 
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _modal = __webpack_require__(13);
+var _modal = __webpack_require__(14);
 
 var a = _interopRequireWildcard(_modal);
 
-var _scroll = __webpack_require__(11);
+var _scroll = __webpack_require__(12);
 
 var scroll = _interopRequireWildcard(_scroll);
 
@@ -1076,13 +1111,17 @@ var _iscroll_mixin = __webpack_require__(9);
 
 var scroll_load = _interopRequireWildcard(_iscroll_mixin);
 
-var _scroll_loader = __webpack_require__(12);
+var _scroll_loader = __webpack_require__(13);
 
 var scroll_wraper = _interopRequireWildcard(_scroll_loader);
 
-var _material_wave = __webpack_require__(10);
+var _material_wave = __webpack_require__(11);
 
 var materal_wave = _interopRequireWildcard(_material_wave);
+
+var _lay_tree = __webpack_require__(10);
+
+var lay_tree = _interopRequireWildcard(_lay_tree);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
