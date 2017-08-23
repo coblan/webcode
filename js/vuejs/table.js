@@ -433,11 +433,12 @@ var table_fun={
             this.search()
         },
         add_new:function () {
-            return ex.template('{engine_url}/{page}.edit/?next={next}',{
+            var  url = ex.template('{engine_url}/{page}.edit/?next={next}',{
                     engine_url:engine_url,
                     page:page_name,
                     next:encodeURIComponent(location.href)
                 })
+            location = url
         },
 	},
 
@@ -452,8 +453,8 @@ var com_table_btn={
     },
     props:['add_new','del_item'],
     template:`<div class='btn-group'>
-    <slot></slot>
-			<a type="button" class="btn btn-success btn-sm" :href='add_new()' v-if='can_add' role="button">创建</a>
+            <slot></slot>
+			<button type="button" class="btn btn-success btn-sm" @click='add_new()' v-if='can_add'>创建</button>
 			<button type="button" class="btn btn-danger btn-sm" @click='del_item()' v-if='can_del'>删除</button>
 
 		</div>`
