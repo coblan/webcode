@@ -1,5 +1,6 @@
 var path = require( 'path' );
-const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
+
+var webpack = require('webpack')
 
 module.exports = 
 {
@@ -74,9 +75,15 @@ module.exports =
 		],
 	
 	},
-	//plugins: [
-	//	new UglifyJSPlugin()
-	//]
+	plugins: [
+		new webpack.optimize.UglifyJsPlugin({  //压缩包
+		    compress: {
+		      warnings: false
+		    },
+		   sourceMap: true,
+		   mangle: false
+		}),
+	]
 }
 
 

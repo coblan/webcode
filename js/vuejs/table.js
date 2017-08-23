@@ -200,7 +200,8 @@ var com_table={
 					<input type="checkbox" name="test" :value="row.pk" v-model='selected'/>
 				</td>
 				<td v-for='head in heads' :class='"td_"+head.name'>
-					<span v-html='m_map(head.name,row)'></span>
+				    <component v-if="head.type" :is="head.type" :name="head.name" :row="row"></component>
+					<span v-else v-html='m_map(head.name,row)'></span>
 				</td>
 			</tr>
 		</tbody>
