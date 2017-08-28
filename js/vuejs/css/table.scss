@@ -55,7 +55,7 @@ table.fake-suit{
 }
 
 .sort-mark img{
-  width:20px;
+  width:10px;
 }
 
 ul.pagination li {display: inline;cursor: pointer}
@@ -88,6 +88,11 @@ ul.pagination li span:hover:not(.active) {background-color: #ddd;}
     }
   }
 
+}
+
+.clickable{
+  cursor: pointer;
+  color: #39718e;
 }
 //.table td{
 //  border-left: 1px solid #F5F5F5;

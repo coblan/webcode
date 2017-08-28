@@ -318,6 +318,11 @@ ex={
 		return rm_item
 	},
 	sort_by_names:function(array,name_list,keep){
+		/*按照name_list来筛选和排列array，如果keep=true，落选的项会append到array后面。
+		@array: [{name:'age',..},{contry:'china'}]
+		@name_list:['contry','name']
+		返回:按照name_list排序后的array
+		* */
 		var out_list=[]
 		ex.each(name_list,function(name){
 			var item = ex.findone(array,{name:name})

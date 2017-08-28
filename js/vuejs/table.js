@@ -178,7 +178,19 @@ var com_table={
         },
         is_sortable:function(name){
             return ex.isin(name,this.row_sort.sortable)
-        }
+        },
+        toggle:function (sort_str,name) {
+            var ls=ex.split(sort_str,',')
+            var norm_ls=this.filter_minus(ls)
+            var idx = norm_ls.indexOf(name)
+            if(idx!=-1){
+                ls[idx]=ls[idx].startsWith('-')?name:'-'+name
+            }else{
+                ls.push(name)
+            }
+            return ls.join(',')
+        },
+
     },
     template:`	<table>
 		<thead>
@@ -342,8 +354,9 @@ var table_fun={
           location=url
         },
         search:function () {
-            location =ex.template('{path}{search}',{path:location.pathname,
-                search: encodeURI(ex.searchfy(this.search_args,'?')) })
+            location=ex.appendSearch(this.search_args)
+            //location =ex.template('{path}{search}',{path:location.pathname,
+            //    search: encodeURI(ex.searchfy(this.search_args,'?')) })
         },
         //rt_win:function(row){
         //    ln.rtWin(row)
@@ -364,6 +377,7 @@ var table_fun={
 			var norm_ls=this.filter_minus(ls)
 			return ex.isin(name,norm_ls)
 		},
+        // 我放到 com table 去，试试。如果行，证明这里的无用了。
 		toggle:function (sort_str,name) {
 			var ls=ex.split(sort_str,',')
 			var norm_ls=this.filter_minus(ls)
@@ -472,7 +486,7 @@ Vue.component('sort-mark',{
 		}
 	},
 	mixins:[table_fun],
-	template:`<div class='sort-mark'>
+	template:`<span class='sort-mark'>
 			<span v-if='index>0' v-text='index'></span>
 			<img v-if='status=="up"' src='http://res.enjoyst.com/image/up_01.png'
 					 @click='sort_str=toggle(sort_str,name);$emit("input",sort_str)'/>
@@ -480,7 +494,7 @@ Vue.component('sort-mark',{
 					 @click='sort_str=toggle(sort_str,name);$emit("input",sort_str)'/>
 			<img v-if='status!="no_sort"' src='http://res.enjoyst.com/image/cross.png' 
 					@click='sort_str=remove_sort(sort_str,name);$emit("input",sort_str)'/>
-			</div>
+			</span>
 	`,
 	computed:{
 		status:function () {
