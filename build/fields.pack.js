@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 18);
+/******/ 	return __webpack_require__(__webpack_require__.s = 19);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -381,7 +381,7 @@ module.exports = function() {
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(16);
+var content = __webpack_require__(17);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(0)(content, {});
@@ -514,9 +514,9 @@ ex.load_css('/static/lib/font-awesome4.7/font-awesome4.7.min.css');
 
 if (!window.__uploading_mark) {
 	window.__uploading_mark = true;
-	document.write('\n\t\t<style>\n\t\t.popup{\n\t\t\tposition: fixed;\n\t\t\ttop: 0;\n\t\t\tleft: 0;\n\t\t\tright: 0;\n\t\t\tbottom: 0;\n\t\t\tdisplay:none;\n\t\t\tz-index: 9000;\n\t\t}\n\t\t#_upload_inn{\n\t\t\tbackground: rgba(88, 88, 88, 0.2);\n\t\t\tborder-radius: 5px;\n\t\t\twidth:180px;\n\t\t\theight:120px;\n\t\t\tz-index: 9500;\n\t\t\t/*padding:30px 80px ;*/\n\t\t}\n\t\t.imiddle{\n\t\t    position: absolute;\n\t        top: 50%;\n\t        left: 50%;\n\t        transform: translate(-50%, -50%);\n\t        -ms-transform:translate(-50%, -50%); \t/* IE 9 */\n\t\t\t-moz-transform:translate(-50%, -50%); \t/* Firefox */\n\t\t\t-webkit-transform:translate(-50%, -50%); /* Safari \u548C Chrome */\n\t\t\t-o-transform:translate(-50%, -50%); \n\t\t\t\n\t        text-align: center;\n\t\t\t/*display: table;*/\n\t        z-index: 10000;\n    \t}\n    \t#_upload_mark{\n    \t\tfloat: left;\n\n    \t}\n\t\t</style>');
+	document.write('\n\t\t<style>\n\t\t._popup{\n\t\t\tposition: fixed;\n\t\t\ttop: 0;\n\t\t\tleft: 0;\n\t\t\tright: 0;\n\t\t\tbottom: 0;\n\t\t\tdisplay:none;\n\t\t\tz-index: 9000;\n\t\t}\n\t\t#_upload_inn{\n\t\t\tbackground: rgba(88, 88, 88, 0.2);\n\t\t\tborder-radius: 5px;\n\t\t\twidth:180px;\n\t\t\theight:120px;\n\t\t\tz-index: 9500;\n\t\t\t/*padding:30px 80px ;*/\n\t\t}\n\t\t.imiddle{\n\t\t    position: absolute;\n\t        top: 50%;\n\t        left: 50%;\n\t        transform: translate(-50%, -50%);\n\t        -ms-transform:translate(-50%, -50%); \t/* IE 9 */\n\t\t\t-moz-transform:translate(-50%, -50%); \t/* Firefox */\n\t\t\t-webkit-transform:translate(-50%, -50%); /* Safari \u548C Chrome */\n\t\t\t-o-transform:translate(-50%, -50%); \n\t\t\t\n\t        text-align: center;\n\t\t\t/*display: table;*/\n\t        z-index: 10000;\n    \t}\n    \t#_upload_mark{\n    \t\tfloat: left;\n\n    \t}\n\t\t</style>');
 	$(function () {
-		$('body').append('<div class="popup" id="load_wrap"><div id=\'_upload_inn\' class="imiddle">\n\t\t<div  id="_upload_mark" class="imiddle"><i class="fa fa-spinner fa-spin fa-3x"></i></div></div></div>');
+		$('body').append('<div class="_popup" id="load_wrap"><div id=\'_upload_inn\' class="imiddle">\n\t\t<div  id="_upload_mark" class="imiddle"><i class="fa fa-spinner fa-spin fa-3x"></i></div></div></div>');
 	});
 }
 
@@ -684,6 +684,96 @@ var edit_level = {
 
 /***/ }),
 /* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+exports.back_ops = back_ops;
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/*
+*
+* 这个文件里面的东西不用了。
+* 因为对象映射，牵涉到异步加载问题，只能用函数代替，结果调用方式不在优雅，
+* 不如直接在前段写一个封装函数。见back_ops函数。
+*
+* 直接将后端操作对象暴露到前端
+*
+*
+* bk_manager=new BackOps(myurl)
+* bk_manager.call_some_method(function(resp){
+*       do_something
+*   }
+* )
+* */
+
+var BackOps = exports.BackOps = function () {
+    function BackOps(url) {
+        _classCallCheck(this, BackOps);
+
+        this.url = url;
+        this.init_methods();
+    }
+
+    _createClass(BackOps, [{
+        key: "init_methods",
+        value: function init_methods() {
+            var url = ex.appendSearch(this.url, { get_class: 1 });
+            var self = this;
+            ex.get(url, function (resp) {
+                for (var k in resp) {
+                    var name = resp[k];
+                    if (typeof name == "string") {
+                        (function (name) {
+                            self[name] = function (kw, callback) {
+                                if (typeof kw == 'function') {
+                                    callback = kw;
+                                    kw = null;
+                                }
+                                self.rout_methods(name, kw, callback);
+                            };
+                        })(name);
+                    }
+                }
+            });
+        }
+    }, {
+        key: "rout_methods",
+        value: function rout_methods(name, kw, callback) {
+            var args = { fun: name };
+            if (kw) {
+                ex.assign(args, kw);
+            }
+            ex.post(this.url, JSON.stringify([args]), function (resp) {
+                callback(resp[name]);
+            });
+        }
+    }]);
+
+    return BackOps;
+}();
+
+function back_ops(url) {
+    var proc = function proc(kw_list, callback) {
+        ex.post(url, JSON.stringify(kw_list), function (resp) {
+            if (callback) {
+                callback(resp);
+            }
+        });
+    };
+    return proc;
+}
+
+/***/ }),
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -869,7 +959,7 @@ var field_base = exports.field_base = {
         },
         date: {
             props: ['name', 'row', 'kw'],
-            template: '<div><span v-if=\'kw.readonly\' v-text=\'row[name]\'></span>\n            \t\t\t<date v-else v-model="row[name]" :id="\'id_\'+name"\n                        \t:placeholder="kw.placeholder"></date>\n                       </div>'
+            template: '<div><span v-if=\'kw.readonly\' v-text=\'row[name]\'></span>\n                                <date v-else v-model="row[name]" :id="\'id_\'+name"\n                                    :placeholder="kw.placeholder"></date>\n                               </div>'
         },
         datetime: {
             props: ['name', 'row', 'kw'],
@@ -885,7 +975,7 @@ var field_base = exports.field_base = {
 };
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -910,12 +1000,16 @@ var field_fun = exports.field_fun = {
             can_log: can_log,
             can_edit: can_edit,
 
-            page_label: page_label
+            page_label: page_label,
+            help_url: help_url
         };
     },
     methods: {
-        after_sub: function after_sub() {
-            location = document.referrer;
+        goto: function goto(url) {
+            location = url;
+        },
+        after_sub: function after_sub(new_row) {
+            ff.back();
         },
         before_sub: function before_sub() {},
         submit: function submit() {
@@ -932,12 +1026,8 @@ var field_fun = exports.field_fun = {
                 hide_upload(500);
                 if (resp.save.errors) {
                     self.kw.errors = resp.save.errors;
-                } else if (search._pop == 1) {
-                    window.ln.try_rt({ row: resp.save.row });
-                } else if (search.next) {
-                    location = decodeURIComponent(search.next);
                 } else {
-                    self.after_sub();
+                    self.after_sub(resp.save.row);
                 }
             });
         },
@@ -979,7 +1069,7 @@ var field_fun = exports.field_fun = {
 };
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1083,7 +1173,7 @@ img-uploador
 <<<<
 */
 
-__webpack_require__(11);
+__webpack_require__(12);
 
 var fl = {
     read: function read(file, callback) {
@@ -1467,13 +1557,13 @@ Vue.component('logo-input', {
 window.fl = fl;
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _tab_box = __webpack_require__(19);
+var _tab_box = __webpack_require__(20);
 
 var tab = _interopRequireWildcard(_tab_box);
 
@@ -1533,7 +1623,7 @@ var date_config_set = {
 
 Vue.component('date', {
     //template:'<input type="text" class="form-control">',
-    template: " <div class=\"input-group datetime-picker\">\n                <input type=\"text\" class=\"form-control\" readonly :placeholder=\"placeholder\"/>\n                <div class=\"input-group-addon\" @click=\"$emit('input','')\">\n                    <i class=\"fa fa-calendar-times-o\" aria-hidden=\"true\"></i>\n                </div>\n                </div>",
+    template: " <div class=\"input-group datetime-picker\" style=\"width: 12em;\">\n                <input type=\"text\" class=\"form-control\" readonly :placeholder=\"placeholder\"/>\n                <div class=\"input-group-addon\" @click=\"$emit('input','')\">\n                    <i class=\"fa fa-calendar-times-o\" aria-hidden=\"true\"></i>\n                </div>\n                </div>",
     props: ['value', 'set', 'config', 'placeholder'],
     mounted: function mounted() {
         var self = this;
@@ -1750,7 +1840,7 @@ var check_box = {
 Vue.component('com-check-box', check_box);
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1828,7 +1918,7 @@ popUrlListen:
 <-<
  */
 
-__webpack_require__(12);
+__webpack_require__(13);
 
 var ln = {
     history_handle: function history_handle(obj) {
@@ -2036,7 +2126,7 @@ var ln = {
 window.ln = ln;
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2131,13 +2221,13 @@ Vue.component('tow-col-sel', {
 });
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(14);
+var content = __webpack_require__(15);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(0)(content, {});
@@ -2157,13 +2247,13 @@ if(false) {
 }
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(15);
+var content = __webpack_require__(16);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(0)(content, {});
@@ -2183,13 +2273,13 @@ if(false) {
 }
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(17);
+var content = __webpack_require__(18);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(0)(content, {});
@@ -2209,7 +2299,7 @@ if(false) {
 }
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)();
@@ -2223,7 +2313,7 @@ exports.push([module.i, ".img-uploader input {\n  display: none; }\n\n.img-uploa
 
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)();
@@ -2237,7 +2327,7 @@ exports.push([module.i, "@charset \"UTF-8\";\n#_load_frame_wrap {\n  position: f
 
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)();
@@ -2251,7 +2341,7 @@ exports.push([module.i, ".error {\n  color: red; }\n\n.field-panel {\n  backgrou
 
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)();
@@ -2265,7 +2355,7 @@ exports.push([module.i, ".tab-lite {\n  display: inline-block;\n  padding: 0.2em
 
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2278,7 +2368,7 @@ exports.merge = merge;
 
 var _ajax_fun = __webpack_require__(3);
 
-var _file = __webpack_require__(7);
+var _file = __webpack_require__(8);
 
 var f = _interopRequireWildcard(_file);
 
@@ -2286,23 +2376,27 @@ var _ckeditor = __webpack_require__(4);
 
 var ck = _interopRequireWildcard(_ckeditor);
 
-var _multi_sel = __webpack_require__(10);
+var _multi_sel = __webpack_require__(11);
 
 var multi = _interopRequireWildcard(_multi_sel);
 
-var _inputs = __webpack_require__(8);
+var _inputs = __webpack_require__(9);
 
 var inputs = _interopRequireWildcard(_inputs);
 
-var _link = __webpack_require__(9);
+var _link = __webpack_require__(10);
 
 var ln = _interopRequireWildcard(_link);
 
-var _base = __webpack_require__(5);
+var _base = __webpack_require__(6);
 
-var _field_page = __webpack_require__(6);
+var _field_page = __webpack_require__(7);
+
+var _backend = __webpack_require__(5);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+__webpack_require__(2);
 
 //import * as fb from './field_base.js'
 //import * as js from './adapt.js'
@@ -2355,7 +2449,7 @@ $.post('',JSON.stringify(post_data),function (data) {
 
 //import {use_color} from '../dosome/color.js'
 //import {load_js,load_css} from '../dosome/pkg.js'
-__webpack_require__(2);
+
 
 (0, _ajax_fun.hook_ajax_msg)();
 (0, _ajax_fun.hook_ajax_csrf)();
@@ -2495,15 +2589,17 @@ window.use_ckeditor = ck.use_ckeditor;
 window.show_upload = _ajax_fun.show_upload;
 window.hide_upload = _ajax_fun.hide_upload;
 window.merge = merge;
+window.BackOps = _backend.BackOps;
+window.back_ops = _backend.back_ops;
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-__webpack_require__(13);
+__webpack_require__(14);
 
 var tab_lite = {
     // event: close(value)

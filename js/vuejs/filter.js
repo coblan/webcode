@@ -16,7 +16,7 @@ table的过滤器
 Vue.component('com-filter',{
     props:['heads','search','search_tip'],
     template:ex.template(`
-    <form class='com-filter' autocomplete="on" v-if='search_tip || heads.length>0'>
+    <form class='com-filter' autocomplete="on" v-if='search_tip || heads.length>0' class="flex">
             <input v-if='search_tip' type="text" name="_q" v-model='search._q' :placeholder='search_tip' class='form-control'/>
             <select v-if="filter.options"  v-for='filter in heads'
                 v-model='search[filter.name]' class='form-control'>
@@ -24,13 +24,18 @@ Vue.component('com-filter',{
                 <option value="">-------</option>
                 <option v-for='option in filter.options' :value="option.value" v-text='option.label'></option>
             </select>
-            <div  v-for='filter in heads' v-if="['time','date','month'].indexOf(filter.type)!=-1" class="date-filter flex">
+            <div  v-for='filter in heads' v-if="['time','date','month'].indexOf(filter.type)!=-1" class="date-filter flex flex-ac">
                 <span>{From}</span>
-                <date v-if="filter.type=='month'" set="month" v-model="search['_start_'+filter.name]"></date>
-                <date v-if="filter.type=='date'"  v-model="search['_start_'+filter.name]"></date>
+                <div>
+                     <date v-if="filter.type=='month'" set="month" v-model="search['_start_'+filter.name]"></date>
+                    <date v-if="filter.type=='date'"  v-model="search['_start_'+filter.name]"></date>
+                </div>
                 <span>{To}</span>
-                <date v-if="filter.type=='month'" set="month" v-model="search['_end_'+filter.name]"></date>
-                <date v-if="filter.type=='date'"  v-model="search['_end_'+filter.name]"></date>
+                <div>
+                    <date v-if="filter.type=='month'" set="month" v-model="search['_end_'+filter.name]"></date>
+                    <date v-if="filter.type=='date'"  v-model="search['_end_'+filter.name]"></date>
+                </div>
+
             </div>
 
             <slot></slot>
