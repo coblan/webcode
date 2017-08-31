@@ -836,6 +836,41 @@ var field_base = exports.field_base = {
         },
         blocktext: {
             props: ['name', 'row', 'kw'],
+            //data:function(){
+            //    return {
+            //        org_height:0,
+            //    }
+            //},
+            //mounted:function(){
+            //    var self=this
+            //    Vue.nextTick(function(){
+            //        self.on_input()
+            //    })
+            //
+            //},
+            //methods:{
+            //    on_input:function(){
+            //        if(this.kw.readonly) return
+            //        var textarea = $(this.$el).find('textarea')[0]
+            //        if(this.org_height!=textarea.scrollHeight){
+            //            $(textarea).height(textarea.scrollHeight-12)
+            //            this.org_height=textarea.scrollHeight
+            //        }
+            //    }
+            //},
+            //computed:{
+            //    value:function(){
+            //        return this.row[this.name]
+            //    }
+            //},
+            //watch:{
+            //    value:function(v){
+            //        var self=this
+            //        Vue.nextTick(function(){
+            //            self.on_input()
+            //        })
+            //    }
+            //},
             template: '<div>\n            <span v-if=\'kw.readonly\' v-text=\'row[name]\'></span>\n            <textarea v-else class="form-control" rows="3" :id="\'id_\'+name" v-model="row[name]" :placeholder="kw.placeholder" :readonly=\'kw.readonly\'></textarea>\n            </div>'
         },
         color: {

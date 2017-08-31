@@ -9,5 +9,6 @@ function gettext(word){
 lan={
     From:'从',
     To:'到',
-    submit:'提交'
+    submit:'提交',
+    search:'查询',
 }
