@@ -2229,13 +2229,14 @@ Vue.component('tow-col-sel', {
 	methods: {
 		orderBy: function orderBy(array, key) {
 			return array.slice().sort(function (a, b) {
-				if (a[key] > b[key]) {
-					return 1;
-				} else if (a[key] < b[key]) {
-					return -1;
-				} else {
-					return 0;
-				}
+				return b[key].localeCompare(a[key]);
+				//if(a[key]>b[key]){
+				//	return -1
+				//}else if(a[key]<b[key]){
+				//	return 1
+				//}else{
+				//	return 0
+				//}
 			});
 		},
 		batch_add: function batch_add() {
