@@ -23,7 +23,10 @@ export var field_fun={
             location=url
         },
         after_sub:function(new_row){
-            ff.back()
+            //ff.back()
+            if(search_args.next){
+                location=decodeURIComponent(search_args.next)
+            }
         },
         before_sub:function(){
 
