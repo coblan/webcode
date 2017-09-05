@@ -2216,7 +2216,7 @@ Vue.component('tow-col-sel', {
 	methods: {
 		orderBy: function orderBy(array, key) {
 			return array.slice().sort(function (a, b) {
-				return b[key].localeCompare(a[key]);
+				return a[key].localeCompare(b[key]);
 				//if(a[key]>b[key]){
 				//	return -1
 				//}else if(a[key]<b[key]){

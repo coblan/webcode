@@ -190,13 +190,21 @@ var com_table={
             }
             return ls.join(',')
         },
+        toggle_all:function(e){
+            var checked = e.currentTarget.checked
+            if(checked){
+                this.selected=ex.map(this.rows,function(row){return row.pk})
+            }else{
+                this.selected=[]
+            }
+        }
 
     },
     template:`	<table>
 		<thead>
 			<tr >
 				<th style='width:50px' v-if='has_check'>
-					<input type="checkbox" name="test" value=""/>
+					<input type="checkbox" name="test" value="" @click="toggle_all($event)"/>
 				</th>
 				<th v-for='head in heads' :class='["td_"+head.name,{"selected":is_sorted(row_sort.sort_str ,head.name )}]'>
 					<span v-if='is_sortable(head.name)' v-text='head.label' class='clickable'

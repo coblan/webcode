@@ -76,13 +76,13 @@ module.exports =
 	
 	},
 	plugins: [
-		new webpack.optimize.UglifyJsPlugin({  //压缩包
-		    compress: {
-		      warnings: false
-		    },
-		   sourceMap: true,
-		   mangle: false
-		}),
+		//new webpack.optimize.UglifyJsPlugin({  //压缩包
+		//    compress: {
+		//      warnings: false
+		//    },
+		//   sourceMap: true,
+		//   mangle: false
+		//}),
 	]
 }
 
