@@ -127,21 +127,7 @@ Vue.component('tow-col-sel',{
 	},
 	methods:{
 		orderBy:function (array,key) {
-			return  array.slice().sort(function (a,b) {
-				if(isChinese(a[key])&&isChinese(b[key])){
-					return a[key].localeCompare(b[key],'zh')
-				}else{
-					return compare(a[key],b[key])
-				}
-
-				//if(a[key]>b[key]){
-				//	return -1
-				//}else if(a[key]<b[key]){
-				//	return 1
-				//}else{
-				//	return 0
-				//}
-			})
+			return  order_by_key(array,key)
 		},
 		batch_add:function () {
 			var self=this
@@ -160,17 +146,3 @@ Vue.component('tow-col-sel',{
 	}
 })
 
-function isChinese(temp){
-	var re=/[^\u4E00-\u9FA5]/;
-	if (re.test(temp)){return false  ;}
-	return true ;
-}
-function compare(temp1, temp2) {
-	if (temp1 < temp2) {
-		return -1;
-	} else if (temp1 == temp2) {
-		return 0;
-	} else {
-		return 1;
-	}
-}

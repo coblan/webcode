@@ -59,7 +59,7 @@ import * as ln from './link.js'
 import  {field_base} from  './fields/base.js'
 import  {field_fun} from './fields/field_page.js'
 import  {BackOps,back_ops} from './fields/backend.js'
-
+import  {order_by_key} from './fields/order.js'
 require('./fields.scss')
 
 hook_ajax_msg()
@@ -234,4 +234,5 @@ window.hide_upload =hide_upload
 window.merge=merge;
 window.BackOps=BackOps
 window.back_ops=back_ops
+window.order_by_key=order_by_key
 

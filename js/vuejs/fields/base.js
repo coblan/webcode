@@ -156,7 +156,7 @@ export var field_base={
             template:`<div>
             <span v-if='kw.readonly' v-text='get_label(kw.options,row[name])'></span>
             <select v-else v-model='row[name]'  :id="'id_'+name"  class="form-control">
-            	<option v-for='opt in kw.options' :value='opt.value' v-text='opt.label'></option>
+            	<option v-for='opt in orderBy(kw.options,"label")' :value='opt.value' v-text='opt.label'></option>
             </select>
             </div>`,
             // 添加，修改，删除的按钮代码，暂时不用。<option :value='null'>----</option>
@@ -183,6 +183,9 @@ export var field_base={
                         return option.label
                     }
                 },
+                orderBy:function(array,key){
+                    return order_by_key(array,key)
+                }
             }
         },
         check_select:{

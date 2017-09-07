@@ -928,7 +928,7 @@ var field_base = exports.field_base = {
                     model: this.row[this.name]
                 };
             },
-            template: '<div>\n            <span v-if=\'kw.readonly\' v-text=\'get_label(kw.options,row[name])\'></span>\n            <select v-else v-model=\'row[name]\'  :id="\'id_\'+name"  class="form-control">\n            \t<option v-for=\'opt in kw.options\' :value=\'opt.value\' v-text=\'opt.label\'></option>\n            </select>\n            </div>',
+            template: '<div>\n            <span v-if=\'kw.readonly\' v-text=\'get_label(kw.options,row[name])\'></span>\n            <select v-else v-model=\'row[name]\'  :id="\'id_\'+name"  class="form-control">\n            \t<option v-for=\'opt in orderBy(kw.options,"label")\' :value=\'opt.value\' v-text=\'opt.label\'></option>\n            </select>\n            </div>',
             // 添加，修改，删除的按钮代码，暂时不用。<option :value='null'>----</option>
             //`<div><select v-model='model'  :id="'id_'+name" :readonly='kw.readonly'>
             //	<option :value='null'>----</option>
@@ -952,6 +952,9 @@ var field_base = exports.field_base = {
                     } else {
                         return option.label;
                     }
+                },
+                orderBy: function orderBy(array, key) {
+                    return order_by_key(array, key);
                 }
             }
         },
@@ -2231,21 +2234,7 @@ Vue.component('tow-col-sel', {
 	},
 	methods: {
 		orderBy: function orderBy(array, key) {
-			return array.slice().sort(function (a, b) {
-				if (isChinese(a[key]) && isChinese(b[key])) {
-					return a[key].localeCompare(b[key], 'zh');
-				} else {
-					return compare(a[key], b[key]);
-				}
-
-				//if(a[key]>b[key]){
-				//	return -1
-				//}else if(a[key]<b[key]){
-				//	return 1
-				//}else{
-				//	return 0
-				//}
-			});
+			return order_by_key(array, key);
 		},
 		batch_add: function batch_add() {
 			var self = this;
@@ -2263,23 +2252,6 @@ Vue.component('tow-col-sel', {
 		}
 	}
 });
-
-function isChinese(temp) {
-	var re = /[^\u4E00-\u9FA5]/;
-	if (re.test(temp)) {
-		return false;
-	}
-	return true;
-}
-function compare(temp1, temp2) {
-	if (temp1 < temp2) {
-		return -1;
-	} else if (temp1 == temp2) {
-		return 0;
-	} else {
-		return 1;
-	}
-}
 
 /***/ }),
 /* 12 */
@@ -2455,9 +2427,9 @@ var _field_page = __webpack_require__(7);
 
 var _backend = __webpack_require__(5);
 
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+var _order = __webpack_require__(21);
 
-__webpack_require__(2);
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 //import * as fb from './field_base.js'
 //import * as js from './adapt.js'
@@ -2510,7 +2482,7 @@ $.post('',JSON.stringify(post_data),function (data) {
 
 //import {use_color} from '../dosome/color.js'
 //import {load_js,load_css} from '../dosome/pkg.js'
-
+__webpack_require__(2);
 
 (0, _ajax_fun.hook_ajax_msg)();
 (0, _ajax_fun.hook_ajax_csrf)();
@@ -2652,6 +2624,7 @@ window.hide_upload = _ajax_fun.hide_upload;
 window.merge = merge;
 window.BackOps = _backend.BackOps;
 window.back_ops = _backend.back_ops;
+window.order_by_key = _order.order_by_key;
 
 /***/ }),
 /* 20 */
@@ -2689,6 +2662,44 @@ var tab_box = {
     }
 };
 Vue.component('com-tab-box', tab_box);
+
+/***/ }),
+/* 21 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.order_by_key = order_by_key;
+function isChinese(temp) {
+    var re = /[^\u4E00-\u9FA5]/;
+    if (re.test(temp)) {
+        return false;
+    }
+    return true;
+}
+function compare(temp1, temp2) {
+    if (temp1 < temp2) {
+        return -1;
+    } else if (temp1 == temp2) {
+        return 0;
+    } else {
+        return 1;
+    }
+}
+
+function order_by_key(array, key) {
+    return array.slice().sort(function (a, b) {
+        if (isChinese(a[key]) && isChinese(b[key])) {
+            return a[key].localeCompare(b[key], 'zh');
+        } else {
+            return compare(a[key], b[key]);
+        }
+    });
+}
 
 /***/ })
 /******/ ]);
