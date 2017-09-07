@@ -25,7 +25,7 @@ Vue.component('com-filter',{
                         v-model='search[filter.name]' class='form-control' >
                         <option :value="undefined" v-text='filter.label'></option>
                         <option value="">-------</option>
-                        <option v-for='option in filter.options' :value="option.value" v-text='option.label'></option>
+                        <option v-for='option in orderBy( filter.options,"label")' :value="option.value" v-text='option.label'></option>
                     </select>
                 </div>
 
@@ -66,14 +66,31 @@ Vue.component('com-filter',{
     methods:{
         m_submit:function () {
             this.$emit('submit')
-            //if(this.submit){
-            //    this.submit()
-            //}else{
-            //    location =ex.template('{path}{search}',{path:location.pathname,
-            //        search: encodeURI(ex.searchfy(this.search,'?')) })
-            //}
-
+        },
+        orderBy:function (array,key) {
+            return  array.slice().sort(function (a,b) {
+                if(isChinese(a[key])&&isChinese(b[key])){
+                    return a[key].localeCompare(b[key],'zh')
+                }else{
+                    return compare(a[key],b[key])
+                }
+            })
         },
     }
 
 })
+
+function isChinese(temp){
+    var re=/[^\u4E00-\u9FA5]/;
+    if (re.test(temp)){return false  ;}
+    return true ;
+}
+function compare(temp1, temp2) {
+    if (temp1 < temp2) {
+        return -1;
+    } else if (temp1 == temp2) {
+        return 0;
+    } else {
+        return 1;
+    }
+}
