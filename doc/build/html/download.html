@@ -1,6 +1,5 @@
 
 
-
 <!DOCTYPE html>
 <!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
@@ -9,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Index &mdash; webcode 1.0 documentation</title>
+  <title>下载 &mdash; webcode 1.0 documentation</title>
   
 
   
@@ -109,7 +108,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -117,9 +116,11 @@
   <ul class="wy-breadcrumbs">
     <li><a href="index.html">Docs</a> &raquo;</li>
       
-    <li></li>
+    <li>下载</li>
       <li class="wy-breadcrumbs-aside">
         
+          
+            <a href="_sources/download.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -129,11 +130,32 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
+  <div class="section" id="id1">
+<h1>下载<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<p>在app/ajax.py文件中，直接响应下载请求。</p>
+<p>前端代码请求download通用地址</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">export_data</span><span class="p">:</span><span class="n">function</span><span class="p">(){</span>
+                <span class="n">var</span> <span class="n">items_str</span><span class="o">=</span><span class="s2">&quot;&quot;</span>
+                <span class="n">ex</span><span class="o">.</span><span class="n">each</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">selected</span><span class="p">,</span><span class="n">function</span><span class="p">(</span><span class="n">pk</span><span class="p">){</span>
+                    <span class="n">items_str</span><span class="o">+=</span> <span class="n">pk</span><span class="o">+</span><span class="s1">&#39;-&#39;</span>
+                <span class="p">})</span>
+                <span class="n">var</span> <span class="n">op_str</span><span class="o">=</span><span class="s1">&#39;download_group_permit:items:&#39;</span><span class="o">+</span><span class="n">items_str</span>
+                <span class="n">location</span><span class="o">=</span><span class="s1">&#39;/_download/director&#39;</span><span class="o">+</span><span class="s1">&#39;?_op=&#39;</span><span class="o">+</span><span class="n">op_str</span>
+            <span class="p">},</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">注意使用的是GET方法，因为POST触发浏览器下载，有点不地道。</p>
+</div>
+<p>后端代码，使用downloadfy_response函数，触发浏览器下载。这个函数写在app/ajax.py文件里面</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">helpers.common.download_response</span> <span class="k">import</span> <span class="n">downloadfy_response</span>
 
-<h1 id="index">Index</h1>
-
-<div class="genindex-jumpbox">
- 
+<span class="k">def</span> <span class="nf">download_func</span><span class="p">():</span>
+    <span class="n">str_list</span><span class="o">=</span><span class="p">[</span><span class="o">...</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">downloadfy_response</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">str_list</span><span class="p">),</span> <span class="s1">&#39;permits.json&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
 </div>
 
 
