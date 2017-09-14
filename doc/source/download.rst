@@ -27,3 +27,10 @@
     def download_func():
         str_list=[...]
         return downloadfy_response(json.dumps(str_list), 'permits.json')
+
+:red:`测试红色`
+================
+
+下面这个是 :red:`红色`.哈哈成功了。这个也是强调\ :red:`\ **颜色**\ 是红色。是的。`
+
+* :red:`整个都是红色` :code:`jjyy`

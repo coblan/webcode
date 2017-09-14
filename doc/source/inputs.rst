@@ -1,10 +1,10 @@
 
- =======
+=========
  inputs
- =======
+=========
 
  date
- ========
+=========
  ::
 
     <date v-model='variable'></date>  // 选择默认set=date ,即选择日期
@@ -14,12 +14,12 @@
     <date v-model='variable' set='month' :config='{}'></date>  //  config 是自定义的配置对象，具体需要参加帮助文件
 
  datetime
- ===========
+============
  ::
 
     <datetime v-model='variable' :config='{}'></datetime> // 选择日期和时间
 
-=========
+
 link
 =========
 示例::

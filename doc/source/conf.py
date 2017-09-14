@@ -339,3 +339,12 @@ html_theme = "sphinx_rtd_theme"
 html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 
 html_search_language = 'zh'
+
+
+html_context = {
+    'css_files': ['_static/custom.css'],
+}
+
+rst_prolog="""
+.. role:: red
+"""
