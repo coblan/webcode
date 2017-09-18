@@ -1,6 +1,6 @@
 function isChinese(temp){
     var re=/[^\u4E00-\u9FA5]/;
-    if (re.test(temp)){return false  ;}
+    if (re.test(temp[0])){return false  ;}
     return true ;
 }
 function compare(temp1, temp2) {
