@@ -159,15 +159,6 @@ export var field_base={
             	<option v-for='opt in orderBy(kw.options,"label")' :value='opt.value' v-text='opt.label'></option>
             </select>
             </div>`,
-            // 添加，修改，删除的按钮代码，暂时不用。<option :value='null'>----</option>
-            //`<div><select v-model='model'  :id="'id_'+name" :readonly='kw.readonly'>
-            //	<option :value='null'>----</option>
-            //	<option v-for='opt in kw.options' :value='opt.value' v-text='opt.label'></option>
-            //</select>
-            //<span v-if='kw.add_url' @click='add()'><img src='http://res.enjoyst.com/image/add.png' /></span>
-            //<span v-if='kw.change_url' @click='edit()'><img src='http://res.enjoyst.com/image/edit.png' /></span>
-            //<span v-if='kw.del_url' @click='del_row()'><img src='http://res.enjoyst.com/image/delete.png' /></a>
-            //</div>`,
             mounted:function(){
                 if(this.kw.default && !this.row[this.name]){
                     Vue.set(this.row,this.name,this.kw.default)
@@ -188,6 +179,45 @@ export var field_base={
                 }
             }
         },
+        search_select:{
+            props:['name','row','kw'],
+            data:function(){
+                return {
+                    model:this.row[this.name]
+                }
+            },
+            template:`<div>
+            <span v-if='kw.readonly' v-text='get_label(kw.options,row[name])'></span>
+            <select v-else v-model='row[name]'  :id="'id_'+name"  class="selectpicker form-control" data-live-search="true">
+            	<option v-for='opt in orderBy(kw.options,"label")' :value='opt.value'
+            	 :data-tokens="opt.label" v-text='opt.label'></option>
+            </select>
+            </div>`,
+            mounted:function(){
+                var self=this
+                if(this.kw.default && !this.row[this.name]){
+                    Vue.set(this.row,this.name,this.kw.default)
+                }
+                ex.load_css("/static/lib/bootstrap-select.min.css")
+                ex.load_js("/static/lib/bootstrap-select.min.js",function(){
+                    $(self.$el).find('.selectpicker').selectpicker()
+                })
+            },
+            methods:{
+                get_label:function(options,value){
+                    var option = ex.findone(options,{value:value})
+                    if(!option){
+                        return '---'
+                    }else{
+                        return option.label
+                    }
+                },
+                orderBy:function(array,key){
+                    return order_by_key(array,key)
+                }
+            }
+        },
+
         check_select:{
             props:['name','row','kw'],
             computed:{

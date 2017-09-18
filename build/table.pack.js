@@ -419,6 +419,7 @@ table的过滤器
     range_fields=[{'name':'month','type':'month'}]
     model=SalaryRecords
 
+
 <-<
  */
 
@@ -426,7 +427,7 @@ __webpack_require__(4);
 
 Vue.component('com-filter', {
     props: ['heads', 'search', 'search_tip'],
-    template: ex.template('\n    <form autocomplete="on" v-if=\'search_tip || heads.length>0\' class="com-filter flex flex-grow flex-ac">\n                <input style="max-width: 20em;min-width: 10em;" v-if=\'search_tip\' type="text" name="_q" v-model=\'search._q\' :placeholder=\'search_tip\' class=\'form-control\'/>\n                <div class="flex" style="flex-grow:0;min-width: 10em;">\n                    <select  v-if="filter.options"  v-for=\'filter in heads\' :id="\'filter-\'+filter.name"\n                        v-model=\'search[filter.name]\' class=\'form-control\' >\n                        <option :value="undefined" v-text=\'filter.label\'></option>\n                        <option value="">-------</option>\n                        <option v-for=\'option in orderBy( filter.options,"label")\' :value="option.value" v-text=\'option.label\'></option>\n                    </select>\n                </div>\n\n                <div  v-for=\'filter in heads\' v-if="[\'time\',\'date\',\'month\'].indexOf(filter.type)!=-1" class="date-filter flex flex-ac">\n                    <span v-text="filter.label"></span>\n                    <span>{From}</span>\n                    <div>\n                         <date v-if="filter.type==\'month\'" set="month" v-model="search[\'_start_\'+filter.name]"></date>\n                        <date v-if="filter.type==\'date\'"  v-model="search[\'_start_\'+filter.name]"></date>\n                    </div>\n                    <span>{To}</span>\n                    <div>\n                        <date v-if="filter.type==\'month\'" set="month" v-model="search[\'_end_\'+filter.name]"></date>\n                        <date v-if="filter.type==\'date\'"  v-model="search[\'_end_\'+filter.name]"></date>\n                    </div>\n\n                </div>\n\n                <slot></slot>\n\n          <button name="go" type="button" class="btn btn-info" @click=\'m_submit()\' >{search}</button>\n        </form>\n    ', ex.trList(['From', 'To', 'search'])),
+    template: ex.template('\n    <form v-if=\'search_tip || heads.length>0\' class="com-filter flex flex-grow flex-ac">\n                <input style="max-width: 20em;min-width: 10em;" v-if=\'search_tip\' type="text" name="_q" v-model=\'search._q\' :placeholder=\'search_tip\' class=\'form-control\'/>\n                <div class="flex row-filter"  style="flex-grow:0;min-width: 10em;">\n                    <!--<component is="sim-filter"  v-model=\'search[filter.name]\' v-if="filter.options"  v-for=\'filter in heads\' :id="\'filter-\'+filter.name"-->\n                    <!--</component>-->\n                     <component :is="filter.type?filter.type:\'sim-filter\'"  :filter="filter" v-model=\'search[filter.name]\' v-if="filter.options"  v-for=\'filter in heads\' :id="\'filter-\'+filter.name">\n                    </component>\n\n                    <!--<select  v-if="filter.options" v-for=\'filter in heads\' :id="\'filter-\'+filter.name"-->\n                        <!--v-model=\'value\' class=\'form-control\' >-->\n                        <!--<option :value="undefined" v-text=\'filter.label\'></option>-->\n                        <!--<option value="">-&#45;&#45;&#45;&#45;&#45;&#45;</option>-->\n                        <!--<option v-for=\'option in orderBy( filter.options,"label")\' :value="option.value" v-text=\'option.label\'></option>-->\n                    <!--</select>-->\n                </div>\n\n                <div  v-for=\'filter in heads\' v-if="[\'time\',\'date\',\'month\'].indexOf(filter.type)!=-1" class="date-filter flex flex-ac">\n                    <span v-text="filter.label"></span>\n                    <span>{From}</span>\n                    <div>\n                         <date v-if="filter.type==\'month\'" set="month" v-model="search[\'_start_\'+filter.name]"></date>\n                        <date v-if="filter.type==\'date\'"  v-model="search[\'_start_\'+filter.name]"></date>\n                    </div>\n                    <span>{To}</span>\n                    <div>\n                        <date v-if="filter.type==\'month\'" set="month" v-model="search[\'_end_\'+filter.name]"></date>\n                        <date v-if="filter.type==\'date\'"  v-model="search[\'_end_\'+filter.name]"></date>\n                    </div>\n\n                </div>\n\n                <slot></slot>\n\n          <button name="go" type="button" class="btn btn-info" @click=\'m_submit()\' >{search}</button>\n        </form>\n    ', ex.trList(['From', 'To', 'search'])),
     created: function created() {
         var self = this;
         ex.each(self.heads, function (filter) {
@@ -459,7 +460,7 @@ Vue.component('com-filter', {
 
 function isChinese(temp) {
     var re = /[^\u4E00-\u9FA5]/;
-    if (re.test(temp)) {
+    if (re.test(temp[0])) {
         return false;
     }
     return true;
@@ -473,6 +474,67 @@ function compare(temp1, temp2) {
         return 1;
     }
 }
+
+var sim_filter = {
+    props: ['filter', 'value'],
+    data: function data() {
+        return {
+            myvalue: this.value
+        };
+    },
+    watch: {
+        myvalue: function myvalue(v) {
+            this.$emit('input', v);
+        }
+    },
+    methods: {
+        orderBy: function orderBy(array, key) {
+            return array.slice().sort(function (a, b) {
+                if (isChinese(a[key]) && isChinese(b[key])) {
+                    return a[key].localeCompare(b[key], 'zh');
+                } else {
+                    return compare(a[key], b[key]);
+                }
+            });
+        }
+    },
+    template: '<select  v-if="filter.options"\n    v-model=\'myvalue\' class=\'form-control\' >\n    <option :value="undefined" v-text=\'filter.label\'></option>\n    <option value="">-------</option>\n    <option v-for=\'option in orderBy( filter.options,"label")\' :value="option.value" v-text=\'option.label\'></option>\n    </select>\n\n    '
+};
+Vue.component('sim-filter', sim_filter);
+
+var sim_filter_with_search = {
+    props: ['filter', 'value'],
+    data: function data() {
+        return {
+            myvalue: this.value
+        };
+    },
+    mounted: function mounted() {
+        var self = this;
+        ex.load_js("/static/lib/bootstrap-select.min.js", function () {
+            $(self.$el).selectpicker();
+        });
+        ex.load_css("/static/lib/bootstrap-select.min.css");
+    },
+    watch: {
+        myvalue: function myvalue(v) {
+            this.$emit('input', v);
+        }
+    },
+    methods: {
+        orderBy: function orderBy(array, key) {
+            return array.slice().sort(function (a, b) {
+                if (isChinese(a[key]) && isChinese(b[key])) {
+                    return a[key].localeCompare(b[key], 'zh');
+                } else {
+                    return compare(a[key], b[key]);
+                }
+            });
+        }
+    },
+    template: '<select class="selectpicker form-control"  data-live-search="true" v-model=\'myvalue\'>\n        <option :value="undefined" v-text=\'filter.label\'></option>\n        <option value="">-------</option>\n        <option v-for=\'option in orderBy( filter.options,"label")\' :value="option.value"\n           :data-tokens="option.label" v-text=\'option.label\'>\n        </option>\n        </select>\n    '
+};
+Vue.component('sel-search-filter', sim_filter_with_search);
 
 /***/ }),
 /* 4 */
@@ -523,7 +585,7 @@ exports = module.exports = __webpack_require__(1)();
 
 
 // module
-exports.push([module.i, ".date-filter {\n  margin: 0 1em; }\n\n.com-filter {\n  -webkit-box-align: start;\n      -ms-flex-align: start;\n          align-items: flex-start;\n  -ms-flex-wrap: wrap;\n      flex-wrap: wrap; }\n", ""]);
+exports.push([module.i, ".date-filter {\n  margin: 0 1em; }\n\n.com-filter {\n  -webkit-box-align: start;\n      -ms-flex-align: start;\n          align-items: flex-start;\n  -ms-flex-wrap: wrap;\n      flex-wrap: wrap; }\n\n.row-filter .bootstrap-select {\n  min-width: 10em; }\n", ""]);
 
 // exports
 

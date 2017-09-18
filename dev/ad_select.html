@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-CN" ng-app="share">
+
+<head>
+    <meta charset='utf-8' />
+    <script src="http://cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+    <script src="http://cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+    <script src="https://cdn.bootcss.com/vue/2.2.6/vue.js"></script>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js"></script>
+
+    <!-- (Optional) Latest compiled and minified JavaScript translation files -->
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/i18n/defaults-*.min.js"></script>-->
+
+    <script type="text/javascript">
+        $(function () {
+
+
+            new Vue({
+                el:'#there',
+                data:{
+                    //hello:'hello dog'
+                },
+//                mixins:[mydata],
+//                methods:{
+//                    cor_get:function () {
+//                        $.ajax({
+//                            url: 'http://api.uacar.cn/user/info?openid=oIvmdwv0KYpK5Uc3zu6W6BkKbMEE',
+//                            xhrFields: {
+//                                withCredentials: true
+//                            },
+//
+//                        });
+//                    }
+//                }
+            })
+
+
+            $('.selectpicker').selectpicker();
+
+
+        })
+
+    </script>
+
+
+</head>
+<body>
+
+<div id="there" class="test">
+
+    <form action="">
+        <select class="selectpicker" data-live-search="true">
+            <option data-tokens="rr">Mustard</option>
+            <option data-tokens="中">Ketchup</option>
+            <option data-tokens="国人">Relish</option>
+        </select>
+
+        <cc class="jjyy"></cc>
+    </form>
+
+
+</div>
+
+<template id="temp">
+    <div>
+        <select class="selectpicker" data-live-search="true" v-model="cvh">
+            <option :data-tokens="i" v-for="i in ls">i</option>
+
+        </select>
+    </div>
+
+</template>
+
+<script>
+    Vue.component('cc',{
+        template:'#temp',
+        data:function(){
+            return {
+                ls:['中国','热是'],
+                cvh:''
+            }
+        },
+        mounted:function(){
+            Vue.nextTick(function(){
+                $('.jjyy').selectpicker();
+            })
+
+        }
+    })
+</script>
+</body>
+
+</html>
+
