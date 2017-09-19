@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>5.5. link &mdash; webcode 1.0 documentation</title>
+  <title>5.7. link &mdash; webcode 1.0 documentation</title>
   
 
   
@@ -32,10 +32,13 @@
   
 
   
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
     <link rel="top" title="webcode 1.0 documentation" href="../index.html"/>
         <link rel="up" title="5. 前端" href="../front.html"/>
-        <link rel="next" title="5.6. table" href="table.html"/>
-        <link rel="prev" title="&lt;no title&gt;" href="input.html"/> 
+        <link rel="next" title="5.8. table" href="table.html"/>
+        <link rel="prev" title="5.6. inputs" href="input.html"/> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
@@ -94,12 +97,15 @@
 <li class="toctree-l2"><a class="reference internal" href="fields.html">5.2. 基本内容</a></li>
 <li class="toctree-l2"><a class="reference internal" href="fields.html#id2">5.3. 参数结构</a></li>
 <li class="toctree-l2"><a class="reference internal" href="file.html">5.4. 文件上传</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">5.5. link</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#history">5.5.1. history</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filter.html">5.5. filter过滤器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="input.html">5.6. inputs</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">5.7. link</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">5.7.1. 示例</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#history">5.7.2. history</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="table.html">5.6. table</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../front.html#id2">5.7. 三方前端库</a></li>
+<li class="toctree-l2"><a class="reference internal" href="table.html">5.8. table</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../front.html#id2">5.9. 三方前端库</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../helpers.html">6. helpers</a></li>
@@ -135,7 +141,7 @@
       
           <li><a href="../front.html">5. 前端</a> &raquo;</li>
       
-    <li>5.5. link</li>
+    <li>5.7. link</li>
       <li class="wy-breadcrumbs-aside">
         
           
@@ -150,8 +156,10 @@
            <div itemprop="articleBody">
             
   <div class="section" id="link">
-<h1>5.5. link<a class="headerlink" href="#link" title="Permalink to this headline">¶</a></h1>
-<p>示例:</p>
+<h1>5.7. link<a class="headerlink" href="#link" title="Permalink to this headline">¶</a></h1>
+<p>这个东西本来主要是用在 <code class="code docutils literal"><span class="pre">移动端</span></code> 上的。但是现在移动端变化大，所以需要重新整理该模块。</p>
+<div class="section" id="id1">
+<h2>5.7.1. 示例<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default"><div class="highlight"><pre><span></span> var director = &#39;{% url &#39;director&#39; %}&#39;
 
  var cache_meta={
@@ -181,8 +189,9 @@
 <dd>&#64;cache_meta
 &#64;root_obj : 如果没写，默认是window</dd>
 </dl>
+</div>
 <div class="section" id="history">
-<h2>5.5.1. history<a class="headerlink" href="#history" title="Permalink to this headline">¶</a></h2>
+<h2>5.7.2. history<a class="headerlink" href="#history" title="Permalink to this headline">¶</a></h2>
 <p>利用h5的history功能，是的地址栏发生变化，并且不会触发服务器请求。该功能可以用在ajax请求，将ajax请求记录在history中，可以达到前进后退的功能。</p>
 <dl class="docutils">
 <dt>pushUrl</dt>
@@ -200,10 +209,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="table.html" class="btn btn-neutral float-right" title="5.6. table" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="table.html" class="btn btn-neutral float-right" title="5.8. table" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="input.html" class="btn btn-neutral" title="&lt;no title&gt;" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="input.html" class="btn btn-neutral" title="5.6. inputs" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

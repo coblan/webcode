@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>5.6. table &mdash; webcode 1.0 documentation</title>
+  <title>5.8. table &mdash; webcode 1.0 documentation</title>
   
 
   
@@ -32,10 +32,13 @@
   
 
   
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
     <link rel="top" title="webcode 1.0 documentation" href="../index.html"/>
         <link rel="up" title="5. 前端" href="../front.html"/>
         <link rel="next" title="6. helpers" href="../helpers.html"/>
-        <link rel="prev" title="5.5. link" href="link.html"/> 
+        <link rel="prev" title="5.7. link" href="link.html"/> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
@@ -94,13 +97,15 @@
 <li class="toctree-l2"><a class="reference internal" href="fields.html">5.2. 基本内容</a></li>
 <li class="toctree-l2"><a class="reference internal" href="fields.html#id2">5.3. 参数结构</a></li>
 <li class="toctree-l2"><a class="reference internal" href="file.html">5.4. 文件上传</a></li>
-<li class="toctree-l2"><a class="reference internal" href="link.html">5.5. link</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">5.6. table</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#argments-format">5.6.1. Argments Format:</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id1">5.6.2. table的过滤器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filter.html">5.5. filter过滤器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="input.html">5.6. inputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="link.html">5.7. link</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">5.8. table</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">5.8.1. 参数格式</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id2">5.8.2. table的过滤器</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../front.html#id2">5.7. 三方前端库</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../front.html#id2">5.9. 三方前端库</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../helpers.html">6. helpers</a></li>
@@ -136,7 +141,7 @@
       
           <li><a href="../front.html">5. 前端</a> &raquo;</li>
       
-    <li>5.6. table</li>
+    <li>5.8. table</li>
       <li class="wy-breadcrumbs-aside">
         
           
@@ -151,21 +156,22 @@
            <div itemprop="articleBody">
             
   <div class="section" id="table">
-<h1>5.6. table<a class="headerlink" href="#table" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="argments-format">
-<h2>5.6.1. Argments Format:<a class="headerlink" href="#argments-format" title="Permalink to this headline">¶</a></h2>
-<dl class="docutils">
-<dt>heads=[{name:&#8217;xxx&#8217;,label:&#8217;label1&#8217;},</dt>
-<dd>{name:&#8217;jb&#8217;,label:&#8217;jb&#8217;}]</dd>
-</dl>
-<p>rows=[{xxx:&#8221;jjy&#8221;,jb:&#8217;hahaer&#8217;}]</p>
-</div>
+<h1>5.8. table<a class="headerlink" href="#table" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="id1">
-<h2>5.6.2. table的过滤器<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<h2>5.8.1. 参数格式<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">heads</span><span class="o">=</span><span class="p">[{</span><span class="n">name</span><span class="p">:</span><span class="s1">&#39;xxx&#39;</span><span class="p">,</span><span class="n">label</span><span class="p">:</span><span class="s1">&#39;label1&#39;</span><span class="p">},</span>
+        <span class="p">{</span><span class="n">name</span><span class="p">:</span><span class="s1">&#39;jb&#39;</span><span class="p">,</span><span class="n">label</span><span class="p">:</span><span class="s1">&#39;jb&#39;</span><span class="p">}]</span>
+<span class="n">rows</span><span class="o">=</span><span class="p">[{</span><span class="n">xxx</span><span class="p">:</span><span class="s2">&quot;jjy&quot;</span><span class="p">,</span><span class="n">jb</span><span class="p">:</span><span class="s1">&#39;hahaer&#39;</span><span class="p">}]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id2">
+<h2>5.8.2. table的过滤器<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p>后端的写法，不过这个貌似可以看python的代码，python代码比前端容易看懂得多。</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">SalaryFilter</span><span class="p">(</span><span class="n">RowFilter</span><span class="p">):</span>
-<span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;is_checked&#39;</span><span class="p">]</span>
-<span class="n">range_fields</span><span class="o">=</span><span class="p">[{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span><span class="s1">&#39;month&#39;</span><span class="p">,</span><span class="s1">&#39;type&#39;</span><span class="p">:</span><span class="s1">&#39;month&#39;</span><span class="p">}]</span>
-<span class="n">model</span><span class="o">=</span><span class="n">SalaryRecords</span>
+    <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;is_checked&#39;</span><span class="p">]</span>
+    <span class="n">range_fields</span><span class="o">=</span><span class="p">[{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span><span class="s1">&#39;month&#39;</span><span class="p">,</span><span class="s1">&#39;type&#39;</span><span class="p">:</span><span class="s1">&#39;month&#39;</span><span class="p">}]</span>
+    <span class="n">model</span><span class="o">=</span><span class="n">SalaryRecords</span>
 </pre></div>
 </div>
 </div>
@@ -181,7 +187,7 @@
         <a href="../helpers.html" class="btn btn-neutral float-right" title="6. helpers" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="link.html" class="btn btn-neutral" title="5.5. link" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="link.html" class="btn btn-neutral" title="5.7. link" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

@@ -71,6 +71,7 @@ img-uploador
             $('#haha')[0].src = data
     }
 
+这个适合直接读取本地图片，并且显示。
 
 上传图片
 ==========
@@ -84,11 +85,9 @@ img-uploador
     <img-uploader v-model='xxx' :config='{crop:true,aspectRatio: 8 / 10}'></img-uploader>
 
 
-样式技巧
-========
-1. 自定义样式
+自定义样式
+===========
+:code:`<file-inpu>` 不支持直接自定义样式。但是可以通过其他方式自定义。最简单的方式是：
 
-    <file-inpu>不支持直接自定义样式。但是可以通过其他方式自定义。最简单的方式是：
-
-    * 隐藏<file-input> ，
-    * 然后触发其click事件('.file-input').click()
+* 隐藏<file-input> ，
+* 然后触发其click事件('.file-input').click()

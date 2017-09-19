@@ -10,16 +10,17 @@
 参数结构
 ==============
 field_base的参数都是采用的关键字参数，结构如下：
-使用的 kw 结构
- kw={
-     errors:{},
-     row:{
-         username:'',
-         password:'',
-         pas2:'',
-    },
-     heads:[
-     	{name:'username',label:'用户名',type:'text',required:true,autofocus:true},
-     ]
-  }
- <field name='username' :kw='kw' ></field>
+使用的 kw 结构::
+
+    kw={
+        errors:{},
+        row:{
+            username:'',
+            password:'',
+            pas2:'',
+        },
+        heads:[
+            {name:'username',label:'用户名',type:'text',required:true,autofocus:true},
+        ]
+    }
+    <field name='username' :kw='kw' ></field>

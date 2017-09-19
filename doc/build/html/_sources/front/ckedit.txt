@@ -2,7 +2,7 @@
 ==========
 ckeditor
 ==========
-源文件:vuejs/ckeditor.js
+源文件: :code:`vuejs/ckeditor.js`
 
 使用时，引入fields.pack.js即可。
 
