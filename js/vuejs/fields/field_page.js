@@ -26,6 +26,8 @@ export var field_fun={
             //ff.back()
             if(search_args.next){
                 location=decodeURIComponent(search_args.next)
+            }else{
+                location=document.referrer
             }
         },
         before_sub:function(){
