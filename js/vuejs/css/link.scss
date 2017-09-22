@@ -23,6 +23,18 @@
   z-index: 10000;
 }
 .popframe{
-  width:500px;
-  height:400px;
+  width:90vw;
+  height:90vh;
+  border: 2px solid #8e8e8e;
+  -moz-box-shadow:2px 2px 20px #d0d0d0; -webkit-box-shadow:2px 2px 20px #b7b698; box-shadow:2px 2px 20px #828282;
+
+  .close-btn{
+    position: absolute;
+    right: 0.5em;
+    top:0.4em;
+    cursor: pointer;
+    //&:hover{
+    //  font-size: 1.3em;
+    //}
+  }
 }

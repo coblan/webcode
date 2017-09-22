@@ -16,6 +16,7 @@ rows=[{xxx:"jjy",jb:'hahaer'}]
  */
 
 import * as myfilter from './filter.js'
+import * as first_col from './table/first_col.js'
 require('./css/table.scss')
 
 // 下面这个sort-table应该是不用了的。有空来清理它
@@ -331,6 +332,8 @@ var build_table_args = {
 
 var table_fun={
     data:function(){
+        heads[0].type='first-col'
+
       return {
               heads:heads,
               rows:rows,
@@ -406,11 +409,14 @@ var table_fun={
 		},
         map:function(name,row){
             var content=row[name]
-            if(this.search_args._pop){
-                ln.rtWin(row)
-            }else if(name==this.heads[0].name){
-                return this.form_link(name,row)
-            }else if(content===true){
+            //if(name==this.heads[0].name){
+            //    if(this.search_args._pop){
+            //        return '<a onclick="ln.ret(row)">'+row[name]+'</a>'
+            //    }else{
+            //        return this.form_link(name,row)
+            //    }
+            //}else
+            if(content===true){
                 return '<img src="//res.enjoyst.com/true.png" width="15px" />'
             }else if(content===false){
                 return '<img src="//res.enjoyst.com/false.png" width="15px" />'

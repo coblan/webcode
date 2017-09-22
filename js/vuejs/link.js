@@ -119,23 +119,37 @@ var ln={
         location=ex.appendSearch(url,{_pop:1})
 
     },
-    try_rt:function(value){
-        var search_args=ex.parseSearch()
-        if(search_args._pop){
-            if(search_args._frame){
-                if(parent.__fram_back){
-                    parent.__fram_back(value)
-                }
-            }else if(window.opener){
-                this.rtWin(value)
-            }else{
-                sessionStorage.setItem('_rt',JSON.stringify(value))
-                history.back()
-            }
-            return  true
+    ret:function(value){
+        if(window.opener){
+            this._ret_win(value)
         }else{
-            return false
+            this._ret_frame(value)
         }
+    },
+    _ret_frame:function(value){
+        // 在iframe中运行
+        //var search_args=ex.parseSearch()
+        if(search_args._pop){
+            if(window.parent.__fram_back){
+                window.parent.__fram_back(value)
+            }
+
+            //if(search_args._frame){
+            //    if(parent.__fram_back){
+            //        parent.__fram_back(value)
+            //    }
+            //}else if(window.opener){
+            //    this.rtWin(value)
+            //}else{
+            //    sessionStorage.setItem('_rt',JSON.stringify(value))
+            //    history.back()
+            //}
+            //return  true
+        }
+
+        //else{
+        //    return false
+        //}
     },
 
 
@@ -233,7 +247,7 @@ var ln={
         window.__on_subwin_close=callback
 
     },
-    rtWin:function(resp){
+    _ret_win:function(resp){
         if(window.opener && window.opener.__on_subwin_close){
             window.opener.__on_subwin_close(resp)
         }
@@ -258,7 +272,12 @@ var ln={
     openFrame:function(url,callback,css){
         var self=this
         if(!window.__load_frame){
-            $('body').append('<div id="_load_frame_wrap"><div class="imiddle popframe"><iframe id="_load_frame" frameborder="0" width="100%" height="100%"></iframe></div></div>')
+            $('body').append(`<div id="_load_frame_wrap">
+            <div class="imiddle popframe">
+                <span class="close-btn" onclick="ln.closeFrame()"><i class="fa fa-times fa-2x" aria-hidden="true"></i></span>
+                <iframe id="_load_frame" frameborder="0" width="100%" height="100%"></iframe>
+            </div>
+            </div>`)
             window.__load_frame=true
         }
         var url=ex.appendSearch(url,{_pop:1,_frame:1})
