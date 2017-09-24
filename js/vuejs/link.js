@@ -269,13 +269,14 @@ var ln={
             }
         })
     },
-    openFrame:function(url,callback,css){
+    openFrame:function(url,title,callback,css){
         var self=this
         if(!window.__load_frame){
             $('body').append(`<div id="_load_frame_wrap">
-            <div class="imiddle popframe">
+            <div class="imiddle popframe flex-v">
+                <span class="title"><b>${title}</b></span>
                 <span class="close-btn" onclick="ln.closeFrame()"><i class="fa fa-times fa-2x" aria-hidden="true"></i></span>
-                <iframe id="_load_frame" frameborder="0" width="100%" height="100%"></iframe>
+                <iframe id="_load_frame" frameborder="0" class="flex-grow"></iframe>
             </div>
             </div>`)
             window.__load_frame=true

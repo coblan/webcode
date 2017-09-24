@@ -8,6 +8,11 @@
   z-index: 1000;
   background: rgba(88, 88, 88, 0.2);
 }
+#_load_frame{
+  width: 100%;
+  height: 100%;
+  border-top: 1px solid #b6b6b6;
+}
 .imiddle{
   position: absolute;
   top: 50%;
@@ -23,10 +28,15 @@
   z-index: 10000;
 }
 .popframe{
-  width:90vw;
-  height:90vh;
+  max-width:90vw;
+  max-height:90vh;
+  min-width: 40em;
+  min-height: 30em;
   border: 2px solid #8e8e8e;
   -moz-box-shadow:2px 2px 20px #d0d0d0; -webkit-box-shadow:2px 2px 20px #b7b698; box-shadow:2px 2px 20px #828282;
+  border-radius: 1em;
+  padding-top: 3em;
+  background-color:white ;
 
   .close-btn{
     position: absolute;
@@ -36,5 +46,11 @@
     //&:hover{
     //  font-size: 1.3em;
     //}
+  }
+  .title{
+    position: absolute;
+    top:0.5em;
+    left: 50%;
+    transform: translate(-50%,0);
   }
 }

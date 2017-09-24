@@ -131,9 +131,9 @@ Vue.component('com-form-btn',{
 	},
 	template:`<div style='overflow: hidden;'>
 		<div class="btn-group" style='float: right;'>
-			<button type="button" class="btn btn-default" @click='submit()' v-if='can_add'>Save</button>
+			<button type="button" class="btn btn-default" @click='submit()' v-if='can_add'>保存</button>
 			<a type="button" class="btn btn-default" v-if='can_del &&del_link' :href='del_link'>删除</a>
-			<button type="button" class="btn btn-default" @click='cancel()' >Cancel</button>
+			<button type="button" class="btn btn-default" @click='cancel()' >取消</button>
 		</div>
 	</div>`
 })

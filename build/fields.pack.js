@@ -2213,10 +2213,10 @@ var ln = {
             }
         });
     },
-    openFrame: function openFrame(url, callback, css) {
+    openFrame: function openFrame(url, title, callback, css) {
         var self = this;
         if (!window.__load_frame) {
-            $('body').append('<div id="_load_frame_wrap">\n            <div class="imiddle popframe">\n                <span class="close-btn" onclick="ln.closeFrame()"><i class="fa fa-times fa-2x" aria-hidden="true"></i></span>\n                <iframe id="_load_frame" frameborder="0" width="100%" height="100%"></iframe>\n            </div>\n            </div>');
+            $('body').append('<div id="_load_frame_wrap">\n            <div class="imiddle popframe flex-v">\n                <span class="title"><b>' + title + '</b></span>\n                <span class="close-btn" onclick="ln.closeFrame()"><i class="fa fa-times fa-2x" aria-hidden="true"></i></span>\n                <iframe id="_load_frame" frameborder="0" class="flex-grow"></iframe>\n            </div>\n            </div>');
             window.__load_frame = true;
         }
         var url = ex.appendSearch(url, { _pop: 1, _frame: 1 });
@@ -2432,7 +2432,7 @@ exports = module.exports = __webpack_require__(1)();
 
 
 // module
-exports.push([module.i, "@charset \"UTF-8\";\n#_load_frame_wrap {\n  position: fixed;\n  top: 0;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  display: none;\n  z-index: 1000;\n  background: rgba(88, 88, 88, 0.2); }\n\n.imiddle {\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n  -ms-transform: translate(-50%, -50%);\n  /* IE 9 */\n  -moz-transform: translate(-50%, -50%);\n  /* Firefox */\n  -webkit-transform: translate(-50%, -50%);\n  /* Safari 和 Chrome */\n  -o-transform: translate(-50%, -50%);\n  text-align: center;\n  /*display: table;*/\n  z-index: 10000; }\n\n.popframe {\n  width: 90vw;\n  height: 90vh;\n  border: 2px solid #8e8e8e;\n  box-shadow: 2px 2px 20px #828282; }\n  .popframe .close-btn {\n    position: absolute;\n    right: 0.5em;\n    top: 0.4em;\n    cursor: pointer; }\n", ""]);
+exports.push([module.i, "@charset \"UTF-8\";\n#_load_frame_wrap {\n  position: fixed;\n  top: 0;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  display: none;\n  z-index: 1000;\n  background: rgba(88, 88, 88, 0.2); }\n\n#_load_frame {\n  width: 100%;\n  height: 100%;\n  border-top: 1px solid #b6b6b6; }\n\n.imiddle {\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n  -ms-transform: translate(-50%, -50%);\n  /* IE 9 */\n  -moz-transform: translate(-50%, -50%);\n  /* Firefox */\n  -webkit-transform: translate(-50%, -50%);\n  /* Safari 和 Chrome */\n  -o-transform: translate(-50%, -50%);\n  text-align: center;\n  /*display: table;*/\n  z-index: 10000; }\n\n.popframe {\n  max-width: 90vw;\n  max-height: 90vh;\n  min-width: 40em;\n  min-height: 30em;\n  border: 2px solid #8e8e8e;\n  box-shadow: 2px 2px 20px #828282;\n  border-radius: 1em;\n  padding-top: 3em;\n  background-color: white; }\n  .popframe .close-btn {\n    position: absolute;\n    right: 0.5em;\n    top: 0.4em;\n    cursor: pointer; }\n  .popframe .title {\n    position: absolute;\n    top: 0.5em;\n    left: 50%;\n    -webkit-transform: translate(-50%, 0);\n            transform: translate(-50%, 0); }\n", ""]);
 
 // exports
 
@@ -2607,7 +2607,7 @@ Vue.component('com-form-btn', {
 			return this.del_row();
 		}
 	},
-	template: '<div style=\'overflow: hidden;\'>\n\t\t<div class="btn-group" style=\'float: right;\'>\n\t\t\t<button type="button" class="btn btn-default" @click=\'submit()\' v-if=\'can_add\'>Save</button>\n\t\t\t<a type="button" class="btn btn-default" v-if=\'can_del &&del_link\' :href=\'del_link\'>\u5220\u9664</a>\n\t\t\t<button type="button" class="btn btn-default" @click=\'cancel()\' >Cancel</button>\n\t\t</div>\n\t</div>'
+	template: '<div style=\'overflow: hidden;\'>\n\t\t<div class="btn-group" style=\'float: right;\'>\n\t\t\t<button type="button" class="btn btn-default" @click=\'submit()\' v-if=\'can_add\'>\u4FDD\u5B58</button>\n\t\t\t<a type="button" class="btn btn-default" v-if=\'can_del &&del_link\' :href=\'del_link\'>\u5220\u9664</a>\n\t\t\t<button type="button" class="btn btn-default" @click=\'cancel()\' >\u53D6\u6D88</button>\n\t\t</div>\n\t</div>'
 });
 
 var fieldset_fun = {
