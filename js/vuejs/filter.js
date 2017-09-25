@@ -52,7 +52,7 @@ Vue.component('com-filter',{
 
                 <slot></slot>
 
-          <button name="go" type="button" class="btn btn-info" @click='m_submit()' >{search}</button>
+          <button name="go" type="button" class="btn btn-info btn-sm" @click='m_submit()' >{search}</button>
         </form>
     `,ex.trList(['From','To','search'])),
     created:function(){

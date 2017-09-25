@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 4);
+/******/ 	return __webpack_require__(__webpack_require__.s = 5);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -397,11 +397,11 @@ table的过滤器
 <-<
  */
 
-__webpack_require__(7);
+__webpack_require__(8);
 
 Vue.component('com-filter', {
     props: ['heads', 'search', 'search_tip'],
-    template: ex.template('\n    <form v-if=\'search_tip || heads.length>0\' class="com-filter flex flex-grow flex-ac">\n                <input style="max-width: 20em;min-width: 10em;" v-if=\'search_tip\' type="text" name="_q" v-model=\'search._q\' :placeholder=\'search_tip\' class=\'form-control\'/>\n                <div class="flex row-filter"  style="flex-grow:0;min-width: 10em;">\n                    <!--<component is="sim-filter"  v-model=\'search[filter.name]\' v-if="filter.options"  v-for=\'filter in heads\' :id="\'filter-\'+filter.name"-->\n                    <!--</component>-->\n                     <component :is="filter.type?filter.type:\'sim-filter\'"  :filter="filter" v-model=\'search[filter.name]\' v-if="filter.options"  v-for=\'filter in heads\' :id="\'filter-\'+filter.name">\n                    </component>\n\n                    <!--<select  v-if="filter.options" v-for=\'filter in heads\' :id="\'filter-\'+filter.name"-->\n                        <!--v-model=\'value\' class=\'form-control\' >-->\n                        <!--<option :value="undefined" v-text=\'filter.label\'></option>-->\n                        <!--<option value="">-&#45;&#45;&#45;&#45;&#45;&#45;</option>-->\n                        <!--<option v-for=\'option in orderBy( filter.options,"label")\' :value="option.value" v-text=\'option.label\'></option>-->\n                    <!--</select>-->\n                </div>\n\n                <div  v-for=\'filter in heads\' v-if="[\'time\',\'date\',\'month\'].indexOf(filter.type)!=-1" class="date-filter flex flex-ac">\n                    <span v-text="filter.label"></span>\n                    <span>{From}</span>\n                    <div>\n                         <date v-if="filter.type==\'month\'" set="month" v-model="search[\'_start_\'+filter.name]"></date>\n                        <date v-if="filter.type==\'date\'"  v-model="search[\'_start_\'+filter.name]"></date>\n                    </div>\n                    <span>{To}</span>\n                    <div>\n                        <date v-if="filter.type==\'month\'" set="month" v-model="search[\'_end_\'+filter.name]"></date>\n                        <date v-if="filter.type==\'date\'"  v-model="search[\'_end_\'+filter.name]"></date>\n                    </div>\n\n                </div>\n\n                <slot></slot>\n\n          <button name="go" type="button" class="btn btn-info" @click=\'m_submit()\' >{search}</button>\n        </form>\n    ', ex.trList(['From', 'To', 'search'])),
+    template: ex.template('\n    <form v-if=\'search_tip || heads.length>0\' class="com-filter flex flex-grow flex-ac">\n                <input style="max-width: 20em;min-width: 10em;" v-if=\'search_tip\' type="text" name="_q" v-model=\'search._q\' :placeholder=\'search_tip\' class=\'form-control\'/>\n                <div class="flex row-filter"  style="flex-grow:0;min-width: 10em;">\n                    <!--<component is="sim-filter"  v-model=\'search[filter.name]\' v-if="filter.options"  v-for=\'filter in heads\' :id="\'filter-\'+filter.name"-->\n                    <!--</component>-->\n                     <component :is="filter.type?filter.type:\'sim-filter\'"  :filter="filter" v-model=\'search[filter.name]\' v-if="filter.options"  v-for=\'filter in heads\' :id="\'filter-\'+filter.name">\n                    </component>\n\n                    <!--<select  v-if="filter.options" v-for=\'filter in heads\' :id="\'filter-\'+filter.name"-->\n                        <!--v-model=\'value\' class=\'form-control\' >-->\n                        <!--<option :value="undefined" v-text=\'filter.label\'></option>-->\n                        <!--<option value="">-&#45;&#45;&#45;&#45;&#45;&#45;</option>-->\n                        <!--<option v-for=\'option in orderBy( filter.options,"label")\' :value="option.value" v-text=\'option.label\'></option>-->\n                    <!--</select>-->\n                </div>\n\n                <div  v-for=\'filter in heads\' v-if="[\'time\',\'date\',\'month\'].indexOf(filter.type)!=-1" class="date-filter flex flex-ac">\n                    <span v-text="filter.label"></span>\n                    <span>{From}</span>\n                    <div>\n                         <date v-if="filter.type==\'month\'" set="month" v-model="search[\'_start_\'+filter.name]"></date>\n                        <date v-if="filter.type==\'date\'"  v-model="search[\'_start_\'+filter.name]"></date>\n                    </div>\n                    <span>{To}</span>\n                    <div>\n                        <date v-if="filter.type==\'month\'" set="month" v-model="search[\'_end_\'+filter.name]"></date>\n                        <date v-if="filter.type==\'date\'"  v-model="search[\'_end_\'+filter.name]"></date>\n                    </div>\n\n                </div>\n\n                <slot></slot>\n\n          <button name="go" type="button" class="btn btn-info btn-sm" @click=\'m_submit()\' >{search}</button>\n        </form>\n    ', ex.trList(['From', 'To', 'search'])),
     created: function created() {
         var self = this;
         ex.each(self.heads, function (filter) {
@@ -514,10 +514,37 @@ Vue.component('sel-search-filter', sim_filter_with_search);
 /* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
+"use strict";
+
+
+var first_col = {
+    props: ['row', 'name'],
+    methods: {
+        ret: function ret(row) {
+            ln.ret(row);
+        },
+        form_link: function form_link(name, row) {
+            return ex.template('{edit}?pk={pk}', { edit: page_name + '.edit',
+                pk: row.pk
+            });
+        },
+        is_pop: function is_pop() {
+            return search_args._pop;
+        }
+    },
+    template: '<div>\n    <span v-if="is_pop()"  v-text="row[name]" @click="ret(row)" style="cursor: pointer;color: #5d9cd3"></span>\n    <a v-else :href="form_link(name,row)" v-text="row[name]"></a>\n    </div>'
+};
+
+Vue.component('first-col', first_col);
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(5);
+var content = __webpack_require__(6);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(1)(content, {});
@@ -537,7 +564,7 @@ if(false) {
 }
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -547,7 +574,7 @@ var _filter = __webpack_require__(2);
 
 var myfilter = _interopRequireWildcard(_filter);
 
-var _first_col = __webpack_require__(8);
+var _first_col = __webpack_require__(3);
 
 var first_col = _interopRequireWildcard(_first_col);
 
@@ -569,7 +596,7 @@ rows=[{xxx:"jjy",jb:'hahaer'}]
 <-<
  */
 
-__webpack_require__(3);
+__webpack_require__(4);
 
 // 下面这个sort-table应该是不用了的。有空来清理它
 Vue.component('sort-table', {
@@ -1027,7 +1054,7 @@ window.table_fun = table_fun;
 window.build_table_args = build_table_args;
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(0)();
@@ -1041,7 +1068,7 @@ exports.push([module.i, "table.fake-suit {\n  border: 1px solid #DDD;\n  border-
 
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(0)();
@@ -1055,13 +1082,13 @@ exports.push([module.i, ".date-filter {\n  margin: 0 1em; }\n\n.com-filter {\n  
 
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(6);
+var content = __webpack_require__(7);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(1)(content, {});
@@ -1079,33 +1106,6 @@ if(false) {
 	// When the module is disposed, remove the <style> tags
 	module.hot.dispose(function() { update(); });
 }
-
-/***/ }),
-/* 8 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var first_col = {
-    props: ['row', 'name'],
-    methods: {
-        ret: function ret(row) {
-            ln.ret(row);
-        },
-        form_link: function form_link(name, row) {
-            return ex.template('{edit}?pk={pk}', { edit: page_name + '.edit',
-                pk: row.pk
-            });
-        },
-        is_pop: function is_pop() {
-            return search_args._pop;
-        }
-    },
-    template: '<div>\n    <span v-if="is_pop()"  v-text="row[name]" @click="ret(row)" style="cursor: pointer;color: #5d9cd3"></span>\n    <a v-else :href="form_link(name,row)" v-text="row[name]"></a>\n    </div>'
-};
-
-Vue.component('first-col', first_col);
 
 /***/ })
 /******/ ]);
