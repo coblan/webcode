@@ -1,0 +1,19 @@
+===========
+framework7
+===========
+framework7是一个针对手机的H5 Ui库。我主要使用该库作为移动端的构架。
+
+android后端
+============
+
+splash.html
+
+:code:`build.gradle` 脚本修改
+
+前端
+======
+
+外部封装页面
+--------------
+
+f7/wraper.html
