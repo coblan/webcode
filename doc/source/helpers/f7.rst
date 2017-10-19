@@ -17,3 +17,40 @@ splash.html
 --------------
 
 f7/wraper.html
+
+load_iframe(url,name,callback):
+   利用一个iframe来加载一个页面。
+
+   *url* : 地址。
+   *name* : Framework7需要每个页面都有一个name名字，注意尽量不要重复。
+   *callback* : 在子frame中，可以通过 :code:`windows.ret` 调用该函数，该回调函数接收一个参数。
+
+
+load_vue_com(kw)：
+   利用一个vue component来作为一个页面。
+
+::
+
+    kw={
+            url:url string,
+            com_html:html string,   // html 字符串，例如 <div><my-com :name='test'></my-com></div>
+            data:{},       // Vue 实例的数据。
+            name:string,   // Framework7页面唯一标示名
+            label:string,  // 页面标题
+            callback:function, 
+        }
+
+    callback的使用方法：
+
+    #在parent页面触发vue_com页面，
+    load_vue_com({other:xxx,  callback:function(com_resp){
+                dosomething(com_resp)
+        }
+
+    #在vue_com页面中，在返回parent页面时，要调用注册的回调函数。
+    methods:{
+        back:function(){
+            this.$parent.callback(my_resp)
+            mainView.router.back()
+        }
+    }

@@ -163,6 +163,41 @@
 <div class="section" id="id2">
 <h3>外部封装页面<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
 <p>f7/wraper.html</p>
+<dl class="docutils">
+<dt>load_iframe(url,name,callback):</dt>
+<dd><p class="first">利用一个iframe来加载一个页面。</p>
+<p class="last"><em>url</em> : 地址。
+<em>name</em> : Framework7需要每个页面都有一个name名字，注意尽量不要重复。
+<em>callback</em> : 在子frame中，可以通过 <code class="code docutils literal"><span class="pre">windows.ret</span></code> 调用该函数，该回调函数接收一个参数。</p>
+</dd>
+<dt>load_vue_com(kw)：</dt>
+<dd>利用一个vue component来作为一个页面。</dd>
+</dl>
+<div class="highlight-default"><div class="highlight"><pre><span></span>kw={
+        url:url string,
+        com_html:html string,   // html 字符串，例如 &lt;div&gt;&lt;my-com :name=&#39;test&#39;&gt;&lt;/my-com&gt;&lt;/div&gt;
+        data:{},       // Vue 实例的数据。
+        name:string,   // Framework7页面唯一标示名
+        label:string,  // 页面标题
+        callback:function,
+    }
+
+callback的使用方法：
+
+#在parent页面触发vue_com页面，
+load_vue_com({other:xxx,  callback:function(com_resp){
+            dosomething(com_resp)
+    }
+
+#在vue_com页面中，在返回parent页面时，要调用注册的回调函数。
+methods:{
+    back:function(){
+        this.$parent.callback(my_resp)
+        mainView.router.back()
+    }
+}
+</pre></div>
+</div>
 </div>
 </div>
 </div>
