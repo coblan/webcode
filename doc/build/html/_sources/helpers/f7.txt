@@ -3,20 +3,20 @@ framework7
 ===========
 framework7是一个针对手机的H5 Ui库。我主要使用该库作为移动端的构架。
 
-android后端
-============
+android端运行环境
+=================
 
 splash.html
 
 :code:`build.gradle` 脚本修改
 
-前端
-======
+framwork7前端
+=================
 
 外部封装页面
 --------------
 
-f7/wraper.html
+代码在 :code:`f7/wraper.html` 和 :code:`js/f7_wrap.pack.js` 内
 
 load_iframe(url,name,callback):
    利用一个iframe来加载一个页面。
@@ -54,3 +54,10 @@ load_vue_com(kw)：
             mainView.router.back()
         }
     }
+
+:red:`还有很多函数需要整理`
+
+iframe子页面
+--------------------
+继承主页 :code:`f7/base.html` ;js代码 :code:`js/director_f7.pack.js`
+

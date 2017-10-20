@@ -94,9 +94,10 @@
 <li class="toctree-l2"><a class="reference internal" href="db.html">6.1. 数据库快捷函数</a></li>
 <li class="toctree-l2"><a class="reference internal" href="engine.html">6.2. director engine</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">6.3. framework7</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#android">6.3.1. android后端</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id1">6.3.2. 前端</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#id2">外部封装页面</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#android">6.3.1. android端运行环境</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#framwork7">6.3.2. framwork7前端</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id1">外部封装页面</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#iframe">iframe子页面</a></li>
 </ul>
 </li>
 </ul>
@@ -154,15 +155,15 @@
 <h1>6.3. framework7<a class="headerlink" href="#framework7" title="Permalink to this headline">¶</a></h1>
 <p>framework7是一个针对手机的H5 Ui库。我主要使用该库作为移动端的构架。</p>
 <div class="section" id="android">
-<h2>6.3.1. android后端<a class="headerlink" href="#android" title="Permalink to this headline">¶</a></h2>
+<h2>6.3.1. android端运行环境<a class="headerlink" href="#android" title="Permalink to this headline">¶</a></h2>
 <p>splash.html</p>
 <p><code class="code docutils literal"><span class="pre">build.gradle</span></code> 脚本修改</p>
 </div>
+<div class="section" id="framwork7">
+<h2>6.3.2. framwork7前端<a class="headerlink" href="#framwork7" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="id1">
-<h2>6.3.2. 前端<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id2">
-<h3>外部封装页面<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
-<p>f7/wraper.html</p>
+<h3>外部封装页面<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p>代码在 <code class="code docutils literal"><span class="pre">f7/wraper.html</span></code> 和 <code class="code docutils literal"><span class="pre">js/f7_wrap.pack.js</span></code> 内</p>
 <dl class="docutils">
 <dt>load_iframe(url,name,callback):</dt>
 <dd><p class="first">利用一个iframe来加载一个页面。</p>
@@ -198,6 +199,11 @@ methods:{
 }
 </pre></div>
 </div>
+<p><span class="red">还有很多函数需要整理</span></p>
+</div>
+<div class="section" id="iframe">
+<h3>iframe子页面<a class="headerlink" href="#iframe" title="Permalink to this headline">¶</a></h3>
+<p>继承主页 <code class="code docutils literal"><span class="pre">f7/base.html</span></code> ;js代码 <code class="code docutils literal"><span class="pre">js/director_f7.pack.js</span></code></p>
 </div>
 </div>
 </div>
