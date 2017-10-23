@@ -1,7 +1,7 @@
 ===========
 framework7
 ===========
-framework7是一个针对手机的H5 Ui库。我主要使用该库作为移动端的构架。
+:code:`framework7` 是一个针对手机的H5 Ui库。Director模块中主要使用该库作为移动端的构架。
 
 android端运行环境
 =================
@@ -12,6 +12,10 @@ splash.html
 
 framwork7前端
 =================
+
+.. figure:: /_static/images/wraper.png
+
+   wraper示意图
 
 外部封装页面
 --------------
@@ -60,4 +64,6 @@ load_vue_com(kw)：
 iframe子页面
 --------------------
 继承主页 :code:`f7/base.html` ;js代码 :code:`js/director_f7.pack.js`
+
+主要使用ff对象，调用parent页面，进行next页面加载或者返回last页面等操作。
 

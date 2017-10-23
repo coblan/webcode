@@ -153,7 +153,7 @@
             
   <div class="section" id="framework7">
 <h1>6.3. framework7<a class="headerlink" href="#framework7" title="Permalink to this headline">¶</a></h1>
-<p>framework7是一个针对手机的H5 Ui库。我主要使用该库作为移动端的构架。</p>
+<p><code class="code docutils literal"><span class="pre">framework7</span></code> 是一个针对手机的H5 Ui库。Director模块中主要使用该库作为移动端的构架。</p>
 <div class="section" id="android">
 <h2>6.3.1. android端运行环境<a class="headerlink" href="#android" title="Permalink to this headline">¶</a></h2>
 <p>splash.html</p>
@@ -161,6 +161,10 @@
 </div>
 <div class="section" id="framwork7">
 <h2>6.3.2. framwork7前端<a class="headerlink" href="#framwork7" title="Permalink to this headline">¶</a></h2>
+<div class="figure" id="id2">
+<img alt="../_images/wraper.png" src="../_images/wraper.png" />
+<p class="caption"><span class="caption-text">wraper示意图</span></p>
+</div>
 <div class="section" id="id1">
 <h3>外部封装页面<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
 <p>代码在 <code class="code docutils literal"><span class="pre">f7/wraper.html</span></code> 和 <code class="code docutils literal"><span class="pre">js/f7_wrap.pack.js</span></code> 内</p>
@@ -204,6 +208,7 @@ methods:{
 <div class="section" id="iframe">
 <h3>iframe子页面<a class="headerlink" href="#iframe" title="Permalink to this headline">¶</a></h3>
 <p>继承主页 <code class="code docutils literal"><span class="pre">f7/base.html</span></code> ;js代码 <code class="code docutils literal"><span class="pre">js/director_f7.pack.js</span></code></p>
+<p>主要使用ff对象，调用parent页面，进行next页面加载或者返回last页面等操作。</p>
 </div>
 </div>
 </div>
