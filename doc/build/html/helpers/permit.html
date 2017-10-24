@@ -94,15 +94,9 @@
 <li class="toctree-l2"><a class="reference internal" href="engine.html">6.2. director engine</a></li>
 <li class="toctree-l2"><a class="reference internal" href="f7.html">6.3. framework7</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">6.4. 权限</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#id2">6.4.1. 思考</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id3">6.4.2. 总体步骤</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id4">6.4.3. 注册权限</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id5">6.4.4. 后台权限认证</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#model">model逻辑权限</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id6">自定义名称权限</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#id7">6.4.5. 前端页面配置权限</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id2">6.4.1. 注册权限</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id3">6.4.2. 后台调用</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id4">6.4.3. 分配权限组给用户</a></li>
 </ul>
 </li>
 </ul>
@@ -155,23 +149,14 @@
             
   <div class="section" id="id1">
 <h1>6.4. 权限<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<p>权限是director模块的重要组成部分，主要有两块</p>
+<ol class="arabic simple">
+<li><code class="code docutils literal"><span class="pre">ModelPermit</span></code> ，用于控制数据库表的读写。控制粒度每个字段的读写，表记录的创建删除，以及整个表的日志查看。</li>
+<li>自定义权限，使用 <code class="code docutils literal"><span class="pre">has_permit</span></code> 进行判断。</li>
+</ol>
 <div class="section" id="id2">
-<h2>6.4.1. 思考<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
-<ol class="arabic simple">
-<li>正负权限</li>
-</ol>
-</div>
-<div class="section" id="id3">
-<h2>6.4.2. 总体步骤<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
-<ol class="arabic simple">
-<li>先在admin.py文件中，注册权限</li>
-<li>后台调用 <code class="code docutils literal"><span class="pre">ModelPermit</span></code> 和 <code class="code docutils literal"><span class="pre">has_permit</span></code> 进行权限认证。</li>
-<li>通过前端页面设置权限组和人员归属。</li>
-</ol>
-</div>
-<div class="section" id="id4">
-<h2>6.4.3. 注册权限<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
-<p>注册权限备选项的代码一般都放在 <code class="code docutils literal"><span class="pre">admin.py</span></code> 文件内，便于查找。</p>
+<h2>6.4.1. 注册权限<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p>先在admin.py文件中，注册权限。注册权限备选项的代码一般都放在 <code class="code docutils literal"><span class="pre">admin.py</span></code> 文件内，便于查找。</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">permit_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">WorkNode</span><span class="p">)</span>
 <span class="n">permit_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">NodeGroup</span><span class="p">)</span>
 <span class="n">permit_list</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;name&#39;</span><span class="p">:</span><span class="s1">&#39;nodegroup&#39;</span><span class="p">,</span><span class="s1">&#39;label&#39;</span><span class="p">:</span><span class="s1">&#39;liucheng.nodegroup_SP&#39;</span><span class="p">,</span><span class="s1">&#39;fields&#39;</span><span class="p">:[</span>
@@ -181,16 +166,11 @@
 </pre></div>
 </div>
 </div>
-<div class="section" id="id5">
-<h2>6.4.4. 后台权限认证<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="model">
-<h3>model逻辑权限<a class="headerlink" href="#model" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id3">
+<h2>6.4.2. 后台调用<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<p>后台调用 <code class="code docutils literal"><span class="pre">ModelPermit</span></code> 和 <code class="code docutils literal"><span class="pre">has_permit</span></code> 进行权限认证。</p>
 <p><code class="code docutils literal"><span class="pre">ModelTable</span></code> 和 <code class="code docutils literal"><span class="pre">ModelFields</span></code> 自带权限认证。如果需要自定义权限输出可以利用 <code class="code docutils literal"><span class="pre">ModelPermit</span></code> 类来控制Model的输出字段。如果是要利用前端用户组权限输出，直接调用 <code class="code docutils literal"><span class="pre">permit_to_dict</span></code>，它会查询用户组权限，调用注册的 <code class="code docutils literal"><span class="pre">ModelFields</span></code> 类进行输出。</p>
-</div>
-<div class="section" id="id6">
-<h3>自定义名称权限<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
-<p>has_permit(user,permit_name)</p>
-<p>这种权限可以是负权限，用于对 <code class="code docutils literal"><span class="pre">Modelpermit</span></code> 权限进行修剪。</p>
+<p>has_permit(user,permit_name) 这种权限可以是负权限，用于对 <code class="code docutils literal"><span class="pre">Modelpermit</span></code> 权限进行修剪。</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">permit_list</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;name&#39;</span><span class="p">:</span><span class="s1">&#39;workgroup&#39;</span><span class="p">,</span><span class="s1">&#39;label&#39;</span><span class="p">:</span><span class="s1">&#39;工作流程&#39;</span><span class="p">,</span><span class="s1">&#39;fields&#39;</span><span class="p">:[</span>
     <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span><span class="s1">&#39;-only_self&#39;</span><span class="p">,</span><span class="s1">&#39;label&#39;</span><span class="p">:</span><span class="s1">&#39;只能修改自身工作步骤&#39;</span><span class="p">,</span><span class="s1">&#39;type&#39;</span><span class="p">:</span><span class="s1">&#39;bool&#39;</span><span class="p">},]</span>
 <span class="p">})</span>
@@ -202,13 +182,12 @@
 </div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">要小心负的权限，因为按照普通的习惯，都是权限越多，能力越大。负权限可能与直觉有所违背。</p>
+<p class="last">要小心负的权限，因为按照普通的习惯，都是权限越多，能力越大。负权限可能与直觉有所违背，一旦添加了负权限，就会约束用户的行为，即使他属于其他不受约束的权限组。(到目前，还没有最佳实践来调和这种负权限带来的，稍微有点别扭的感觉)</p>
 </div>
 </div>
-</div>
-<div class="section" id="id7">
-<h2>6.4.5. 前端页面配置权限<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
-<p>权限组分配到人</p>
+<div class="section" id="id4">
+<h2>6.4.3. 分配权限组给用户<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<p>通过前端页面设置权限组和人员归属。利用两个页面，一个页面用于创建 <strong>可用权限</strong> ，一个用于将权限组赋予用户。</p>
 </div>
 </div>
 
