@@ -27,9 +27,19 @@
 后台调用 :code:`ModelPermit` 和 :code:`has_permit` 进行权限认证。
 
 
+Modelpermit
+============
+
 :code:`ModelTable` 和 :code:`ModelFields` 自带权限认证。如果需要自定义权限输出可以利用 :code:`ModelPermit` 类来控制Model的输出字段。如果是要利用前端用户组权限输出，直接调用 :code:`permit_to_dict`，它会查询用户组权限，调用注册的 :code:`ModelFields` 类进行输出。
 
+::
 
+   perm=ModelPermit(instance,user)
+   perm.readable_fields()
+
+
+has_permit
+============
 has_permit(user,permit_name) 这种权限可以是负权限，用于对 :code:`Modelpermit` 权限进行修剪。
 
 ::
