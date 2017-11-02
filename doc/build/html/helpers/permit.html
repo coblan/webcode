@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>6.4. 权限 &mdash; webcode 1.0 documentation</title>
+  <title>6.5. 权限 &mdash; webcode 1.0 documentation</title>
   
 
   
@@ -34,7 +34,7 @@
   
     <link rel="top" title="webcode 1.0 documentation" href="../index.html"/>
         <link rel="up" title="6. helpers" href="../helpers.html"/>
-        <link rel="prev" title="6.3. framework7" href="f7.html"/> 
+        <link rel="prev" title="6.4. framework7" href="f7.html"/> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
@@ -91,16 +91,17 @@
 <li class="toctree-l1"><a class="reference internal" href="../front.html">5. 前端</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../helpers.html">6. helpers</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="db.html">6.1. 数据库快捷函数</a></li>
-<li class="toctree-l2"><a class="reference internal" href="engine.html">6.2. director engine</a></li>
-<li class="toctree-l2"><a class="reference internal" href="f7.html">6.3. framework7</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">6.4. 权限</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#id2">6.4.1. 注册权限</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id3">6.4.2. 后台调用</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="depart_permit.html">6.2. 部门权限</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engine.html">6.3. director engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="f7.html">6.4. framework7</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">6.5. 权限</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id2">6.5.1. 注册权限</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id3">6.5.2. 后台调用</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#modelpermit">Modelpermit</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#has-permit">has_permit</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#id4">6.4.3. 分配权限组给用户</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id4">6.5.3. 分配权限组给用户</a></li>
 </ul>
 </li>
 </ul>
@@ -137,7 +138,7 @@
       
           <li><a href="../helpers.html">6. helpers</a> &raquo;</li>
       
-    <li>6.4. 权限</li>
+    <li>6.5. 权限</li>
       <li class="wy-breadcrumbs-aside">
         
           
@@ -152,14 +153,14 @@
            <div itemprop="articleBody">
             
   <div class="section" id="id1">
-<h1>6.4. 权限<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<h1>6.5. 权限<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
 <p>权限是director模块的重要组成部分，主要有两块</p>
 <ol class="arabic simple">
 <li><code class="code docutils literal"><span class="pre">ModelPermit</span></code> ，用于控制数据库表的读写。控制粒度每个字段的读写，表记录的创建删除，以及整个表的日志查看。</li>
 <li>自定义权限，使用 <code class="code docutils literal"><span class="pre">has_permit</span></code> 进行判断。</li>
 </ol>
 <div class="section" id="id2">
-<h2>6.4.1. 注册权限<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<h2>6.5.1. 注册权限<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
 <p>先在admin.py文件中，注册权限。注册权限备选项的代码一般都放在 <code class="code docutils literal"><span class="pre">admin.py</span></code> 文件内，便于查找。</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">permit_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">WorkNode</span><span class="p">)</span>
 <span class="n">permit_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">NodeGroup</span><span class="p">)</span>
@@ -171,7 +172,7 @@
 </div>
 </div>
 <div class="section" id="id3">
-<h2>6.4.2. 后台调用<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<h2>6.5.2. 后台调用<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
 <p>后台调用 <code class="code docutils literal"><span class="pre">ModelPermit</span></code> 和 <code class="code docutils literal"><span class="pre">has_permit</span></code> 进行权限认证。</p>
 <div class="section" id="modelpermit">
 <h3>Modelpermit<a class="headerlink" href="#modelpermit" title="Permalink to this headline">¶</a></h3>
@@ -200,7 +201,7 @@
 </div>
 </div>
 <div class="section" id="id4">
-<h2>6.4.3. 分配权限组给用户<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<h2>6.5.3. 分配权限组给用户<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
 <p>通过前端页面设置权限组和人员归属。利用两个页面，一个页面用于创建 <strong>可用权限</strong> ，一个用于将权限组赋予用户。</p>
 </div>
 </div>
@@ -213,7 +214,7 @@
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
       
-        <a href="f7.html" class="btn btn-neutral" title="6.3. framework7" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="f7.html" class="btn btn-neutral" title="6.4. framework7" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
