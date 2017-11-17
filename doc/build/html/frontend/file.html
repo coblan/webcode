@@ -1,0 +1,328 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>3.4. 文件上传 &mdash; webcode 1.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+
+  
+    <link rel="top" title="webcode 1.0 documentation" href="../index.html"/>
+        <link rel="up" title="3. 前端" href="index.html"/>
+        <link rel="next" title="4. 前端ui组件" href="../front_uis/index.html"/>
+        <link rel="prev" title="3.3. js辅助函数" href="exfun.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> webcode
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../admin/index.html">1. 模拟admin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../backend/index.html">2. 后端</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">3. 前端</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="fields.html">3.1. 表单</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ajax_hook.html">3.2. ajax process</a></li>
+<li class="toctree-l2"><a class="reference internal" href="exfun.html">3.3. js辅助函数</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">3.4. 文件上传</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id2">3.4.1. 主要内容</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id3">3.4.2. 多个文件上传步骤</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id4">3.4.3. 单个文件</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id5">3.4.4. 上传进度</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id6">3.4.5. 预览图片</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id7">3.4.6. 上传图片</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id8">3.4.7. 自定义样式</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../front_uis/index.html">4. 前端ui组件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../helpers.html">5. helpers</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">webcode</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="index.html">3. 前端</a> &raquo;</li>
+      
+    <li>3.4. 文件上传</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/frontend/file.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="id1">
+<h1>3.4. 文件上传<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id2">
+<h2>3.4.1. 主要内容<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt>fl</dt>
+<dd>包含可以操作file对象的函数，例如上传upload,批量上传uploads.</dd>
+<dt>file-input</dt>
+<dd>该组件用户收集用户输入。只能返回file list 。所以，如果使用upload上传文件，必须取 [0] 第一个file对象。</dd>
+<dt>img-uploador</dt>
+<dd>图片选择，自动上传。</dd>
+</dl>
+</div>
+<div class="section" id="id3">
+<h2>3.4.2. 多个文件上传步骤<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p class="first">Vue.data设置:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">data</span><span class="p">:{</span>
+<span class="n">files</span><span class="p">:[],</span>
+<span class="p">},</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">在html中插入Vue组件:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">file</span><span class="o">-</span><span class="nb">input</span> <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;jjyy&#39;</span> <span class="n">v</span><span class="o">-</span><span class="n">model</span><span class="o">=</span><span class="s1">&#39;files&#39;</span> <span class="n">multiple</span><span class="o">&gt;&lt;/</span><span class="n">file</span><span class="o">-</span><span class="nb">input</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">在Methods中上传:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>fl.uploads(files,url,function(resp){  // url 可以忽略，默认url为 /face/upload
+    resp ....
+})
+</pre></div>
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="id4">
+<h2>3.4.3. 单个文件<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<p>1.Vue.data设置:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">data</span><span class="p">:{</span>
+    <span class="n">files</span><span class="p">:[],</span>
+<span class="p">},</span>
+</pre></div>
+</div>
+<ol class="arabic" start="2">
+<li><p class="first">在html中插入Vue组件:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">file</span><span class="o">-</span><span class="nb">input</span> <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;jjyy&#39;</span> <span class="n">v</span><span class="o">-</span><span class="n">model</span><span class="o">=</span><span class="s1">&#39;files&#39;</span><span class="o">&gt;&lt;/</span><span class="n">file</span><span class="o">-</span><span class="nb">input</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">在Methods中上传:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">fl</span><span class="o">.</span><span class="n">uploads</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">files</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">url</span><span class="p">,</span><span class="n">function</span><span class="p">(</span><span class="n">resp</span><span class="p">){</span>
+   <span class="n">resp</span> <span class="o">....</span>
+<span class="p">})</span>
+</pre></div>
+</div>
+</li>
+</ol>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">默认上传url是/face/upload ，该接口返回的是 file_url_list。</p>
+</div>
+</div>
+<div class="section" id="id5">
+<h2>3.4.4. 上传进度<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<p>进度只是上传进度，判断文件是否被后端接收成功，需要判断是否success回调被调用:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">fl</span><span class="o">.</span><span class="n">upload</span><span class="p">(</span><span class="n">this</span><span class="o">.</span><span class="n">file2</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="s1">&#39;/face/upload&#39;</span><span class="p">,</span><span class="n">function</span><span class="p">(</span><span class="n">url_list</span><span class="p">){</span>
+
+<span class="p">},</span><span class="n">function</span><span class="p">(</span><span class="n">progress</span><span class="p">){</span>
+   <span class="n">console</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">progress</span><span class="p">)</span>
+<span class="p">})</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id6">
+<h2>3.4.5. 预览图片<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
+<p>从file-input读出数据，然后赋予图片的src</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>f1.read(this.files[0],function (data) {
+        $(&#39;#haha&#39;)[0].src = data
+}
+</pre></div>
+</div>
+<p>这个适合直接读取本地图片，并且显示。</p>
+</div>
+<div class="section" id="id7">
+<h2>3.4.6. 上传图片<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default"><div class="highlight"><pre><span></span>&lt;img-uploador v-model=&#39;xxx_url_variable&#39;&gt;&lt;/img-uploador&gt;   //默认上传，使用的是 fl.upload默认地址 /face/upload
+&lt;img-uploador v-model=&#39;xxx_url_variable&#39; up_url=&#39;xxx&#39;&gt;&lt;/img-uploador&gt;
+</pre></div>
+</div>
+<p>具备裁剪性质:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">img</span><span class="o">-</span><span class="n">uploader</span> <span class="n">v</span><span class="o">-</span><span class="n">model</span><span class="o">=</span><span class="s1">&#39;xxx&#39;</span> <span class="p">:</span><span class="n">config</span><span class="o">=</span><span class="s1">&#39;{crop:true,aspectRatio: 8 / 10}&#39;</span><span class="o">&gt;&lt;/</span><span class="n">img</span><span class="o">-</span><span class="n">uploader</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id8">
+<h2>3.4.7. 自定义样式<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h2>
+<p><code class="code docutils literal"><span class="pre">&lt;file-inpu&gt;</span></code> 不支持直接自定义样式。但是可以通过其他方式自定义。最简单的方式是：</p>
+<ul class="simple">
+<li>隐藏&lt;file-input&gt; ，</li>
+<li>然后触发其click事件(&#8216;.file-input&#8217;).click()</li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../front_uis/index.html" class="btn btn-neutral float-right" title="4. 前端ui组件" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="exfun.html" class="btn btn-neutral" title="3.3. js辅助函数" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, coblan.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

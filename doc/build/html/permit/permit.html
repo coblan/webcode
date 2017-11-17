@@ -1,0 +1,247 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>权限 &mdash; webcode 1.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+
+  
+    <link rel="top" title="webcode 1.0 documentation" href="../index.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> webcode
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../admin/index.html">1. 模拟admin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../backend/index.html">2. 后端</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../frontend/index.html">3. 前端</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../front_uis/index.html">4. 前端ui组件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../helpers.html">5. helpers</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">webcode</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+    <li>权限</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/permit/permit.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="id1">
+<h1>权限<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<p>权限是director模块的重要组成部分，主要有两块</p>
+<ol class="arabic simple">
+<li><code class="code docutils literal"><span class="pre">ModelPermit</span></code> ，用于控制数据库表的读写。控制粒度每个字段的读写，表记录的创建删除，以及整个表的日志查看。</li>
+<li>自定义权限，使用 <code class="code docutils literal"><span class="pre">has_permit</span></code> 进行判断。</li>
+</ol>
+<div class="section" id="id2">
+<h2>注册权限<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p>先在admin.py文件中，注册权限。注册权限备选项的代码一般都放在 <code class="code docutils literal"><span class="pre">admin.py</span></code> 文件内，便于查找。</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">permit_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">WorkNode</span><span class="p">)</span>
+<span class="n">permit_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">NodeGroup</span><span class="p">)</span>
+<span class="n">permit_list</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;name&#39;</span><span class="p">:</span><span class="s1">&#39;nodegroup&#39;</span><span class="p">,</span><span class="s1">&#39;label&#39;</span><span class="p">:</span><span class="s1">&#39;liucheng.nodegroup_SP&#39;</span><span class="p">,</span><span class="s1">&#39;fields&#39;</span><span class="p">:[</span>
+    <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span><span class="s1">&#39;check_all&#39;</span><span class="p">,</span><span class="s1">&#39;label&#39;</span><span class="p">:</span><span class="s1">&#39;查看所有流程&#39;</span><span class="p">,</span><span class="s1">&#39;type&#39;</span><span class="p">:</span><span class="s1">&#39;bool&#39;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span><span class="s1">&#39;edit_template&#39;</span><span class="p">,</span><span class="s1">&#39;label&#39;</span><span class="p">:</span><span class="s1">&#39;编辑模板&#39;</span><span class="p">,</span><span class="s1">&#39;type&#39;</span><span class="p">:</span><span class="s1">&#39;bool&#39;</span><span class="p">},</span>
+<span class="p">]})</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id3">
+<h2>后台调用<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<p>后台调用 <code class="code docutils literal"><span class="pre">ModelPermit</span></code> 和 <code class="code docutils literal"><span class="pre">has_permit</span></code> 进行权限认证。</p>
+<div class="section" id="modelpermit">
+<h3>Modelpermit<a class="headerlink" href="#modelpermit" title="Permalink to this headline">¶</a></h3>
+<p><code class="code docutils literal"><span class="pre">ModelTable</span></code> 和 <code class="code docutils literal"><span class="pre">ModelFields</span></code> 自带权限认证。如果需要自定义权限输出可以利用 <code class="code docutils literal"><span class="pre">ModelPermit</span></code> 类来控制Model的输出字段。如果是要利用前端用户组权限输出，直接调用 <code class="code docutils literal"><span class="pre">permit_to_dict</span></code>，它会查询用户组权限，调用注册的 <code class="code docutils literal"><span class="pre">ModelFields</span></code> 类进行输出。</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">perm</span><span class="o">=</span><span class="n">ModelPermit</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span><span class="n">user</span><span class="p">)</span>
+<span class="n">perm</span><span class="o">.</span><span class="n">readable_fields</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="has-permit">
+<h3>has_permit<a class="headerlink" href="#has-permit" title="Permalink to this headline">¶</a></h3>
+<p>has_permit(user,permit_name) 这种权限可以是负权限，用于对 <code class="code docutils literal"><span class="pre">Modelpermit</span></code> 权限进行修剪。</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">permit_list</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;name&#39;</span><span class="p">:</span><span class="s1">&#39;workgroup&#39;</span><span class="p">,</span><span class="s1">&#39;label&#39;</span><span class="p">:</span><span class="s1">&#39;工作流程&#39;</span><span class="p">,</span><span class="s1">&#39;fields&#39;</span><span class="p">:[</span>
+    <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span><span class="s1">&#39;-only_self&#39;</span><span class="p">,</span><span class="s1">&#39;label&#39;</span><span class="p">:</span><span class="s1">&#39;只能修改自身工作步骤&#39;</span><span class="p">,</span><span class="s1">&#39;type&#39;</span><span class="p">:</span><span class="s1">&#39;bool&#39;</span><span class="p">},]</span>
+<span class="p">})</span>
+
+<span class="c1"># 使用该权限</span>
+<span class="k">if</span> <span class="n">has_permit</span><span class="p">(</span><span class="n">crt_user</span><span class="p">,</span><span class="s2">&quot;workgroup.-only_self&quot;</span><span class="p">):</span>
+    <span class="n">dosomething</span><span class="o">...</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">要小心负的权限，因为按照普通的习惯，都是权限越多，能力越大。负权限可能与直觉有所违背，一旦添加了负权限，就会约束用户的行为，即使他属于其他不受约束的权限组。(到目前，还没有最佳实践来调和这种负权限带来的，稍微有点别扭的感觉)</p>
+</div>
+</div>
+</div>
+<div class="section" id="id4">
+<h2>分配权限组给用户<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<p>通过前端页面设置权限组和人员归属。利用两个页面，一个页面用于创建 <strong>可用权限</strong> ，一个用于将权限组赋予用户。</p>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, coblan.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

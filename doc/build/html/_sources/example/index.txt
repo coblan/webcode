@@ -1,9 +1,0 @@
-======
-样例
-======
-
-.. toctree::
-   :maxdepth: 2
-
-   fields
-   simple_fields

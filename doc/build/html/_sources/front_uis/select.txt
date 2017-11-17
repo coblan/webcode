@@ -1,0 +1,6 @@
+=============
+选择框
+=============
+
+search_select
+   具有搜索框的选择框。只需要在head中指定 :code:`head.type="search_select"` 就可以将 :code:`select` 改变成 :code:`search_select` 。使用到的三方组件: :code:`bootstrap-select`

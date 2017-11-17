@@ -19,8 +19,8 @@ Contents:
    admin/index
    backend/index
    frontend/index
-   uis/index
-   front
+   front_uis/index
+   permit
    helpers
 
 
