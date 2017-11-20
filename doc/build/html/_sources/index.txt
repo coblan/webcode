@@ -19,6 +19,7 @@ Contents:
    admin/index
    backend/index
    frontend/index
+   inputs/index
    front_uis/index
    permit
    helpers

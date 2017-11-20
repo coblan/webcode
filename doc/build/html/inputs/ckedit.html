@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>inputs &mdash; webcode 1.0 documentation</title>
+  <title>4.2. ckeditor &mdash; webcode 1.0 documentation</title>
   
 
   
@@ -32,7 +32,10 @@
   
 
   
-    <link rel="top" title="webcode 1.0 documentation" href="../index.html"/> 
+    <link rel="top" title="webcode 1.0 documentation" href="../index.html"/>
+        <link rel="up" title="4. 输入组件" href="index.html"/>
+        <link rel="next" title="4.3. 普通fields" href="fields.html"/>
+        <link rel="prev" title="4.1. 日期时间" href="date.html"/> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
@@ -81,12 +84,22 @@
           
             
             
-                <ul>
+                <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../admin/index.html">1. 模拟admin</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../backend/index.html">2. 后端</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../frontend/index.html">3. 前端</a></li>
-<li class="toctree-l1"><a class="reference internal" href="index.html">4. 前端ui组件</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../helpers.html">5. helpers</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">4. 输入组件</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="date.html">4.1. 日期时间</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">4.2. ckeditor</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">4.2.1. 使用示例</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#set">4.2.2. set</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="fields.html">4.3. 普通fields</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../front_uis/index.html">5. 前端ui组件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../helpers.html">6. helpers</a></li>
 </ul>
 
             
@@ -117,11 +130,13 @@
   <ul class="wy-breadcrumbs">
     <li><a href="../index.html">Docs</a> &raquo;</li>
       
-    <li>inputs</li>
+          <li><a href="index.html">4. 输入组件</a> &raquo;</li>
+      
+    <li>4.2. ckeditor</li>
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="../_sources/front_uis/input.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/inputs/ckedit.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -131,35 +146,44 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="inputs">
-<h1>inputs<a class="headerlink" href="#inputs" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="date">
-<h2>date<a class="headerlink" href="#date" title="Permalink to this headline">¶</a></h2>
-<blockquote>
-<div><p>日期选择框，</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span>&lt;date v-model=&#39;variable&#39;&gt;&lt;/date&gt;  // 选择默认set=date ,即选择日期
+  <div class="section" id="ckeditor">
+<h1>4.2. ckeditor<a class="headerlink" href="#ckeditor" title="Permalink to this headline">¶</a></h1>
+<p>源文件: <code class="code docutils literal"><span class="pre">vuejs/ckeditor.js</span></code> 。使用时，引入fields.pack.js即可。</p>
+<p>ckeditor官方文档地址：<a class="reference external" href="http://docs.cksource.com/Main_Page">http://docs.cksource.com/Main_Page</a></p>
+<div class="section" id="id1">
+<h2>4.2.1. 使用示例<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default"><div class="highlight"><pre><span></span>bus=new Vue()  //因为ckeditor的数据不是时时同步的，所以提交时，需要触发数据同步
+// 提交时:
+bus.$emit(&#39;sync_data&#39;)
 
-&lt;date v-model=&#39;variable&#39; set=&#39;month&#39;&gt;&lt;/date&gt; // 选择 set=month ,即选择月份
-
-&lt;date v-model=&#39;variable&#39; set=&#39;month&#39; :config=&#39;{}&#39;&gt;&lt;/date&gt;  //  config 是自定义的配置对象，具体需要参加帮助文件
+&lt;ckeditor set=&#39;complex&#39; config=&#39;{}&#39;&gt;&lt;/ckeditor&gt;
 </pre></div>
 </div>
-</div></blockquote>
 </div>
-<div class="section" id="datetime">
-<h2>datetime<a class="headerlink" href="#datetime" title="Permalink to this headline">¶</a></h2>
-<blockquote>
-<div><div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">datetime</span> <span class="n">v</span><span class="o">-</span><span class="n">model</span><span class="o">=</span><span class="s1">&#39;variable&#39;</span> <span class="p">:</span><span class="n">config</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">&gt;&lt;/</span><span class="n">datetime</span><span class="o">&gt;</span> <span class="o">//</span> <span class="n">选择日期和时间</span>
-</pre></div>
-</div>
-</div></blockquote>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">返回的是ISO格式的字符串。后端设置 <code class="code docutils literal"><span class="pre">max_length=10,15</span></code> 。不要设置太大，否则可能会造成索引过大，甚至不能索引。</p>
-</div>
-</div>
-<div class="section" id="fields">
-<h2>fields内部<a class="headerlink" href="#fields" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="set">
+<h2>4.2.2. set<a class="headerlink" href="#set" title="Permalink to this headline">¶</a></h2>
+<p>set是指预先定义好的一套设置。可以在Vue component中定义映射。</p>
+<p>当前有的set有:</p>
+<table border="1" class="docutils" id="id2">
+<caption><span class="caption-text">set集合种类</span><a class="headerlink" href="#id2" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col width="50%" />
+<col width="50%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">KEY</th>
+<th class="head">说明</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>complex</td>
+<td>完全体</td>
+</tr>
+<tr class="row-odd"><td>edit</td>
+<td>普通编辑体</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 
@@ -167,6 +191,15 @@
            </div>
           </div>
           <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="fields.html" class="btn btn-neutral float-right" title="4.3. 普通fields" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="date.html" class="btn btn-neutral" title="4.1. 日期时间" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
   
 
   <hr/>

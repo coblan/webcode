@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>5.2. director engine &mdash; webcode 1.0 documentation</title>
+  <title>6.2. director engine &mdash; webcode 1.0 documentation</title>
   
 
   
@@ -33,9 +33,9 @@
 
   
     <link rel="top" title="webcode 1.0 documentation" href="../index.html"/>
-        <link rel="up" title="5. helpers" href="../helpers.html"/>
-        <link rel="next" title="5.3. framework7" href="f7.html"/>
-        <link rel="prev" title="5.1. 数据库快捷函数" href="db.html"/> 
+        <link rel="up" title="6. helpers" href="../helpers.html"/>
+        <link rel="next" title="6.3. framework7" href="f7.html"/>
+        <link rel="prev" title="6.1. 数据库快捷函数" href="db.html"/> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
@@ -88,16 +88,17 @@
 <li class="toctree-l1"><a class="reference internal" href="../admin/index.html">1. 模拟admin</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../backend/index.html">2. 后端</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../frontend/index.html">3. 前端</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../front_uis/index.html">4. 前端ui组件</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="../helpers.html">5. helpers</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="db.html">5.1. 数据库快捷函数</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">5.2. director engine</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#id1">5.2.1. 步骤</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id2">5.2.2. 说明</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../inputs/index.html">4. 输入组件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../front_uis/index.html">5. 前端ui组件</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../helpers.html">6. helpers</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="db.html">6.1. 数据库快捷函数</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">6.2. director engine</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">6.2.1. 步骤</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id2">6.2.2. 说明</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="f7.html">5.3. framework7</a></li>
-<li class="toctree-l2"><a class="reference internal" href="work.html">5.4. 工作</a></li>
+<li class="toctree-l2"><a class="reference internal" href="f7.html">6.3. framework7</a></li>
+<li class="toctree-l2"><a class="reference internal" href="work.html">6.4. 工作</a></li>
 </ul>
 </li>
 </ul>
@@ -130,9 +131,9 @@
   <ul class="wy-breadcrumbs">
     <li><a href="../index.html">Docs</a> &raquo;</li>
       
-          <li><a href="../helpers.html">5. helpers</a> &raquo;</li>
+          <li><a href="../helpers.html">6. helpers</a> &raquo;</li>
       
-    <li>5.2. director engine</li>
+    <li>6.2. director engine</li>
       <li class="wy-breadcrumbs-aside">
         
           
@@ -147,9 +148,9 @@
            <div itemprop="articleBody">
             
   <div class="section" id="director-engine">
-<h1>5.2. director engine<a class="headerlink" href="#director-engine" title="Permalink to this headline">¶</a></h1>
+<h1>6.2. director engine<a class="headerlink" href="#director-engine" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="id1">
-<h2>5.2.1. 步骤<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<h2>6.2.1. 步骤<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
 <ol class="arabic">
 <li><p class="first">自定义engine:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">XicheEngine</span><span class="p">(</span><span class="n">BaseEngine</span><span class="p">):</span>
@@ -171,7 +172,7 @@
 </ol>
 </div>
 <div class="section" id="id2">
-<h2>5.2.2. 说明<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<h2>6.2.2. 说明<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
 <p><a href="#id3"><span class="problematic" id="id4">*</span></a>. add_pages时传入的字典，记载了各个页面之间的逻辑关系。例如:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">dc</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;user&#39;</span><span class="p">:</span><span class="n">usertablepage</span><span class="p">,</span><span class="s1">&#39;user.edit&#39;</span><span class="p">:</span><span class="n">userformpage</span><span class="p">}</span>
 </pre></div>
@@ -186,10 +187,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="f7.html" class="btn btn-neutral float-right" title="5.3. framework7" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="f7.html" class="btn btn-neutral float-right" title="6.3. framework7" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="db.html" class="btn btn-neutral" title="5.1. 数据库快捷函数" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="db.html" class="btn btn-neutral" title="6.1. 数据库快捷函数" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

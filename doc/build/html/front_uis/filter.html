@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>filter过滤器 &mdash; webcode 1.0 documentation</title>
+  <title>5.1. filter过滤器 &mdash; webcode 1.0 documentation</title>
   
 
   
@@ -32,7 +32,10 @@
   
 
   
-    <link rel="top" title="webcode 1.0 documentation" href="../index.html"/> 
+    <link rel="top" title="webcode 1.0 documentation" href="../index.html"/>
+        <link rel="up" title="5. 前端ui组件" href="index.html"/>
+        <link rel="next" title="6. helpers" href="../helpers.html"/>
+        <link rel="prev" title="5. 前端ui组件" href="index.html"/> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
@@ -81,12 +84,21 @@
           
             
             
-                <ul>
+                <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../admin/index.html">1. 模拟admin</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../backend/index.html">2. 后端</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../frontend/index.html">3. 前端</a></li>
-<li class="toctree-l1"><a class="reference internal" href="index.html">4. 前端ui组件</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../helpers.html">5. helpers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../inputs/index.html">4. 输入组件</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">5. 前端ui组件</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">5.1. filter过滤器</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">5.1.1. 描述</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id2">5.1.2. filter组件</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#id1">5.2. 三方前端库</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../helpers.html">6. helpers</a></li>
 </ul>
 
             
@@ -117,7 +129,9 @@
   <ul class="wy-breadcrumbs">
     <li><a href="../index.html">Docs</a> &raquo;</li>
       
-    <li>filter过滤器</li>
+          <li><a href="index.html">5. 前端ui组件</a> &raquo;</li>
+      
+    <li>5.1. filter过滤器</li>
       <li class="wy-breadcrumbs-aside">
         
           
@@ -132,11 +146,11 @@
            <div itemprop="articleBody">
             
   <div class="section" id="filter">
-<h1>filter过滤器<a class="headerlink" href="#filter" title="Permalink to this headline">¶</a></h1>
+<h1>5.1. filter过滤器<a class="headerlink" href="#filter" title="Permalink to this headline">¶</a></h1>
 <p>源文件：/js/vuejs/filter.js
 引入文件:table.pack.js</p>
 <div class="section" id="id1">
-<h2>描述<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<h2>5.1.1. 描述<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
 <p>这个过滤器是用在table页面。</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">com</span><span class="o">-</span><span class="nb">filter</span> <span class="n">class</span><span class="o">=</span><span class="s2">&quot;flex&quot;</span> <span class="p">:</span><span class="n">heads</span><span class="o">=</span><span class="s2">&quot;row_filters&quot;</span> <span class="p">:</span><span class="n">search</span><span class="o">=</span><span class="s2">&quot;search_args&quot;</span>
                 <span class="p">:</span><span class="n">search_tip</span><span class="o">=</span><span class="s1">&#39;search_tip&#39;</span> <span class="nd">@submit</span><span class="o">=</span><span class="s2">&quot;search()&quot;</span><span class="o">&gt;&lt;/</span><span class="n">com</span><span class="o">-</span><span class="nb">filter</span><span class="o">&gt;</span>
@@ -145,7 +159,7 @@
 <p>其中 <code class="code docutils literal"><span class="pre">row_filters</span></code> 是由后端注入的。</p>
 </div>
 <div class="section" id="id2">
-<h2>filter组件<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<h2>5.1.2. filter组件<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
 <dl class="docutils">
 <dt>sel-search-filter：</dt>
 <dd>具有搜索框的过滤器。只需要让 <code class="code docutils literal"><span class="pre">filter.type=&quot;sel-search-filter&quot;</span></code> 并且 <code class="code docutils literal"><span class="pre">filter.options</span></code> 不为空。使用到的三方组件: <code class="code docutils literal"><span class="pre">bootstrap-select</span></code></dd>
@@ -157,6 +171,15 @@
            </div>
           </div>
           <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../helpers.html" class="btn btn-neutral float-right" title="6. helpers" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral" title="5. 前端ui组件" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
   
 
   <hr/>

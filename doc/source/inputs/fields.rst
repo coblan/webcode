@@ -4,6 +4,8 @@
 普通fields
 ============
 
+源代码位于 :code:`vuejs/fields/base.js`
+
 基本内容
 ==============
 1. field_base
@@ -30,12 +32,10 @@ field_base的参数都是采用的关键字参数，结构如下：
     }
     <field name='username' :kw='kw' ></field>
 
-组件
-============
-
-源代码位于 vuejs/fields/base.js
 
 search_select
+===============
+
    具有搜索框的选择框。只需要在head中指定 :code:`head.type="search_select"` 就可以将 :code:`select` 改变成 :code:`search_select` 。使用到的三方组件: :code:`bootstrap-select`
 
    .. figure:: /_static/images/search_select.png
