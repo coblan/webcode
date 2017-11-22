@@ -8,3 +8,4 @@
    date
    ckedit
    fields
+   file

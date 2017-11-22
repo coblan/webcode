@@ -3,6 +3,9 @@
 文件上传
 ===========
 
+源代码：/js/vuejs/file.js
+导入：fields.pack.js
+
 主要内容
 ========
 fl
@@ -87,7 +90,7 @@ img-uploador
 
 自定义样式
 ===========
-:code:`<file-inpu>` 不支持直接自定义样式。但是可以通过其他方式自定义。最简单的方式是：
+:code:`<file-input>` 不支持直接自定义样式。但是可以通过其他方式自定义。最简单的方式是：
 
-* 隐藏<file-input> ，
-* 然后触发其click事件('.file-input').click()
+1. 隐藏<file-input>
+2. 然后触发其click事件('.file-input').click()
