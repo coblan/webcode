@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Deposits and Withdrawals</title>
+    <script type="text/javascript" src='http://apps.bdimg.com/libs/jquery/1.9.1/jquery.min.js'></script>
+    <script src="http://cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <script src="https://cdn.bootcss.com/chosen/1.8.2/chosen.jquery.min.js"></script>
+    <link href="https://cdn.bootcss.com/chosen/1.8.2/chosen.min.css" rel="stylesheet">
+
+
+</head>
+<body>
+
+<select name="dept" style="width:
+ 150px;" id="dept" class="dept_select" multiple="multiple">
+    <option value="部门1">a门1</option>
+    <option value="部门2">b门2</option>
+    <option value="部门3">c门3</option>
+    <option value="部门4">d门4</option>
+    <option value="部门5">e门5</option>
+</select>
+
+<script>
+    $(function(){
+        $('.dept_select').chosen({
+            search_contains:true
+        });
+    });
+</script>
+</body>
+</html>
