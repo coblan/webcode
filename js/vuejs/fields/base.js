@@ -175,7 +175,12 @@ export var field_base={
                     }
                 },
                 orderBy:function(array,key){
-                    return order_by_key(array,key)
+                    if(this.kw.orgin_order){
+                        return array
+                    }else{
+                        return order_by_key(array,key)
+                    }
+
                 }
             }
         },
