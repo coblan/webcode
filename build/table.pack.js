@@ -1050,7 +1050,7 @@ Vue.component('sort-mark', {
 
 });
 
-window.table_fun = table_fun;
+//window.table_fun=table_fun
 window.build_table_args = build_table_args;
 
 /***/ }),
