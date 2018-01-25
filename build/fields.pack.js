@@ -905,8 +905,13 @@ var field_base = exports.field_base = {
         sim_select: {
             props: ['name', 'row', 'kw'],
             data: function data() {
+                var inn_config = {};
+                if (this.kw.config) {
+                    ex.assign(inn_config, this.kw.config);
+                }
                 return {
-                    model: this.row[this.name]
+                    model: this.row[this.name],
+                    cfg: inn_config
                 };
             },
             template: '<div>\n            <span v-if=\'kw.readonly\' v-text=\'get_label(kw.options,row[name])\'></span>\n            <select v-else v-model=\'row[name]\'  :id="\'id_\'+name"  class="form-control">\n            \t<option v-for=\'opt in orderBy(kw.options,"label")\' :value=\'opt.value\' v-text=\'opt.label\'></option>\n            </select>\n            </div>',
@@ -926,7 +931,7 @@ var field_base = exports.field_base = {
                     }
                 },
                 orderBy: function orderBy(array, key) {
-                    if (this.kw.orgin_order) {
+                    if (this.kw.orgin_order || this.cfg.orgin_order) {
                         return array;
                     } else {
                         return order_by_key(array, key);

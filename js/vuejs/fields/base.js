@@ -149,8 +149,13 @@ export var field_base={
         sim_select:{
             props:['name','row','kw'],
             data:function(){
+                var inn_config={}
+                if(this.kw.config){
+                    ex.assign(inn_config,this.kw.config)
+                }
                 return {
-                    model:this.row[this.name]
+                    model:this.row[this.name],
+                    cfg:inn_config
                 }
             },
             template:`<div>
@@ -175,7 +180,7 @@ export var field_base={
                     }
                 },
                 orderBy:function(array,key){
-                    if(this.kw.orgin_order){
+                    if(this.kw.orgin_order || this.cfg.orgin_order){
                         return array
                     }else{
                         return order_by_key(array,key)

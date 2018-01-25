@@ -24,7 +24,7 @@ Vue.component('com-filter',{
                 <div class="flex row-filter"  style="flex-grow:0;min-width: 10em;">
                     <!--<component is="sim-filter"  v-model='search[filter.name]' v-if="filter.options"  v-for='filter in heads' :id="'filter-'+filter.name"-->
                     <!--</component>-->
-                     <component :is="filter.type?filter.type:'sim-filter'"  :filter="filter" v-model='search[filter.name]' v-if="filter.options"  v-for='filter in heads' :id="'filter-'+filter.name">
+                     <component :is="filter.type?filter.type:'sim-filter'"   :filter="filter" v-model='search[filter.name]' v-if="filter.options"  v-for='filter in heads' :id="'filter-'+filter.name">
                     </component>
 
                     <!--<select  v-if="filter.options" v-for='filter in heads' :id="'filter-'+filter.name"-->
