@@ -1,0 +1,210 @@
+
+=========
+ inputs
+=========
+
+ date
+=========
+ ::
+
+    <date v-model='variable'></date>  // 选择默认set=date ,即选择日期
+
+    <date v-model='variable' set='month'></date> // 选择 set=month ,即选择月份
+
+    <date v-model='variable' set='month' :config='{}'></date>  //  config 是自定义的配置对象，具体需要参加帮助文件
+
+ datetime
+============
+ ::
+
+    <datetime v-model='variable' :config='{}'></datetime> // 选择日期和时间
+
+
+link
+=========
+示例::
+
+     var director = '{% url 'director' %}'
+
+     var cache_meta={
+     cache:['person.emp_info.row',
+     'person.bas_info.row',
+     'crt_view'],
+     rt_key:{'auth.user':'person.emp_info.row.user'}
+     }
+
+    //auth.user 是返回的值在storage中的key，person.emp_info.row.user是还原的对象路径
+
+     ln.cache(cache_meta)
+
+     // 下面是构造跳转的url,其中最重要的是需要appendSearch({cache:1})),表明返回时，需要读取cache
+     var back_url=btoa(ex.appendSearch({cache:1}))
+     if(pk){
+     location=ex.template('{director}model/{name}/edit/{pk}?next={encode_url}',{director:director,name:name,pk:pk,encode_url:back_url})
+     }else{
+     location=ex.template('{director}model/{name}/edit?next={encode_url}',{director:director,name:name,encode_url:back_url})
+     }
+
+readCache
+	@root_obj
+
+cache
+	@cache_meta
+	@root_obj : 如果没写，默认是window
+
+
+history
+========
+利用h5的history功能，是的地址栏发生变化，并且不会触发服务器请求。该功能可以用在ajax请求，将ajax请求记录在history中，可以达到前进后退的功能。
+
+pushUrl
+    url入栈
+
+popUrlListen:
+    监听pop history事件，点击前进后退按钮时，刷新整个页面。如果需要精细的控制，在不刷新页面的情况下，切换状态，需要自定义事件handler
+
+基本内容
+==============
+1. field_base
+    基类，几乎有所逻辑都在里面。如果需要特殊的field，可以继承field_base，然后修改template
+
+2. field
+    Vue组件，在field_base外面套上了一层外观，例如label，error等。
+
+参数结构
+==============
+field_base的参数都是采用的关键字参数，结构如下：
+使用的 kw 结构
+ kw={
+     errors:{},
+     row:{
+         username:'',
+         password:'',
+         pas2:'',
+    },
+     heads:[
+     	{name:'username',label:'用户名',type:'text',required:true,autofocus:true},
+     ]
+  }
+ <field name='username' :kw='kw' ></field>
+
+
+ table的过滤器
+ ============
+
+ class SalaryFilter(RowFilter):
+ names=['is_checked']
+ range_fields=[{'name':'month','type':'month'}]
+ model=SalaryRecords
+
+Argments Format:
+=================
+
+heads=[{name:'xxx',label:'label1'},
+        {name:'jb',label:'jb'}]
+rows=[{xxx:"jjy",jb:'hahaer'}]
+
+基本内容
+==============
+1. field_base
+    基类，几乎有所逻辑都在里面。如果需要特殊的field，可以继承field_base，然后修改template
+
+2. field
+    Vue组件，在field_base外面套上了一层外观，例如label，error等。
+
+参数结构
+==============
+field_base的参数都是采用的关键字参数，结构如下：
+使用的 kw 结构
+ kw={
+     errors:{},
+     row:{
+         username:'',
+         password:'',
+         pas2:'',
+    },
+     heads:[
+     	{name:'username',label:'用户名',type:'text',required:true,autofocus:true},
+     ]
+  }
+ <field name='username' :kw='kw' ></field>
+
+
+ table的过滤器
+ ============
+
+ class SalaryFilter(RowFilter):
+ names=['is_checked']
+ range_fields=[{'name':'month','type':'month'}]
+ model=SalaryRecords
+
+ =======
+ inputs
+ =======
+
+ date
+ ========
+ ::
+
+    <date v-model='variable'></date>  // 选择默认set=date ,即选择日期
+
+    <date v-model='variable' set='month'></date> // 选择 set=month ,即选择月份
+
+    <date v-model='variable' set='month' :config='{}'></date>  //  config 是自定义的配置对象，具体需要参加帮助文件
+
+ datetime
+ ===========
+ ::
+
+    <datetime v-model='variable' :config='{}'></datetime> // 选择日期和时间
+
+=========
+link
+=========
+示例::
+
+     var director = '{% url 'director' %}'
+
+     var cache_meta={
+     cache:['person.emp_info.row',
+     'person.bas_info.row',
+     'crt_view'],
+     rt_key:{'auth.user':'person.emp_info.row.user'}
+     }
+
+    //auth.user 是返回的值在storage中的key，person.emp_info.row.user是还原的对象路径
+
+     ln.cache(cache_meta)
+
+     // 下面是构造跳转的url,其中最重要的是需要appendSearch({cache:1})),表明返回时，需要读取cache
+     var back_url=btoa(ex.appendSearch({cache:1}))
+     if(pk){
+     location=ex.template('{director}model/{name}/edit/{pk}?next={encode_url}',{director:director,name:name,pk:pk,encode_url:back_url})
+     }else{
+     location=ex.template('{director}model/{name}/edit?next={encode_url}',{director:director,name:name,encode_url:back_url})
+     }
+
+readCache
+	@root_obj
+
+cache
+	@cache_meta
+	@root_obj : 如果没写，默认是window
+
+
+history
+========
+利用h5的history功能，是的地址栏发生变化，并且不会触发服务器请求。该功能可以用在ajax请求，将ajax请求记录在history中，可以达到前进后退的功能。
+
+pushUrl
+    url入栈
+
+popUrlListen:
+    监听pop history事件，点击前进后退按钮时，刷新整个页面。如果需要精细的控制，在不刷新页面的情况下，切换状态，需要自定义事件handler
+
+Argments Format:
+=================
+
+heads=[{name:'xxx',label:'label1'},
+        {name:'jb',label:'jb'}]
+rows=[{xxx:"jjy",jb:'hahaer'}]

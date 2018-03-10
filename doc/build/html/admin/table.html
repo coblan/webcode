@@ -32,6 +32,9 @@
   
 
   
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
     <link rel="top" title="webcode 1.0 documentation" href="../index.html"/>
         <link rel="up" title="1. 模拟admin" href="index.html"/>
         <link rel="next" title="1.5. 权限控制" href="permit.html"/>
@@ -44,6 +47,7 @@
 
 <body class="wy-body-for-nav" role="document">
 
+   
   <div class="wy-grid-for-nav">
 
     
@@ -116,8 +120,10 @@
 
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../index.html">webcode</a>
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">webcode</a>
+        
       </nav>
 
 
@@ -126,25 +132,42 @@
         <div class="rst-content">
           
 
- 
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 <div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-    <li><a href="../index.html">Docs</a> &raquo;</li>
-      
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
           <li><a href="index.html">1. 模拟admin</a> &raquo;</li>
-      
-    <li>1.4. table</li>
+        
+      <li>1.4. table</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
         
-          
-            <a href="../_sources/admin/table.txt" rel="nofollow"> View page source</a>
+            
+            <a href="../_sources/admin/table.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
@@ -260,17 +283,15 @@
 </pre></div>
 </div>
 <p><strong>mix</strong> :table_fun 引入了：</p>
-<ul>
+<ul class="simple">
 <li><dl class="first docutils">
 <dt>is_sorted(row_sort.sort_str ,head.name )</dt>
-<dd><p class="first last">判断字段是否已排序</p>
-</dd>
+<dd>判断字段是否已排序</dd>
 </dl>
 </li>
 <li><dl class="first docutils">
 <dt>toggle( row_sort.sort_str,head.name)</dt>
-<dd><p class="first last">切换字段排序方向，返回重拍的sort_str</p>
-</dd>
+<dd>切换字段排序方向，返回重拍的sort_str</dd>
 </dl>
 </li>
 </ul>
@@ -308,15 +329,18 @@
 
 
            </div>
+           <div class="articleComments">
+            
+           </div>
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="permit.html" class="btn btn-neutral float-right" title="1.5. 权限控制" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="permit.html" class="btn btn-neutral float-right" title="1.5. 权限控制" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="fields.html" class="btn btn-neutral" title="1.3. fields后端" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="fields.html" class="btn btn-neutral" title="1.3. fields后端" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -350,7 +374,8 @@
             VERSION:'1.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="../_static/jquery.js"></script>

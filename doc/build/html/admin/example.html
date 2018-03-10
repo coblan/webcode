@@ -32,6 +32,9 @@
   
 
   
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
     <link rel="top" title="webcode 1.0 documentation" href="../index.html"/>
         <link rel="up" title="1. 模拟admin" href="index.html"/>
         <link rel="next" title="1.2. 表单简化版" href="simple_fields.html"/>
@@ -44,6 +47,7 @@
 
 <body class="wy-body-for-nav" role="document">
 
+   
   <div class="wy-grid-for-nav">
 
     
@@ -123,8 +127,10 @@
 
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../index.html">webcode</a>
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">webcode</a>
+        
       </nav>
 
 
@@ -133,25 +139,42 @@
         <div class="rst-content">
           
 
- 
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 <div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-    <li><a href="../index.html">Docs</a> &raquo;</li>
-      
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
           <li><a href="index.html">1. 模拟admin</a> &raquo;</li>
-      
-    <li>1.1. 基本样例</li>
+        
+      <li>1.1. 基本样例</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
         
-          
-            <a href="../_sources/admin/example.txt" rel="nofollow"> View page source</a>
+            
+            <a href="../_sources/admin/example.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
@@ -166,8 +189,8 @@
 <p>使用时，需要为模块分配一个prefix url。</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">director</span> <span class="k">import</span> <span class="n">urls</span> <span class="k">as</span> <span class="n">director_urls</span>
 <span class="n">urlpatterns</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="n">url</span><span class="p">(</span><span class="s1">r&#39;^d/&#39;</span><span class="p">,</span><span class="n">include</span><span class="p">(</span><span class="n">director_urls</span><span class="p">)),</span>  <span class="c1"># 可以是任意不冲突路径。所有engine渲染页面都是以该路径开始</span>
-    <span class="n">url</span><span class="p">(</span><span class="s1">r&#39;^accounts/&#39;</span><span class="p">,</span><span class="n">include</span><span class="p">(</span><span class="n">director_urls</span><span class="p">)),</span> <span class="c1"># 是为了兼容django的login登录默认地址。</span>
+    <span class="n">url</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;^d/&#39;</span><span class="p">,</span><span class="n">include</span><span class="p">(</span><span class="n">director_urls</span><span class="p">)),</span>  <span class="c1"># 可以是任意不冲突路径。所有engine渲染页面都是以该路径开始</span>
+    <span class="n">url</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;^accounts/&#39;</span><span class="p">,</span><span class="n">include</span><span class="p">(</span><span class="n">director_urls</span><span class="p">)),</span> <span class="c1"># 是为了兼容django的login登录默认地址。</span>
     <span class="o">...</span>
 <span class="p">]</span>
 </pre></div>
@@ -307,15 +330,18 @@ var post_data=[{fun:&#39;save&#39;,row:row}]
 
 
            </div>
+           <div class="articleComments">
+            
+           </div>
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="simple_fields.html" class="btn btn-neutral float-right" title="1.2. 表单简化版" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="simple_fields.html" class="btn btn-neutral float-right" title="1.2. 表单简化版" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="index.html" class="btn btn-neutral" title="1. 模拟admin" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="index.html" class="btn btn-neutral" title="1. 模拟admin" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -349,7 +375,8 @@ var post_data=[{fun:&#39;save&#39;,row:row}]
             VERSION:'1.0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
         };
     </script>
       <script type="text/javascript" src="../_static/jquery.js"></script>
