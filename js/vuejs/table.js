@@ -15,7 +15,7 @@ rows=[{xxx:"jjy",jb:'hahaer'}]
 <-<
  */
 
-import * as myfilter from './filter.js'
+//import * as myfilter from './filter.js'
 import * as first_col from './table/first_col.js'
 require('./css/table.scss')
 
@@ -557,7 +557,7 @@ Vue.component('sort-mark',{
 
 
 
-window.table_fun=table_fun
+//window.table_fun=table_fun
 window.build_table_args=build_table_args
 
 

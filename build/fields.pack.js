@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 20);
+/******/ 	return __webpack_require__(__webpack_require__.s = 19);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -381,7 +381,7 @@ module.exports = function() {
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(18);
+var content = __webpack_require__(17);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(0)(content, {});
@@ -782,270 +782,6 @@ function back_ops(url) {
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-var field_base = exports.field_base = {
-    props: {
-        name: {
-            required: true
-        },
-        kw: {
-            required: true
-        }
-    },
-    computed: {
-        row: function row() {
-            return this.kw.row;
-        },
-        errors: function errors() {
-            if (!this.kw.errors) {
-                Vue.set(this.kw, 'errors', {});
-            }
-            return this.kw.errors;
-        },
-        head: function head() {
-            var heads = this.kw.heads;
-            for (var x = 0; x < heads.length; x++) {
-                var head = heads[x];
-                if (head.name == this.name) {
-                    return head;
-                }
-            }
-        }
-    },
-    methods: {
-        error_data: function error_data(name) {
-            if (this.errors[name]) {
-                return this.errors[name];
-            } else {
-                return '';
-            }
-        }
-    },
-    components: {
-        linetext: {
-            props: ['name', 'row', 'kw'],
-            template: '<div>\n            \t\t\t<span v-if=\'kw.readonly\' v-text=\'row[name]\'></span>\n            \t\t\t<input v-else type="text" class="form-control" v-model="row[name]" :id="\'id_\'+name"\n                        \t:placeholder="kw.placeholder" :autofocus="kw.autofocus" :maxlength=\'kw.maxlength\'>\n                       </div>'
-        },
-        number: {
-            props: ['name', 'row', 'kw'],
-
-            template: '<div><span v-if=\'kw.readonly\' v-text=\'row[name]\'></span>\n            \t\t<input v-else type="number" class="form-control" v-model="row[name]" :id="\'id_\'+name"\n                        :placeholder="kw.placeholder" :autofocus="kw.autofocus"></div>'
-        },
-        password: {
-            props: ['name', 'row', 'kw'],
-            template: '<input type="password" :id="\'id_\'+name" class="form-control" v-model="row[name]" :placeholder="kw.placeholder" :readonly=\'kw.readonly\'>'
-        },
-        blocktext: {
-            props: ['name', 'row', 'kw'],
-            //data:function(){
-            //    return {
-            //        org_height:0,
-            //    }
-            //},
-            //mounted:function(){
-            //    var self=this
-            //    Vue.nextTick(function(){
-            //        self.on_input()
-            //    })
-            //
-            //},
-            //methods:{
-            //    on_input:function(){
-            //        if(this.kw.readonly) return
-            //        var textarea = $(this.$el).find('textarea')[0]
-            //        if(this.org_height!=textarea.scrollHeight){
-            //            $(textarea).height(textarea.scrollHeight-12)
-            //            this.org_height=textarea.scrollHeight
-            //        }
-            //    }
-            //},
-            //computed:{
-            //    value:function(){
-            //        return this.row[this.name]
-            //    }
-            //},
-            //watch:{
-            //    value:function(v){
-            //        var self=this
-            //        Vue.nextTick(function(){
-            //            self.on_input()
-            //        })
-            //    }
-            //},
-            template: '<div>\n            <span v-if=\'kw.readonly\' v-text=\'row[name]\'></span>\n            <textarea v-else class="form-control" rows="3" :id="\'id_\'+name" v-model="row[name]" :placeholder="kw.placeholder" :readonly=\'kw.readonly\'></textarea>\n            </div>'
-        },
-        color: {
-            props: ['name', 'row', 'kw'],
-            template: '<input type="text" v-model="row[name]" :id="\'id_\'+name" :readonly=\'kw.readonly\'>',
-            methods: {
-                init_and_listen: function init_and_listen() {
-                    var self = this;
-                    Vue.nextTick(function () {
-                        $(self.$el).spectrum({
-                            color: self.row[self.name],
-                            showInitial: true,
-                            showInput: true,
-                            preferredFormat: "name",
-                            change: function change(color) {
-                                self.src_color = color.toHexString();
-                                self.row[self.name] = color.toHexString();
-                            }
-                        });
-                    });
-                }
-            },
-            watch: {
-                input_value: function input_value(value) {
-                    if (this.src_color != value) {
-                        this.init_and_listen();
-                    }
-                }
-            },
-            computed: {
-                input_value: function input_value() {
-                    return this.row[this.name];
-                }
-            },
-            mounted: function mounted() {
-                var self = this;
-                ex.load_css('/static/lib/spectrum1.8.0.min.css');
-                ex.load_js('/static/lib/spectrum1.8.0.min.js', function () {
-                    self.init_and_listen();
-                });
-            }
-        },
-        logo: { // absolate
-            props: ['name', 'row', 'kw'],
-            template: '<logo-input :up_url="kw.up_url" :web_url.sync="row[name]" :id="\'id_\'+name"></logo-input>'
-        },
-        picture: {
-            props: ['name', 'row', 'kw'],
-            template: '<div><img class="img-uploador" v-if=\'kw.readonly\' :src=\'row[name]\'/>\n\t\t\t<img-uploador v-else :up_url="kw.up_url" v-model="row[name]" :id="\'id_\'+name" :config="kw.config"></img-uploador></div>'
-        },
-        sim_select: {
-            props: ['name', 'row', 'kw'],
-            data: function data() {
-                return {
-                    model: this.row[this.name]
-                };
-            },
-            template: '<div>\n            <span v-if=\'kw.readonly\' v-text=\'get_label(kw.options,row[name])\'></span>\n            <select v-else v-model=\'row[name]\'  :id="\'id_\'+name"  class="form-control">\n            \t<option v-for=\'opt in orderBy(kw.options,"label")\' :value=\'opt.value\' v-text=\'opt.label\'></option>\n            </select>\n            </div>',
-            mounted: function mounted() {
-                if (this.kw.default && !this.row[this.name]) {
-                    Vue.set(this.row, this.name, this.kw.default);
-                    //this.row[this.name]=this.kw.default
-                }
-            },
-            methods: {
-                get_label: function get_label(options, value) {
-                    var option = ex.findone(options, { value: value });
-                    if (!option) {
-                        return '---';
-                    } else {
-                        return option.label;
-                    }
-                },
-                orderBy: function orderBy(array, key) {
-                    return order_by_key(array, key);
-                }
-            }
-        },
-        search_select: {
-            props: ['name', 'row', 'kw'],
-            data: function data() {
-                return {
-                    model: this.row[this.name]
-                };
-            },
-            template: '<div>\n            <span v-if=\'kw.readonly\' v-text=\'get_label(kw.options,row[name])\'></span>\n            <select v-else v-model=\'row[name]\'  :id="\'id_\'+name"  class="selectpicker form-control" data-live-search="true">\n            \t<option v-for=\'opt in orderBy(kw.options,"label")\' :value=\'opt.value\'\n            \t :data-tokens="opt.label" v-text=\'opt.label\'></option>\n            </select>\n            </div>',
-            mounted: function mounted() {
-                var self = this;
-                if (this.kw.default && !this.row[this.name]) {
-                    Vue.set(this.row, this.name, this.kw.default);
-                }
-                ex.load_css("/static/lib/bootstrap-select.min.css");
-                ex.load_js("/static/lib/bootstrap-select.min.js", function () {
-                    $(self.$el).find('.selectpicker').selectpicker();
-                });
-            },
-            methods: {
-                get_label: function get_label(options, value) {
-                    var option = ex.findone(options, { value: value });
-                    if (!option) {
-                        return '---';
-                    } else {
-                        return option.label;
-                    }
-                },
-                orderBy: function orderBy(array, key) {
-                    return order_by_key(array, key);
-                }
-            }
-        },
-
-        check_select: {
-            props: ['name', 'row', 'kw'],
-            computed: {
-                selected: {
-                    get: function get() {
-                        var data = this.row[this.name];
-                        if (data) {
-                            return data.split(',');
-                        } else {
-                            return [];
-                        }
-                    },
-                    set: function set(v) {
-                        this.row[this.name] = v.join(',');
-                    }
-
-                }
-            },
-            template: '<div>\n                <ul>\n                <li v-for=\'option in kw.options\' v-if="option.value"><input type="checkbox" :value="option.value" v-model="selected"/><span v-text="option.label"></span></li>\n                </ul>\n            </div>'
-        },
-        tow_col: {
-            props: ['name', 'row', 'kw'],
-            template: '<div>\n\t        \t<ul v-if=\'kw.readonly\'><li v-for=\'value in row[name]\' v-text=\'get_label(value)\'></li></ul>\n\t        \t<tow-col-sel v-else v-model=\'row[name]\' :id="\'id_\'+name" :choices=\'kw.options\' :size=\'kw.size\' ></tow-col-sel>\n\t        \t</div>',
-            methods: {
-                get_label: function get_label(value) {
-                    for (var i = 0; i < this.kw.options.length; i++) {
-                        if (this.kw.options[i].value == value) {
-                            return this.kw.options[i].label;
-                        }
-                    }
-                }
-            }
-        },
-        bool: {
-            props: ['name', 'row', 'kw'],
-            template: '<div class="checkbox">\n\t        <input type="checkbox" :id="\'id_\'+name" v-model=\'row[name]\' :disabled="kw.readonly">\n\t\t\t <label :for="\'id_\'+name"><span v-text=\'kw.label\'></span></label>\n\t\t\t\t\t  </div>'
-        },
-        date: {
-            props: ['name', 'row', 'kw'],
-            template: '<div><span v-if=\'kw.readonly\' v-text=\'row[name]\'></span>\n                                <date v-else v-model="row[name]" :id="\'id_\'+name"\n                                    :placeholder="kw.placeholder"></date>\n                               </div>'
-        },
-        datetime: {
-            props: ['name', 'row', 'kw'],
-            template: '<div><span v-if=\'kw.readonly\' v-text=\'row[name]\'></span>\n            \t\t\t<datetime  v-model="row[name]" :id="\'id_\'+name"\n                        \t:placeholder="kw.placeholder"></datetime>\n                       </div>'
-        },
-        richtext: {
-            props: ['name', 'row', 'kw'],
-            template: '<div><span v-if=\'kw.readonly\' v-text=\'row[name]\'></span>\n            \t\t\t<ckeditor  v-model="row[name]" :id="\'id_\'+name"></ckeditor>\n                       </div>'
-        }
-
-    }
-
-};
-
-/***/ }),
-/* 7 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
 var field_fun = exports.field_fun = {
     data: function data() {
         return {
@@ -1136,7 +872,7 @@ var field_fun = exports.field_fun = {
 };
 
 /***/ }),
-/* 8 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1174,7 +910,7 @@ function order_by_key(array, key) {
 }
 
 /***/ }),
-/* 9 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1278,7 +1014,7 @@ img-uploador
 <<<<
 */
 
-__webpack_require__(13);
+__webpack_require__(12);
 
 var fl = {
     read: function read(file, callback) {
@@ -1662,13 +1398,13 @@ Vue.component('logo-input', {
 window.fl = fl;
 
 /***/ }),
-/* 10 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _tab_box = __webpack_require__(21);
+var _tab_box = __webpack_require__(20);
 
 var tab = _interopRequireWildcard(_tab_box);
 
@@ -1945,7 +1681,7 @@ var check_box = {
 Vue.component('com-check-box', check_box);
 
 /***/ }),
-/* 11 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2023,7 +1759,7 @@ popUrlListen:
 <-<
  */
 
-__webpack_require__(14);
+__webpack_require__(13);
 
 var ln = {
     history_handle: function history_handle(obj) {
@@ -2245,7 +1981,7 @@ var ln = {
 window.ln = ln;
 
 /***/ }),
-/* 12 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2332,13 +2068,13 @@ Vue.component('tow-col-sel', {
 });
 
 /***/ }),
-/* 13 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(16);
+var content = __webpack_require__(15);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(0)(content, {});
@@ -2358,13 +2094,13 @@ if(false) {
 }
 
 /***/ }),
-/* 14 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(17);
+var content = __webpack_require__(16);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(0)(content, {});
@@ -2384,13 +2120,13 @@ if(false) {
 }
 
 /***/ }),
-/* 15 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(19);
+var content = __webpack_require__(18);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(0)(content, {});
@@ -2410,7 +2146,7 @@ if(false) {
 }
 
 /***/ }),
-/* 16 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)();
@@ -2424,7 +2160,7 @@ exports.push([module.i, ".img-uploader input {\n  display: none; }\n\n.img-uploa
 
 
 /***/ }),
-/* 17 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)();
@@ -2438,7 +2174,7 @@ exports.push([module.i, "@charset \"UTF-8\";\n#_load_frame_wrap {\n  position: f
 
 
 /***/ }),
-/* 18 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)();
@@ -2452,7 +2188,7 @@ exports.push([module.i, ".error {\n  color: red; }\n\n.field-panel {\n  backgrou
 
 
 /***/ }),
-/* 19 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(1)();
@@ -2466,7 +2202,7 @@ exports.push([module.i, ".tab-lite {\n  display: inline-block;\n  padding: 0.2em
 
 
 /***/ }),
-/* 20 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2479,7 +2215,7 @@ exports.merge = merge;
 
 var _ajax_fun = __webpack_require__(3);
 
-var _file = __webpack_require__(9);
+var _file = __webpack_require__(8);
 
 var f = _interopRequireWildcard(_file);
 
@@ -2487,25 +2223,25 @@ var _ckeditor = __webpack_require__(4);
 
 var ck = _interopRequireWildcard(_ckeditor);
 
-var _multi_sel = __webpack_require__(12);
+var _multi_sel = __webpack_require__(11);
 
 var multi = _interopRequireWildcard(_multi_sel);
 
-var _inputs = __webpack_require__(10);
+var _inputs = __webpack_require__(9);
 
 var inputs = _interopRequireWildcard(_inputs);
 
-var _link = __webpack_require__(11);
+var _link = __webpack_require__(10);
 
 var ln = _interopRequireWildcard(_link);
 
-var _base = __webpack_require__(6);
+var _base = __webpack_require__(21);
 
-var _field_page = __webpack_require__(7);
+var _field_page = __webpack_require__(6);
 
 var _backend = __webpack_require__(5);
 
-var _order = __webpack_require__(8);
+var _order = __webpack_require__(7);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -2567,7 +2303,7 @@ __webpack_require__(2);
 
 var field = {
 	mixins: [_base.field_base],
-	template: '\n\t\t<div for=\'field\' class="form-group field" :class=\'{"error":error_data(name)}\' v-if="head">\n\t\t<label :for="\'id_\'+name"  class="control-label" v-if=\'!head.no_auto_label\'>\n\t\t\t<span v-text="head.label"></span><span class="req_star" v-if=\'head.required\'>*</span>\n\t\t</label>\n\n\t\t<div class="field_input">\n\t\t\t<component :is=\'head.type\'\n\t\t\t\t:row=\'row\'\n\t\t\t\t:name=\'name\'\n\t\t\t\t:kw=\'head\'>\n\t\t\t</component>\n\t\t</div>\n\t\t<div class="help_text"><span v-text="head.help_text"></span></div>\n\t\t<slot> </slot>\n\t\t<div v-for=\'error in error_data(name)\' v-text=\'error\' class=\'error\'></div>\n\t\t</div>\n\t'
+	template: '\n\t\t<div for=\'field\' class="form-group field" :class=\'{"error":error_data(name)}\' v-if="head">\n\t\t<label :for="\'id_\'+name"  class="control-label" v-if=\'head.label && head.label!=""\'>\n\t\t\t<span v-text="head.label"></span><span class="req_star" v-if=\'head.required\'>*</span>\n\t\t</label>\n\n\t\t<div class="field_input">\n\t\t\t<component :is=\'head.type\'\n\t\t\t\t:row=\'row\'\n\t\t\t\t:name=\'name\'\n\t\t\t\t:kw=\'head\'>\n\t\t\t</component>\n\t\t</div>\n\t\t<div class="help_text"><span v-text="head.help_text"></span></div>\n\t\t<slot> </slot>\n\t\t<div v-for=\'error in error_data(name)\' v-text=\'error\' class=\'error\'></div>\n\t\t</div>\n\t'
 
 };
 
@@ -2705,13 +2441,13 @@ window.back_ops = _backend.back_ops;
 window.order_by_key = _order.order_by_key;
 
 /***/ }),
-/* 21 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-__webpack_require__(15);
+__webpack_require__(14);
 
 var tab_lite = {
     // event: close(value)
@@ -2740,6 +2476,279 @@ var tab_box = {
     }
 };
 Vue.component('com-tab-box', tab_box);
+
+/***/ }),
+/* 21 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+var field_base = exports.field_base = {
+    props: {
+        name: {
+            required: true
+        },
+        kw: {
+            required: true
+        }
+    },
+    computed: {
+        row: function row() {
+            return this.kw.row;
+        },
+        errors: function errors() {
+            if (!this.kw.errors) {
+                Vue.set(this.kw, 'errors', {});
+            }
+            return this.kw.errors;
+        },
+        head: function head() {
+            var heads = this.kw.heads;
+            for (var x = 0; x < heads.length; x++) {
+                var head = heads[x];
+                if (head.name == this.name) {
+                    return head;
+                }
+            }
+        }
+    },
+    methods: {
+        error_data: function error_data(name) {
+            if (this.errors[name]) {
+                return this.errors[name];
+            } else {
+                return '';
+            }
+        }
+    },
+    components: {
+        linetext: {
+            props: ['name', 'row', 'kw'],
+            template: '<div>\n            \t\t\t<span v-if=\'kw.readonly\' v-text=\'row[name]\'></span>\n            \t\t\t<input v-else type="text" class="form-control" v-model="row[name]" :id="\'id_\'+name"\n                        \t:placeholder="kw.placeholder" :autofocus="kw.autofocus" :maxlength=\'kw.maxlength\'>\n                       </div>'
+        },
+        number: {
+            props: ['name', 'row', 'kw'],
+
+            template: '<div><span v-if=\'kw.readonly\' v-text=\'row[name]\'></span>\n            \t\t<input v-else type="number" class="form-control" v-model="row[name]" :id="\'id_\'+name"\n                        :placeholder="kw.placeholder" :autofocus="kw.autofocus"></div>'
+        },
+        password: {
+            props: ['name', 'row', 'kw'],
+            template: '<input type="password" :id="\'id_\'+name" class="form-control" v-model="row[name]" :placeholder="kw.placeholder" :readonly=\'kw.readonly\'>'
+        },
+        blocktext: {
+            props: ['name', 'row', 'kw'],
+            //data:function(){
+            //    return {
+            //        org_height:0,
+            //    }
+            //},
+            //mounted:function(){
+            //    var self=this
+            //    Vue.nextTick(function(){
+            //        self.on_input()
+            //    })
+            //
+            //},
+            //methods:{
+            //    on_input:function(){
+            //        if(this.kw.readonly) return
+            //        var textarea = $(this.$el).find('textarea')[0]
+            //        if(this.org_height!=textarea.scrollHeight){
+            //            $(textarea).height(textarea.scrollHeight-12)
+            //            this.org_height=textarea.scrollHeight
+            //        }
+            //    }
+            //},
+            //computed:{
+            //    value:function(){
+            //        return this.row[this.name]
+            //    }
+            //},
+            //watch:{
+            //    value:function(v){
+            //        var self=this
+            //        Vue.nextTick(function(){
+            //            self.on_input()
+            //        })
+            //    }
+            //},
+            template: '<div>\n            <span v-if=\'kw.readonly\' v-text=\'row[name]\'></span>\n            <textarea v-else class="form-control" rows="3" :id="\'id_\'+name" v-model="row[name]" :placeholder="kw.placeholder" :readonly=\'kw.readonly\'></textarea>\n            </div>'
+        },
+        color: {
+            props: ['name', 'row', 'kw'],
+            template: '<input type="text" v-model="row[name]" :id="\'id_\'+name" :readonly=\'kw.readonly\'>',
+            methods: {
+                init_and_listen: function init_and_listen() {
+                    var self = this;
+                    Vue.nextTick(function () {
+                        $(self.$el).spectrum({
+                            color: self.row[self.name],
+                            showInitial: true,
+                            showInput: true,
+                            preferredFormat: "name",
+                            change: function change(color) {
+                                self.src_color = color.toHexString();
+                                self.row[self.name] = color.toHexString();
+                            }
+                        });
+                    });
+                }
+            },
+            watch: {
+                input_value: function input_value(value) {
+                    if (this.src_color != value) {
+                        this.init_and_listen();
+                    }
+                }
+            },
+            computed: {
+                input_value: function input_value() {
+                    return this.row[this.name];
+                }
+            },
+            mounted: function mounted() {
+                var self = this;
+                ex.load_css('/static/lib/spectrum1.8.0.min.css');
+                ex.load_js('/static/lib/spectrum1.8.0.min.js', function () {
+                    self.init_and_listen();
+                });
+            }
+        },
+        logo: { // absolate
+            props: ['name', 'row', 'kw'],
+            template: '<logo-input :up_url="kw.up_url" :web_url.sync="row[name]" :id="\'id_\'+name"></logo-input>'
+        },
+        picture: {
+            props: ['name', 'row', 'kw'],
+            template: '<div><img class="img-uploador" v-if=\'kw.readonly\' :src=\'row[name]\'/>\n\t\t\t<img-uploador v-else :up_url="kw.up_url" v-model="row[name]" :id="\'id_\'+name" :config="kw.config"></img-uploador></div>'
+        },
+        sim_select: {
+            props: ['name', 'row', 'kw'],
+            data: function data() {
+                var inn_config = {};
+                if (this.kw.config) {
+                    ex.assign(inn_config, this.kw.config);
+                }
+                return {
+                    model: this.row[this.name],
+                    cfg: inn_config
+                };
+            },
+            template: '<div>\n            <span v-if=\'kw.readonly\' v-text=\'get_label(kw.options,row[name])\'></span>\n            <select v-else v-model=\'row[name]\'  :id="\'id_\'+name"  class="form-control">\n            \t<option v-for=\'opt in orderBy(kw.options,"label")\' :value=\'opt.value\' v-text=\'opt.label\'></option>\n            </select>\n            </div>',
+            mounted: function mounted() {
+                if (this.kw.default && !this.row[this.name]) {
+                    Vue.set(this.row, this.name, this.kw.default);
+                    //this.row[this.name]=this.kw.default
+                }
+            },
+            methods: {
+                get_label: function get_label(options, value) {
+                    var option = ex.findone(options, { value: value });
+                    if (!option) {
+                        return '---';
+                    } else {
+                        return option.label;
+                    }
+                },
+                orderBy: function orderBy(array, key) {
+                    if (this.kw.orgin_order || this.cfg.orgin_order) {
+                        return array;
+                    } else {
+                        return order_by_key(array, key);
+                    }
+                }
+            }
+        },
+        search_select: {
+            props: ['name', 'row', 'kw'],
+            data: function data() {
+                return {
+                    model: this.row[this.name]
+                };
+            },
+            template: '<div>\n            <span v-if=\'kw.readonly\' v-text=\'get_label(kw.options,row[name])\'></span>\n            <select v-else v-model=\'row[name]\'  :id="\'id_\'+name"  class="selectpicker form-control" data-live-search="true">\n            \t<option v-for=\'opt in orderBy(kw.options,"label")\' :value=\'opt.value\'\n            \t :data-tokens="opt.label" v-text=\'opt.label\'></option>\n            </select>\n            </div>',
+            mounted: function mounted() {
+                var self = this;
+                if (this.kw.default && !this.row[this.name]) {
+                    Vue.set(this.row, this.name, this.kw.default);
+                }
+                ex.load_css("/static/lib/bootstrap-select.min.css");
+                ex.load_js("/static/lib/bootstrap-select.min.js", function () {
+                    $(self.$el).find('.selectpicker').selectpicker();
+                });
+            },
+            methods: {
+                get_label: function get_label(options, value) {
+                    var option = ex.findone(options, { value: value });
+                    if (!option) {
+                        return '---';
+                    } else {
+                        return option.label;
+                    }
+                },
+                orderBy: function orderBy(array, key) {
+                    return order_by_key(array, key);
+                }
+            }
+        },
+
+        check_select: {
+            props: ['name', 'row', 'kw'],
+            computed: {
+                selected: {
+                    get: function get() {
+                        var data = this.row[this.name];
+                        if (data) {
+                            return data.split(',');
+                        } else {
+                            return [];
+                        }
+                    },
+                    set: function set(v) {
+                        this.row[this.name] = v.join(',');
+                    }
+
+                }
+            },
+            template: '<div>\n                <ul>\n                <li v-for=\'option in kw.options\' v-if="option.value"><input type="checkbox" :value="option.value" v-model="selected"/><span v-text="option.label"></span></li>\n                </ul>\n            </div>'
+        },
+        tow_col: {
+            props: ['name', 'row', 'kw'],
+            template: '<div>\n\t        \t<ul v-if=\'kw.readonly\'><li v-for=\'value in row[name]\' v-text=\'get_label(value)\'></li></ul>\n\t        \t<tow-col-sel v-else v-model=\'row[name]\' :id="\'id_\'+name" :choices=\'kw.options\' :size=\'kw.size\' ></tow-col-sel>\n\t        \t</div>',
+            methods: {
+                get_label: function get_label(value) {
+                    for (var i = 0; i < this.kw.options.length; i++) {
+                        if (this.kw.options[i].value == value) {
+                            return this.kw.options[i].label;
+                        }
+                    }
+                }
+            }
+        },
+        bool: {
+            props: ['name', 'row', 'kw'],
+            template: '<div class="checkbox">\n\t        <input type="checkbox" :id="\'id_\'+name" v-model=\'row[name]\' :disabled="kw.readonly">\n\t\t\t <label :for="\'id_\'+name"><span v-text=\'kw.label\'></span></label>\n\t\t\t\t\t  </div>'
+        },
+        date: {
+            props: ['name', 'row', 'kw'],
+            template: '<div><span v-if=\'kw.readonly\' v-text=\'row[name]\'></span>\n                                <date v-else v-model="row[name]" :id="\'id_\'+name"\n                                    :placeholder="kw.placeholder"></date>\n                               </div>'
+        },
+        datetime: {
+            props: ['name', 'row', 'kw'],
+            template: '<div><span v-if=\'kw.readonly\' v-text=\'row[name]\'></span>\n            \t\t\t<datetime  v-model="row[name]" :id="\'id_\'+name"\n                        \t:placeholder="kw.placeholder"></datetime>\n                       </div>'
+        },
+        richtext: {
+            props: ['name', 'row', 'kw'],
+            template: '<div><span v-if=\'kw.readonly\' v-text=\'row[name]\'></span>\n            \t\t\t<ckeditor  v-model="row[name]" :id="\'id_\'+name"></ckeditor>\n                       </div>'
+        }
+
+    }
+
+};
 
 /***/ })
 /******/ ]);

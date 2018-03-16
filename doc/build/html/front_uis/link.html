@@ -1,0 +1,289 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>link &mdash; webcode 1.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+
+  
+    <link rel="top" title="webcode 1.0 documentation" href="../index.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> webcode
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../admin/index.html">1. 模拟admin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../backend/index.html">2. 后端</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../frontend/index.html">3. 前端逻辑</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../inputs/index.html">4. 输入组件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html">5. 前端ui组件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../helpers.html">6. helpers</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">webcode</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+<<<<<<< HEAD:doc/build/html/front/link.html
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../front.html">5. 前端</a> &raquo;</li>
+        
+      <li>5.7. link</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/front/link.rst.txt" rel="nofollow"> View page source</a>
+=======
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+    <li>link</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/front_uis/link.txt" rel="nofollow"> View page source</a>
+>>>>>>> ff0580d4c0cfbde86a8bffd6f22446d011bd0422:doc/build/html/front_uis/link.html
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="link">
+<h1>link<a class="headerlink" href="#link" title="Permalink to this headline">¶</a></h1>
+<p>这个东西本来主要是用在 <code class="code docutils literal"><span class="pre">移动端</span></code> 上的。但是现在移动端变化大，所以需要重新整理该模块。</p>
+<div class="section" id="id1">
+<h2>示例<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default"><div class="highlight"><pre><span></span> var director = &#39;{% url &#39;director&#39; %}&#39;
+
+ var cache_meta={
+ cache:[&#39;person.emp_info.row&#39;,
+ &#39;person.bas_info.row&#39;,
+ &#39;crt_view&#39;],
+ rt_key:{&#39;auth.user&#39;:&#39;person.emp_info.row.user&#39;}
+ }
+
+//auth.user 是返回的值在storage中的key，person.emp_info.row.user是还原的对象路径
+
+ ln.cache(cache_meta)
+
+ // 下面是构造跳转的url,其中最重要的是需要appendSearch({cache:1})),表明返回时，需要读取cache
+ var back_url=btoa(ex.appendSearch({cache:1}))
+ if(pk){
+ location=ex.template(&#39;{director}model/{name}/edit/{pk}?next={encode_url}&#39;,{director:director,name:name,pk:pk,encode_url:back_url})
+ }else{
+ location=ex.template(&#39;{director}model/{name}/edit?next={encode_url}&#39;,{director:director,name:name,encode_url:back_url})
+ }
+</pre></div>
+</div>
+<dl class="docutils">
+<dt>readCache</dt>
+<dd>&#64;root_obj</dd>
+<dt>cache</dt>
+<dd>&#64;cache_meta
+&#64;root_obj : 如果没写，默认是window</dd>
+</dl>
+</div>
+<div class="section" id="history">
+<h2>history<a class="headerlink" href="#history" title="Permalink to this headline">¶</a></h2>
+<p>利用h5的history功能，是的地址栏发生变化，并且不会触发服务器请求。该功能可以用在ajax请求，将ajax请求记录在history中，可以达到前进后退的功能。</p>
+<dl class="docutils">
+<dt>pushUrl</dt>
+<dd>url入栈</dd>
+<dt>popUrlListen:</dt>
+<dd>监听pop history事件，点击前进后退按钮时，刷新整个页面。如果需要精细的控制，在不刷新页面的情况下，切换状态，需要自定义事件handler</dd>
+</dl>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+<<<<<<< HEAD:doc/build/html/front/link.html
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="table.html" class="btn btn-neutral float-right" title="5.8. table" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="input.html" class="btn btn-neutral" title="5.6. inputs" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+=======
+>>>>>>> ff0580d4c0cfbde86a8bffd6f22446d011bd0422:doc/build/html/front_uis/link.html
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, coblan.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

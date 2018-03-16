@@ -1,0 +1,33 @@
+
+==========
+ckeditor
+==========
+源文件: :code:`vuejs/ckeditor.js` 。使用时，引入fields.pack.js即可。
+
+ckeditor官方文档地址：http://docs.cksource.com/Main_Page
+
+使用示例
+=========
+::
+
+	bus=new Vue()  //因为ckeditor的数据不是时时同步的，所以提交时，需要触发数据同步
+	// 提交时:
+	bus.$emit('sync_data')
+
+	<ckeditor set='complex' config='{}'></ckeditor>
+
+set
+======
+
+set是指预先定义好的一套设置。可以在Vue component中定义映射。
+
+当前有的set有:
+
+.. csv-table:: set集合种类
+   :header: "KEY", "说明"
+   :widths: 10, 10
+
+   "complex", 完全体
+   "edit", 普通编辑体
+
+

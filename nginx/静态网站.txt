@@ -1,0 +1,16 @@
+server{
+    listen 80;
+    server_name prototype.enjoyst.com;
+    client_max_body_size 100m;
+    set $proj_name prototype;
+
+    access_log /var/log/nginx/$proj_name.log;
+    error_log /var/log/nginx/$proj_name.log;
+
+    location / {
+        root /pypro/prototype;
+        index index.html;
+        expires off;
+        access_log off;
+    }
+}

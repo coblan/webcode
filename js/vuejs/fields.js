@@ -71,7 +71,7 @@ var field={
 		mixins:[field_base],
 		template:`
 		<div for='field' class="form-group field" :class='{"error":error_data(name)}' v-if="head">
-		<label :for="'id_'+name"  class="control-label" v-if='!head.no_auto_label'>
+		<label :for="'id_'+name"  class="control-label" v-if='head.label && head.label!=""'>
 			<span v-text="head.label"></span><span class="req_star" v-if='head.required'>*</span>
 		</label>
 

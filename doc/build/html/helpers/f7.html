@@ -1,0 +1,284 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>6.3. framework7 &mdash; webcode 1.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+
+  
+    <link rel="top" title="webcode 1.0 documentation" href="../index.html"/>
+        <link rel="up" title="6. helpers" href="../helpers.html"/>
+        <link rel="next" title="6.4. 工作" href="work.html"/>
+        <link rel="prev" title="6.2. director engine" href="engine.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> webcode
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../admin/index.html">1. 模拟admin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../backend/index.html">2. 后端</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../frontend/index.html">3. 前端逻辑</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../inputs/index.html">4. 输入组件</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../front_uis/index.html">5. 前端ui组件</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../helpers.html">6. helpers</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="db.html">6.1. 数据库快捷函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engine.html">6.2. director engine</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">6.3. framework7</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#android">6.3.1. android端运行环境</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#framwork7">6.3.2. framwork7前端</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id1">外部封装页面</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#iframe">iframe子页面</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="work.html">6.4. 工作</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../index.html">webcode</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../helpers.html">6. helpers</a> &raquo;</li>
+      
+    <li>6.3. framework7</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/helpers/f7.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="framework7">
+<h1>6.3. framework7<a class="headerlink" href="#framework7" title="Permalink to this headline">¶</a></h1>
+<p><code class="code docutils literal"><span class="pre">framework7</span></code> 是一个针对手机的H5 Ui库。Director模块中主要使用该库作为移动端的构架。</p>
+<div class="section" id="android">
+<h2>6.3.1. android端运行环境<a class="headerlink" href="#android" title="Permalink to this headline">¶</a></h2>
+<p>splash.html</p>
+<p><code class="code docutils literal"><span class="pre">build.gradle</span></code> 脚本修改</p>
+</div>
+<div class="section" id="framwork7">
+<h2>6.3.2. framwork7前端<a class="headerlink" href="#framwork7" title="Permalink to this headline">¶</a></h2>
+<div class="figure" id="id2">
+<img alt="../_images/wraper.png" src="../_images/wraper.png" />
+<p class="caption"><span class="caption-text">wraper示意图</span></p>
+</div>
+<div class="section" id="id1">
+<h3>外部封装页面<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p>代码在 <code class="code docutils literal"><span class="pre">f7/wraper.html</span></code> 和 <code class="code docutils literal"><span class="pre">js/f7_wrap.pack.js</span></code> 内</p>
+<dl class="docutils">
+<dt>load_iframe(url,name,callback):</dt>
+<dd><p class="first">利用一个iframe来加载一个页面。</p>
+<p class="last"><em>url</em> : 地址。
+<em>name</em> : Framework7需要每个页面都有一个name名字，注意尽量不要重复。
+<em>callback</em> : 在子frame中，可以通过 <code class="code docutils literal"><span class="pre">windows.ret</span></code> 调用该函数，该回调函数接收一个参数。</p>
+</dd>
+<dt>load_vue_com(kw)：</dt>
+<dd>利用一个vue component来作为一个页面。</dd>
+</dl>
+<div class="highlight-default"><div class="highlight"><pre><span></span>kw={
+        url:url string,
+        com_html:html string,   // html 字符串，例如 &lt;div&gt;&lt;my-com :name=&#39;test&#39;&gt;&lt;/my-com&gt;&lt;/div&gt;
+        data:{},       // Vue 实例的数据。
+        name:string,   // Framework7页面唯一标示名
+        label:string,  // 页面标题
+        callback:function,
+    }
+
+callback的使用方法：
+
+#在parent页面触发vue_com页面，
+load_vue_com({other:xxx,  callback:function(com_resp){
+            dosomething(com_resp)
+    }
+
+#在vue_com页面中，在返回parent页面时，要调用注册的回调函数。
+methods:{
+    back:function(){
+        this.$parent.callback(my_resp)
+        mainView.router.back()
+    }
+}
+</pre></div>
+</div>
+<p><span class="red">还有很多函数需要整理</span></p>
+</div>
+<div class="section" id="iframe">
+<h3>iframe子页面<a class="headerlink" href="#iframe" title="Permalink to this headline">¶</a></h3>
+<p>继承主页 <code class="code docutils literal"><span class="pre">f7/base.html</span></code> ;js代码 <code class="code docutils literal"><span class="pre">js/director_f7.pack.js</span></code></p>
+<p>主要使用ff对象，调用parent页面，进行next页面加载或者返回last页面等操作。</p>
+</div>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="work.html" class="btn btn-neutral float-right" title="6.4. 工作" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="engine.html" class="btn btn-neutral" title="6.2. director engine" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, coblan.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

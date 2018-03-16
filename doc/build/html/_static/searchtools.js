@@ -424,7 +424,11 @@ var Search = {
     var searchterms = [];
     var excluded = [];
     var hlterms = [];
+<<<<<<< HEAD
     var tmp = splitQuery(query);
+=======
+    var tmp = query.split(/\s+/);
+>>>>>>> ff0580d4c0cfbde86a8bffd6f22446d011bd0422
     var objectterms = [];
     for (i = 0; i < tmp.length; i++) {
       if (tmp[i] !== "") {
